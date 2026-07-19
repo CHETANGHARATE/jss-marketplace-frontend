@@ -3,33 +3,53 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  Shirt,
-  Laptop,
-  Sprout,
-  Lamp,
-  Sofa,
-  Gem,
-  BookOpen,
-  Activity,
+  GlassWater,
+  Flower2,
+  Paintbrush,
   Sparkles,
+  Footprints,
+  Utensils,
+  Flame,
+  Shirt,
+  Gem,
+  Sprout,
   Car,
+  Home,
+  Landmark,
+  Gift,
+  Baby,
+  Droplet,
+  Cookie,
+  Moon,
+  PartyPopper,
+  Laptop,
   ChevronRight
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Category } from '../types';
 
-// Map icon strings to components
+// Map icon strings to components — one entry per official category
 const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
-  Shirt,
-  Laptop,
-  Sprout,
-  Lamp,
-  Sofa,
-  Gem,
-  BookOpen,
-  Activity,
+  GlassWater,
+  Flower2,
+  Paintbrush,
   Sparkles,
-  Car
+  Footprints,
+  Utensils,
+  Flame,
+  Shirt,
+  Gem,
+  Sprout,
+  Car,
+  Home,
+  Landmark,
+  Gift,
+  Baby,
+  Droplet,
+  Cookie,
+  Moon,
+  PartyPopper,
+  Laptop
 };
 
 // Rotating gradient palette — one per card, cycles if there are more categories than colors
