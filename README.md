@@ -24,32 +24,28 @@ This frontend is designed to consume the **Laravel 12 REST API Backend** running
   - Product Details (`app/product/[slug]`) and Search Results (`app/search`).
 
 - **Module 4 (Shopping Cart & Wishlist)**:
-  - Cart & Wishlist API Services.
-  - Cart (`app/cart`) and Wishlist (`app/wishlist`) Pages.
+  - Cart & Wishlist API Services (`app/cart` and `app/wishlist`).
 
 - **Module 5 (Customer Checkout & Orders)**:
-  - Saved Address, Checkout & Orders API Services.
-  - Checkout (`app/checkout`) and Order History (`app/orders`).
+  - Saved Address, Checkout & Orders API Services (`app/checkout` and `app/orders`).
 
 - **Module 6 (Payments & Shipping)**:
   - Payment & Shipping API Services with Razorpay integration.
 
 - **Module 7 (Customer Account)**:
-  - Customer Profile API Service (`services/profileService.ts`).
-  - Notification Center API Service (`services/notificationService.ts`).
-  - Product Reviews API Service (`services/reviewService.ts`).
-  - Support Tickets API Service (`services/supportService.ts`).
-  - Returns API Service (`services/returnService.ts`).
-  - Refunds API Service (`services/refundService.ts`).
-  - TanStack Query hooks (`useProfileQuery`, `useUpdateProfileMutation`, `useChangePasswordMutation`, `useNotificationsQuery`, `useMyReviewsQuery`, `useSupportTicketsQuery`, `useReturnsQuery`, `useRefundsQuery`).
-  - Customer Account Navigation Sidebar (`components/AccountSidebar.tsx`).
-  - Centralized Account Dashboard Overview (`app/account/page.tsx`).
-  - Personal Profile details management (`app/account/profile/page.tsx`).
-  - Password & Security management with strength indicator (`app/account/password/page.tsx`).
-  - Notification Center (`app/account/notifications/page.tsx`).
-  - Product Reviews history (`app/account/reviews/page.tsx`).
-  - Customer Support Tickets & reply thread (`app/account/support/page.tsx`).
-  - Returns & Refund requests tracker (`app/account/returns/page.tsx`).
+  - Customer Profile, Notifications, Reviews, Support Tickets, Returns & Refunds (`app/account/*`).
+
+- **Module 8 (Vendor Portal)**:
+  - Vendor REST API Service (`services/vendorService.ts`).
+  - TanStack Query hooks (`useVendorDashboardQuery`, `useVendorProductsQuery`, `useCreateVendorProductMutation`, `useDeleteVendorProductMutation`, `useVendorInventoryQuery`, `useUpdateVendorInventoryMutation`, `useVendorOrdersQuery`, `useUpdateVendorOrderStatusMutation`, `useVendorWalletQuery`, `useVendorSettlementsQuery`, `useVendorAnalyticsQuery`, `useVendorStoreSettingsQuery`, `useUpdateVendorStoreSettingsMutation`).
+  - Dedicated Vendor Navigation Sidebar (`components/VendorSidebar.tsx`).
+  - Seller Store Overview Dashboard (`app/vendor/page.tsx`).
+  - Vendor Product Catalog Management & Creation (`app/vendor/products/page.tsx`).
+  - Real-time Inventory & Stock Quantity Control (`app/vendor/inventory/page.tsx`).
+  - Vendor Orders & Fulfillment Status Updates (`app/vendor/orders/page.tsx`).
+  - Vendor Wallet & Settlement Payout Ledger (`app/vendor/wallet/page.tsx`).
+  - Sales Analytics & Business Intelligence (`app/vendor/analytics/page.tsx`).
+  - Vendor Storefront Profile & Settings (`app/vendor/settings/page.tsx`).
 
 ---
 
