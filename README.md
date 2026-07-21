@@ -39,18 +39,19 @@ This frontend is designed to consume the **Laravel 12 REST API Backend** running
   - Seller Store Dashboard, Product Catalog, Inventory, Vendor Orders, Wallet, Analytics, and Settings (`app/vendor/*`).
 
 - **Module 9 (Admin Dashboard)**:
-  - Admin REST API Service (`services/adminService.ts`).
-  - TanStack Query hooks (`useAdminDashboardQuery`, `useAdminCustomersQuery`, `useToggleCustomerStatusMutation`, `useAdminVendorsQuery`, `useApproveVendorMutation`, `useSuspendVendorMutation`, `useAdminProductsQuery`, `useApproveProductMutation`, `useRejectProductMutation`, `useToggleFeatureProductMutation`, `useAdminOrdersQuery`, `useUpdateAdminOrderStatusMutation`, `useAdminPaymentsQuery`, `useAdminShipmentsQuery`, `useAdminReportsQuery`, `useAdminSettingsQuery`, `useUpdateAdminSettingsMutation`).
-  - Dedicated Admin Control Navigation Sidebar (`components/AdminSidebar.tsx`).
-  - System Administrator Dashboard Overview (`app/admin/page.tsx`).
-  - Customer Account Directory & Status Controls (`app/admin/users/page.tsx`).
-  - Multi-Vendor Merchant Control & Approvals (`app/admin/vendors/page.tsx`).
-  - Product Catalog Moderation & Featuring (`app/admin/products/page.tsx`).
-  - Platform-wide Orders Audit & Status Overrides (`app/admin/orders/page.tsx`).
-  - Payment Gateway Audit Logs (`app/admin/payments/page.tsx`).
-  - Platform Logistics & Courier Dispatch (`app/admin/shipping/page.tsx`).
-  - Executive Reports & Intelligence (`app/admin/reports/page.tsx`).
-  - Global Marketplace Settings & Maintenance Mode (`app/admin/settings/page.tsx`).
+  - System Administrator Dashboard, Customer Directory, Vendor Control, Catalog Moderation, Platform Orders, Payment Audit, Logistics, Executive Reports, and Global Settings (`app/admin/*`).
+
+- **Module 10 (Marketing & Promotions)**:
+  - Coupon API Service (`services/couponService.ts`).
+  - Promotion & Campaign API Service (`services/promotionService.ts`).
+  - Loyalty Points API Service (`services/loyaltyService.ts`).
+  - Referral Program API Service (`services/referralService.ts`).
+  - TanStack Query hooks (`useCouponsQuery`, `useApplyCouponMutation`, `useRemoveCouponMutation`, `useFlashSalesQuery`, `useLoyaltyQuery`, `useRedeemPointsMutation`, `useReferralQuery`, `usePromotionalBannersQuery`, `useCampaignsQuery`).
+  - Interactive Coupon Applying Widget (`components/CouponSelector.tsx`).
+  - Live Flash Sale Countdown Banner (`components/FlashSaleBanner.tsx`).
+  - Promotional Deals & Campaign Landing Page (`app/promotions/page.tsx`).
+  - Customer Loyalty Points Rewards Dashboard (`app/account/loyalty/page.tsx`).
+  - Customer Refer & Earn Program Dashboard (`app/account/referrals/page.tsx`).
 
 ---
 

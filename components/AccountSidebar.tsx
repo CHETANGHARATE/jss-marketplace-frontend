@@ -12,6 +12,8 @@ import {
   Star,
   LifeBuoy,
   RotateCcw,
+  Gift,
+  Share2,
   LogOut
 } from 'lucide-react';
 
@@ -23,6 +25,8 @@ const MENU_ITEMS = [
   { href: '/account/reviews', label: 'My Reviews', icon: Star },
   { href: '/account/support', label: 'Support Tickets', icon: LifeBuoy },
   { href: '/account/returns', label: 'Returns & Refunds', icon: RotateCcw },
+  { href: '/account/loyalty', label: 'Loyalty Rewards', icon: Gift },
+  { href: '/account/referrals', label: 'Refer & Earn', icon: Share2 },
 ];
 
 export function AccountSidebar() {
