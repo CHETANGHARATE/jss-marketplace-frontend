@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useSearch } from '../../hooks/useSearch';
 import { Breadcrumbs } from '../../components/Breadcrumbs';
 import { ProductGridSkeleton } from '../../components/ProductGridSkeleton';
+import { ApiProduct } from '../../types/api';
 import {
   Search,
   Grid,
@@ -36,7 +37,7 @@ function SearchResultsContent() {
     page,
   });
 
-  const products = data?.data || [];
+  const products: ApiProduct[] = data?.data || [];
   const meta = data?.meta;
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -141,7 +142,7 @@ function SearchResultsContent() {
         </div>
       ) : isGridView ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((prod) => (
+          {products.map((prod: ApiProduct) => (
             <Link
               key={prod.id}
               href={`/product/${prod.slug}`}
@@ -173,7 +174,7 @@ function SearchResultsContent() {
         </div>
       ) : (
         <div className="space-y-4">
-          {products.map((prod) => (
+          {products.map((prod: ApiProduct) => (
             <Link
               key={prod.id}
               href={`/product/${prod.slug}`}

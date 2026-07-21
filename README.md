@@ -42,16 +42,14 @@ This frontend is designed to consume the **Laravel 12 REST API Backend** running
   - System Administrator Dashboard, Customer Directory, Vendor Control, Catalog Moderation, Platform Orders, Payment Audit, Logistics, Executive Reports, and Global Settings (`app/admin/*`).
 
 - **Module 10 (Marketing & Promotions)**:
-  - Coupon API Service (`services/couponService.ts`).
-  - Promotion & Campaign API Service (`services/promotionService.ts`).
-  - Loyalty Points API Service (`services/loyaltyService.ts`).
-  - Referral Program API Service (`services/referralService.ts`).
-  - TanStack Query hooks (`useCouponsQuery`, `useApplyCouponMutation`, `useRemoveCouponMutation`, `useFlashSalesQuery`, `useLoyaltyQuery`, `useRedeemPointsMutation`, `useReferralQuery`, `usePromotionalBannersQuery`, `useCampaignsQuery`).
-  - Interactive Coupon Applying Widget (`components/CouponSelector.tsx`).
-  - Live Flash Sale Countdown Banner (`components/FlashSaleBanner.tsx`).
-  - Promotional Deals & Campaign Landing Page (`app/promotions/page.tsx`).
-  - Customer Loyalty Points Rewards Dashboard (`app/account/loyalty/page.tsx`).
-  - Customer Refer & Earn Program Dashboard (`app/account/referrals/page.tsx`).
+  - Coupon, Flash Sale, Loyalty Rewards, and Referral Program API Services (`app/promotions`, `app/account/loyalty`, `app/account/referrals`).
+
+- **Module 11 (Search, SEO & Personalization)**:
+  - SEO Service (`services/seoService.ts`) for Schema.org JSON-LD structured data (Product, BreadcrumbList, Organization).
+  - Personalization Service (`services/personalizationService.ts`) for personalized product recommendations and trending items.
+  - Next.js App Router dynamic XML Sitemap (`app/sitemap.ts`) and Crawl Rules (`app/robots.ts`).
+  - Instant Search Autocomplete (`components/SearchBar.tsx`) with search history and popular keyword chips.
+  - Personalized Recommendation Block (`components/PersonalizedSection.tsx`) integrated on Homepage.
 
 ---
 

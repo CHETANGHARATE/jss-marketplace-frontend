@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
-  Search,
   Heart,
   ShoppingBag,
   Bell,
@@ -27,7 +26,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCartWishlist } from '../contexts/CartWishlistContext';
 import { useAuth } from '../contexts/AuthContext';
-import { SearchDropdown } from './SearchDropdown';
+import { SearchBar } from './SearchBar';
 import { ProductQuickView } from './ProductQuickView';
 import { MegaMenu } from './MegaMenu';
 
@@ -47,21 +46,16 @@ export const Header: React.FC = () => {
     cartItemCount
   } = useCartWishlist();
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchFocused, setSearchFocused] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [notifPanelOpen, setNotifPanelOpen] = useState(false);
 
-  // Drawers
   const [cartOpen, setCartOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Quick view helper in header for search selections
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
-  const searchRef = useRef<HTMLDivElement>(null);
   const langMenuRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
@@ -69,10 +63,6 @@ export const Header: React.FC = () => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      
-      if (searchRef.current && !searchRef.current.contains(target)) {
-        setSearchFocused(false);
-      }
       if (langMenuRef.current && !langMenuRef.current.contains(target)) {
         setLangMenuOpen(false);
       }
@@ -87,17 +77,6 @@ export const Header: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSearchSubmit = (eOrQuery?: React.FormEvent | string) => {
-    if (eOrQuery && typeof eOrQuery !== 'string') {
-      eOrQuery.preventDefault();
-    }
-    const query = typeof eOrQuery === 'string' ? eOrQuery : searchQuery;
-    if (query.trim()) {
-      router.push(`/category/electronics?search=${encodeURIComponent(query)}`);
-      setSearchFocused(false);
-    }
-  };
-
   const mockNotifications = [
     { id: 1, title: 'Diwali Dhamaka Starts Today!', desc: 'Get up to 80% off on all electronics & fashion apparel.', time: '2 mins ago', read: false },
     { id: 2, title: 'Price drop alert', desc: 'An item in your wishlist has dropped in price by 10%.', time: '1 hour ago', read: false },
@@ -110,7 +89,6 @@ export const Header: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-20 items-center justify-between gap-4">
             
-            {/* Logo */}
             <div className="flex items-center gap-4">
               <button 
                 onClick={() => setMobileMenuOpen(true)}
@@ -128,46 +106,16 @@ export const Header: React.FC = () => {
               </Link>
             </div>
 
-            {/* Mega Menu Category Catalog */}
             <div className="hidden lg:block">
               <MegaMenu />
             </div>
 
-            {/* Global Search Bar */}
-            <div ref={searchRef} className="hidden lg:block relative flex-1 max-w-xl mx-2">
-              <form onSubmit={handleSearchSubmit} className="relative">
-                <input
-                  type="text"
-                  placeholder={t('nav.search_placeholder')}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => setSearchFocused(true)}
-                  className="w-full bg-background-secondary text-foreground text-sm pl-11 pr-12 py-3 rounded-2xl border border-border-custom focus:border-primary focus:bg-card focus:outline-none transition-all duration-200 shadow-inner"
-                />
-                <Search size={18} className="absolute left-4 top-3.5 text-muted-custom" />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-4 top-3 text-muted-custom hover:text-foreground"
-                  >
-                    <X size={16} />
-                  </button>
-                )}
-              </form>
-              <SearchDropdown
-                query={searchQuery}
-                isOpen={searchFocused}
-                onClose={() => setSearchFocused(false)}
-                onSearchSubmit={handleSearchSubmit}
-                onProductClick={(id) => setSelectedProductId(id)}
-              />
+            <div className="hidden lg:block flex-1 max-w-xl mx-2">
+              <SearchBar />
             </div>
 
-            {/* Utility Actions */}
             <div className="flex items-center gap-1 sm:gap-3">
               
-              {/* Language Switcher */}
               <div ref={langMenuRef} className="relative">
                 <button
                   onClick={() => setLangMenuOpen(!langMenuOpen)}
@@ -199,7 +147,6 @@ export const Header: React.FC = () => {
                 )}
               </div>
 
-              {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
                 className="p-2.5 text-foreground hover:bg-background-secondary hover:text-primary rounded-2xl transition-all"
@@ -208,7 +155,6 @@ export const Header: React.FC = () => {
                 {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
               </button>
 
-              {/* Notifications panel */}
               <div ref={notifRef} className="relative">
                 <button
                   onClick={() => setNotifPanelOpen(!notifPanelOpen)}
@@ -241,7 +187,6 @@ export const Header: React.FC = () => {
                 )}
               </div>
 
-              {/* Wishlist Toggle Button */}
               <button
                 onClick={() => setWishlistOpen(true)}
                 className="p-2.5 text-foreground hover:bg-background-secondary hover:text-primary rounded-2xl transition-all relative"
@@ -255,7 +200,6 @@ export const Header: React.FC = () => {
                 )}
               </button>
 
-              {/* Cart Toggle Button */}
               <button
                 onClick={() => setCartOpen(true)}
                 className="p-2.5 text-foreground hover:bg-background-secondary hover:text-primary rounded-2xl transition-all relative flex items-center gap-1.5 pr-3.5 pl-2.5"
@@ -274,7 +218,6 @@ export const Header: React.FC = () => {
                 ) : null}
               </button>
 
-              {/* User Profile dropdown */}
               <div ref={userMenuRef} className="relative hidden md:block">
                 {isAuthenticated && user ? (
                   <>
@@ -297,14 +240,14 @@ export const Header: React.FC = () => {
                           <p className="text-sm font-semibold text-foreground mt-1 truncate">{user.name}</p>
                         </div>
                         <div className="py-1">
-                          <Link href="/profile" className="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-background-secondary transition-colors">
+                          <Link href="/account" className="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-background-secondary transition-colors">
                             <User size={16} className="text-muted-custom" />
                             {t('nav.profile')}
                           </Link>
                           {user.role === 'seller' && (
-                            <Link href="/seller/dashboard" className="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-background-secondary transition-colors">
+                            <Link href="/vendor" className="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-background-secondary transition-colors">
                               <Store size={16} className="text-muted-custom" />
-                              Seller Dashboard
+                              Vendor Portal
                             </Link>
                           )}
                         </div>
@@ -321,22 +264,21 @@ export const Header: React.FC = () => {
                   </>
                 ) : (
                   <Link
-                    href="/login"
+                    href="/account"
                     className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary/10 text-primary text-xs font-bold hover:bg-primary/20 transition-all"
                   >
                     <LogIn size={14} />
-                    <span>Login</span>
+                    <span>Account</span>
                   </Link>
                 )}
               </div>
 
-              {/* Become Seller Header Button */}
               <Link
-                href="/seller/register"
+                href="/vendor"
                 className="hidden xl:flex items-center gap-1.5 text-xs font-bold bg-accent text-white px-4 py-2.5 rounded-2xl hover:bg-accent-hover transition-all shadow-sm hover:scale-105 active:scale-95"
               >
                 <Store size={14} />
-                <span>{t('nav.become_seller')}</span>
+                <span>Vendor Hub</span>
               </Link>
 
             </div>
@@ -344,7 +286,6 @@ export const Header: React.FC = () => {
         </div>
       </header>
 
-      {/* Cart Drawer */}
       {cartOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-xs transition-opacity">
           <div className="w-full max-w-md bg-card text-card-foreground p-6 shadow-2xl flex flex-col h-full animate-slide-in relative border-l border-border-custom">
@@ -415,22 +356,19 @@ export const Header: React.FC = () => {
                   <span className="text-sm font-semibold text-muted-custom">Total Amount</span>
                   <span className="text-xl font-black text-foreground">₹{cartTotal.toLocaleString()}</span>
                 </div>
-                <button
-                  onClick={() => {
-                    alert('Redirecting to checkout');
-                    setCartOpen(false);
-                  }}
+                <Link
+                  href="/checkout"
+                  onClick={() => setCartOpen(false)}
                   className="w-full bg-primary text-white py-3.5 rounded-2xl font-bold hover:bg-primary-hover transition-all text-center block shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0"
                 >
                   {t('cart.checkout')}
-                </button>
+                </Link>
               </div>
             )}
           </div>
         </div>
       )}
 
-      {/* Wishlist Drawer */}
       {wishlistOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-xs transition-opacity">
           <div className="w-full max-w-md bg-card text-card-foreground p-6 shadow-2xl flex flex-col h-full animate-slide-in relative border-l border-border-custom">
@@ -492,7 +430,6 @@ export const Header: React.FC = () => {
         </div>
       )}
 
-      {/* Global quick view modal portal hook wrapper */}
       {selectedProductId && (
         <ProductQuickView
           productId={selectedProductId}

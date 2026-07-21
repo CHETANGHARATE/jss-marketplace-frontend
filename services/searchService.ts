@@ -1,38 +1,52 @@
 import { apiClient } from './apiClient';
-import { ApiProduct, ApiResponse, PaginatedApiResponse } from '../types/api';
+import { ApiProduct, PaginatedApiResponse, ApiResponse } from '../types/api';
 
-export interface SearchQueryParams {
-  query: string;
+export interface SearchParams {
+  q?: string;
+  query?: string;
+  category_id?: number;
   category?: string;
+  brand_id?: number;
   brand?: string;
   min_price?: number;
   max_price?: number;
+  rating?: number;
+  sort_by?: string;
   sort?: string;
   page?: number;
+  per_page?: number;
 }
 
-export interface SearchFacets {
-  categories?: Record<string, number>;
-  brands?: Record<string, number>;
-  price_range?: { min: number; max: number };
-}
+export type SearchQueryParams = SearchParams;
 
-export interface SearchResultData {
-  products: ApiProduct[];
-  facets?: SearchFacets;
+export interface SearchSuggestion {
+  query: string;
+  category?: string;
+  product_name?: string;
+  slug?: string;
 }
 
 export const searchService = {
-  async search(params: SearchQueryParams): Promise<PaginatedApiResponse<ApiProduct>> {
-    const response = await apiClient.get<PaginatedApiResponse<ApiProduct>>('/search', { params });
+  async searchProducts(params: SearchParams): Promise<PaginatedApiResponse<ApiProduct>> {
+    const response = await apiClient.get<PaginatedApiResponse<ApiProduct>>('/search', {
+      params,
+    });
     return response.data;
   },
 
-  async getAutocompleteSuggestions(query: string): Promise<string[]> {
-    if (!query || query.trim().length < 2) return [];
-    const response = await apiClient.get<ApiResponse<string[]>>('/search/autocomplete', {
+  async search(params: SearchParams): Promise<PaginatedApiResponse<ApiProduct>> {
+    return this.searchProducts(params);
+  },
+
+  async getSuggestions(query: string): Promise<SearchSuggestion[]> {
+    if (!query || query.length < 2) return [];
+    const response = await apiClient.get<ApiResponse<SearchSuggestion[]>>('/search/suggestions', {
       params: { q: query },
     });
     return response.data.data;
+  },
+
+  async getAutocompleteSuggestions(query: string): Promise<SearchSuggestion[]> {
+    return this.getSuggestions(query);
   },
 };

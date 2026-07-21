@@ -8,6 +8,7 @@ import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { ProductGallery } from '../../../components/ProductGallery';
 import { ProductDetailsInfo } from '../../../components/ProductDetailsInfo';
 import { RecentlyViewedSection } from '../../../components/RecentlyViewedSection';
+import { seoService } from '../../../services/seoService';
 import { Sparkles, AlertCircle, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
 
@@ -53,19 +54,30 @@ export default function ProductDetailPage() {
     );
   }
 
+  const productJsonLd = seoService.generateProductJsonLd(product);
+  const breadcrumbItems = [
+    ...(product.category
+      ? [{ label: typeof product.category.name === 'string' ? product.category.name : 'Category', href: `/category/${product.category.slug}` }]
+      : []),
+    ...(product.brand
+      ? [{ label: product.brand.name, href: `/brand/${product.brand.slug}` }]
+      : []),
+    { label: product.name },
+  ];
+  const breadcrumbJsonLd = seoService.generateBreadcrumbJsonLd(breadcrumbItems);
+
   return (
     <div className="space-y-12">
-      <Breadcrumbs
-        items={[
-          ...(product.category
-            ? [{ label: typeof product.category.name === 'string' ? product.category.name : 'Category', href: `/category/${product.category.slug}` }]
-            : []),
-          ...(product.brand
-            ? [{ label: product.brand.name, href: `/brand/${product.brand.slug}` }]
-            : []),
-          { label: product.name },
-        ]}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
+      <Breadcrumbs items={breadcrumbItems} />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-start">
         <div className="lg:col-span-6">

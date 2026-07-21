@@ -1,29 +1,43 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import ReactQueryProvider from "../providers/ReactQueryProvider";
-import { AuthProvider } from "../contexts/AuthContext";
-import { ThemeProvider } from "../contexts/ThemeContext";
-import { LanguageProvider } from "../contexts/LanguageContext";
-import { CartWishlistProvider } from "../contexts/CartWishlistContext";
-import { Header } from "../components/Header";
-import { Footer } from "../components/Footer";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import ReactQueryProvider from '../providers/ReactQueryProvider';
+import { AuthProvider } from '../contexts/AuthContext';
+import { CartWishlistProvider } from '../contexts/CartWishlistContext';
+import { ThemeProvider } from '../contexts/ThemeContext';
+import { LanguageProvider } from '../contexts/LanguageContext';
+import { Header } from '../components/Header';
+import { Footer } from '../components/Footer';
+import { seoService } from '../services/seoService';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "JSS Solutions - Multi Vendor Marketplace",
-  description: "Experience premium eCommerce shopping with high conversion designs, multi-vendor support, multilingual and dark mode features.",
-  authors: [{ name: "JSS Solutions Ltd" }],
-  keywords: ["eCommerce", "marketplace", "multi-vendor", "electronics", "fashion", "agriculture", "india"],
+  title: {
+    default: 'JSS Marketplace - Enterprise Multi-Vendor eCommerce Platform',
+    template: '%s | JSS Marketplace',
+  },
+  description: 'Shop millions of products from verified multi-vendor merchants on JSS Marketplace.',
+  keywords: ['eCommerce', 'Multi-vendor', 'Marketplace', 'Online Shopping', 'JSS Marketplace'],
+  authors: [{ name: 'JSS Solutions' }],
+  metadataBase: new URL('http://localhost:3000'),
+  openGraph: {
+    title: 'JSS Marketplace - Enterprise Multi-Vendor eCommerce Platform',
+    description: 'Shop millions of products from verified multi-vendor merchants on JSS Marketplace.',
+    url: 'http://localhost:3000',
+    siteName: 'JSS Marketplace',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'JSS Marketplace',
+    description: 'Shop millions of products from verified multi-vendor merchants.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -31,26 +45,31 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const orgJsonLd = seoService.generateOrganizationJsonLd();
+
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300">
+    <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
+      </head>
+      <body className={`${inter.className} bg-background text-foreground antialiased min-h-screen flex flex-col`}>
         <ReactQueryProvider>
-          <AuthProvider>
-            <ThemeProvider>
-              <LanguageProvider>
+          <ThemeProvider>
+            <LanguageProvider>
+              <AuthProvider>
                 <CartWishlistProvider>
                   <Header />
-                  <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16">
+                  <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
                     {children}
                   </main>
                   <Footer />
                 </CartWishlistProvider>
-              </LanguageProvider>
-            </ThemeProvider>
-          </AuthProvider>
+              </AuthProvider>
+            </LanguageProvider>
+          </ThemeProvider>
         </ReactQueryProvider>
       </body>
     </html>

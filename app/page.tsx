@@ -8,15 +8,15 @@ import { CategorySection } from '../components/CategorySection';
 import { FeaturedCategories } from '../components/FeaturedCategories';
 import { ProductCard } from '../components/ProductCard';
 import { ProductQuickView } from '../components/ProductQuickView';
+import { PersonalizedSection } from '../components/PersonalizedSection';
 import { Accordion } from '../components/ui/Accordion';
 import { categoryService } from '../services/categoryService';
 import { getTrendingProducts, getNewArrivals, getBestSellers } from '../services/product';
 import { getFeaturedSellers } from '../services/seller';
-import { Category, Product, Seller } from '../types';
+import { Product, Seller } from '../types';
 import { mockTestimonials, mockFaqs } from '../constants/mockData';
 
 export default function HomePage() {
-  const { t } = { t: (k: string) => k };
   const langContext = useLanguage();
   const translate = langContext ? langContext.t : (k: string) => k;
 
@@ -73,8 +73,12 @@ export default function HomePage() {
 
   return (
     <div className="space-y-20">
+      
       <BannerSlider />
+
       {categories.length > 0 && <CategorySection categories={categories} />}
+
+      <PersonalizedSection />
 
       <section className="bg-gradient-to-r from-accent/10 to-orange-500/5 border border-accent/20 rounded-3xl p-6 sm:p-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -124,6 +128,7 @@ export default function HomePage() {
       )}
 
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
         <div className="space-y-6 bg-card border border-border-custom p-6 rounded-3xl shadow-sm">
           <div className="flex items-center gap-2 pb-4 border-b border-border-custom">
             <Sparkles className="text-primary" size={18} />
