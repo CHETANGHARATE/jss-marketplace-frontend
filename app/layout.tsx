@@ -8,6 +8,7 @@ import { ThemeProvider } from '../contexts/ThemeContext';
 import { LanguageProvider } from '../contexts/LanguageContext';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
+import { SkipLink } from '../components/SkipLink';
 import { seoService } from '../services/seoService';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -56,13 +57,14 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} bg-background text-foreground antialiased min-h-screen flex flex-col`}>
+        <SkipLink />
         <ReactQueryProvider>
           <ThemeProvider>
             <LanguageProvider>
               <AuthProvider>
                 <CartWishlistProvider>
                   <Header />
-                  <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                  <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 focus:outline-none">
                     {children}
                   </main>
                   <Footer />

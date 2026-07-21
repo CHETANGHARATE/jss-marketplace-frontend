@@ -49,7 +49,12 @@ This frontend is designed to consume the **Laravel 12 REST API Backend** running
   - Personalization Service (`services/personalizationService.ts`) for personalized product recommendations and trending items.
   - Next.js App Router dynamic XML Sitemap (`app/sitemap.ts`) and Crawl Rules (`app/robots.ts`).
   - Instant Search Autocomplete (`components/SearchBar.tsx`) with search history and popular keyword chips.
-  - Personalized Recommendation Block (`components/PersonalizedSection.tsx`) integrated on Homepage.
+
+- **Module 12 (Performance, Accessibility & Optimization)**:
+  - Skip to Main Content Link (`components/SkipLink.tsx`) for WCAG 2.2 accessibility.
+  - Global Error Boundary (`app/error.tsx`) and custom accessible 404 page (`app/not-found.tsx`).
+  - Optimized React Query caching strategy (`gcTime: 15m`, `staleTime: 5m`, `retry: 1`, `refetchOnWindowFocus: false`).
+  - Clean build verification with 0 TypeScript/build errors across 37 App Router routes.
 
 ---
 
