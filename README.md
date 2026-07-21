@@ -26,6 +26,19 @@ This frontend is designed to consume the **Laravel 12 REST API Backend** running
   - Brand landing page (`app/brand/[slug]/page.tsx`).
   - Category catalog page (`app/category/[id]/page.tsx`).
 
+- **Module 3 (Product Engine & Search Experience)**:
+  - Product API Service (`services/productService.ts`).
+  - Search API Service (`services/searchService.ts`).
+  - Recommendation API Service (`services/recommendationService.ts`).
+  - TanStack Query hooks (`useProducts`, `useProductBySlug`, `useFeaturedProducts`, `useTrendingProducts`, `useRelatedProducts`, `useSearch`, `useAutocompleteSuggestions`, `useTrendingRecommendations`, `usePersonalizedRecommendations`).
+  - Recently viewed local storage hook (`hooks/useRecentlyViewed.ts`).
+  - Product Gallery component (`components/ProductGallery.tsx`).
+  - Product Details Info panel (`components/ProductDetailsInfo.tsx`).
+  - Grid & List view skeletons (`components/ProductGridSkeleton.tsx`).
+  - Recently Viewed Products section (`components/RecentlyViewedSection.tsx`).
+  - Product Details Page route (`app/product/[slug]/page.tsx`).
+  - Advanced Search Results Page route (`app/search/page.tsx`).
+
 ---
 
 ## Local Development Setup
