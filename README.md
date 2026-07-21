@@ -30,14 +30,22 @@ This frontend is designed to consume the **Laravel 12 REST API Backend** running
   - Product API Service (`services/productService.ts`).
   - Search API Service (`services/searchService.ts`).
   - Recommendation API Service (`services/recommendationService.ts`).
-  - TanStack Query hooks (`useProducts`, `useProductBySlug`, `useFeaturedProducts`, `useTrendingProducts`, `useRelatedProducts`, `useSearch`, `useAutocompleteSuggestions`, `useTrendingRecommendations`, `usePersonalizedRecommendations`).
-  - Recently viewed local storage hook (`hooks/useRecentlyViewed.ts`).
   - Product Gallery component (`components/ProductGallery.tsx`).
   - Product Details Info panel (`components/ProductDetailsInfo.tsx`).
   - Grid & List view skeletons (`components/ProductGridSkeleton.tsx`).
   - Recently Viewed Products section (`components/RecentlyViewedSection.tsx`).
   - Product Details Page route (`app/product/[slug]/page.tsx`).
   - Advanced Search Results Page route (`app/search/page.tsx`).
+
+- **Module 4 (Shopping Cart & Wishlist)**:
+  - Cart API Service (`services/cartService.ts`).
+  - Wishlist API Service (`services/wishlistService.ts`).
+  - TanStack Query hooks (`useCartQuery`, `useAddToCartMutation`, `useUpdateCartItemMutation`, `useRemoveCartItemMutation`, `useClearCartMutation`, `useMergeCartMutation`, `useWishlistQuery`, `useToggleWishlistMutation`, `useRemoveWishlistMutation`).
+  - Cart Item Card (`components/CartItemCard.tsx`).
+  - Order Summary breakdown (`components/CartSummary.tsx`).
+  - Dedicated Cart Page route (`app/cart/page.tsx`).
+  - Dedicated Wishlist Page route (`app/wishlist/page.tsx`).
+  - Guest to Authenticated user Cart Merging (`cartService.mergeCart()`).
 
 ---
 
