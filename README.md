@@ -20,32 +20,30 @@ This frontend is designed to consume the **Laravel 12 REST API Backend** running
   - Hierarchical Category API Service (`services/categoryService.ts`).
   - Brand API Service (`services/brandService.ts`).
   - Attribute API Service (`services/attributeService.ts`).
-  - TanStack Query hooks (`useCategories`, `useCategoryBySlug`, `useBrands`, `useBrandBySlug`, `useAttributes`).
   - Dynamic Mega Menu (`components/MegaMenu.tsx`) with multilingual name resolution (`en`, `hi`, `mr`).
-  - Accessible Breadcrumbs (`components/Breadcrumbs.tsx`).
-  - Brand landing page (`app/brand/[slug]/page.tsx`).
-  - Category catalog page (`app/category/[id]/page.tsx`).
 
 - **Module 3 (Product Engine & Search Experience)**:
   - Product API Service (`services/productService.ts`).
   - Search API Service (`services/searchService.ts`).
-  - Recommendation API Service (`services/recommendationService.ts`).
-  - Product Gallery component (`components/ProductGallery.tsx`).
-  - Product Details Info panel (`components/ProductDetailsInfo.tsx`).
-  - Grid & List view skeletons (`components/ProductGridSkeleton.tsx`).
-  - Recently Viewed Products section (`components/RecentlyViewedSection.tsx`).
   - Product Details Page route (`app/product/[slug]/page.tsx`).
   - Advanced Search Results Page route (`app/search/page.tsx`).
 
 - **Module 4 (Shopping Cart & Wishlist)**:
   - Cart API Service (`services/cartService.ts`).
   - Wishlist API Service (`services/wishlistService.ts`).
-  - TanStack Query hooks (`useCartQuery`, `useAddToCartMutation`, `useUpdateCartItemMutation`, `useRemoveCartItemMutation`, `useClearCartMutation`, `useMergeCartMutation`, `useWishlistQuery`, `useToggleWishlistMutation`, `useRemoveWishlistMutation`).
-  - Cart Item Card (`components/CartItemCard.tsx`).
-  - Order Summary breakdown (`components/CartSummary.tsx`).
   - Dedicated Cart Page route (`app/cart/page.tsx`).
   - Dedicated Wishlist Page route (`app/wishlist/page.tsx`).
-  - Guest to Authenticated user Cart Merging (`cartService.mergeCart()`).
+
+- **Module 5 (Customer Checkout & Orders)**:
+  - Saved Address API Service (`services/addressService.ts`).
+  - Checkout API Service (`services/checkoutService.ts`).
+  - Orders API Service (`services/orderService.ts`).
+  - TanStack Query hooks (`useAddressesQuery`, `useCreateAddressMutation`, `useDeleteAddressMutation`, `useCheckoutMutation`, `useOrdersQuery`, `useOrderByNumberQuery`, `useCancelOrderMutation`).
+  - Address selection card (`components/AddressCard.tsx`) & Modal form (`components/AddressModal.tsx`).
+  - Order status progress timeline (`components/OrderStatusTimeline.tsx`).
+  - Multi-step Checkout page (`app/checkout/page.tsx`).
+  - Customer Orders History page (`app/orders/page.tsx`).
+  - Single Order Details & Printable Invoice page (`app/orders/[orderNumber]/page.tsx`).
 
 ---
 
