@@ -38,12 +38,18 @@ This frontend is designed to consume the **Laravel 12 REST API Backend** running
   - Saved Address API Service (`services/addressService.ts`).
   - Checkout API Service (`services/checkoutService.ts`).
   - Orders API Service (`services/orderService.ts`).
-  - TanStack Query hooks (`useAddressesQuery`, `useCreateAddressMutation`, `useDeleteAddressMutation`, `useCheckoutMutation`, `useOrdersQuery`, `useOrderByNumberQuery`, `useCancelOrderMutation`).
-  - Address selection card (`components/AddressCard.tsx`) & Modal form (`components/AddressModal.tsx`).
-  - Order status progress timeline (`components/OrderStatusTimeline.tsx`).
   - Multi-step Checkout page (`app/checkout/page.tsx`).
   - Customer Orders History page (`app/orders/page.tsx`).
-  - Single Order Details & Printable Invoice page (`app/orders/[orderNumber]/page.tsx`).
+
+- **Module 6 (Payments & Shipping)**:
+  - Payment API Service (`services/paymentService.ts`).
+  - Razorpay SDK Client Service (`services/razorpayService.ts`).
+  - Shipping API Service (`services/shippingService.ts`).
+  - TanStack Query hooks (`usePaymentMethodsQuery`, `useCreatePaymentOrderMutation`, `useVerifyPaymentMutation`, `useShippingMethodsQuery`, `useCalculateShippingCostMutation`, `useShipmentTrackingQuery`).
+  - Modular Payment Selector (`components/PaymentSelector.tsx`).
+  - Shipping Delivery Option Selector (`components/ShippingMethodSelector.tsx`).
+  - Courier Shipment Tracking Card (`components/ShipmentTrackingCard.tsx`).
+  - Real-time Payment Status Modal (`components/PaymentStatusModal.tsx`).
 
 ---
 

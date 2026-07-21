@@ -3,9 +3,10 @@
 import React from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { useOrderByNumberQuery, useCancelOrderMutation } from '../../../hooks/useOrders';
+import { useOrderByNumberQuery, useCancelOrderMutation, useOrderShipmentQuery } from '../../../hooks/useOrders';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { OrderStatusTimeline } from '../../../components/OrderStatusTimeline';
+import { ShipmentTrackingCard } from '../../../components/ShipmentTrackingCard';
 import { OrderSkeleton } from '../../../components/OrderSkeleton';
 import {
   Printer,
@@ -23,6 +24,7 @@ export default function OrderDetailPage() {
   const orderNumber = typeof params?.orderNumber === 'string' ? params.orderNumber : '';
 
   const { data: order, isLoading, isError } = useOrderByNumberQuery(orderNumber);
+  const { data: shipment } = useOrderShipmentQuery(orderNumber, !!order);
   const cancelMutation = useCancelOrderMutation();
 
   if (isLoading) {
@@ -120,6 +122,8 @@ export default function OrderDetailPage() {
         </h3>
         <OrderStatusTimeline status={order.status} />
       </div>
+
+      <ShipmentTrackingCard tracking={shipment} />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div className="lg:col-span-8 bg-card border border-border/40 rounded-3xl p-6 shadow-sm space-y-6">

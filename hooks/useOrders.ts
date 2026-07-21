@@ -29,10 +29,10 @@ export function useCancelOrderMutation() {
   });
 }
 
-export function useOrderShipmentQuery(orderNumber: string) {
+export function useOrderShipmentQuery(orderNumber: string, enabled = true) {
   return useQuery({
     queryKey: ['order', orderNumber, 'shipment'],
     queryFn: () => orderService.getOrderShipment(orderNumber),
-    enabled: !!orderNumber,
+    enabled: !!orderNumber && enabled,
   });
 }

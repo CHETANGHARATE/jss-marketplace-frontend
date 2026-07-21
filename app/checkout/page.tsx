@@ -6,24 +6,47 @@ import Link from 'next/link';
 import { useCartWishlist } from '../../contexts/CartWishlistContext';
 import { useAddressesQuery } from '../../hooks/useAddress';
 import { useCheckoutMutation } from '../../hooks/useCheckout';
+import { useCreatePaymentOrderMutation, useVerifyPaymentMutation } from '../../hooks/usePayment';
+import { razorpayService } from '../../services/razorpayService';
 import { Breadcrumbs } from '../../components/Breadcrumbs';
 import { AddressCard } from '../../components/AddressCard';
 import { AddressModal } from '../../components/AddressModal';
+import { PaymentSelector } from '../../components/PaymentSelector';
+import { ShippingMethodSelector } from '../../components/ShippingMethodSelector';
+import { PaymentStatusModal } from '../../components/PaymentStatusModal';
 import { CartSummary } from '../../components/CartSummary';
-import { ApiAddress } from '../../types/api';
-import { ShoppingBag, Plus, CreditCard, ShieldCheck, Sparkles, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ApiShippingMethod } from '../../services/shippingService';
+import { ShoppingBag, Plus, Sparkles, ArrowLeft, CheckCircle2 } from 'lucide-react';
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart, cartTotal, cartItemCount, clearCart } = useCartWishlist();
   const { data: addresses = [], isLoading: isAddressesLoading } = useAddressesQuery();
+
   const checkoutMutation = useCheckoutMutation();
+  const createPaymentOrderMutation = useCreatePaymentOrderMutation();
+  const verifyPaymentMutation = useVerifyPaymentMutation();
 
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<'razorpay' | 'stripe' | 'cod'>('razorpay');
+  const [paymentProvider, setPaymentProvider] = useState<'razorpay' | 'stripe' | 'cod' | 'bank_transfer'>('razorpay');
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState<ApiShippingMethod>({
+    id: 1,
+    code: 'standard',
+    name: 'Standard Surface Delivery',
+    cost: 99,
+    estimated_days: '3-5 Days',
+    is_free_eligible: true,
+  });
+
   const [isAddressModalOpen, setIsAddressModalOpen] = useState<boolean>(false);
   const [isOrderPlaced, setIsOrderPlaced] = useState<boolean>(false);
   const [placedOrderNumber, setPlacedOrderNumber] = useState<string>('');
+
+  const [paymentModalState, setPaymentModalState] = useState<{
+    isOpen: boolean;
+    status: 'processing' | 'success' | 'failed';
+    errorMessage?: string;
+  }>({ isOpen: false, status: 'processing' });
 
   React.useEffect(() => {
     if (addresses.length > 0 && !selectedAddressId) {
@@ -61,9 +84,9 @@ export default function CheckoutPage() {
           <CheckCircle2 className="w-10 h-10" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-3xl font-extrabold text-foreground">Order Placed Successfully!</h2>
+          <h2 className="text-3xl font-extrabold text-foreground">Order & Payment Confirmed!</h2>
           <p className="text-sm text-foreground/60">
-            Thank you for your order. Your unique order reference number is:
+            Thank you for your purchase. Your unique order reference number is:
           </p>
           <span className="inline-block px-4 py-1.5 bg-primary/10 text-primary font-mono font-bold text-lg rounded-xl">
             {placedOrderNumber}
@@ -75,7 +98,7 @@ export default function CheckoutPage() {
             href={`/orders/${placedOrderNumber}`}
             className="w-full sm:w-auto px-6 py-3 bg-primary text-primary-foreground font-bold rounded-2xl shadow-sm hover:bg-primary/90 transition-all text-center"
           >
-            View Order Status & Details
+            View Order Status & Tracking
           </Link>
           <Link
             href="/orders"
@@ -97,26 +120,99 @@ export default function CheckoutPage() {
     checkoutMutation.mutate(
       {
         shipping_address_id: selectedAddressId,
-        payment_method: paymentMethod,
+        payment_method: paymentProvider === 'bank_transfer' ? 'cod' : paymentProvider,
       },
       {
         onSuccess: (order) => {
-          clearCart();
-          setPlacedOrderNumber(order.order_number);
-          setIsOrderPlaced(true);
+          if (paymentProvider === 'razorpay') {
+            setPaymentModalState({ isOpen: true, status: 'processing' });
+
+            createPaymentOrderMutation.mutate(
+              { order_id: order.id, gateway: 'razorpay' },
+              {
+                onSuccess: async (razorpayData) => {
+                  try {
+                    await razorpayService.openCheckout({
+                      key: razorpayData.key || 'rzp_test_placeholder',
+                      amount: razorpayData.amount,
+                      currency: razorpayData.currency || 'INR',
+                      name: 'JSS Marketplace',
+                      description: `Order #${order.order_number}`,
+                      order_id: razorpayData.gateway_order_id,
+                      handler: (response) => {
+                        verifyPaymentMutation.mutate(
+                          {
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_signature: response.razorpay_signature,
+                          },
+                          {
+                            onSuccess: () => {
+                              clearCart();
+                              setPaymentModalState({ isOpen: false, status: 'success' });
+                              setPlacedOrderNumber(order.order_number);
+                              setIsOrderPlaced(true);
+                            },
+                            onError: () => {
+                              setPaymentModalState({
+                                isOpen: true,
+                                status: 'failed',
+                                errorMessage: 'Payment verification failed. Please contact support.',
+                              });
+                            },
+                          }
+                        );
+                      },
+                      modal: {
+                        ondismiss: () => {
+                          setPaymentModalState({
+                            isOpen: true,
+                            status: 'failed',
+                            errorMessage: 'Payment window was closed before completion.',
+                          });
+                        },
+                      },
+                    });
+                  } catch (err: any) {
+                    setPaymentModalState({
+                      isOpen: true,
+                      status: 'failed',
+                      errorMessage: err.message,
+                    });
+                  }
+                },
+                onError: () => {
+                  setPaymentModalState({
+                    isOpen: true,
+                    status: 'failed',
+                    errorMessage: 'Failed to initialize payment gateway order.',
+                  });
+                },
+              }
+            );
+          } else {
+            clearCart();
+            setPlacedOrderNumber(order.order_number);
+            setIsOrderPlaced(true);
+          }
         },
         onError: (err: any) => {
-          alert(err.message || 'Failed to place order. Please try again.');
+          alert(err.message || 'Failed to process checkout.');
         },
       }
     );
   };
 
+  const calculatedShippingFee =
+    selectedShippingMethod.is_free_eligible && cartTotal > 1000 && selectedShippingMethod.code === 'standard'
+      ? 0
+      : selectedShippingMethod.cost;
+
   return (
     <div className="space-y-8">
       <Breadcrumbs items={[{ label: 'Checkout' }]} />
 
-      <h1 className="text-3xl font-extrabold text-foreground tracking-tight">Checkout & Place Order</h1>
+      <h1 className="text-3xl font-extrabold text-foreground tracking-tight">Checkout & Order Fulfillment</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div className="lg:col-span-8 space-y-8">
@@ -162,54 +258,23 @@ export default function CheckoutPage() {
 
           <section className="bg-card border border-border/40 rounded-3xl p-6 shadow-sm space-y-4">
             <h3 className="text-lg font-bold text-foreground pb-3 border-b border-border/40">
-              2. Select Payment Method
+              2. Shipping & Delivery Option
             </h3>
+            <ShippingMethodSelector
+              selectedMethodId={selectedShippingMethod.id}
+              onSelect={setSelectedShippingMethod}
+              subtotal={cartTotal}
+            />
+          </section>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div
-                onClick={() => setPaymentMethod('razorpay')}
-                className={`p-4 rounded-2xl border cursor-pointer space-y-2 transition-all ${
-                  paymentMethod === 'razorpay'
-                    ? 'bg-primary/5 border-primary ring-2 ring-primary/20'
-                    : 'bg-card border-border/40 hover:border-primary/40'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <CreditCard className="w-5 h-5 text-primary" />
-                  <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                    Recommended
-                  </span>
-                </div>
-                <span className="font-bold text-xs text-foreground block">Razorpay Gateway</span>
-                <span className="text-[11px] text-foreground/60 block">UPI, Cards, Netbanking</span>
-              </div>
-
-              <div
-                onClick={() => setPaymentMethod('stripe')}
-                className={`p-4 rounded-2xl border cursor-pointer space-y-2 transition-all ${
-                  paymentMethod === 'stripe'
-                    ? 'bg-primary/5 border-primary ring-2 ring-primary/20'
-                    : 'bg-card border-border/40 hover:border-primary/40'
-                }`}
-              >
-                <CreditCard className="w-5 h-5 text-indigo-500" />
-                <span className="font-bold text-xs text-foreground block">Stripe Global</span>
-                <span className="text-[11px] text-foreground/60 block">International Cards</span>
-              </div>
-
-              <div
-                onClick={() => setPaymentMethod('cod')}
-                className={`p-4 rounded-2xl border cursor-pointer space-y-2 transition-all ${
-                  paymentMethod === 'cod'
-                    ? 'bg-primary/5 border-primary ring-2 ring-primary/20'
-                    : 'bg-card border-border/40 hover:border-primary/40'
-                }`}
-              >
-                <ShieldCheck className="w-5 h-5 text-emerald-500" />
-                <span className="font-bold text-xs text-foreground block">Cash on Delivery</span>
-                <span className="text-[11px] text-foreground/60 block">Pay upon delivery</span>
-              </div>
-            </div>
+          <section className="bg-card border border-border/40 rounded-3xl p-6 shadow-sm space-y-4">
+            <h3 className="text-lg font-bold text-foreground pb-3 border-b border-border/40">
+              3. Payment Provider & Option
+            </h3>
+            <PaymentSelector
+              selectedProvider={paymentProvider}
+              onSelect={setPaymentProvider}
+            />
           </section>
 
           <button
@@ -220,22 +285,37 @@ export default function CheckoutPage() {
             {checkoutMutation.isPending ? (
               <>
                 <Sparkles className="w-5 h-5 animate-spin" />
-                <span>Processing Order & Reserving Stock...</span>
+                <span>Creating Order & Initializing Payment...</span>
               </>
             ) : (
-              <span>Confirm & Place Order &rarr;</span>
+              <span>Confirm & Complete Purchase &rarr;</span>
             )}
           </button>
         </div>
 
         <div className="lg:col-span-4">
-          <CartSummary subtotal={cartTotal} itemCount={cartItemCount} />
+          <CartSummary
+            subtotal={cartTotal}
+            shippingFee={calculatedShippingFee}
+            itemCount={cartItemCount}
+          />
         </div>
       </div>
 
       <AddressModal
         isOpen={isAddressModalOpen}
         onClose={() => setIsAddressModalOpen(false)}
+      />
+
+      <PaymentStatusModal
+        isOpen={paymentModalState.isOpen}
+        status={paymentModalState.status}
+        errorMessage={paymentModalState.errorMessage}
+        onRetry={() => {
+          setPaymentModalState({ isOpen: false, status: 'processing' });
+          handlePlaceOrder();
+        }}
+        onClose={() => setPaymentModalState({ ...paymentModalState, isOpen: false })}
       />
     </div>
   );
