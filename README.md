@@ -36,16 +36,21 @@ This frontend is designed to consume the **Laravel 12 REST API Backend** running
   - Customer Profile, Notifications, Reviews, Support Tickets, Returns & Refunds (`app/account/*`).
 
 - **Module 8 (Vendor Portal)**:
-  - Vendor REST API Service (`services/vendorService.ts`).
-  - TanStack Query hooks (`useVendorDashboardQuery`, `useVendorProductsQuery`, `useCreateVendorProductMutation`, `useDeleteVendorProductMutation`, `useVendorInventoryQuery`, `useUpdateVendorInventoryMutation`, `useVendorOrdersQuery`, `useUpdateVendorOrderStatusMutation`, `useVendorWalletQuery`, `useVendorSettlementsQuery`, `useVendorAnalyticsQuery`, `useVendorStoreSettingsQuery`, `useUpdateVendorStoreSettingsMutation`).
-  - Dedicated Vendor Navigation Sidebar (`components/VendorSidebar.tsx`).
-  - Seller Store Overview Dashboard (`app/vendor/page.tsx`).
-  - Vendor Product Catalog Management & Creation (`app/vendor/products/page.tsx`).
-  - Real-time Inventory & Stock Quantity Control (`app/vendor/inventory/page.tsx`).
-  - Vendor Orders & Fulfillment Status Updates (`app/vendor/orders/page.tsx`).
-  - Vendor Wallet & Settlement Payout Ledger (`app/vendor/wallet/page.tsx`).
-  - Sales Analytics & Business Intelligence (`app/vendor/analytics/page.tsx`).
-  - Vendor Storefront Profile & Settings (`app/vendor/settings/page.tsx`).
+  - Seller Store Dashboard, Product Catalog, Inventory, Vendor Orders, Wallet, Analytics, and Settings (`app/vendor/*`).
+
+- **Module 9 (Admin Dashboard)**:
+  - Admin REST API Service (`services/adminService.ts`).
+  - TanStack Query hooks (`useAdminDashboardQuery`, `useAdminCustomersQuery`, `useToggleCustomerStatusMutation`, `useAdminVendorsQuery`, `useApproveVendorMutation`, `useSuspendVendorMutation`, `useAdminProductsQuery`, `useApproveProductMutation`, `useRejectProductMutation`, `useToggleFeatureProductMutation`, `useAdminOrdersQuery`, `useUpdateAdminOrderStatusMutation`, `useAdminPaymentsQuery`, `useAdminShipmentsQuery`, `useAdminReportsQuery`, `useAdminSettingsQuery`, `useUpdateAdminSettingsMutation`).
+  - Dedicated Admin Control Navigation Sidebar (`components/AdminSidebar.tsx`).
+  - System Administrator Dashboard Overview (`app/admin/page.tsx`).
+  - Customer Account Directory & Status Controls (`app/admin/users/page.tsx`).
+  - Multi-Vendor Merchant Control & Approvals (`app/admin/vendors/page.tsx`).
+  - Product Catalog Moderation & Featuring (`app/admin/products/page.tsx`).
+  - Platform-wide Orders Audit & Status Overrides (`app/admin/orders/page.tsx`).
+  - Payment Gateway Audit Logs (`app/admin/payments/page.tsx`).
+  - Platform Logistics & Courier Dispatch (`app/admin/shipping/page.tsx`).
+  - Executive Reports & Intelligence (`app/admin/reports/page.tsx`).
+  - Global Marketplace Settings & Maintenance Mode (`app/admin/settings/page.tsx`).
 
 ---
 
