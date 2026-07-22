@@ -35,7 +35,7 @@ This document provides a comprehensive technical overview of the JSS Marketplace
                             │
 ┌───────────────────────────▼─────────────────────────────┐
 │                 Laravel REST API                        │
-│               http://localhost:8000/api/v1              │
+│               https://api.jsssolutions.in/api/v1        │
 └─────────────────────────────────────────────────────────┘
 ```
 

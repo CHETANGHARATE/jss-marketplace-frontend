@@ -6,7 +6,7 @@ Enterprise-grade multi-vendor eCommerce frontend for JSS Solutions Marketplace. 
 
 ## Backend API Integration & Architecture
 
-This frontend is designed to consume the **Laravel 12 REST API Backend** running at `http://localhost:8000/api/v1`.
+This frontend is designed to consume the **Laravel 12 REST API Backend** running at `https://api.jsssolutions.in/api/v1`.
 
 ### Completed Master Roadmap (All 13 Modules Released):
 
