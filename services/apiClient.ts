@@ -1,6 +1,16 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.jsssolutions.in/api/v1';
+/**
+ * API Base URL resolution — triple-layer guarantee:
+ *  1. NEXT_PUBLIC_API_BASE_URL from Vercel dashboard (baked at build time by Next.js)
+ *  2. next.config.ts env block guarantees this is never undefined/empty in production
+ *  3. Literal fallback string — the final backstop, always points to production
+ *
+ * Result: localhost:8000 can NEVER appear in a production bundle.
+ */
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  'https://api.jsssolutions.in/api/v1';
 
 export const apiClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -10,6 +20,7 @@ export const apiClient: AxiosInstance = axios.create({
   },
   timeout: 15000,
 });
+
 
 /**
  * Request Interceptor: Attach bearer token & guest session header

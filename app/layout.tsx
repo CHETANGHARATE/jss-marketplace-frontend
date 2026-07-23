@@ -10,37 +10,59 @@ import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { SkipLink } from '../components/SkipLink';
 import { seoService } from '../services/seoService';
-import { envConfig } from '../config/env';
+
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata: Metadata = {
-  title: {
-    default: 'JSS Marketplace - Enterprise Multi-Vendor eCommerce Platform',
-    template: '%s | JSS Marketplace',
-  },
-  description: 'Shop millions of products from verified multi-vendor merchants on JSS Marketplace.',
-  keywords: ['eCommerce', 'Multi-vendor', 'Marketplace', 'Online Shopping', 'JSS Marketplace'],
-  authors: [{ name: 'JSS Solutions' }],
-  metadataBase: new URL(envConfig.appUrl),
-  openGraph: {
-    title: 'JSS Marketplace - Enterprise Multi-Vendor eCommerce Platform',
+/**
+ * Resolves the canonical site URL with a multi-level fallback:
+ *  1. NEXT_PUBLIC_APP_URL  (Vercel dashboard or next.config.ts env block)
+ *  2. VERCEL_URL           (auto-injected by Vercel for every deployment)
+ *  3. Hard-coded production domain (ultimate safe fallback)
+ *
+ * VERCEL_URL does NOT include a protocol, so we prepend https://.
+ */
+function getSiteUrl(): string {
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return 'https://jss-marketplace.vercel.app';
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const siteUrl = getSiteUrl();
+  return {
+    title: {
+      default: 'JSS Marketplace - Enterprise Multi-Vendor eCommerce Platform',
+      template: '%s | JSS Marketplace',
+    },
     description: 'Shop millions of products from verified multi-vendor merchants on JSS Marketplace.',
-    url: envConfig.appUrl,
-    siteName: 'JSS Marketplace',
-    locale: 'en_US',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'JSS Marketplace',
-    description: 'Shop millions of products from verified multi-vendor merchants.',
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+    keywords: ['eCommerce', 'Multi-vendor', 'Marketplace', 'Online Shopping', 'JSS Marketplace'],
+    authors: [{ name: 'JSS Solutions' }],
+    metadataBase: new URL(siteUrl),
+    openGraph: {
+      title: 'JSS Marketplace - Enterprise Multi-Vendor eCommerce Platform',
+      description: 'Shop millions of products from verified multi-vendor merchants on JSS Marketplace.',
+      url: siteUrl,
+      siteName: 'JSS Marketplace',
+      locale: 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'JSS Marketplace',
+      description: 'Shop millions of products from verified multi-vendor merchants.',
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
+
 
 export default function RootLayout({
   children,
