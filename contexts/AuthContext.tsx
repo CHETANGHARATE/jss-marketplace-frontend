@@ -9,8 +9,8 @@ interface AuthContextType {
   token: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (payload: LoginPayload) => Promise<void>;
-  register: (payload: RegisterPayload) => Promise<void>;
+  login: (payload: LoginPayload) => Promise<ApiUser>;
+  register: (payload: RegisterPayload) => Promise<ApiUser>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -44,25 +44,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const login = async (payload: LoginPayload) => {
+  const login = async (payload: LoginPayload): Promise<ApiUser> => {
     setIsLoading(true);
     try {
       const data = await authService.login(payload);
       setToken(data.token);
       setUser(data.user);
       localStorage.setItem('auth_token', data.token);
+      return data.user;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const register = async (payload: RegisterPayload) => {
+  const register = async (payload: RegisterPayload): Promise<ApiUser> => {
     setIsLoading(true);
     try {
       const data = await authService.register(payload);
       setToken(data.token);
       setUser(data.user);
       localStorage.setItem('auth_token', data.token);
+      return data.user;
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +83,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const refreshUser = async () => {
-    if (!token) return;
+    const activeToken = token || localStorage.getItem('auth_token');
+    if (!activeToken) return;
     try {
       const userData = await authService.getProfile();
       setUser(userData);
