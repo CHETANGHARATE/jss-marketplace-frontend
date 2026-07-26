@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Sparkles, Clock, Star, ShieldCheck, CheckCircle2, Award, Zap, Truck, Lock, BadgeCheck, Mail, Send } from 'lucide-react';
+import { Sparkles, Clock, Star, ShieldCheck, CheckCircle2, Award, Zap, Truck, Lock, BadgeCheck, Mail, Send, Store, ArrowRight, TrendingUp } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { BannerSlider } from '../components/BannerSlider';
 import { CategorySection } from '../components/CategorySection';
@@ -142,15 +142,15 @@ export default function HomePage() {
   };
 
   return (
-    <div className="space-y-16">
+    <div className="space-y-20 lg:space-y-24">
       
-      {/* 3. Hero Banner Slider */}
+      {/* 1. Hero Banner Slider */}
       <BannerSlider />
 
-      {/* 4 & 5. Popular Categories Section (Top 10 + View All Expansion) */}
+      {/* 2. Popular Categories Section (Top 10 + View All Expansion) */}
       {categories.length > 0 && <CategorySection categories={categories} />}
 
-      {/* 6. Featured Products Showcase */}
+      {/* 3. Featured Categories & Products Showcase */}
       {categories.length > 0 && (
         <FeaturedCategories
           categories={categories}
@@ -158,37 +158,49 @@ export default function HomePage() {
         />
       )}
 
-      {/* 7. Today's Deals & Trending Products */}
-      <section id="deals" className="bg-card border border-border-custom rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs scroll-mt-24">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-custom">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-rose-500 text-white flex items-center justify-center rounded-xl font-bold">
-              <Clock size={20} />
+      {/* 4. Today's Deals & Flash Sales */}
+      <section id="deals" className="bg-card border border-border-custom/80 rounded-3xl p-6 sm:p-10 space-y-8 shadow-sm scroll-mt-24">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border-custom/80">
+          <div className="flex items-center gap-3.5">
+            <div className="h-12 w-12 bg-rose-500 text-white flex items-center justify-center rounded-2xl font-bold shadow-xs shrink-0">
+              <Clock size={24} />
             </div>
             <div>
-              <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tight flex items-center gap-2">
-                Today's Deals & Flash Sales
+              <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-rose-500 uppercase tracking-widest bg-rose-500/10 px-2.5 py-0.5 rounded-full mb-1">
+                <span>Limited Time Offer</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight flex items-center gap-2">
+                Today's Flash Sales
               </h2>
-              <p className="text-xs text-muted-custom mt-0.5 font-medium">Exclusive public marketplace discounts. Deal ends in:</p>
+              <p className="text-xs text-muted-custom mt-0.5 font-medium">Verified marketplace discounts directly from source. Deal ends in:</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-1.5 text-foreground font-black">
-            <span className="bg-background-secondary border border-border-custom px-3 py-1.5 rounded-xl text-xs sm:text-sm font-mono">
-              {String(timeLeft.hours).padStart(2, '0')}h
-            </span>
-            <span className="text-rose-500 font-bold">:</span>
-            <span className="bg-background-secondary border border-border-custom px-3 py-1.5 rounded-xl text-xs sm:text-sm font-mono">
-              {String(timeLeft.minutes).padStart(2, '0')}m
-            </span>
-            <span className="text-rose-500 font-bold">:</span>
-            <span className="bg-background-secondary border border-border-custom px-3 py-1.5 rounded-xl text-xs sm:text-sm font-mono">
-              {String(timeLeft.seconds).padStart(2, '0')}s
-            </span>
+          <div className="flex items-center gap-2 text-foreground font-black">
+            <div className="flex flex-col items-center">
+              <span className="bg-background-secondary border border-border-custom px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-mono shadow-xs">
+                {String(timeLeft.hours).padStart(2, '0')}
+              </span>
+              <span className="text-[9px] text-muted-custom font-semibold uppercase mt-1">Hours</span>
+            </div>
+            <span className="text-rose-500 font-black text-lg mb-4">:</span>
+            <div className="flex flex-col items-center">
+              <span className="bg-background-secondary border border-border-custom px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-mono shadow-xs">
+                {String(timeLeft.minutes).padStart(2, '0')}
+              </span>
+              <span className="text-[9px] text-muted-custom font-semibold uppercase mt-1">Mins</span>
+            </div>
+            <span className="text-rose-500 font-black text-lg mb-4">:</span>
+            <div className="flex flex-col items-center">
+              <span className="bg-background-secondary border border-border-custom px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-mono shadow-xs">
+                {String(timeLeft.seconds).padStart(2, '0')}
+              </span>
+              <span className="text-[9px] text-muted-custom font-semibold uppercase mt-1">Secs</span>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {trendingProducts.map((prod) => (
             <ProductCard
               key={`flash_${prod.id}`}
@@ -199,22 +211,24 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Trending Products Grid */}
-      <section className="space-y-6">
-        <div>
-          <div className="flex items-center gap-1.5 text-xs font-bold text-primary uppercase tracking-wider">
-            <Zap size={14} />
-            <span>Buyer Choice</span>
+      {/* 5. Trending Products Grid */}
+      <section className="space-y-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-primary uppercase tracking-widest bg-primary/10 px-2.5 py-0.5 rounded-full mb-1">
+              <TrendingUp size={12} />
+              <span>Buyer Favorites</span>
+            </div>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tight mt-1">
+              Trending Products Across India
+            </h2>
+            <p className="text-xs sm:text-sm text-muted-custom mt-1 font-medium max-w-2xl">
+              Most purchased authentic items across fashion, electronics, regional faral, and certified agricultural inputs.
+            </p>
           </div>
-          <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight mt-1">
-            Trending Products Across India
-          </h2>
-          <p className="text-xs text-muted-custom mt-1 font-medium">
-            Top purchased items across fashion, electronics, regional faral, and local handicrafts.
-          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {trendingProducts.concat(newArrivals).slice(0, 4).map((prod) => (
             <ProductCard
               key={`trend_grid_${prod.id}`}
@@ -225,43 +239,45 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 8. Featured Vendors */}
-      <section className="space-y-6">
-        <div>
-          <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 uppercase tracking-wider">
-            <ShieldCheck size={14} />
-            <span>GSTIN Verified Partners</span>
+      {/* 6. Featured Vendors */}
+      <section className="space-y-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-emerald-600 uppercase tracking-widest bg-emerald-500/10 px-2.5 py-0.5 rounded-full mb-1">
+              <ShieldCheck size={12} />
+              <span>GSTIN Verified Partners</span>
+            </div>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tight mt-1">
+              Featured Marketplace Vendors
+            </h2>
+            <p className="text-xs sm:text-sm text-muted-custom mt-1 font-medium max-w-2xl">
+              Buy directly from compliance-verified manufacturers, farmers, and official distributors across India.
+            </p>
           </div>
-          <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight mt-1">
-            Featured Marketplace Vendors
-          </h2>
-          <p className="text-xs text-muted-custom mt-1 font-medium">
-            Buy directly from compliance-verified manufacturers, farmers, and official distributors.
-          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {featuredSellers.map((seller) => (
-            <div key={seller.id} className="bg-card border border-border-custom rounded-3xl p-5 shadow-xs flex flex-col justify-between space-y-4">
-              <div>
-                <div className="flex items-center gap-2.5">
-                  <div className="h-10 w-10 bg-primary/10 text-primary border border-primary/20 flex items-center justify-center rounded-xl font-bold text-xs shrink-0">
+            <div key={seller.id} className="group bg-card border border-border-custom/80 hover:border-primary/50 rounded-3xl p-6 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between space-y-5">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 bg-primary/10 text-primary border border-primary/20 flex items-center justify-center rounded-2xl font-black text-sm shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
                     {seller.name.substring(0, 2).toUpperCase()}
                   </div>
                   <div className="min-w-0">
-                    <h4 className="font-bold text-xs text-foreground truncate">{seller.name}</h4>
-                    <span className="text-[10px] text-muted-custom block truncate">{seller.location}</span>
+                    <h4 className="font-bold text-sm text-foreground truncate group-hover:text-primary transition-colors">{seller.name}</h4>
+                    <span className="text-[11px] text-muted-custom block truncate">{seller.location}</span>
                   </div>
                 </div>
-                <p className="text-xs text-muted-custom mt-3 line-clamp-3 leading-relaxed font-normal">
+                <p className="text-xs text-muted-custom line-clamp-3 leading-relaxed font-normal">
                   {seller.description}
                 </p>
               </div>
-              <div className="flex justify-between items-center pt-3 border-t border-border-custom text-[10px] font-bold">
-                <span className="text-amber-500 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md">
+              <div className="flex justify-between items-center pt-4 border-t border-border-custom/60 text-xs font-bold">
+                <span className="text-amber-500 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-xl">
                   ★ {seller.rating} Rating
                 </span>
-                <span className="text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-md">
+                <span className="text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-xl">
                   Since {seller.joinedDate}
                 </span>
               </div>
@@ -270,57 +286,57 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 9. Why Choose JSS Marketplace (4 Feature Cards) */}
-      <section className="bg-card border border-border-custom rounded-3xl p-8 space-y-6 shadow-xs">
-        <div className="text-center space-y-1.5 max-w-xl mx-auto">
-          <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-primary uppercase tracking-wider">
-            <Award size={14} />
+      {/* 7. Why Choose JSS Marketplace (4 Feature Cards) */}
+      <section className="bg-card border border-border-custom/80 rounded-3xl p-8 sm:p-12 space-y-8 shadow-xs">
+        <div className="text-center space-y-2 max-w-xl mx-auto">
+          <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-primary uppercase tracking-widest bg-primary/10 px-3 py-1 rounded-full">
+            <Award size={12} />
             <span>Marketplace Excellence</span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tight">
             Why Choose JSS Marketplace?
           </h2>
-          <p className="text-xs text-muted-custom font-medium">
+          <p className="text-xs sm:text-sm text-muted-custom font-medium">
             India's most trusted direct-from-source multi-vendor platform for retail & wholesale buyers.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
-          <div className="p-5 bg-background-secondary border border-border-custom rounded-2xl space-y-2 text-center">
-            <div className="h-12 w-12 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto mb-3">
-              <Lock size={24} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-2">
+          <div className="p-6 bg-background-secondary/80 border border-border-custom/70 hover:border-primary/40 rounded-2xl space-y-3 text-center transition-all hover:-translate-y-1 shadow-xs">
+            <div className="h-14 w-14 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2">
+              <Lock size={26} />
             </div>
-            <h4 className="font-bold text-sm text-foreground">Secure Payments</h4>
+            <h4 className="font-bold text-base text-foreground">Secure Payments</h4>
             <p className="text-xs text-muted-custom leading-relaxed">
               Your payments are safely held in escrow until your order is delivered & verified.
             </p>
           </div>
 
-          <div className="p-5 bg-background-secondary border border-border-custom rounded-2xl space-y-2 text-center">
-            <div className="h-12 w-12 bg-amber-500/10 text-amber-600 border border-amber-500/20 rounded-2xl flex items-center justify-center mx-auto mb-3">
-              <Truck size={24} />
+          <div className="p-6 bg-background-secondary/80 border border-border-custom/70 hover:border-primary/40 rounded-2xl space-y-3 text-center transition-all hover:-translate-y-1 shadow-xs">
+            <div className="h-14 w-14 bg-amber-500/10 text-amber-600 border border-amber-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2">
+              <Truck size={26} />
             </div>
-            <h4 className="font-bold text-sm text-foreground">Fast Delivery</h4>
+            <h4 className="font-bold text-base text-foreground">Fast Delivery</h4>
             <p className="text-xs text-muted-custom leading-relaxed">
               Real-time shipment tracking with express dispatch across 25,000+ PIN codes in India.
             </p>
           </div>
 
-          <div className="p-5 bg-background-secondary border border-border-custom rounded-2xl space-y-2 text-center">
-            <div className="h-12 w-12 bg-indigo-500/10 text-indigo-600 border border-indigo-500/20 rounded-2xl flex items-center justify-center mx-auto mb-3">
-              <BadgeCheck size={24} />
+          <div className="p-6 bg-background-secondary/80 border border-border-custom/70 hover:border-primary/40 rounded-2xl space-y-3 text-center transition-all hover:-translate-y-1 shadow-xs">
+            <div className="h-14 w-14 bg-indigo-500/10 text-indigo-600 border border-indigo-500/20 rounded-2xl flex items-center justify-center mx-auto mb-2">
+              <BadgeCheck size={26} />
             </div>
-            <h4 className="font-bold text-sm text-foreground">Trusted Sellers</h4>
+            <h4 className="font-bold text-base text-foreground">Trusted Sellers</h4>
             <p className="text-xs text-muted-custom leading-relaxed">
               Buy directly from GSTIN & compliance-verified manufacturers, farmers, and distributors.
             </p>
           </div>
 
-          <div className="p-5 bg-background-secondary border border-border-custom rounded-2xl space-y-2 text-center">
-            <div className="h-12 w-12 bg-primary/10 text-primary border border-primary/20 rounded-2xl flex items-center justify-center mx-auto mb-3">
-              <CheckCircle2 size={24} />
+          <div className="p-6 bg-background-secondary/80 border border-border-custom/70 hover:border-primary/40 rounded-2xl space-y-3 text-center transition-all hover:-translate-y-1 shadow-xs">
+            <div className="h-14 w-14 bg-primary/10 text-primary border border-primary/20 rounded-2xl flex items-center justify-center mx-auto mb-2">
+              <CheckCircle2 size={26} />
             </div>
-            <h4 className="font-bold text-sm text-foreground">Quality Products</h4>
+            <h4 className="font-bold text-base text-foreground">Quality Products</h4>
             <p className="text-xs text-muted-custom leading-relaxed">
               Every item is inspected and dispatched directly from source with 100% authenticity.
             </p>
@@ -328,34 +344,34 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 10. Newsletter */}
-      <section className="bg-card border border-border-custom rounded-3xl p-8 space-y-4 shadow-xs">
-        <div className="max-w-2xl mx-auto text-center space-y-2">
-          <div className="flex items-center justify-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
-            <Mail size={18} />
+      {/* 8. Newsletter Subscription */}
+      <section className="bg-card border border-border-custom/80 rounded-3xl p-8 sm:p-12 space-y-6 shadow-xs">
+        <div className="max-w-2xl mx-auto text-center space-y-3">
+          <div className="inline-flex items-center justify-center gap-2 text-primary font-bold text-xs uppercase tracking-widest bg-primary/10 px-3 py-1 rounded-full">
+            <Mail size={14} />
             <span>Marketplace Newsletter</span>
           </div>
-          <h2 className="text-2xl font-black text-foreground tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
             Subscribe For Weekly Flash Sales & Insider Deals
           </h2>
-          <p className="text-xs text-muted-custom font-medium">
+          <p className="text-xs sm:text-sm text-muted-custom font-medium leading-relaxed">
             Get exclusive multi-vendor coupons, new category alerts, and festival discount notifications directly in your inbox.
           </p>
-          <form onSubmit={handleSubscribe} className="flex gap-2 max-w-md mx-auto pt-3">
+          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto pt-2">
             <input
               type="email"
               required
               placeholder="Enter your email address..."
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 bg-background-secondary text-foreground text-xs px-4 py-3 rounded-2xl border border-border-custom focus:border-primary focus:outline-none transition-colors"
+              className="flex-1 bg-background-secondary text-foreground text-xs sm:text-sm px-4 py-3.5 rounded-2xl border border-border-custom focus:border-primary focus:outline-none transition-colors"
             />
             <button
               type="submit"
-              className="bg-primary text-white font-bold text-xs uppercase px-5 py-3 rounded-2xl hover:bg-primary-hover transition-all flex items-center gap-1.5 shrink-0 shadow-sm"
+              className="bg-primary text-white font-bold text-xs sm:text-sm uppercase px-6 py-3.5 rounded-2xl hover:bg-primary-hover transition-all flex items-center justify-center gap-2 shrink-0 shadow-sm"
             >
               <span>Subscribe</span>
-              <Send size={13} />
+              <Send size={14} />
             </button>
           </form>
           {subscribed && (
@@ -367,26 +383,26 @@ export default function HomePage() {
       </section>
 
       {/* Customer Testimonials & FAQs */}
-      <section className="space-y-6 bg-background-secondary border border-border-custom p-8 rounded-3xl">
-        <div className="text-center space-y-1.5">
-          <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
+      <section className="space-y-6 bg-background-secondary/80 border border-border-custom/80 p-8 sm:p-12 rounded-3xl">
+        <div className="text-center space-y-2">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tight">
             {translate('home.testimonials')}
           </h2>
-          <p className="text-xs text-muted-custom max-w-xl mx-auto font-medium">
+          <p className="text-xs sm:text-sm text-muted-custom max-w-xl mx-auto font-medium">
             Real feedback from shoppers, retail buyers, and agricultural partners across India.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
           {mockTestimonials.map((t) => (
-            <div key={t.id} className="bg-card border border-border-custom p-5 rounded-2xl shadow-xs flex flex-col justify-between space-y-3">
+            <div key={t.id} className="bg-card border border-border-custom/80 p-6 rounded-2xl shadow-xs flex flex-col justify-between space-y-4">
               <p className="text-xs text-muted-custom italic leading-relaxed">
                 "{t.comment}"
               </p>
-              <div className="flex items-center gap-3">
-                <img src={t.image} alt={t.userName} className="h-9 w-9 rounded-full object-cover border border-border-custom shrink-0" />
+              <div className="flex items-center gap-3 pt-2 border-t border-border-custom/50">
+                <img src={t.image} alt={t.userName} className="h-10 w-10 rounded-full object-cover border border-border-custom shrink-0" />
                 <div>
                   <h4 className="font-bold text-xs text-foreground leading-none">{t.userName}</h4>
-                  <span className="text-[10px] text-muted-custom mt-0.5 block">{t.role}</span>
+                  <span className="text-[10px] text-muted-custom mt-1 block font-medium">{t.role}</span>
                 </div>
               </div>
             </div>
@@ -399,11 +415,11 @@ export default function HomePage() {
           <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
             {translate('faq.title')}
           </h2>
-          <p className="text-xs text-muted-custom leading-relaxed font-medium">
+          <p className="text-xs sm:text-sm text-muted-custom leading-relaxed font-medium">
             Got questions about public orders, vendor onboarding, or delivery coverage?
           </p>
-          <div className="p-4 bg-background-secondary border border-border-custom rounded-2xl text-xs text-muted-custom leading-relaxed">
-            Need custom B2B wholesale pricing? Reach out to our helpline at 1800-JSS-MARKET.
+          <div className="p-5 bg-background-secondary border border-border-custom/80 rounded-2xl text-xs text-muted-custom leading-relaxed">
+            Need custom B2B wholesale pricing? Reach out to our helpline at <span className="font-bold text-foreground">1800-JSS-MARKET</span>.
           </div>
         </div>
         <div className="lg:col-span-2">
