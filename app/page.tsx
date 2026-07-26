@@ -11,8 +11,7 @@ import { ProductQuickView } from '../components/ProductQuickView';
 import { PersonalizedSection } from '../components/PersonalizedSection';
 import { Accordion } from '../components/ui/Accordion';
 import { categoryService } from '../services/categoryService';
-import { getTrendingProducts, getNewArrivals, getBestSellers } from '../services/product';
-import { getFeaturedSellers } from '../services/seller';
+import { productService, mapApiProductToProduct } from '../services/productService';
 import { Product, Seller } from '../types';
 import { mockTestimonials, mockFaqs } from '../constants/mockData';
 
@@ -53,17 +52,20 @@ export default function HomePage() {
         const cats = await categoryService.getCategories();
         setCategories(cats);
 
-        const trending = await getTrendingProducts(4);
-        setTrendingProducts(trending);
+        const trending = await productService.getTrendingProducts();
+        setTrendingProducts(trending.slice(0, 4).map(mapApiProductToProduct));
 
-        const fresh = await getNewArrivals(4);
-        setNewArrivals(fresh);
+        const fresh = await productService.getProducts({ sort: 'newest', per_page: 4 });
+        setNewArrivals(fresh.data.map(mapApiProductToProduct));
 
-        const topRated = await getBestSellers(4);
-        setBestSellers(topRated);
+        const topRated = await productService.getProducts({ sort: 'best_selling', per_page: 4 });
+        setBestSellers(topRated.data.map(mapApiProductToProduct));
 
-        const sellers = await getFeaturedSellers(4);
-        setFeaturedSellers(sellers);
+        // NOTE: no public "featured vendors" endpoint exists yet in the
+        // backend-integrated system — vendorService only exposes
+        // authenticated seller-dashboard endpoints (see audit). Left empty
+        // rather than reintroducing the mock services/seller.ts dependency.
+        setFeaturedSellers([]);
       } catch (err) {
         console.error('Failed to load homepage data', err);
       }
