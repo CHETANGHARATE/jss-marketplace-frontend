@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { Sparkles, Clock, Star, ShieldCheck, CheckCircle2, Award, Zap, Truck, Lock, BadgeCheck, Mail, Send, Store, ArrowRight, TrendingUp } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { BannerSlider } from '../components/BannerSlider';
@@ -239,47 +240,74 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 6. Featured Vendors */}
+      {/* 6. Featured Marketplace Vendors (Phase 2F Vendor Experience) */}
       <section className="space-y-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border-custom/80 pb-6">
           <div>
             <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-emerald-600 uppercase tracking-widest bg-emerald-500/10 px-2.5 py-0.5 rounded-full mb-1">
               <ShieldCheck size={12} />
-              <span>GSTIN Verified Partners</span>
+              <span>GSTIN Verified Merchant Partners</span>
             </div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tight mt-1">
-              Featured Marketplace Vendors
+              Featured Verified Vendors
             </h2>
             <p className="text-xs sm:text-sm text-muted-custom mt-1 font-medium max-w-2xl">
-              Buy directly from compliance-verified manufacturers, farmers, and official distributors across India.
+              Buy directly from compliance-verified manufacturers, farmers, and official distributors with escrow protection.
             </p>
           </div>
+
+          <Link
+            href="/seller/register"
+            className="inline-flex items-center gap-2 text-xs font-black text-accent bg-accent/10 hover:bg-accent hover:text-white border border-accent/20 px-5 py-3 rounded-2xl transition-all shadow-2xs w-max"
+          >
+            <Store size={15} />
+            <span>Join as Vendor Partner</span>
+            <ArrowRight size={14} />
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {featuredSellers.map((seller) => (
-            <div key={seller.id} className="group bg-card border border-border-custom/80 hover:border-primary/50 rounded-3xl p-6 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between space-y-5">
+            <div key={seller.id} className="group bg-card border border-border-custom/80 hover:border-emerald-500/50 rounded-3xl p-6 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between space-y-5">
               <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 bg-primary/10 text-primary border border-primary/20 flex items-center justify-center rounded-2xl font-black text-sm shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
+                {/* Store Header Avatar & Verification */}
+                <div className="flex items-center gap-3.5">
+                  <div className="h-14 w-14 bg-gradient-to-br from-primary/10 to-emerald-500/10 text-primary border border-primary/20 flex items-center justify-center rounded-2xl font-black text-base shrink-0 group-hover:bg-primary group-hover:text-white transition-all shadow-2xs">
                     {seller.name.substring(0, 2).toUpperCase()}
                   </div>
-                  <div className="min-w-0">
-                    <h4 className="font-bold text-sm text-foreground truncate group-hover:text-primary transition-colors">{seller.name}</h4>
-                    <span className="text-[11px] text-muted-custom block truncate">{seller.location}</span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1">
+                      <h4 className="font-extrabold text-sm text-foreground truncate group-hover:text-primary transition-colors">{seller.name}</h4>
+                      <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
+                    </div>
+                    <span className="text-xs text-muted-custom block truncate mt-0.5">{seller.location}</span>
                   </div>
                 </div>
+
                 <p className="text-xs text-muted-custom line-clamp-3 leading-relaxed font-normal">
                   {seller.description}
                 </p>
               </div>
-              <div className="flex justify-between items-center pt-4 border-t border-border-custom/60 text-xs font-bold">
-                <span className="text-amber-500 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-xl">
-                  ★ {seller.rating} Rating
-                </span>
-                <span className="text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-xl">
-                  Since {seller.joinedDate}
-                </span>
+
+              {/* Vendor Badges & Actions */}
+              <div className="pt-4 border-t border-border-custom/60 space-y-3">
+                <div className="flex justify-between items-center text-xs font-bold">
+                  <span className="text-amber-500 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-xl">
+                    ★ {seller.rating} Rating
+                  </span>
+                  <span className="text-emerald-600 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-xl">
+                    Verified Merchant
+                  </span>
+                </div>
+
+                <Link
+                  href={`/search?seller=${encodeURIComponent(seller.name)}`}
+                  className="w-full bg-background-secondary hover:bg-primary hover:text-white text-foreground border border-border-custom/80 py-2.5 rounded-2xl text-xs font-black transition-all flex items-center justify-center gap-1.5 shadow-2xs"
+                >
+                  <Store size={14} />
+                  <span>Visit Vendor Store</span>
+                  <ArrowRight size={13} />
+                </Link>
               </div>
             </div>
           ))}
