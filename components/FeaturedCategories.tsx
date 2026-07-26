@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles, Package } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Category, Product } from '../types';
 import { productService, mapApiProductToProduct } from '../services/productService';
@@ -54,13 +54,13 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
   if (loading) {
     return (
       <div className="space-y-12">
-        {Array.from({ length: 3 }).map((_, idx) => (
+        {Array.from({ length: 2 }).map((_, idx) => (
           <div key={idx} className="space-y-4 animate-pulse">
-            <div className="h-8 bg-background-secondary rounded-lg w-1/4" />
-            <div className="h-4 bg-background-secondary rounded-lg w-1/3" />
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-4">
+            <div className="h-8 bg-background-secondary rounded-2xl w-1/4" />
+            <div className="h-4 bg-background-secondary rounded-xl w-1/3" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 pt-4">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="h-72 bg-background-secondary rounded-2xl" />
+                <div key={i} className="h-80 bg-background-secondary rounded-3xl" />
               ))}
             </div>
           </div>
@@ -70,39 +70,40 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
   }
 
   return (
-    <div className="space-y-20">
+    <div className="space-y-20 lg:space-y-24">
       {categories.map((cat) => {
         const products = featuredData[String(cat.id)] || [];
         if (products.length === 0) return null;
 
         return (
-          <section key={cat.id} className="space-y-6 scroll-mt-24 border-b border-border-custom last:border-0 pb-16 last:pb-0">
+          <section key={cat.id} className="space-y-8 scroll-mt-24 border-b border-border-custom/80 last:border-0 pb-16 last:pb-0">
             {/* Header section */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
               <div>
-                <div className="flex items-center gap-1.5 text-xs font-bold text-accent tracking-wider uppercase">
+                <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-accent uppercase tracking-widest bg-accent/10 px-2.5 py-0.5 rounded-full mb-1">
                   <Sparkles size={12} className="fill-accent" />
-                  <span>Featured Collection</span>
+                  <span>Curated Collection</span>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight mt-1">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tight mt-1">
                   {t(cat.name)}
                 </h2>
-                <p className="text-sm text-muted-custom mt-1 max-w-2xl font-medium">
+                <p className="text-xs sm:text-sm text-muted-custom mt-1 max-w-2xl font-medium">
                   {cat.description}
                 </p>
               </div>
               
               <Link
                 href={`/category/${cat.id}`}
-                className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-primary-hover hover:gap-2.5 transition-all w-max bg-primary/5 hover:bg-primary/10 border border-primary/10 px-4.5 py-2.5 rounded-2xl"
+                className="inline-flex items-center gap-2 text-xs font-black text-primary hover:text-primary-hover transition-all w-max bg-primary/10 hover:bg-primary hover:text-white border border-primary/20 px-5 py-3 rounded-2xl shadow-2xs"
               >
-                <span>View All {t(cat.name)} Products</span>
-                <ArrowRight size={16} />
+                <Package size={14} />
+                <span>View All {t(cat.name)}</span>
+                <ArrowRight size={14} />
               </Link>
             </div>
 
             {/* Products grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-2">
               {products.map((prod) => (
                 <ProductCard
                   key={prod.id}

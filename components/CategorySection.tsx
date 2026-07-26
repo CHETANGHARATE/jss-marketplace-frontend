@@ -26,7 +26,8 @@ import {
   ArrowRight,
   Grid,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Layers
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Category } from '../types';
@@ -67,29 +68,30 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ categories }) 
   const displayedCategories = isExpanded ? categories.slice(0, 20) : categories.slice(0, 10);
 
   return (
-    <section id="categories" className="space-y-8 scroll-mt-24">
+    <section id="categories" className="space-y-8 sm:space-y-10 scroll-mt-24">
       {/* Category Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border-custom pb-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border-custom/80 pb-6">
         <div>
-          <div className="flex items-center gap-1.5 text-xs font-bold text-primary uppercase tracking-wider">
-            <Grid size={14} />
+          <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-primary uppercase tracking-widest bg-primary/10 px-2.5 py-0.5 rounded-full mb-1">
+            <Grid size={12} />
             <span>Marketplace Catalog</span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight mt-1">
-            Explore Marketplace Categories
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tight mt-1">
+            Explore Popular Categories
           </h2>
-          <p className="text-xs text-muted-custom mt-1 font-medium max-w-xl">
-            Browse verified multi-vendor products across all 20 official marketplace categories.
+          <p className="text-xs sm:text-sm text-muted-custom mt-1 font-medium max-w-xl">
+            Browse verified multi-vendor products across all official marketplace categories direct from source.
           </p>
         </div>
 
-        <div className="bg-primary/10 text-primary border border-primary/20 text-xs font-bold px-3.5 py-1.5 rounded-xl w-max">
-          {categories.length} Categories Available
+        <div className="inline-flex items-center gap-2 bg-primary/10 text-primary border border-primary/20 text-xs font-black px-4 py-2 rounded-2xl w-max shadow-2xs">
+          <Layers size={14} />
+          <span>{categories.length} Categories Available</span>
         </div>
       </div>
 
       {/* Grid Displaying Top 10 (or expanded 20) Categories */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 sm:gap-6">
         {displayedCategories.map((cat, idx) => {
           const IconComponent = iconMap[cat.icon] || Sprout;
 
@@ -97,25 +99,25 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ categories }) 
             <Link
               key={cat.id || idx}
               href={`/category/${cat.id}`}
-              className="group bg-card text-card-foreground border border-border-custom hover:border-primary rounded-2xl p-5 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between"
+              className="group bg-card text-card-foreground border border-border-custom/80 hover:border-primary/60 rounded-3xl p-6 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
             >
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {/* Header Row: Icon & Category Index Tag */}
                 <div className="flex items-center justify-between">
-                  <div className="h-12 w-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-primary group-hover:bg-primary group-hover:text-white flex items-center justify-center transition-colors shrink-0">
-                    <IconComponent size={22} />
+                  <div className="h-14 w-14 rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0 shadow-2xs">
+                    <IconComponent size={24} />
                   </div>
-                  <span className="text-[10px] font-black text-muted-custom bg-background-secondary border border-border-custom px-2 py-0.5 rounded-md">
+                  <span className="text-[10px] font-black text-muted-custom bg-background-secondary border border-border-custom/80 px-2.5 py-1 rounded-xl">
                     #{idx + 1}
                   </span>
                 </div>
 
                 {/* Title & Description */}
                 <div>
-                  <h3 className="font-bold text-sm text-foreground group-hover:text-primary transition-colors leading-snug">
+                  <h3 className="font-extrabold text-base text-foreground group-hover:text-primary transition-colors leading-snug">
                     {t(cat.name)}
                   </h3>
-                  <p className="text-[11px] text-muted-custom line-clamp-2 mt-1 leading-relaxed font-normal">
+                  <p className="text-xs text-muted-custom line-clamp-2 mt-1.5 leading-relaxed font-normal">
                     {t(cat.description)}
                   </p>
                 </div>
@@ -123,15 +125,15 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ categories }) 
 
               {/* Card Footer: Subcategories / Product Count & Explore CTA */}
               <div className="pt-4 mt-4 border-t border-border-custom/60 flex items-center justify-between">
-                <span className="text-[10px] font-bold text-muted-custom">
+                <span className="text-[11px] font-bold text-muted-custom">
                   {cat.subcategories && cat.subcategories.length > 0
                     ? `${cat.subcategories.length} Subcategories`
                     : '100+ Products'}
                 </span>
                 
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-primary group-hover:translate-x-0.5 transition-transform">
+                <span className="inline-flex items-center gap-1.5 text-xs font-black text-primary group-hover:translate-x-1 transition-transform">
                   <span>Explore</span>
-                  <ArrowRight size={13} />
+                  <ArrowRight size={14} />
                 </span>
               </div>
             </Link>
@@ -141,12 +143,12 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ categories }) 
 
       {/* In-Homepage Expand Toggle: View All 20 Categories / Show Fewer */}
       {categories.length > 10 && (
-        <div className="flex justify-center pt-2">
+        <div className="flex justify-center pt-3">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="inline-flex items-center gap-2 text-xs font-bold text-primary bg-primary/10 hover:bg-primary hover:text-white border border-primary/20 px-6 py-3 rounded-2xl transition-all shadow-xs"
+            className="inline-flex items-center gap-2.5 text-xs font-black text-primary bg-primary/10 hover:bg-primary hover:text-white border border-primary/20 px-7 py-3.5 rounded-2xl transition-all shadow-xs active:scale-95"
           >
-            <span>{isExpanded ? 'Show Fewer Categories' : 'View All Categories'}</span>
+            <span>{isExpanded ? 'Show Fewer Categories' : 'View All 20 Categories'}</span>
             {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
           </button>
         </div>
