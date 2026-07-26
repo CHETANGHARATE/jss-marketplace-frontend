@@ -14,7 +14,8 @@ import {
   RotateCcw,
   Gift,
   Share2,
-  LogOut
+  LogOut,
+  ShieldCheck
 } from 'lucide-react';
 
 const MENU_ITEMS = [
@@ -34,18 +35,23 @@ export function AccountSidebar() {
   const { user, logout } = useAuth();
 
   return (
-    <aside className="w-full lg:w-64 bg-card border border-border/40 rounded-3xl p-4 shadow-sm space-y-6 shrink-0">
-      <div className="p-4 bg-muted/20 border border-border/40 rounded-2xl flex items-center gap-3">
-        <div className="h-10 w-10 bg-primary/10 text-primary font-black rounded-xl flex items-center justify-center text-sm uppercase">
-          {user?.name ? user.name.slice(0, 2) : 'CU'}
+    <aside className="w-full lg:w-72 bg-card border border-border-custom/80 rounded-3xl p-5 shadow-xs space-y-6 shrink-0">
+      {/* Customer Profile Avatar Box */}
+      <div className="p-4 bg-background-secondary/80 border border-border-custom/80 rounded-2xl flex items-center gap-3.5">
+        <div className="h-12 w-12 bg-gradient-to-br from-primary/10 to-emerald-500/10 text-primary border border-primary/20 font-black rounded-2xl flex items-center justify-center text-sm uppercase shrink-0 shadow-2xs">
+          {user?.name ? user.name.slice(0, 2).toUpperCase() : 'CU'}
         </div>
-        <div className="min-w-0">
-          <h4 className="font-bold text-sm text-foreground truncate">{user?.name || 'Customer Account'}</h4>
-          <span className="text-[11px] text-foreground/60 truncate block">{user?.email || 'customer@jss.com'}</span>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1">
+            <h4 className="font-extrabold text-sm text-foreground truncate">{user?.name || 'Customer Account'}</h4>
+            <ShieldCheck size={14} className="text-emerald-500 shrink-0" />
+          </div>
+          <span className="text-[11px] font-medium text-muted-custom truncate block mt-0.5">{user?.email || 'customer@jss.com'}</span>
         </div>
       </div>
 
-      <nav className="space-y-1">
+      {/* Navigation Links */}
+      <nav className="space-y-1.5">
         {MENU_ITEMS.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -54,10 +60,10 @@ export function AccountSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-extrabold transition-all ${
                 isActive
-                  ? 'bg-primary text-primary-foreground shadow-xs'
-                  : 'text-foreground/70 hover:bg-muted/40 hover:text-foreground'
+                  ? 'bg-primary text-white shadow-xs'
+                  : 'text-muted-custom hover:bg-background-secondary hover:text-foreground'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -68,7 +74,7 @@ export function AccountSidebar() {
 
         <button
           onClick={logout}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold text-rose-500 hover:bg-rose-500/10 transition-colors text-left"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-extrabold text-rose-500 hover:bg-rose-500/10 transition-colors text-left"
         >
           <LogOut className="w-4 h-4" />
           <span>Sign Out</span>
