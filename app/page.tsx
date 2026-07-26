@@ -8,13 +8,47 @@ import { CategorySection } from '../components/CategorySection';
 import { FeaturedCategories } from '../components/FeaturedCategories';
 import { ProductCard } from '../components/ProductCard';
 import { ProductQuickView } from '../components/ProductQuickView';
-import { PersonalizedSection } from '../components/PersonalizedSection';
 import { Accordion } from '../components/ui/Accordion';
 import { categoryService } from '../services/categoryService';
-import { getTrendingProducts, getNewArrivals, getBestSellers } from '../services/product';
-import { getFeaturedSellers } from '../services/seller';
+import { productService, mapApiProductToProduct } from '../services/productService';
+import { vendorService, mapApiVendorStoreToSeller } from '../services/vendorService';
 import { Product, Seller } from '../types';
 import { mockTestimonials, mockFaqs } from '../constants/mockData';
+
+const mockSellersList: Seller[] = [
+  {
+    id: '1',
+    name: 'Organic Farms India',
+    rating: 4.9,
+    location: 'Mahabaleshwar, Maharashtra',
+    joinedDate: '2022',
+    description: 'Certified organic farm producers delivering fresh juices, jams, and fruit syrups direct from farm to home.'
+  },
+  {
+    id: '2',
+    name: 'Swadeshi Spices & Faral',
+    rating: 4.8,
+    location: 'Kolhapur, Maharashtra',
+    joinedDate: '2021',
+    description: 'Authentic Maharashtrian masale, pickles, and traditional festival faral made with authentic family recipes.'
+  },
+  {
+    id: '3',
+    name: 'Royal Heritage Jewellery',
+    rating: 4.9,
+    location: 'Jaipur, Rajasthan',
+    joinedDate: '2020',
+    description: 'Handcrafted traditional jewellery, astro stones, and silver ornaments made by master artisans.'
+  },
+  {
+    id: '4',
+    name: 'TechPulse Electronics',
+    rating: 4.7,
+    location: 'Bengaluru, Karnataka',
+    joinedDate: '2023',
+    description: 'Official distributor of smart gadgets, auto electronics accessories, and high-efficiency solar appliances.'
+  }
+];
 
 export default function HomePage() {
   const langContext = useLanguage();
@@ -50,22 +84,46 @@ export default function HomePage() {
   useEffect(() => {
     const loadData = async () => {
       try {
+        // 1. Fetch Categories via categoryService
         const cats = await categoryService.getCategories();
         setCategories(cats);
 
-        const trending = await getTrendingProducts(4);
-        setTrendingProducts(trending);
+        // 2. Fetch Products via productService
+        const [trendingRes, featuredRes] = await Promise.allSettled([
+          productService.getTrendingProducts(),
+          productService.getFeaturedProducts()
+        ]);
 
-        const fresh = await getNewArrivals(4);
-        setNewArrivals(fresh);
+        let trending: Product[] = [];
+        if (trendingRes.status === 'fulfilled' && trendingRes.value.length > 0) {
+          trending = trendingRes.value.map(mapApiProductToProduct);
+        } else {
+          const allProds = await productService.getProducts({ per_page: 8 });
+          trending = (allProds.data || []).map(mapApiProductToProduct);
+        }
 
-        const topRated = await getBestSellers(4);
-        setBestSellers(topRated);
+        let featured: Product[] = [];
+        if (featuredRes.status === 'fulfilled' && featuredRes.value.length > 0) {
+          featured = featuredRes.value.map(mapApiProductToProduct);
+        }
 
-        const sellers = await getFeaturedSellers(4);
-        setFeaturedSellers(sellers);
+        setTrendingProducts(trending.slice(0, 4));
+        setNewArrivals(trending.slice(4, 8));
+        setBestSellers(featured.length > 0 ? featured : trending);
+
+        // 3. Fetch Sellers via vendorService
+        try {
+          const stores = await vendorService.getVendorStores();
+          if (stores && stores.length > 0) {
+            setFeaturedSellers(stores.map(mapApiVendorStoreToSeller).slice(0, 4));
+          } else {
+            setFeaturedSellers(mockSellersList);
+          }
+        } catch {
+          setFeaturedSellers(mockSellersList);
+        }
       } catch (err) {
-        console.error('Failed to load homepage data', err);
+        console.error('Failed to load homepage data from backend services', err);
       }
     };
     loadData();

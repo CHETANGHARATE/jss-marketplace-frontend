@@ -1,5 +1,6 @@
 import { apiClient } from './apiClient';
 import { ApiProduct, ApiOrder, ApiVendorStore, ApiVendorWallet, ApiResponse, PaginatedApiResponse } from '../types/api';
+import { Seller } from '../types';
 
 export interface VendorDashboardData {
   total_sales: number;
@@ -36,6 +37,17 @@ export interface VendorAnalyticsData {
   sales_trend: Array<{ date: string; amount: number }>;
   top_products: Array<{ id: number; name: string; sales_count: number }>;
   order_status_counts: Record<string, number>;
+}
+
+export function mapApiVendorStoreToSeller(store: ApiVendorStore): Seller {
+  return {
+    id: String(store.id),
+    name: store.store_name,
+    rating: 4.9,
+    location: 'India',
+    joinedDate: store.created_at ? store.created_at.substring(0, 4) : '2024',
+    description: store.description || 'Verified multi-vendor partner store.'
+  };
 }
 
 export const vendorService = {
@@ -106,5 +118,19 @@ export const vendorService = {
   async updateStoreSettings(payload: Partial<ApiVendorStore>): Promise<ApiVendorStore> {
     const response = await apiClient.put<ApiResponse<ApiVendorStore>>('/vendor/store', payload);
     return response.data.data;
+  },
+
+  async getVendorStores(): Promise<ApiVendorStore[]> {
+    try {
+      const response = await apiClient.get<ApiResponse<ApiVendorStore[]>>('/vendors');
+      return response.data.data;
+    } catch {
+      try {
+        const response = await apiClient.get<PaginatedApiResponse<ApiVendorStore>>('/admin/vendor/stores');
+        return response.data.data;
+      } catch {
+        return [];
+      }
+    }
   },
 };
