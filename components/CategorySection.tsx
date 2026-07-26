@@ -95,7 +95,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ categories }) 
 
           return (
             <Link
-              key={cat.id || cat.slug || idx}
+              key={cat.id || idx}
               href={`/category/${cat.id}`}
               className="group bg-card text-card-foreground border border-border-custom hover:border-primary rounded-2xl p-5 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between"
             >
