@@ -9,8 +9,10 @@ import { ProductGallery } from '../../../components/ProductGallery';
 import { ProductDetailsInfo } from '../../../components/ProductDetailsInfo';
 import { RecentlyViewedSection } from '../../../components/RecentlyViewedSection';
 import { seoService } from '../../../services/seoService';
-import { Sparkles, AlertCircle, ShoppingBag } from 'lucide-react';
+import { Sparkles, AlertCircle, ShoppingBag, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { ProductCard } from '../../../components/ProductCard';
+import { mapApiProductToProduct } from '../../../services/productService';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -28,24 +30,26 @@ export default function ProductDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="py-20 flex flex-col items-center justify-center gap-3 text-foreground/60">
+      <div className="py-24 flex flex-col items-center justify-center gap-3 text-foreground/60">
         <Sparkles className="w-8 h-8 text-primary animate-spin" />
-        <p className="text-sm font-medium">Loading Product Details...</p>
+        <p className="text-sm font-black tracking-wide">Loading Product Details...</p>
       </div>
     );
   }
 
   if (isError || !product) {
     return (
-      <div className="py-16 text-center space-y-4">
-        <AlertCircle className="w-12 h-12 text-rose-500 mx-auto" />
-        <h2 className="text-2xl font-bold text-foreground">Product Not Found</h2>
-        <p className="text-sm text-foreground/60">
-          The requested product could not be found or has been removed from our catalog.
+      <div className="py-20 text-center space-y-4 max-w-md mx-auto">
+        <div className="h-16 w-16 rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20 flex items-center justify-center mx-auto">
+          <AlertCircle className="w-8 h-8" />
+        </div>
+        <h2 className="text-2xl font-black text-foreground">Product Not Found</h2>
+        <p className="text-xs text-muted-custom leading-relaxed font-medium">
+          The requested product could not be found or has been removed from our marketplace catalog.
         </p>
         <Link
           href="/"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-bold text-xs rounded-xl shadow-xs hover:bg-primary-hover transition-all uppercase tracking-wider"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-black text-xs rounded-2xl shadow-xs hover:bg-primary-hover transition-all uppercase tracking-wider"
         >
           <ShoppingBag className="w-4 h-4" />
           <span>Back to Marketplace</span>
@@ -67,7 +71,7 @@ export default function ProductDetailPage() {
   const breadcrumbJsonLd = seoService.generateBreadcrumbJsonLd(breadcrumbItems);
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 sm:space-y-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
@@ -79,8 +83,8 @@ export default function ProductDetailPage() {
 
       <Breadcrumbs items={breadcrumbItems} />
 
-      {/* Main Details Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-start bg-card border border-border-custom p-6 sm:p-8 rounded-3xl shadow-xs">
+      {/* Main Details Card Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-start bg-card border border-border-custom/80 p-6 sm:p-10 rounded-3xl shadow-xs">
         <div className="lg:col-span-6">
           <ProductGallery images={product.images} name={product.name} />
         </div>
@@ -91,33 +95,29 @@ export default function ProductDetailPage() {
 
       {/* Related Products Showcase */}
       {relatedProducts.length > 0 && (
-        <section className="space-y-6 pt-8 border-t border-border-custom">
-          <h3 className="text-xl font-black text-foreground tracking-tight">
-            Related Products
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {relatedProducts.slice(0, 4).map((relProd) => (
-              <Link
-                key={relProd.id}
-                href={`/product/${relProd.slug}`}
-                className="group bg-card border border-border-custom hover:border-primary rounded-2xl p-4 shadow-xs hover:shadow-md transition-all space-y-3"
-              >
-                <div className="aspect-square w-full bg-slate-50 dark:bg-slate-900/50 rounded-xl p-3 flex items-center justify-center overflow-hidden border border-border-custom/50">
-                  <img
-                    src={relProd.images?.[0] || '/placeholder-product.png'}
-                    alt={relProd.name}
-                    className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform"
-                    loading="lazy"
-                  />
-                </div>
-                <h4 className="font-bold text-xs text-foreground group-hover:text-primary transition-colors line-clamp-1">
-                  {relProd.name}
-                </h4>
-                <span className="text-sm font-black text-primary block">
-                  ₹{(relProd.sale_price || relProd.original_price).toLocaleString()}
-                </span>
-              </Link>
-            ))}
+        <section className="space-y-6 pt-8 border-t border-border-custom/80">
+          <div className="flex justify-between items-end">
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-primary uppercase tracking-widest bg-primary/10 px-2.5 py-0.5 rounded-full mb-1">
+                <span>Recommendations</span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
+                Related Marketplace Products
+              </h3>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {relatedProducts.slice(0, 4).map((relProd) => {
+              const mappedProduct = mapApiProductToProduct(relProd);
+              return (
+                <ProductCard
+                  key={relProd.id}
+                  product={mappedProduct}
+                  onQuickView={() => {}}
+                />
+              );
+            })}
           </div>
         </section>
       )}
