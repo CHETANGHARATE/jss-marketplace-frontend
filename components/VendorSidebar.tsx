@@ -13,7 +13,8 @@ import {
   BarChart3,
   Store,
   LogOut,
-  Sparkles
+  Sparkles,
+  CheckCircle2
 } from 'lucide-react';
 
 const MENU_ITEMS = [
@@ -31,17 +32,22 @@ export function VendorSidebar() {
   const { user, logout } = useAuth();
 
   return (
-    <aside className="w-full lg:w-64 bg-card border border-border/40 rounded-3xl p-4 shadow-sm space-y-6 shrink-0">
-      <div className="p-4 bg-primary/10 border border-primary/20 rounded-2xl space-y-1">
-        <div className="flex items-center gap-1.5 text-primary text-xs font-bold uppercase tracking-wider">
+    <aside className="w-full lg:w-72 bg-card border border-border-custom/80 rounded-3xl p-5 shadow-xs space-y-6 shrink-0">
+      {/* Vendor Store Header Box */}
+      <div className="p-4 bg-primary/10 border border-primary/20 rounded-2xl space-y-1.5 shadow-2xs">
+        <div className="flex items-center gap-1.5 text-primary text-[10px] font-extrabold uppercase tracking-widest">
           <Sparkles className="w-3.5 h-3.5" />
           <span>Vendor Control Panel</span>
         </div>
-        <h4 className="font-black text-sm text-foreground truncate">{user?.name || 'Verified Seller Store'}</h4>
-        <span className="text-[11px] text-foreground/60 block truncate">{user?.email || 'vendor@jss.com'}</span>
+        <div className="flex items-center gap-1.5">
+          <h4 className="font-black text-sm text-foreground truncate">{user?.name || 'Verified Seller Store'}</h4>
+          <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
+        </div>
+        <span className="text-[11px] text-muted-custom font-medium block truncate">{user?.email || 'vendor@jss.com'}</span>
       </div>
 
-      <nav className="space-y-1">
+      {/* Navigation Links */}
+      <nav className="space-y-1.5">
         {MENU_ITEMS.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -50,10 +56,10 @@ export function VendorSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-extrabold transition-all ${
                 isActive
-                  ? 'bg-primary text-primary-foreground shadow-xs'
-                  : 'text-foreground/70 hover:bg-muted/40 hover:text-foreground'
+                  ? 'bg-primary text-white shadow-xs'
+                  : 'text-muted-custom hover:bg-background-secondary hover:text-foreground'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -64,7 +70,7 @@ export function VendorSidebar() {
 
         <button
           onClick={logout}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold text-rose-500 hover:bg-rose-500/10 transition-colors text-left"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-extrabold text-rose-500 hover:bg-rose-500/10 transition-colors text-left"
         >
           <LogOut className="w-4 h-4" />
           <span>Exit Vendor Panel</span>
