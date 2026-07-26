@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Sparkles, Clock, Star, ShieldCheck } from 'lucide-react';
+import { Sparkles, Clock, Star, ShieldCheck, CheckCircle2, Award, Zap, Truck, Lock } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { BannerSlider } from '../components/BannerSlider';
 import { CategorySection } from '../components/CategorySection';
@@ -74,17 +74,14 @@ export default function HomePage() {
   return (
     <div className="space-y-16">
       
-      {/* Hero Banner Slider */}
+      {/* 1. Hero Banner Slider */}
       <BannerSlider />
 
-      {/* Popular Categories Grid */}
+      {/* 2. All 20 Categories Section */}
       {categories.length > 0 && <CategorySection categories={categories} />}
 
-      {/* Personalized Recommendations Section */}
-      <PersonalizedSection />
-
-      {/* Today's Flash Deals Section */}
-      <section className="bg-card border border-border-custom rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs">
+      {/* 3. Today's Deals Section (Flash Sale) */}
+      <section id="deals" className="bg-card border border-border-custom rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs scroll-mt-24">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-custom">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 bg-rose-500 text-white flex items-center justify-center rounded-xl font-bold">
@@ -92,9 +89,9 @@ export default function HomePage() {
             </div>
             <div>
               <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tight flex items-center gap-2">
-                Today's Flash Deals
+                Today's Deals & Flash Sales
               </h2>
-              <p className="text-xs text-muted-custom mt-0.5 font-medium">Limited time mega discounts. Deal ends in:</p>
+              <p className="text-xs text-muted-custom mt-0.5 font-medium">Exclusive public marketplace discounts. Deal ends in:</p>
             </div>
           </div>
           
@@ -124,7 +121,33 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Categories Showcases */}
+      {/* 4. Trending Products Showcase */}
+      <section className="space-y-6">
+        <div>
+          <div className="flex items-center gap-1.5 text-xs font-bold text-primary uppercase tracking-wider">
+            <Zap size={14} />
+            <span>Buyer Choice</span>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight mt-1">
+            Trending Products Across India
+          </h2>
+          <p className="text-xs text-muted-custom mt-1 font-medium">
+            Top purchased items across fashion, electronics, regional faral, and local handicrafts.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          {trendingProducts.concat(newArrivals).slice(0, 4).map((prod) => (
+            <ProductCard
+              key={`trend_grid_${prod.id}`}
+              product={prod}
+              onQuickView={setQuickViewProductId}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* 5. Featured Products Showcase */}
       {categories.length > 0 && (
         <FeaturedCategories
           categories={categories}
@@ -132,96 +155,7 @@ export default function HomePage() {
         />
       )}
 
-      {/* Trending / New / Top Rated Showcase Section */}
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Trending Now */}
-        <div className="space-y-4 bg-card border border-border-custom p-6 rounded-3xl shadow-xs">
-          <div className="flex items-center gap-2 pb-3 border-b border-border-custom">
-            <Sparkles className="text-primary" size={18} />
-            <h3 className="font-black text-base text-foreground tracking-tight uppercase">Trending Now</h3>
-          </div>
-          <div className="divide-y divide-border-custom space-y-3">
-            {trendingProducts.slice(0, 3).map((prod) => (
-              <div 
-                key={`trend_list_${prod.id}`} 
-                onClick={() => setQuickViewProductId(prod.id)}
-                className="flex gap-3.5 pt-3 first:pt-0 group cursor-pointer"
-              >
-                <img src={prod.image} alt={prod.name} className="h-14 w-14 rounded-xl object-contain bg-background-secondary p-1 border border-border-custom shrink-0" />
-                <div className="min-w-0 flex-1">
-                  <h4 className="font-bold text-xs text-foreground truncate group-hover:text-primary transition-colors">{prod.name}</h4>
-                  <p className="text-[10px] text-muted-custom">{prod.brand}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="font-black text-xs text-primary">₹{prod.offerPrice.toLocaleString()}</span>
-                    <span className="text-[10px] text-rose-500 font-bold">({prod.discountPercent}% Off)</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* New Arrivals */}
-        <div className="space-y-4 bg-card border border-border-custom p-6 rounded-3xl shadow-xs">
-          <div className="flex items-center gap-2 pb-3 border-b border-border-custom">
-            <Clock className="text-accent" size={18} />
-            <h3 className="font-black text-base text-foreground tracking-tight uppercase">New Arrivals</h3>
-          </div>
-          <div className="divide-y divide-border-custom space-y-3">
-            {newArrivals.slice(0, 3).map((prod) => (
-              <div 
-                key={`new_list_${prod.id}`} 
-                onClick={() => setQuickViewProductId(prod.id)}
-                className="flex gap-3.5 pt-3 first:pt-0 group cursor-pointer"
-              >
-                <img src={prod.image} alt={prod.name} className="h-14 w-14 rounded-xl object-contain bg-background-secondary p-1 border border-border-custom shrink-0" />
-                <div className="min-w-0 flex-1">
-                  <h4 className="font-bold text-xs text-foreground truncate group-hover:text-primary transition-colors">{prod.name}</h4>
-                  <p className="text-[10px] text-muted-custom">{prod.brand}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="font-black text-xs text-primary">₹{prod.offerPrice.toLocaleString()}</span>
-                    <span className="text-[10px] text-emerald-600 font-bold bg-emerald-500/10 px-1.5 py-0.2 rounded">Fresh</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Top Rated */}
-        <div className="space-y-4 bg-card border border-border-custom p-6 rounded-3xl shadow-xs">
-          <div className="flex items-center gap-2 pb-3 border-b border-border-custom">
-            <Star className="text-amber-500 fill-amber-500" size={18} />
-            <h3 className="font-black text-base text-foreground tracking-tight uppercase">Top Rated</h3>
-          </div>
-          <div className="divide-y divide-border-custom space-y-3">
-            {bestSellers.slice(0, 3).map((prod) => (
-              <div 
-                key={`best_list_${prod.id}`} 
-                onClick={() => setQuickViewProductId(prod.id)}
-                className="flex gap-3.5 pt-3 first:pt-0 group cursor-pointer"
-              >
-                <img src={prod.image} alt={prod.name} className="h-14 w-14 rounded-xl object-contain bg-background-secondary p-1 border border-border-custom shrink-0" />
-                <div className="min-w-0 flex-1">
-                  <h4 className="font-bold text-xs text-foreground truncate group-hover:text-primary transition-colors">{prod.name}</h4>
-                  <p className="text-[10px] text-muted-custom">{prod.brand}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="font-black text-xs text-primary">₹{prod.offerPrice.toLocaleString()}</span>
-                    <div className="flex items-center text-amber-500 text-[10px] font-bold">
-                      <Star size={10} fill="currentColor" />
-                      <span className="ml-0.5">{prod.rating}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-      </section>
-
-      {/* Featured Verified Sellers Section */}
+      {/* 6. Popular Verified Vendors */}
       <section className="space-y-6">
         <div>
           <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 uppercase tracking-wider">
@@ -229,7 +163,7 @@ export default function HomePage() {
             <span>GSTIN Verified Partners</span>
           </div>
           <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight mt-1">
-            Featured Verified Sellers
+            Popular Marketplace Vendors
           </h2>
           <p className="text-xs text-muted-custom mt-1 font-medium">
             Buy directly from compliance-verified manufacturers, farmers, and official distributors.
@@ -249,7 +183,7 @@ export default function HomePage() {
                     <span className="text-[10px] text-muted-custom block truncate">{seller.location}</span>
                   </div>
                 </div>
-                <p className="text-xs text-muted-custom mt-3 line-clamp-3 leading-relaxed">
+                <p className="text-xs text-muted-custom mt-3 line-clamp-3 leading-relaxed font-normal">
                   {seller.description}
                 </p>
               </div>
@@ -266,14 +200,62 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* 7. Why Choose JSS Marketplace */}
+      <section className="bg-card border border-border-custom rounded-3xl p-8 space-y-6 shadow-xs">
+        <div className="text-center space-y-1.5 max-w-xl mx-auto">
+          <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-primary uppercase tracking-wider">
+            <Award size={14} />
+            <span>Marketplace Excellence</span>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
+            Why Choose JSS Marketplace?
+          </h2>
+          <p className="text-xs text-muted-custom font-medium">
+            India's most trusted direct-from-source multi-vendor platform for retail & wholesale buyers.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+          <div className="p-5 bg-background-secondary border border-border-custom rounded-2xl space-y-2 text-center">
+            <div className="h-12 w-12 bg-primary/10 text-primary border border-primary/20 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <CheckCircle2 size={24} />
+            </div>
+            <h4 className="font-bold text-sm text-foreground">100% Genuine Guaranteed</h4>
+            <p className="text-xs text-muted-custom leading-relaxed">
+              Every item is inspected and dispatched directly from verified manufacturers and certified farmers.
+            </p>
+          </div>
+
+          <div className="p-5 bg-background-secondary border border-border-custom rounded-2xl space-y-2 text-center">
+            <div className="h-12 w-12 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <Lock size={24} />
+            </div>
+            <h4 className="font-bold text-sm text-foreground">Secure Escrow Payments</h4>
+            <p className="text-xs text-muted-custom leading-relaxed">
+              Your payments are safely held in escrow until your order is delivered and verified.
+            </p>
+          </div>
+
+          <div className="p-5 bg-background-secondary border border-border-custom rounded-2xl space-y-2 text-center">
+            <div className="h-12 w-12 bg-amber-500/10 text-amber-600 border border-amber-500/20 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <Truck size={24} />
+            </div>
+            <h4 className="font-bold text-sm text-foreground">Express All-India Delivery</h4>
+            <p className="text-xs text-muted-custom leading-relaxed">
+              Real-time shipment tracking with express dispatch across 25,000+ PIN codes in India.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. Customer Testimonials */}
       <section className="space-y-6 bg-background-secondary border border-border-custom p-8 rounded-3xl">
         <div className="text-center space-y-1.5">
           <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
             {translate('home.testimonials')}
           </h2>
           <p className="text-xs text-muted-custom max-w-xl mx-auto font-medium">
-            Hear from retail buyers, verified builders, and agricultural partners.
+            Real feedback from shoppers, retail buyers, and agricultural partners across India.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2">
@@ -294,17 +276,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Frequently Asked Questions */}
+      {/* 9. Frequently Asked Questions */}
       <section id="faq" className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start scroll-mt-24">
         <div className="space-y-3">
           <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">
             {translate('faq.title')}
           </h2>
           <p className="text-xs text-muted-custom leading-relaxed font-medium">
-            Have questions about order safety, shipping parameters, seller policies, or bulk orders?
+            Got questions about public orders, vendor onboarding, or delivery coverage?
           </p>
           <div className="p-4 bg-background-secondary border border-border-custom rounded-2xl text-xs text-muted-custom leading-relaxed">
-            Need custom B2B bulk rates? Feel free to contact our support helpdesk.
+            Need custom B2B wholesale pricing? Reach out to our helpline at 1800-JSS-MARKET.
           </div>
         </div>
         <div className="lg:col-span-2">

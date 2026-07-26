@@ -21,8 +21,9 @@ import {
   CheckCircle2,
   Info,
   LogIn,
-  Sparkles,
-  ShieldCheck
+  UserPlus,
+  ShieldCheck,
+  Tag
 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -91,7 +92,7 @@ export const Header: React.FC = () => {
       <div className="bg-slate-900 text-white text-[11px] font-bold py-1.5 px-4 text-center border-b border-slate-800">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <span className="hidden sm:inline-block text-slate-400 font-medium">
-            🇮🇳 Verified Multi-Vendor E-Commerce Platform
+            🇮🇳 India's Public Multi-Vendor E-Commerce Marketplace
           </span>
           <div className="mx-auto sm:mx-0 flex items-center gap-2">
             <span className="bg-rose-500 text-white text-[9px] px-1.5 py-0.5 rounded font-black uppercase">
@@ -100,7 +101,7 @@ export const Header: React.FC = () => {
             <span>Free Express Shipping on all orders above ₹499!</span>
           </div>
           <span className="hidden md:inline-block text-slate-400 font-medium">
-            Helpdesk: 1800-JSS-MARKET
+            Helpline: 1800-JSS-MARKET
           </span>
         </div>
       </div>
@@ -108,9 +109,9 @@ export const Header: React.FC = () => {
       {/* Main Header Bar */}
       <header className="sticky top-0 z-40 w-full bg-card border-b border-border-custom shadow-xs transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 sm:h-20 items-center justify-between gap-4">
+          <div className="flex h-16 sm:h-20 items-center justify-between gap-3 sm:gap-4">
             
-            {/* Left: Mobile Menu Toggle & Brand Logo */}
+            {/* Left: Brand Logo & Navigation */}
             <div className="flex items-center gap-3">
               <button 
                 onClick={() => setMobileMenuOpen(true)}
@@ -125,24 +126,40 @@ export const Header: React.FC = () => {
                   JSS<span className="text-accent">Solutions</span>
                 </span>
                 <span className="hidden sm:inline-block text-[9px] font-extrabold bg-primary/10 text-primary border border-primary/20 px-1.5 py-0.5 rounded uppercase tracking-wider">
-                  Market
+                  Marketplace
                 </span>
               </Link>
             </div>
 
-            {/* Middle: Mega Menu Dropdown */}
-            <div className="hidden lg:block">
+            {/* Middle: Mega Menu Dropdown & Quick Deals Link */}
+            <div className="hidden lg:flex items-center gap-2">
               <MegaMenu />
+              <Link
+                href="#deals"
+                className="flex items-center gap-1.5 text-xs font-bold text-foreground hover:text-primary border border-border-custom px-3 py-2 rounded-xl transition-all"
+              >
+                <Tag size={14} className="text-rose-500" />
+                <span>Today's Deals</span>
+              </Link>
             </div>
 
             {/* Middle: Search Bar */}
-            <div className="hidden lg:block flex-1 max-w-xl mx-2">
+            <div className="hidden lg:block flex-1 max-w-lg mx-2">
               <SearchBar />
             </div>
 
-            {/* Right: Actions (Language, Theme, Notifications, Wishlist, Cart, User) */}
+            {/* Right: Actions (Become Vendor, Login, Sign Up, Cart, Wishlist, Language, Theme) */}
             <div className="flex items-center gap-1.5 sm:gap-2">
               
+              {/* Become Vendor Link */}
+              <Link
+                href="/seller/register"
+                className="hidden md:flex items-center gap-1.5 text-xs font-bold bg-accent/10 text-accent border border-accent/20 px-3 py-2 rounded-xl hover:bg-accent hover:text-white transition-all"
+              >
+                <Store size={14} />
+                <span>Become Vendor</span>
+              </Link>
+
               {/* Language Selector */}
               <div ref={langMenuRef} className="relative">
                 <button
@@ -151,7 +168,7 @@ export const Header: React.FC = () => {
                   aria-label="Language Selector"
                 >
                   <Globe size={18} />
-                  <span className="uppercase hidden md:inline">{language}</span>
+                  <span className="uppercase hidden xl:inline">{language}</span>
                 </button>
                 {langMenuOpen && (
                   <div className="absolute right-0 mt-2 w-36 bg-card border border-border-custom rounded-2xl shadow-lg z-50 overflow-hidden py-1">
@@ -184,41 +201,7 @@ export const Header: React.FC = () => {
                 {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
               </button>
 
-              {/* Notifications Dropdown */}
-              <div ref={notifRef} className="relative">
-                <button
-                  onClick={() => setNotifPanelOpen(!notifPanelOpen)}
-                  className="p-2 text-foreground hover:bg-background-secondary rounded-xl border border-border-custom transition-colors relative"
-                  aria-label="Notifications"
-                >
-                  <Bell size={18} />
-                  <span className="absolute top-1.5 right-1.5 h-2 w-2 bg-accent rounded-full" />
-                </button>
-                {notifPanelOpen && (
-                  <div className="absolute right-[-40px] sm:right-0 mt-2 w-80 bg-card border border-border-custom rounded-2xl shadow-xl z-50 overflow-hidden divide-y divide-border-custom">
-                    <div className="px-4 py-3 bg-background-secondary flex justify-between items-center">
-                      <span className="font-bold text-xs uppercase tracking-wider text-foreground">{t('nav.notifications')}</span>
-                      <span className="text-[10px] text-accent bg-accent/10 border border-accent/20 px-2 py-0.5 rounded-md font-bold">3 New</span>
-                    </div>
-                    <div className="max-h-72 overflow-y-auto divide-y divide-border-custom">
-                      {mockNotifications.map((notif) => (
-                        <div key={notif.id} className={`p-3.5 hover:bg-background-secondary transition-colors ${!notif.read ? 'bg-primary/5' : ''}`}>
-                          <div className="flex gap-2">
-                            {!notif.read ? <CheckCircle2 size={15} className="text-primary shrink-0 mt-0.5" /> : <Info size={15} className="text-muted-custom shrink-0 mt-0.5" />}
-                            <div>
-                              <h4 className="font-bold text-xs text-foreground leading-tight">{notif.title}</h4>
-                              <p className="text-[11px] text-muted-custom mt-1 leading-snug">{notif.desc}</p>
-                              <span className="text-[9px] text-muted-custom block mt-1">{notif.time}</span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Wishlist Drawer Trigger */}
+              {/* Wishlist Trigger */}
               <button
                 onClick={() => setWishlistOpen(true)}
                 className="p-2 text-foreground hover:bg-background-secondary rounded-xl border border-border-custom transition-colors relative"
@@ -232,7 +215,7 @@ export const Header: React.FC = () => {
                 )}
               </button>
 
-              {/* Shopping Cart Trigger */}
+              {/* Cart Trigger */}
               <button
                 onClick={() => setCartOpen(true)}
                 className="p-2 sm:px-3 text-foreground hover:bg-background-secondary rounded-xl border border-border-custom transition-colors relative flex items-center gap-1.5"
@@ -251,84 +234,139 @@ export const Header: React.FC = () => {
                 )}
               </button>
 
-              {/* Account Dropdown or Login Link */}
-              <div ref={userMenuRef} className="relative hidden md:block">
-                {isAuthenticated && user ? (
-                  <>
-                    <button
-                      onClick={() => setUserMenuOpen(!userMenuOpen)}
-                      className="flex items-center gap-1.5 p-1.5 pr-2.5 rounded-xl border border-border-custom bg-background-secondary hover:bg-card transition-colors text-xs font-bold"
-                    >
-                      <div className="h-7 w-7 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-xs uppercase">
-                        {user.name.substring(0, 2)}
+              {/* Authentication Actions: Guest vs Logged-In User */}
+              {isAuthenticated && user ? (
+                <div ref={userMenuRef} className="relative hidden md:block">
+                  <button
+                    onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    className="flex items-center gap-1.5 p-1.5 pr-2.5 rounded-xl border border-border-custom bg-background-secondary hover:bg-card transition-colors text-xs font-bold"
+                  >
+                    <div className="h-7 w-7 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-xs uppercase">
+                      {user.name.substring(0, 2)}
+                    </div>
+                    <span className="max-w-[90px] truncate text-foreground">
+                      {user.name}
+                    </span>
+                    <ChevronDown size={14} className="text-muted-custom" />
+                  </button>
+                  {userMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-card border border-border-custom rounded-2xl shadow-xl z-50 overflow-hidden divide-y divide-border-custom">
+                      <div className="px-4 py-3 bg-background-secondary">
+                        <p className="text-[10px] text-muted-custom font-semibold uppercase">Signed in as</p>
+                        <p className="text-xs font-bold text-foreground truncate mt-0.5">{user.name}</p>
+                        <span className="text-[9px] font-extrabold text-primary bg-primary/10 px-1.5 py-0.5 rounded capitalize mt-1 inline-block">
+                          {user.role || 'customer'}
+                        </span>
                       </div>
-                      <span className="max-w-[90px] truncate text-foreground">
-                        {user.name}
-                      </span>
-                      <ChevronDown size={14} className="text-muted-custom" />
-                    </button>
-                    {userMenuOpen && (
-                      <div className="absolute right-0 mt-2 w-48 bg-card border border-border-custom rounded-2xl shadow-xl z-50 overflow-hidden divide-y divide-border-custom">
-                        <div className="px-4 py-3 bg-background-secondary">
-                          <p className="text-[10px] text-muted-custom font-semibold uppercase">Signed in as</p>
-                          <p className="text-xs font-bold text-foreground truncate mt-0.5">{user.name}</p>
-                          <span className="text-[9px] font-extrabold text-primary bg-primary/10 px-1.5 py-0.5 rounded capitalize mt-1 inline-block">
-                            {user.role || 'customer'}
-                          </span>
-                        </div>
-                        <div className="py-1 text-xs font-medium">
-                          <Link href="/account" className="flex items-center gap-2 px-4 py-2 text-foreground hover:bg-background-secondary transition-colors">
-                            <User size={15} className="text-muted-custom" />
-                            {t('nav.profile')}
+                      <div className="py-1 text-xs font-medium">
+                        <Link href="/account" className="flex items-center gap-2 px-4 py-2 text-foreground hover:bg-background-secondary transition-colors">
+                          <User size={15} className="text-muted-custom" />
+                          {t('nav.profile')}
+                        </Link>
+                        {user.role === 'seller' && (
+                          <Link href="/vendor" className="flex items-center gap-2 px-4 py-2 text-foreground hover:bg-background-secondary transition-colors">
+                            <Store size={15} className="text-muted-custom" />
+                            Vendor Portal
                           </Link>
-                          {user.role === 'seller' && (
-                            <Link href="/vendor" className="flex items-center gap-2 px-4 py-2 text-foreground hover:bg-background-secondary transition-colors">
-                              <Store size={15} className="text-muted-custom" />
-                              Vendor Portal
-                            </Link>
-                          )}
-                          {user.role === 'admin' && (
-                            <Link href="/admin" className="flex items-center gap-2 px-4 py-2 text-rose-500 hover:bg-background-secondary transition-colors font-bold">
-                              <ShieldCheck size={15} />
-                              Admin Dashboard
-                            </Link>
-                          )}
-                        </div>
-                        <div className="py-1">
-                          <button
-                            onClick={() => logout()}
-                            className="w-full text-left flex items-center gap-2 px-4 py-2 text-xs font-bold text-rose-500 hover:bg-background-secondary transition-colors"
-                          >
-                            {t('nav.logout')}
-                          </button>
-                        </div>
+                        )}
+                        {user.role === 'admin' && (
+                          <Link href="/admin" className="flex items-center gap-2 px-4 py-2 text-rose-500 hover:bg-background-secondary transition-colors font-bold">
+                            <ShieldCheck size={15} />
+                            Admin Dashboard
+                          </Link>
+                        )}
                       </div>
-                    )}
-                  </>
-                ) : (
+                      <div className="py-1">
+                        <button
+                          onClick={() => logout()}
+                          className="w-full text-left flex items-center gap-2 px-4 py-2 text-xs font-bold text-rose-500 hover:bg-background-secondary transition-colors"
+                        >
+                          {t('nav.logout')}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                /* Unauthenticated Guest Actions: Login & Sign Up */
+                <div className="hidden sm:flex items-center gap-1.5">
                   <Link
                     href="/account"
-                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary-hover transition-all"
+                    className="flex items-center gap-1 px-3 py-2 rounded-xl bg-background-secondary text-foreground border border-border-custom text-xs font-bold hover:border-primary transition-all"
                   >
                     <LogIn size={14} />
-                    <span>Account</span>
+                    <span>Login</span>
                   </Link>
-                )}
-              </div>
-
-              {/* Vendor Portal Link */}
-              <Link
-                href="/vendor"
-                className="hidden xl:flex items-center gap-1.5 text-xs font-bold bg-background-secondary text-foreground border border-border-custom px-3.5 py-2 rounded-xl hover:border-primary transition-all"
-              >
-                <Store size={14} className="text-accent" />
-                <span>Seller Hub</span>
-              </Link>
+                  <Link
+                    href="/account?tab=register"
+                    className="flex items-center gap-1 px-3.5 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary-hover transition-all"
+                  >
+                    <UserPlus size={14} />
+                    <span>Sign Up</span>
+                  </Link>
+                </div>
+              )}
 
             </div>
           </div>
         </div>
       </header>
+
+      {/* Mobile Drawer Menu */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 flex bg-slate-900/60 backdrop-blur-xs transition-opacity lg:hidden">
+          <div className="w-4/5 max-w-sm bg-card text-card-foreground p-6 shadow-2xl flex flex-col h-full animate-slide-in relative border-r border-border-custom">
+            <div className="flex items-center justify-between border-b border-border-custom pb-4 mb-4">
+              <span className="text-lg font-black text-primary">JSS Solutions</span>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 text-foreground hover:bg-background-secondary rounded-xl border border-border-custom"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-4 text-xs font-bold">
+              <Link
+                href="/seller/register"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 p-3 bg-accent/10 border border-accent/20 text-accent rounded-xl"
+              >
+                <Store size={16} />
+                <span>Become Vendor / Sell Products</span>
+              </Link>
+
+              {!isAuthenticated ? (
+                <div className="grid grid-cols-2 gap-2 pt-2">
+                  <Link
+                    href="/account"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-3 text-center bg-background-secondary border border-border-custom text-foreground rounded-xl"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/account?tab=register"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-3 text-center bg-primary text-white rounded-xl"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              ) : (
+                <Link
+                  href="/account"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2 p-3 bg-primary/10 text-primary border border-primary/20 rounded-xl"
+                >
+                  <User size={16} />
+                  <span>My Account Dashboard</span>
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Cart Drawer */}
       {cartOpen && (
