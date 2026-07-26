@@ -45,7 +45,7 @@ export default function ProductDetailPage() {
         </p>
         <Link
           href="/"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground font-bold rounded-2xl shadow-sm hover:bg-primary/90 transition-all"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white font-bold text-xs rounded-xl shadow-xs hover:bg-primary-hover transition-all uppercase tracking-wider"
         >
           <ShoppingBag className="w-4 h-4" />
           <span>Back to Marketplace</span>
@@ -79,7 +79,8 @@ export default function ProductDetailPage() {
 
       <Breadcrumbs items={breadcrumbItems} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-start">
+      {/* Main Details Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-start bg-card border border-border-custom p-6 sm:p-8 rounded-3xl shadow-xs">
         <div className="lg:col-span-6">
           <ProductGallery images={product.images} name={product.name} />
         </div>
@@ -88,29 +89,31 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
+      {/* Related Products Showcase */}
       {relatedProducts.length > 0 && (
-        <section className="space-y-6 pt-12 border-t border-border/40">
-          <h3 className="text-2xl font-black text-foreground tracking-tight">
+        <section className="space-y-6 pt-8 border-t border-border-custom">
+          <h3 className="text-xl font-black text-foreground tracking-tight">
             Related Products
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {relatedProducts.slice(0, 4).map((relProd) => (
               <Link
                 key={relProd.id}
                 href={`/product/${relProd.slug}`}
-                className="group bg-card border border-border/40 rounded-3xl p-4 shadow-sm hover:shadow-md hover:border-primary/50 transition-all space-y-3"
+                className="group bg-card border border-border-custom hover:border-primary rounded-2xl p-4 shadow-xs hover:shadow-md transition-all space-y-3"
               >
-                <div className="aspect-square w-full bg-muted/20 rounded-2xl p-3 flex items-center justify-center overflow-hidden">
+                <div className="aspect-square w-full bg-slate-50 dark:bg-slate-900/50 rounded-xl p-3 flex items-center justify-center overflow-hidden border border-border-custom/50">
                   <img
                     src={relProd.images?.[0] || '/placeholder-product.png'}
                     alt={relProd.name}
                     className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform"
+                    loading="lazy"
                   />
                 </div>
-                <h4 className="font-bold text-sm text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                <h4 className="font-bold text-xs text-foreground group-hover:text-primary transition-colors line-clamp-1">
                   {relProd.name}
                 </h4>
-                <span className="text-base font-black text-primary block">
+                <span className="text-sm font-black text-primary block">
                   ₹{(relProd.sale_price || relProd.original_price).toLocaleString()}
                 </span>
               </Link>
@@ -119,6 +122,7 @@ export default function ProductDetailPage() {
         </section>
       )}
 
+      {/* Recently Viewed Items */}
       <RecentlyViewedSection />
     </div>
   );

@@ -133,8 +133,8 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
       {category.children && category.children.length > 0 && (
         <div className="space-y-3">
-          <h3 className="font-bold text-sm text-foreground">Explore Subcategories</h3>
-          <div className="flex flex-wrap gap-2.5">
+          <h3 className="font-bold text-xs uppercase tracking-wider text-muted-custom">Explore Subcategories</h3>
+          <div className="flex flex-wrap gap-2">
             {category.children.map((subcat) => {
               const isSelected = filters.subcategory === subcat.slug;
               const subName = getLocalizedText(subcat.name, language);
@@ -142,9 +142,9 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 <button
                   key={subcat.id}
                   onClick={() => handleSubcategoryPillClick(subcat.slug)}
-                  className={`text-xs font-bold px-4 py-2.5 rounded-2xl border transition-all ${
+                  className={`text-xs font-bold px-3.5 py-2 rounded-xl border transition-all ${
                     isSelected
-                      ? 'bg-primary border-primary text-white shadow-md'
+                      ? 'bg-primary border-primary text-white shadow-xs'
                       : 'bg-card border-border-custom hover:border-primary text-muted-custom hover:text-primary'
                   }`}
                 >
@@ -172,9 +172,9 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
         <div className="lg:col-span-3 space-y-6">
           
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card border border-border-custom p-4.5 rounded-3xl shadow-sm">
-            <p className="text-sm text-muted-custom font-semibold">
-              Showing <span className="text-foreground font-black">{products.length}</span> products in {categoryName}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card border border-border-custom p-4 rounded-2xl shadow-xs">
+            <p className="text-xs text-muted-custom font-semibold">
+              Showing <span className="text-foreground font-bold">{products.length}</span> products in {categoryName}
             </p>
             
             <div className="flex items-center gap-3 self-end sm:self-auto">
@@ -183,7 +183,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 <select
                   value={filters.sortBy || ''}
                   onChange={(e) => handleSortChange(e.target.value)}
-                  className="bg-background-secondary border border-border-custom text-foreground text-xs font-bold px-3 py-2 rounded-xl focus:outline-none focus:border-primary cursor-pointer transition-all"
+                  className="bg-background-secondary border border-border-custom text-foreground text-xs font-bold px-3 py-1.5 rounded-xl focus:outline-none focus:border-primary cursor-pointer transition-colors"
                 >
                   <option value="popularity">{t('cat.sort_popularity')}</option>
                   <option value="newest">{t('cat.sort_newest')}</option>
@@ -196,28 +196,28 @@ export default function CategoryPage({ params }: CategoryPageProps) {
               <div className="flex border border-border-custom rounded-xl overflow-hidden shrink-0">
                 <button
                   onClick={() => setIsGridView(true)}
-                  className={`p-2 transition-colors ${isGridView ? 'bg-primary text-white' : 'bg-background-secondary text-muted-custom hover:text-foreground'}`}
+                  className={`p-1.5 transition-colors ${isGridView ? 'bg-primary text-white' : 'bg-background-secondary text-muted-custom hover:text-foreground'}`}
                   title="Grid View"
                 >
-                  <Grid size={16} />
+                  <Grid size={15} />
                 </button>
                 <button
                   onClick={() => setIsGridView(false)}
-                  className={`p-2 transition-colors ${!isGridView ? 'bg-primary text-white' : 'bg-background-secondary text-muted-custom hover:text-foreground'}`}
+                  className={`p-1.5 transition-colors ${!isGridView ? 'bg-primary text-white' : 'bg-background-secondary text-muted-custom hover:text-foreground'}`}
                   title="List View"
                 >
-                  <List size={16} />
+                  <List size={15} />
                 </button>
               </div>
             </div>
           </div>
 
           {filters.searchQuery && (
-            <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 text-primary px-4 py-2 rounded-2xl w-max text-xs font-bold">
+            <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 text-primary px-3 py-1.5 rounded-xl w-max text-xs font-bold">
               <span>Search query: "{filters.searchQuery}"</span>
               <button 
                 onClick={() => setFilters(prev => ({ ...prev, searchQuery: undefined }))}
-                className="hover:text-accent ml-1 text-sm font-black"
+                className="hover:text-rose-500 ml-1 text-sm font-bold"
               >
                 ×
               </button>
@@ -227,16 +227,16 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {Array.from({ length: 6 }).map((_, idx) => (
-                <div key={idx} className="h-[420px] bg-card border border-border-custom rounded-2xl animate-pulse" />
+                <div key={idx} className="h-[380px] bg-card border border-border-custom rounded-2xl animate-pulse" />
               ))}
             </div>
           ) : products.length === 0 ? (
-            <div className="text-center py-16 bg-card border border-border-custom rounded-3xl shadow-sm space-y-4">
-              <ShoppingBag size={48} className="text-muted-custom/30 mx-auto" />
-              <p className="text-sm font-semibold text-muted-custom">{t('cat.no_products')}</p>
+            <div className="text-center py-16 bg-card border border-border-custom rounded-3xl shadow-xs space-y-3">
+              <ShoppingBag size={44} className="text-muted-custom/30 mx-auto" />
+              <p className="text-xs font-semibold text-muted-custom">{t('cat.no_products')}</p>
             </div>
           ) : isGridView ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
               {currentProducts.map((prod) => (
                 <ProductCard
                   key={prod.id}
@@ -251,41 +251,41 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 <div 
                   key={`list_${prod.id}`}
                   onClick={() => setQuickViewProductId(prod.id)}
-                  className="group bg-card text-card-foreground border border-border-custom hover:border-primary rounded-3xl p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col sm:flex-row gap-5 cursor-pointer relative"
+                  className="group bg-card text-card-foreground border border-border-custom hover:border-slate-400 dark:hover:border-slate-600 rounded-2xl p-4 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col sm:flex-row gap-4 cursor-pointer relative"
                 >
-                  <div className="h-40 w-full sm:w-40 bg-background-secondary rounded-2xl p-4 flex items-center justify-center relative shrink-0">
-                    <img src={prod.image} alt={prod.name} className="max-h-full max-w-full object-contain mix-blend-multiply dark:mix-blend-normal transition-transform group-hover:scale-105" />
+                  <div className="h-36 w-full sm:w-36 bg-slate-50 dark:bg-slate-900/50 rounded-xl p-3 flex items-center justify-center relative shrink-0 border border-border-custom/50">
+                    <img src={prod.image} alt={prod.name} className="max-h-full max-w-full object-contain transition-transform group-hover:scale-105" />
                     {prod.discountPercent > 0 && (
-                      <span className="absolute top-2 left-2 bg-accent text-white text-[9px] font-black px-2 py-0.5 rounded-full">
+                      <span className="absolute top-2 left-2 bg-foreground text-background text-[9px] font-black px-2 py-0.5 rounded uppercase">
                         {prod.discountPercent}% OFF
                       </span>
                     )}
                   </div>
                   
-                  <div className="flex-1 min-w-0 flex flex-col justify-between py-1">
-                    <div className="space-y-2">
+                  <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                    <div className="space-y-1.5">
                       <div className="flex justify-between items-center text-[10px] text-muted-custom font-semibold">
                         <span>{prod.brand}</span>
-                        <span className={prod.stockStatus === 'in_stock' ? 'text-green-600' : 'text-amber-600'}>
+                        <span className={prod.stockStatus === 'in_stock' ? 'text-emerald-600 font-bold' : 'text-amber-600 font-bold'}>
                           {t(`prod.${prod.stockStatus}`)}
                         </span>
                       </div>
-                      <h3 className="font-bold text-base text-foreground group-hover:text-primary transition-colors leading-tight line-clamp-1">{prod.name}</h3>
+                      <h3 className="font-bold text-sm text-foreground group-hover:text-primary transition-colors leading-tight line-clamp-1">{prod.name}</h3>
                       <p className="text-xs text-muted-custom line-clamp-2 leading-relaxed">{prod.description}</p>
                       
                       <div className="flex items-center gap-1">
                         <div className="flex text-amber-400">
                           {Array.from({ length: 5 }).map((_, i) => (
-                            <Star key={i} size={12} fill={i < Math.floor(prod.rating) ? 'currentColor' : 'none'} className={i < Math.floor(prod.rating) ? 'text-amber-400' : 'text-gray-300 dark:text-gray-600'} />
+                            <Star key={i} size={11} fill={i < Math.floor(prod.rating) ? 'currentColor' : 'none'} className={i < Math.floor(prod.rating) ? 'text-amber-400' : 'text-slate-300 dark:text-slate-700'} />
                           ))}
                         </div>
                         <span className="text-[10px] font-black text-foreground">{prod.rating}</span>
                       </div>
                     </div>
 
-                    <div className="flex justify-between items-center pt-3 border-t border-border-custom mt-3">
+                    <div className="flex justify-between items-center pt-2.5 border-t border-border-custom/60 mt-2">
                       <div className="flex items-baseline gap-1.5">
-                        <span className="text-lg font-black text-primary">₹{prod.offerPrice.toLocaleString()}</span>
+                        <span className="text-base font-black text-primary">₹{prod.offerPrice.toLocaleString()}</span>
                         {prod.originalPrice > prod.offerPrice && (
                           <span className="text-xs text-muted-custom line-through">₹{prod.originalPrice.toLocaleString()}</span>
                         )}
@@ -301,11 +301,11 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           )}
 
           {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-2 pt-6">
+            <div className="flex justify-center items-center gap-2 pt-4">
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="p-2 border border-border-custom hover:border-primary rounded-xl disabled:opacity-40 disabled:hover:border-border-custom transition-all"
+                className="p-2 border border-border-custom hover:border-primary rounded-xl disabled:opacity-40 disabled:hover:border-border-custom transition-colors"
               >
                 <ChevronLeft size={16} />
               </button>
@@ -314,9 +314,9 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 <button
                   key={idx}
                   onClick={() => handlePageChange(idx + 1)}
-                  className={`h-9 w-9 rounded-xl font-bold text-xs border transition-all ${
+                  className={`h-8 w-8 rounded-xl font-bold text-xs border transition-colors ${
                     currentPage === idx + 1
-                      ? 'bg-primary border-primary text-white shadow-md'
+                      ? 'bg-primary border-primary text-white shadow-xs'
                       : 'bg-card border-border-custom hover:border-primary text-foreground'
                   }`}
                 >
@@ -327,7 +327,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="p-2 border border-border-custom hover:border-primary rounded-xl disabled:opacity-40 disabled:hover:border-border-custom transition-all"
+                className="p-2 border border-border-custom hover:border-primary rounded-xl disabled:opacity-40 disabled:hover:border-border-custom transition-colors"
               >
                 <ChevronRight size={16} />
               </button>
@@ -339,14 +339,14 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       </div>
 
       {relatedCats.length > 0 && (
-        <section className="space-y-6 pt-8 border-t border-border-custom">
-          <h3 className="text-xl font-black text-foreground tracking-tight">{t('cat.related_categories')}</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <section className="space-y-4 pt-6 border-t border-border-custom">
+          <h3 className="text-lg font-black text-foreground tracking-tight">{t('cat.related_categories')}</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {relatedCats.map((relCat) => (
               <Link
                 key={relCat.id}
                 href={`/category/${relCat.slug}`}
-                className="bg-card text-card-foreground border border-border-custom hover:border-primary p-5 rounded-2xl shadow-sm text-center font-bold text-sm block transition-all hover:-translate-y-1"
+                className="bg-card text-card-foreground border border-border-custom hover:border-primary p-4 rounded-xl shadow-xs text-center font-bold text-xs block transition-colors"
               >
                 {getLocalizedText(relCat.name, language)}
               </Link>
