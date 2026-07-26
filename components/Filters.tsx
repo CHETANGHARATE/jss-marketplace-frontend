@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Star, RotateCcw, ShieldCheck, Tag, Sparkles } from 'lucide-react';
+import { Star, RotateCcw, ShieldCheck, Tag, Sparkles, Filter } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FilterParams } from '../types';
 
@@ -77,17 +77,17 @@ export const Filters: React.FC<FiltersProps> = ({
   };
 
   return (
-    <div className="space-y-7 bg-card text-card-foreground border border-border-custom p-6 rounded-3xl shadow-sm">
+    <div className="space-y-7 bg-card text-card-foreground border border-border-custom/80 p-6 rounded-3xl shadow-xs">
       
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-border-custom">
+      <div className="flex items-center justify-between pb-4 border-b border-border-custom/80">
         <div className="flex items-center gap-2">
-          <Sparkles size={16} className="text-primary" />
-          <h3 className="font-black text-base uppercase tracking-wider">{t('cat.filter_by')}</h3>
+          <Filter size={16} className="text-primary" />
+          <h3 className="font-extrabold text-base uppercase tracking-wider">{t('cat.filter_by')}</h3>
         </div>
         <button
           onClick={handleClearAll}
-          className="text-xs font-bold text-accent hover:text-accent-hover flex items-center gap-1 transition-colors"
+          className="text-xs font-extrabold text-rose-500 hover:text-rose-600 flex items-center gap-1 transition-colors"
         >
           <RotateCcw size={12} />
           {t('cat.clear_all')}
@@ -97,18 +97,18 @@ export const Filters: React.FC<FiltersProps> = ({
       {/* Subcategories */}
       {subcategories.length > 0 && (
         <div className="space-y-3">
-          <h4 className="font-bold text-sm text-foreground">Subcategories</h4>
+          <h4 className="font-extrabold text-xs uppercase tracking-wider text-muted-custom">Subcategories</h4>
           <div className="space-y-2">
             {subcategories.map((subcat) => (
               <label
                 key={subcat}
-                className="flex items-center gap-2.5 text-sm text-muted-custom hover:text-foreground cursor-pointer transition-colors"
+                className="flex items-center gap-2.5 text-xs font-medium text-muted-custom hover:text-foreground cursor-pointer transition-colors"
               >
                 <input
                   type="checkbox"
                   checked={activeFilters.subcategory === subcat}
                   onChange={() => handleSubcatToggle(subcat)}
-                  className="h-4.5 w-4.5 rounded-lg border-border-custom text-primary focus:ring-primary/20 accent-primary"
+                  className="h-4 w-4 rounded-md border-border-custom text-primary focus:ring-primary/20 accent-primary cursor-pointer"
                 />
                 <span>{subcat}</span>
               </label>
@@ -118,33 +118,33 @@ export const Filters: React.FC<FiltersProps> = ({
       )}
 
       {/* Price Filter */}
-      <div className="space-y-3 pt-4 border-t border-border-custom">
-        <h4 className="font-bold text-sm text-foreground">{t('cat.price_range')}</h4>
+      <div className="space-y-3 pt-4 border-t border-border-custom/80">
+        <h4 className="font-extrabold text-xs uppercase tracking-wider text-muted-custom">{t('cat.price_range')}</h4>
         <div className="flex items-center gap-2">
           <div className="flex-1">
             <span className="text-[10px] font-bold text-muted-custom uppercase">{t('cat.min')}</span>
             <div className="relative mt-1">
-              <span className="absolute left-3 top-2.5 text-xs text-muted-custom">₹</span>
+              <span className="absolute left-3 top-2.5 text-xs text-muted-custom font-bold">₹</span>
               <input
                 type="number"
                 value={activeFilters.minPrice ?? ''}
                 onChange={(e) => handlePriceChange('minPrice', e.target.value)}
                 placeholder="0"
-                className="w-full bg-background-secondary text-foreground text-sm pl-7 pr-3 py-2 rounded-xl border border-border-custom focus:outline-none focus:border-primary transition-all"
+                className="w-full bg-background-secondary text-foreground text-xs font-semibold pl-7 pr-3 py-2 rounded-xl border border-border-custom/80 focus:outline-none focus:border-primary transition-all"
               />
             </div>
           </div>
-          <div className="text-muted-custom self-end mb-2.5">-</div>
+          <div className="text-muted-custom self-end mb-2 font-bold text-xs">-</div>
           <div className="flex-1">
             <span className="text-[10px] font-bold text-muted-custom uppercase">{t('cat.max')}</span>
             <div className="relative mt-1">
-              <span className="absolute left-3 top-2.5 text-xs text-muted-custom">₹</span>
+              <span className="absolute left-3 top-2.5 text-xs text-muted-custom font-bold">₹</span>
               <input
                 type="number"
                 value={activeFilters.maxPrice ?? ''}
                 onChange={(e) => handlePriceChange('maxPrice', e.target.value)}
                 placeholder="99,999"
-                className="w-full bg-background-secondary text-foreground text-sm pl-7 pr-3 py-2 rounded-xl border border-border-custom focus:outline-none focus:border-primary transition-all"
+                className="w-full bg-background-secondary text-foreground text-xs font-semibold pl-7 pr-3 py-2 rounded-xl border border-border-custom/80 focus:outline-none focus:border-primary transition-all"
               />
             </div>
           </div>
@@ -153,19 +153,19 @@ export const Filters: React.FC<FiltersProps> = ({
 
       {/* Brand Filters */}
       {popularBrands.length > 0 && (
-        <div className="space-y-3 pt-4 border-t border-border-custom">
-          <h4 className="font-bold text-sm text-foreground">{t('cat.brand_filter')}</h4>
+        <div className="space-y-3 pt-4 border-t border-border-custom/80">
+          <h4 className="font-extrabold text-xs uppercase tracking-wider text-muted-custom">{t('cat.brand_filter')}</h4>
           <div className="space-y-2">
             {popularBrands.map((brand) => (
               <label
                 key={brand}
-                className="flex items-center gap-2.5 text-sm text-muted-custom hover:text-foreground cursor-pointer transition-colors"
+                className="flex items-center gap-2.5 text-xs font-medium text-muted-custom hover:text-foreground cursor-pointer transition-colors"
               >
                 <input
                   type="checkbox"
                   checked={(activeFilters.brand || []).includes(brand)}
                   onChange={() => handleBrandToggle(brand)}
-                  className="h-4.5 w-4.5 rounded-lg border-border-custom text-primary focus:ring-primary/20 accent-primary"
+                  className="h-4 w-4 rounded-md border-border-custom text-primary focus:ring-primary/20 accent-primary cursor-pointer"
                 />
                 <span>{brand}</span>
               </label>
@@ -175,16 +175,16 @@ export const Filters: React.FC<FiltersProps> = ({
       )}
 
       {/* Customer Rating */}
-      <div className="space-y-3 pt-4 border-t border-border-custom">
-        <h4 className="font-bold text-sm text-foreground">{t('cat.rating_filter')}</h4>
+      <div className="space-y-3 pt-4 border-t border-border-custom/80">
+        <h4 className="font-extrabold text-xs uppercase tracking-wider text-muted-custom">{t('cat.rating_filter')}</h4>
         <div className="space-y-2">
           {[4, 3, 2].map((stars) => (
             <button
               key={stars}
               onClick={() => handleRatingSelect(stars)}
-              className={`w-full flex items-center justify-between text-left p-2 rounded-xl text-sm transition-all border ${
+              className={`w-full flex items-center justify-between text-left p-2 rounded-xl text-xs transition-all border ${
                 activeFilters.rating === stars
-                  ? 'bg-primary/5 border-primary/20 text-primary font-bold'
+                  ? 'bg-primary/10 border-primary/20 text-primary font-bold'
                   : 'border-transparent text-muted-custom hover:bg-background-secondary hover:text-foreground'
               }`}
             >
@@ -193,15 +193,15 @@ export const Filters: React.FC<FiltersProps> = ({
                   {Array.from({ length: 5 }).map((_, idx) => (
                     <Star
                       key={idx}
-                      size={14}
+                      size={13}
                       fill={idx < stars ? 'currentColor' : 'none'}
-                      className={idx < stars ? 'text-amber-400' : 'text-gray-300 dark:text-gray-600'}
+                      className={idx < stars ? 'text-amber-400' : 'text-slate-300 dark:text-slate-700'}
                     />
                   ))}
                 </div>
-                <span>& Above</span>
+                <span className="font-bold">& Above</span>
               </div>
-              <span className="text-[10px] bg-background border border-border-custom px-2 py-0.5 rounded-md font-bold text-muted-custom">
+              <span className="text-[10px] bg-background border border-border-custom/80 px-2 py-0.5 rounded-lg font-black text-muted-custom">
                 {stars}★
               </span>
             </button>
@@ -210,24 +210,24 @@ export const Filters: React.FC<FiltersProps> = ({
       </div>
 
       {/* Discount Percentage */}
-      <div className="space-y-3 pt-4 border-t border-border-custom">
-        <h4 className="font-bold text-sm text-foreground">{t('cat.discount_filter')}</h4>
+      <div className="space-y-3 pt-4 border-t border-border-custom/80">
+        <h4 className="font-extrabold text-xs uppercase tracking-wider text-muted-custom">{t('cat.discount_filter')}</h4>
         <div className="space-y-2">
           {[50, 30, 10].map((disc) => (
             <button
               key={disc}
               onClick={() => handleDiscountSelect(disc)}
-              className={`w-full flex items-center justify-between text-left p-2 rounded-xl text-sm transition-all border ${
+              className={`w-full flex items-center justify-between text-left p-2 rounded-xl text-xs transition-all border ${
                 activeFilters.discount === disc
-                  ? 'bg-accent/5 border-accent/20 text-accent font-bold'
+                  ? 'bg-rose-500/10 border-rose-500/20 text-rose-500 font-bold'
                   : 'border-transparent text-muted-custom hover:bg-background-secondary hover:text-foreground'
               }`}
             >
               <div className="flex items-center gap-1.5">
-                <Tag size={12} className={activeFilters.discount === disc ? 'text-accent' : 'text-muted-custom'} />
-                <span>{disc}% Off or more</span>
+                <Tag size={13} className={activeFilters.discount === disc ? 'text-rose-500' : 'text-muted-custom'} />
+                <span className="font-bold">{disc}% Off or more</span>
               </div>
-              <span className="text-[10px] bg-background border border-border-custom px-2 py-0.5 rounded-md font-bold text-muted-custom">
+              <span className="text-[10px] bg-background border border-border-custom/80 px-2 py-0.5 rounded-lg font-black text-muted-custom">
                 {disc}%+
               </span>
             </button>
@@ -236,19 +236,19 @@ export const Filters: React.FC<FiltersProps> = ({
       </div>
 
       {/* Availability (Stock Status) */}
-      <div className="space-y-3 pt-4 border-t border-border-custom">
-        <h4 className="font-bold text-sm text-foreground">Stock Status</h4>
+      <div className="space-y-3 pt-4 border-t border-border-custom/80">
+        <h4 className="font-extrabold text-xs uppercase tracking-wider text-muted-custom">Stock Status</h4>
         <div className="space-y-2">
           {['in_stock', 'low_stock', 'out_of_stock'].map((status) => (
             <label
               key={status}
-              className="flex items-center gap-2.5 text-sm text-muted-custom hover:text-foreground cursor-pointer transition-colors"
+              className="flex items-center gap-2.5 text-xs font-medium text-muted-custom hover:text-foreground cursor-pointer transition-colors"
             >
               <input
                 type="checkbox"
                 checked={activeFilters.stockStatus === status}
                 onChange={() => handleStockToggle(status)}
-                className="h-4.5 w-4.5 rounded-lg border-border-custom text-primary focus:ring-primary/20 accent-primary"
+                className="h-4 w-4 rounded-md border-border-custom text-primary focus:ring-primary/20 accent-primary cursor-pointer"
               />
               <span className="capitalize">{status.replace('_', ' ')}</span>
             </label>
@@ -257,10 +257,10 @@ export const Filters: React.FC<FiltersProps> = ({
       </div>
 
       {/* Certified Protection Badge */}
-      <div className="p-4 bg-background-secondary rounded-2xl border border-border-custom text-center space-y-1">
-        <ShieldCheck size={28} className="text-primary mx-auto mb-2" />
-        <h5 className="font-bold text-xs text-foreground">JSS Solutions Assured</h5>
-        <p className="text-[10px] text-muted-custom">All sellers are GSTIN verified and comply with quality guidelines.</p>
+      <div className="p-4 bg-background-secondary rounded-2xl border border-border-custom/80 text-center space-y-1.5">
+        <ShieldCheck size={26} className="text-emerald-500 mx-auto" />
+        <h5 className="font-bold text-xs text-foreground">JSS Assured Quality</h5>
+        <p className="text-[10px] text-muted-custom leading-relaxed">All products undergo 100% authenticity and vendor GSTIN verification.</p>
       </div>
 
     </div>

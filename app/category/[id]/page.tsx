@@ -11,7 +11,8 @@ import {
   Star,
   ChevronLeft,
   ChevronRight,
-  AlertCircle
+  AlertCircle,
+  ArrowRight
 } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { useCategoryBySlug, useCategories } from '../../../hooks/useCategories';
@@ -68,21 +69,29 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
   if (isCategoryLoading) {
     return (
-      <div className="py-20 flex flex-col items-center justify-center gap-3 text-foreground/60">
+      <div className="py-24 flex flex-col items-center justify-center gap-3 text-foreground/60">
         <Sparkles className="w-8 h-8 text-primary animate-spin" />
-        <p className="text-sm font-medium">Loading Category Catalog...</p>
+        <p className="text-sm font-bold tracking-wide">Loading Category Catalog...</p>
       </div>
     );
   }
 
   if (isError || !category) {
     return (
-      <div className="py-16 text-center space-y-4">
-        <AlertCircle className="w-12 h-12 text-rose-500 mx-auto" />
-        <h2 className="text-2xl font-bold text-foreground">Category Not Found</h2>
-        <p className="text-sm text-foreground/60">
-          The requested category catalog could not be found or has been moved.
+      <div className="py-20 text-center space-y-4 max-w-md mx-auto">
+        <div className="h-16 w-16 rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20 flex items-center justify-center mx-auto">
+          <AlertCircle className="w-8 h-8" />
+        </div>
+        <h2 className="text-2xl font-black text-foreground">Category Not Found</h2>
+        <p className="text-xs text-muted-custom leading-relaxed font-medium">
+          The requested category catalog could not be found or has been moved to another marketplace section.
         </p>
+        <Link 
+          href="/"
+          className="inline-flex items-center gap-2 text-xs font-black text-white bg-primary hover:bg-primary-hover px-5 py-2.5 rounded-2xl transition-all shadow-xs"
+        >
+          Return to Marketplace Home
+        </Link>
       </div>
     );
   }
@@ -120,21 +129,23 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   const relatedCats = allCategories.filter((c) => c.slug !== categorySlug).slice(0, 4);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 sm:space-y-10">
       
       <Breadcrumbs
         items={[
-          { label: 'Categories', href: '/categories' },
+          { label: 'Categories', href: '/#categories' },
           { label: categoryName },
         ]}
       />
 
+      {/* Category Hero Header */}
       <CategoryHeader category={category} />
 
+      {/* Subcategory Pills Carousel */}
       {category.children && category.children.length > 0 && (
         <div className="space-y-3">
-          <h3 className="font-bold text-xs uppercase tracking-wider text-muted-custom">Explore Subcategories</h3>
-          <div className="flex flex-wrap gap-2">
+          <h3 className="font-extrabold text-xs uppercase tracking-wider text-muted-custom">Explore Subcategories</h3>
+          <div className="flex flex-wrap gap-2.5">
             {category.children.map((subcat) => {
               const isSelected = filters.subcategory === subcat.slug;
               const subName = getLocalizedText(subcat.name, language);
@@ -142,10 +153,10 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 <button
                   key={subcat.id}
                   onClick={() => handleSubcategoryPillClick(subcat.slug)}
-                  className={`text-xs font-bold px-3.5 py-2 rounded-xl border transition-all ${
+                  className={`text-xs font-black px-4 py-2 rounded-2xl border transition-all shadow-2xs ${
                     isSelected
                       ? 'bg-primary border-primary text-white shadow-xs'
-                      : 'bg-card border-border-custom hover:border-primary text-muted-custom hover:text-primary'
+                      : 'bg-card border-border-custom/80 hover:border-primary/60 text-muted-custom hover:text-primary'
                   }`}
                 >
                   {subName}
@@ -156,8 +167,10 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         </div>
       )}
 
+      {/* Main Catalog Section */}
       <div id="products-section" className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start scroll-mt-24">
         
+        {/* Sidebar Filters */}
         <div className="lg:col-span-1">
           <Filters
             subcategories={category.children?.map(c => getLocalizedText(c.name, language)) || []}
@@ -170,20 +183,22 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           />
         </div>
 
+        {/* Product Catalog Grid & View Controls */}
         <div className="lg:col-span-3 space-y-6">
           
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card border border-border-custom p-4 rounded-2xl shadow-xs">
+          {/* Controls Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card border border-border-custom/80 p-4 rounded-3xl shadow-xs">
             <p className="text-xs text-muted-custom font-semibold">
-              Showing <span className="text-foreground font-bold">{products.length}</span> products in {categoryName}
+              Showing <span className="text-foreground font-black">{products.length}</span> products in <strong className="text-foreground">{categoryName}</strong>
             </p>
             
             <div className="flex items-center gap-3 self-end sm:self-auto">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-bold text-muted-custom">{t('cat.sort_by')}:</span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-extrabold text-muted-custom uppercase">{t('cat.sort_by')}:</span>
                 <select
                   value={filters.sortBy || ''}
                   onChange={(e) => handleSortChange(e.target.value)}
-                  className="bg-background-secondary border border-border-custom text-foreground text-xs font-bold px-3 py-1.5 rounded-xl focus:outline-none focus:border-primary cursor-pointer transition-colors"
+                  className="bg-background-secondary border border-border-custom/80 text-foreground text-xs font-bold px-3.5 py-2 rounded-2xl focus:outline-none focus:border-primary cursor-pointer transition-colors"
                 >
                   <option value="popularity">{t('cat.sort_popularity')}</option>
                   <option value="newest">{t('cat.sort_newest')}</option>
@@ -193,50 +208,52 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 </select>
               </div>
 
-              <div className="flex border border-border-custom rounded-xl overflow-hidden shrink-0">
+              <div className="flex border border-border-custom/80 rounded-2xl overflow-hidden shrink-0">
                 <button
                   onClick={() => setIsGridView(true)}
-                  className={`p-1.5 transition-colors ${isGridView ? 'bg-primary text-white' : 'bg-background-secondary text-muted-custom hover:text-foreground'}`}
+                  className={`p-2 transition-colors ${isGridView ? 'bg-primary text-white' : 'bg-background-secondary text-muted-custom hover:text-foreground'}`}
                   title="Grid View"
                 >
-                  <Grid size={15} />
+                  <Grid size={16} />
                 </button>
                 <button
                   onClick={() => setIsGridView(false)}
-                  className={`p-1.5 transition-colors ${!isGridView ? 'bg-primary text-white' : 'bg-background-secondary text-muted-custom hover:text-foreground'}`}
+                  className={`p-2 transition-colors ${!isGridView ? 'bg-primary text-white' : 'bg-background-secondary text-muted-custom hover:text-foreground'}`}
                   title="List View"
                 >
-                  <List size={15} />
+                  <List size={16} />
                 </button>
               </div>
             </div>
           </div>
 
+          {/* Active Search Pill Tag */}
           {filters.searchQuery && (
-            <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 text-primary px-3 py-1.5 rounded-xl w-max text-xs font-bold">
+            <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 text-primary px-4 py-2 rounded-2xl w-max text-xs font-black">
               <span>Search query: "{filters.searchQuery}"</span>
               <button 
                 onClick={() => setFilters(prev => ({ ...prev, searchQuery: undefined }))}
-                className="hover:text-rose-500 ml-1 text-sm font-bold"
+                className="hover:text-rose-500 ml-1 text-sm font-black"
               >
                 ×
               </button>
             </div>
           )}
 
+          {/* Catalog State */}
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {Array.from({ length: 6 }).map((_, idx) => (
-                <div key={idx} className="h-[380px] bg-card border border-border-custom rounded-2xl animate-pulse" />
+                <div key={idx} className="h-[380px] bg-card border border-border-custom/80 rounded-3xl animate-pulse" />
               ))}
             </div>
           ) : products.length === 0 ? (
-            <div className="text-center py-16 bg-card border border-border-custom rounded-3xl shadow-xs space-y-3">
-              <ShoppingBag size={44} className="text-muted-custom/30 mx-auto" />
-              <p className="text-xs font-semibold text-muted-custom">{t('cat.no_products')}</p>
+            <div className="text-center py-16 bg-card border border-border-custom/80 rounded-3xl shadow-xs space-y-3">
+              <ShoppingBag size={48} className="text-muted-custom/30 mx-auto" />
+              <p className="text-xs font-bold text-muted-custom">{t('cat.no_products')}</p>
             </div>
           ) : isGridView ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {currentProducts.map((prod) => (
                 <ProductCard
                   key={prod.id}
@@ -251,47 +268,48 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 <div 
                   key={`list_${prod.id}`}
                   onClick={() => setQuickViewProductId(prod.id)}
-                  className="group bg-card text-card-foreground border border-border-custom hover:border-slate-400 dark:hover:border-slate-600 rounded-2xl p-4 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col sm:flex-row gap-4 cursor-pointer relative"
+                  className="group bg-card text-card-foreground border border-border-custom/80 hover:border-primary/50 rounded-3xl p-5 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col sm:flex-row gap-5 cursor-pointer relative"
                 >
-                  <div className="h-36 w-full sm:w-36 bg-slate-50 dark:bg-slate-900/50 rounded-xl p-3 flex items-center justify-center relative shrink-0 border border-border-custom/50">
+                  <div className="h-40 w-full sm:w-40 bg-slate-50 dark:bg-slate-900/40 rounded-2xl p-4 flex items-center justify-center relative shrink-0 border border-border-custom/60 overflow-hidden">
                     <img src={prod.image} alt={prod.name} className="max-h-full max-w-full object-contain transition-transform group-hover:scale-105" />
                     {prod.discountPercent > 0 && (
-                      <span className="absolute top-2 left-2 bg-foreground text-background text-[9px] font-black px-2 py-0.5 rounded uppercase">
+                      <span className="absolute top-2.5 left-2.5 bg-rose-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
                         {prod.discountPercent}% OFF
                       </span>
                     )}
                   </div>
                   
-                  <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
-                    <div className="space-y-1.5">
-                      <div className="flex justify-between items-center text-[10px] text-muted-custom font-semibold">
-                        <span>{prod.brand}</span>
-                        <span className={prod.stockStatus === 'in_stock' ? 'text-emerald-600 font-bold' : 'text-amber-600 font-bold'}>
+                  <div className="flex-1 min-w-0 flex flex-col justify-between py-1 space-y-3">
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center text-[10px] text-muted-custom font-bold">
+                        <span className="uppercase tracking-wider bg-background-secondary border border-border-custom/80 px-2 py-0.5 rounded-md">{prod.brand}</span>
+                        <span className={prod.stockStatus === 'in_stock' ? 'text-emerald-600 font-extrabold' : 'text-amber-600 font-extrabold'}>
                           {t(`prod.${prod.stockStatus}`)}
                         </span>
                       </div>
-                      <h3 className="font-bold text-sm text-foreground group-hover:text-primary transition-colors leading-tight line-clamp-1">{prod.name}</h3>
-                      <p className="text-xs text-muted-custom line-clamp-2 leading-relaxed">{prod.description}</p>
+                      <h3 className="font-extrabold text-base text-foreground group-hover:text-primary transition-colors leading-snug line-clamp-1">{prod.name}</h3>
+                      <p className="text-xs text-muted-custom line-clamp-2 leading-relaxed font-normal">{prod.description}</p>
                       
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1.5 pt-0.5">
                         <div className="flex text-amber-400">
                           {Array.from({ length: 5 }).map((_, i) => (
-                            <Star key={i} size={11} fill={i < Math.floor(prod.rating) ? 'currentColor' : 'none'} className={i < Math.floor(prod.rating) ? 'text-amber-400' : 'text-slate-300 dark:text-slate-700'} />
+                            <Star key={i} size={12} fill={i < Math.floor(prod.rating) ? 'currentColor' : 'none'} className={i < Math.floor(prod.rating) ? 'text-amber-400' : 'text-slate-300 dark:text-slate-700'} />
                           ))}
                         </div>
-                        <span className="text-[10px] font-black text-foreground">{prod.rating}</span>
+                        <span className="text-xs font-black text-foreground">{prod.rating}</span>
                       </div>
                     </div>
 
-                    <div className="flex justify-between items-center pt-2.5 border-t border-border-custom/60 mt-2">
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="text-base font-black text-primary">₹{prod.offerPrice.toLocaleString()}</span>
+                    <div className="flex justify-between items-center pt-3 border-t border-border-custom/60 mt-2">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-lg font-black text-primary">₹{prod.offerPrice.toLocaleString()}</span>
                         {prod.originalPrice > prod.offerPrice && (
-                          <span className="text-xs text-muted-custom line-through">₹{prod.originalPrice.toLocaleString()}</span>
+                          <span className="text-xs text-muted-custom line-through font-semibold">₹{prod.originalPrice.toLocaleString()}</span>
                         )}
                       </div>
-                      <span className="text-xs font-bold text-primary group-hover:underline flex items-center gap-1">
-                        Quick Inspect →
+                      <span className="text-xs font-black text-primary group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                        <span>Quick Inspect</span>
+                        <ArrowRight size={13} />
                       </span>
                     </div>
                   </div>
@@ -300,12 +318,13 @@ export default function CategoryPage({ params }: CategoryPageProps) {
             </div>
           )}
 
+          {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-2 pt-4">
+            <div className="flex justify-center items-center gap-2 pt-6">
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="p-2 border border-border-custom hover:border-primary rounded-xl disabled:opacity-40 disabled:hover:border-border-custom transition-colors"
+                className="p-2.5 border border-border-custom/80 hover:border-primary rounded-2xl disabled:opacity-40 disabled:hover:border-border-custom transition-all"
               >
                 <ChevronLeft size={16} />
               </button>
@@ -314,10 +333,10 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 <button
                   key={idx}
                   onClick={() => handlePageChange(idx + 1)}
-                  className={`h-8 w-8 rounded-xl font-bold text-xs border transition-colors ${
+                  className={`h-9 w-9 rounded-2xl font-black text-xs border transition-all ${
                     currentPage === idx + 1
                       ? 'bg-primary border-primary text-white shadow-xs'
-                      : 'bg-card border-border-custom hover:border-primary text-foreground'
+                      : 'bg-card border-border-custom/80 hover:border-primary text-foreground'
                   }`}
                 >
                   {idx + 1}
@@ -327,7 +346,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="p-2 border border-border-custom hover:border-primary rounded-xl disabled:opacity-40 disabled:hover:border-border-custom transition-colors"
+                className="p-2.5 border border-border-custom/80 hover:border-primary rounded-2xl disabled:opacity-40 disabled:hover:border-border-custom transition-all"
               >
                 <ChevronRight size={16} />
               </button>
@@ -338,15 +357,16 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
       </div>
 
+      {/* Related Categories Footer Bar */}
       {relatedCats.length > 0 && (
-        <section className="space-y-4 pt-6 border-t border-border-custom">
-          <h3 className="text-lg font-black text-foreground tracking-tight">{t('cat.related_categories')}</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <section className="space-y-4 pt-8 border-t border-border-custom/80">
+          <h3 className="text-xl font-black text-foreground tracking-tight">{t('cat.related_categories')}</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {relatedCats.map((relCat) => (
               <Link
                 key={relCat.id}
                 href={`/category/${relCat.slug}`}
-                className="bg-card text-card-foreground border border-border-custom hover:border-primary p-4 rounded-xl shadow-xs text-center font-bold text-xs block transition-colors"
+                className="bg-card text-card-foreground border border-border-custom/80 hover:border-primary/60 p-5 rounded-3xl shadow-2xs text-center font-black text-xs block transition-all hover:-translate-y-0.5"
               >
                 {getLocalizedText(relCat.name, language)}
               </Link>
