@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Category, Product } from '../types';
-import { getFeaturedProductsByCategory } from '../services/product';
+import { productService, mapApiProductToProduct } from '../services/productService';
 import { ProductCard } from './ProductCard';
 
 interface FeaturedCategoriesProps {
@@ -23,8 +23,8 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
       setLoading(true);
       try {
         const promises = categories.map(async (cat) => {
-          const products = await getFeaturedProductsByCategory(cat.id, 4);
-          return { categoryId: cat.id, products };
+          const response = await productService.getProducts({ category: cat.id, per_page: 4 });
+          return { categoryId: cat.id, products: response.data.map(mapApiProductToProduct) };
         });
         
         const results = await Promise.all(promises);
