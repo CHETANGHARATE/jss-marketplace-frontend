@@ -15,23 +15,26 @@ export interface ProductQueryParams {
 }
 
 export function mapApiProductToProduct(apiProd: ApiProduct): Product {
-  const originalPrice = apiProd.original_price || 0;
-  const offerPrice = apiProd.sale_price || originalPrice;
-  const discountPercent = originalPrice > offerPrice
+  const originalPrice = apiProd.originalPrice ?? apiProd.original_price ?? 0;
+  const offerPrice = apiProd.offerPrice ?? apiProd.sale_price ?? originalPrice;
+  const discountPercent = apiProd.discountPercent ?? (originalPrice > offerPrice
     ? Math.round(((originalPrice - offerPrice) / originalPrice) * 100)
-    : 0;
+    : 0);
 
   const categorySlug = typeof apiProd.category?.name === 'string'
     ? apiProd.category.name
     : (apiProd.category?.slug || 'general');
+
+  const imgUrl = apiProd.image || apiProd.images?.[0] || '/placeholder-product.png';
+  const stockStat = (apiProd.stockStatus || apiProd.stock_status || 'in_stock') as any;
 
   return {
     id: String(apiProd.id),
     name: apiProd.name,
     brand: apiProd.brand?.name || 'Generic',
     seller: {
-      id: String(apiProd.seller_id || 1),
-      name: 'Verified Marketplace Vendor',
+      id: String(apiProd.seller_id || apiProd.seller?.id || 1),
+      name: apiProd.seller?.name || 'Verified Marketplace Vendor',
       rating: 4.8,
       location: 'India',
       joinedDate: '2024',
@@ -43,9 +46,9 @@ export function mapApiProductToProduct(apiProd: ApiProduct): Product {
     offerPrice,
     discountPercent,
     rating: apiProd.rating || 5,
-    reviewsCount: apiProd.reviews_count || 0,
-    stockStatus: apiProd.stock_status || 'in_stock',
-    image: apiProd.images?.[0] || '/placeholder-product.png',
+    reviewsCount: apiProd.reviewsCount || apiProd.reviews_count || 0,
+    stockStatus: stockStat,
+    image: imgUrl,
     description: apiProd.description || '',
     features: apiProd.features || [],
     reviews: [],

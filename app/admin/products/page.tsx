@@ -72,19 +72,24 @@ export default function AdminProductsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/40">
-                  {products.map((prod) => (
-                    <tr key={prod.id} className="hover:bg-muted/20">
-                      <td className="py-3.5 px-2 flex items-center gap-3">
-                        <div className="h-10 w-10 shrink-0 bg-muted/30 rounded-xl p-1 flex items-center justify-center overflow-hidden">
-                          <img src={prod.images?.[0] || '/placeholder-product.png'} alt={prod.name} className="max-w-full max-h-full object-contain" />
-                        </div>
-                        <span className="font-bold text-foreground line-clamp-1">{prod.name}</span>
-                      </td>
-                      <td className="py-3.5 px-2 font-mono text-foreground/60">{prod.sku || 'N/A'}</td>
-                      <td className="py-3.5 px-2 font-black text-rose-500">
-                        ₹{(prod.sale_price || prod.original_price).toLocaleString()}
-                      </td>
-                      <td className="py-3.5 px-2 font-bold text-foreground/70">{prod.stock_quantity}</td>
+                    {products.map((prod) => {
+                      const displayImage = prod.image || prod.images?.[0] || '/placeholder-product.png';
+                      const displayPrice = prod.offerPrice ?? prod.originalPrice ?? prod.sale_price ?? prod.original_price ?? 0;
+                      const displayStock = prod.stockQuantity ?? prod.stock_quantity ?? 0;
+
+                      return (
+                        <tr key={prod.id} className="hover:bg-muted/20">
+                          <td className="py-3.5 px-2 flex items-center gap-3">
+                            <div className="h-10 w-10 shrink-0 bg-muted/30 rounded-xl p-1 flex items-center justify-center overflow-hidden">
+                              <img src={displayImage} alt={prod.name} className="max-w-full max-h-full object-contain" />
+                            </div>
+                            <span className="font-bold text-foreground line-clamp-1">{prod.name}</span>
+                          </td>
+                          <td className="py-3.5 px-2 font-mono text-foreground/60">{prod.sku || 'N/A'}</td>
+                          <td className="py-3.5 px-2 font-black text-rose-500">
+                            ₹{displayPrice.toLocaleString()}
+                          </td>
+                          <td className="py-3.5 px-2 font-bold text-foreground/70">{displayStock}</td>
                       <td className="py-3.5 px-2 text-right space-x-2">
                         <button
                           onClick={() => approveMutation.mutate(prod.id)}
@@ -112,7 +117,8 @@ export default function AdminProductsPage() {
                         </button>
                       </td>
                     </tr>
-                  ))}
+                  );
+                })}
                 </tbody>
               </table>
             </div>

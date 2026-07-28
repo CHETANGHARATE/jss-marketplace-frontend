@@ -91,18 +91,27 @@ export interface ApiProduct {
   name: string;
   slug: string;
   sku?: string;
-  original_price: number;
+  original_price?: number;
+  originalPrice?: number;
+  offer_price?: number;
+  offerPrice?: number;
   sale_price?: number;
-  stock_quantity: number;
-  stock_status: 'in_stock' | 'low_stock' | 'out_of_stock';
-  status: 'draft' | 'pending' | 'published' | 'rejected';
-  rating: number;
-  reviews_count: number;
+  discountPercent?: number;
+  stock_quantity?: number;
+  stockQuantity?: number;
+  stock_status?: string;
+  stockStatus?: string;
+  status: string;
+  rating?: number;
+  reviews_count?: number;
+  reviewsCount?: number;
   description?: string;
   features?: string[];
+  image?: string;
   images?: string[];
   category?: ApiCategory;
   brand?: ApiBrand;
+  seller?: { id: number; name: string };
   created_at?: string;
 }
 

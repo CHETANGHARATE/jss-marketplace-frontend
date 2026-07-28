@@ -43,15 +43,13 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
       },
       category: product.category?.slug || 'general',
       subcategory: '',
-      originalPrice: product.original_price,
-      offerPrice: product.sale_price || product.original_price,
-      discountPercent: product.sale_price
-        ? Math.round(((product.original_price - product.sale_price) / product.original_price) * 100)
-        : 0,
+      originalPrice: product.originalPrice ?? product.original_price ?? 0,
+      offerPrice: product.offerPrice ?? product.sale_price ?? product.originalPrice ?? product.original_price ?? 0,
+      discountPercent: product.discountPercent ?? (product.sale_price && product.original_price ? Math.round(((product.original_price - product.sale_price) / product.original_price) * 100) : 0),
       rating: product.rating || 5,
-      reviewsCount: product.reviews_count || 0,
-      stockStatus: product.stock_status || 'in_stock',
-      image: product.images?.[0] || '/placeholder-product.png',
+      reviewsCount: product.reviewsCount || product.reviews_count || 0,
+      stockStatus: (product.stockStatus || product.stock_status || 'in_stock') as any,
+      image: product.image || product.images?.[0] || '/placeholder-product.png',
       description: product.description || '',
       features: product.features || [],
       reviews: [],
@@ -62,14 +60,13 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
     setTimeout(() => setAddedNotice(false), 2500);
   };
 
-  const offerPrice = product.sale_price || product.original_price;
-  const discountPercent = product.sale_price
-    ? Math.round(((product.original_price - product.sale_price) / product.original_price) * 100)
-    : 0;
+  const origPrice = product.originalPrice ?? product.original_price ?? 0;
+  const offerPrice = product.offerPrice ?? product.sale_price ?? origPrice;
+  const discountPercent = product.discountPercent ?? (origPrice > offerPrice
+    ? Math.round(((origPrice - offerPrice) / origPrice) * 100)
+    : 0);
 
-  const savingsAmount = product.sale_price && product.sale_price < product.original_price 
-    ? product.original_price - product.sale_price 
-    : 0;
+  const savingsAmount = origPrice > offerPrice ? origPrice - offerPrice : 0;
 
   return (
     <div className="space-y-6">
@@ -114,9 +111,9 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
           <span className="text-3xl sm:text-4xl font-black text-primary">
             ₹{offerPrice.toLocaleString()}
           </span>
-          {product.sale_price && product.sale_price < product.original_price && (
+          {origPrice > offerPrice && (
             <span className="text-base text-muted-custom line-through font-semibold">
-              ₹{product.original_price.toLocaleString()}
+              ₹{origPrice.toLocaleString()}
             </span>
           )}
           {discountPercent > 0 && (
@@ -204,13 +201,13 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
                 seller: { id: '1', name: '', rating: 5, location: '', joinedDate: '', description: '' },
                 category: '',
                 subcategory: '',
-                originalPrice: product.original_price,
-                offerPrice: product.sale_price || product.original_price,
-                discountPercent: 0,
-                rating: 5,
-                reviewsCount: 0,
-                stockStatus: 'in_stock',
-                image: product.images?.[0] || '',
+                originalPrice: origPrice,
+                offerPrice: offerPrice,
+                discountPercent: discountPercent,
+                rating: product.rating || 5,
+                reviewsCount: product.reviewsCount || product.reviews_count || 0,
+                stockStatus: (product.stockStatus || product.stock_status || 'in_stock') as any,
+                image: product.image || product.images?.[0] || '',
                 description: '',
                 features: [],
                 reviews: [],

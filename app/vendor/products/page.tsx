@@ -108,29 +108,34 @@ export default function VendorProductsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/40">
-                  {products.map((prod) => (
-                    <tr key={prod.id} className="hover:bg-muted/20">
-                      <td className="py-3.5 px-2 flex items-center gap-3">
-                        <div className="h-10 w-10 shrink-0 bg-muted/30 rounded-xl p-1 flex items-center justify-center overflow-hidden">
-                          <img src={prod.images?.[0] || '/placeholder-product.png'} alt={prod.name} className="max-w-full max-h-full object-contain" />
-                        </div>
-                        <span className="font-bold text-foreground line-clamp-1">{prod.name}</span>
-                      </td>
-                      <td className="py-3.5 px-2 font-mono text-foreground/60">{prod.sku || 'N/A'}</td>
-                      <td className="py-3.5 px-2 font-black text-primary">
-                        ₹{(prod.sale_price || prod.original_price).toLocaleString()}
-                      </td>
-                      <td className="py-3.5 px-2">
-                        <span
-                          className={`font-bold px-2 py-0.5 rounded-full text-[10px] ${
-                            prod.stock_quantity <= 5
-                              ? 'bg-rose-500/10 text-rose-500'
-                              : 'bg-emerald-500/10 text-emerald-600'
-                          }`}
-                        >
-                          {prod.stock_quantity} in stock
-                        </span>
-                      </td>
+                  {products.map((prod) => {
+                    const displayImage = prod.image || prod.images?.[0] || '/placeholder-product.png';
+                    const displayPrice = prod.offerPrice ?? prod.originalPrice ?? prod.sale_price ?? prod.original_price ?? 0;
+                    const stockQty = prod.stockQuantity ?? prod.stock_quantity ?? 0;
+
+                    return (
+                      <tr key={prod.id} className="hover:bg-muted/20">
+                        <td className="py-3.5 px-2 flex items-center gap-3">
+                          <div className="h-10 w-10 shrink-0 bg-muted/30 rounded-xl p-1 flex items-center justify-center overflow-hidden">
+                            <img src={displayImage} alt={prod.name} className="max-w-full max-h-full object-contain" />
+                          </div>
+                          <span className="font-bold text-foreground line-clamp-1">{prod.name}</span>
+                        </td>
+                        <td className="py-3.5 px-2 font-mono text-foreground/60">{prod.sku || 'N/A'}</td>
+                        <td className="py-3.5 px-2 font-black text-primary">
+                          ₹{displayPrice.toLocaleString()}
+                        </td>
+                        <td className="py-3.5 px-2">
+                          <span
+                            className={`font-bold px-2 py-0.5 rounded-full text-[10px] ${
+                              stockQty <= 5
+                                ? 'bg-rose-500/10 text-rose-500'
+                                : 'bg-emerald-500/10 text-emerald-600'
+                            }`}
+                          >
+                            {stockQty} in stock
+                          </span>
+                        </td>
                       <td className="py-3.5 px-2">
                         <span className="inline-flex items-center gap-1 text-amber-500 font-bold">
                           <Star className="w-3.5 h-3.5 fill-current" />
@@ -147,7 +152,8 @@ export default function VendorProductsPage() {
                         </button>
                       </td>
                     </tr>
-                  ))}
+                      );
+                    })}
                 </tbody>
               </table>
             </div>

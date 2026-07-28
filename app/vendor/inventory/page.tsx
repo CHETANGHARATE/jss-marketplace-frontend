@@ -61,9 +61,10 @@ export default function VendorInventoryPage() {
           ) : (
             <div className="space-y-4">
               {inventory.map((item) => {
-                const isLowStock = item.stock_quantity <= 5;
+                const qty = item.stockQuantity ?? item.stock_quantity ?? 0;
+                const isLowStock = qty <= 5;
                 const inputValue =
-                  stockInputs[item.id] !== undefined ? stockInputs[item.id] : item.stock_quantity;
+                  stockInputs[item.id] !== undefined ? stockInputs[item.id] : qty;
 
                 return (
                   <div
@@ -100,7 +101,7 @@ export default function VendorInventoryPage() {
                         />
 
                         <button
-                          onClick={() => handleSaveStock(item.id, item.stock_quantity)}
+                          onClick={() => handleSaveStock(item.id, qty)}
                           disabled={updateMutation.isPending}
                           className="px-3.5 py-1.5 bg-primary text-primary-foreground text-xs font-bold rounded-xl hover:bg-primary/90 transition-all flex items-center gap-1.5 shadow-xs"
                         >

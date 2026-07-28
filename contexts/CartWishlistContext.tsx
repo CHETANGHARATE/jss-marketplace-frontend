@@ -55,25 +55,29 @@ export const CartWishlistProvider: React.FC<{ children: React.ReactNode }> = ({ 
       cartService.mergeCart().catch(() => {});
       wishlistService.getWishlist().then((items) => {
         if (items && Array.isArray(items)) {
-          const mappedWishlist: Product[] = items.map((p) => ({
-            id: String(p.id),
-            name: p.name,
-            brand: p.brand?.name || 'Generic',
-            seller: { id: '1', name: '', rating: 5, location: '', joinedDate: '', description: '' },
-            category: p.category?.slug || 'general',
-            subcategory: '',
-            originalPrice: p.original_price,
-            offerPrice: p.sale_price || p.original_price,
-            discountPercent: 0,
-            rating: p.rating || 5,
-            reviewsCount: p.reviews_count || 0,
-            stockStatus: 'in_stock',
-            image: p.images?.[0] || '/placeholder-product.png',
-            description: p.description || '',
-            features: [],
-            reviews: [],
-            tags: [],
-          }));
+          const mappedWishlist: Product[] = items.map((p) => {
+            const origPrice = p.originalPrice ?? p.original_price ?? 0;
+            const offerPrice = p.offerPrice ?? p.sale_price ?? origPrice;
+            return {
+              id: String(p.id),
+              name: p.name,
+              brand: p.brand?.name || 'Generic',
+              seller: { id: '1', name: '', rating: 5, location: '', joinedDate: '', description: '' },
+              category: typeof p.category?.name === 'string' ? p.category.name : (p.category?.slug || 'general'),
+              subcategory: '',
+              originalPrice: origPrice,
+              offerPrice: offerPrice,
+              discountPercent: p.discountPercent ?? 0,
+              rating: p.rating || 5,
+              reviewsCount: p.reviewsCount || p.reviews_count || 0,
+              stockStatus: 'in_stock',
+              image: p.image || p.images?.[0] || '/placeholder-product.png',
+              description: p.description || '',
+              features: [],
+              reviews: [],
+              tags: [],
+            };
+          });
           setWishlist(mappedWishlist);
         }
       }).catch(() => {});

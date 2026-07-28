@@ -37,7 +37,7 @@ export function RecentlyViewedSection() {
           >
             <div className="aspect-square w-full bg-muted/20 rounded-xl p-2 flex items-center justify-center overflow-hidden">
               <img
-                src={prod.images?.[0] || '/placeholder-product.png'}
+                src={prod.image || prod.images?.[0] || '/placeholder-product.png'}
                 alt={prod.name}
                 className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform"
               />
@@ -46,7 +46,7 @@ export function RecentlyViewedSection() {
               {prod.name}
             </h4>
             <span className="text-xs font-bold text-primary block">
-              ₹{(prod.sale_price || prod.original_price).toLocaleString()}
+              ₹{(prod.offerPrice ?? prod.originalPrice ?? prod.sale_price ?? prod.original_price ?? 0).toLocaleString()}
             </span>
           </Link>
         ))}

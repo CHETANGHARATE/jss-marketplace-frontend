@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../../contexts/AuthContext';
 import { useOrdersQuery } from '../../hooks/useOrders';
@@ -12,17 +12,255 @@ import {
   Bell,
   User,
   Heart,
-  ChevronRight,
   ShieldCheck,
   Package,
-  ArrowRight
+  ArrowRight,
+  LogIn,
+  UserPlus,
+  Mail,
+  Lock,
+  AlertCircle,
+  Sparkles
 } from 'lucide-react';
 
-export default function AccountDashboardPage() {
-  const { user } = useAuth();
-  const { data: orders = [] } = useOrdersQuery();
-  const { data: notifications = [] } = useNotificationsQuery();
+export default function AccountPage() {
+  const { user, isAuthenticated, isLoading, login, register } = useAuth();
+  const { data: orders = [] } = useOrdersQuery(isAuthenticated);
+  const { data: notifications = [] } = useNotificationsQuery(isAuthenticated);
 
+  // Auth Form State for Unauthenticated Users
+  const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage(null);
+    if (!email || !password) {
+      setErrorMessage('Please fill in both email and password.');
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      await login({ email, password });
+    } catch (err: any) {
+      setErrorMessage(err?.response?.data?.message || err?.message || 'Authentication failed. Please check credentials.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage(null);
+    if (!name || !email || !password) {
+      setErrorMessage('Please fill in all required fields.');
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      await register({ name, email, password, role: 'customer' });
+    } catch (err: any) {
+      setErrorMessage(err?.response?.data?.message || err?.message || 'Registration failed. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="py-20 text-center space-y-3">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-xs font-bold text-foreground/60">Verifying session...</p>
+      </div>
+    );
+  }
+
+  // ─── UNAUTHENTICATED: Render Login / Register Form ─────────────────────────
+  if (!isAuthenticated || !user) {
+    return (
+      <div className="space-y-8 max-w-md mx-auto py-6 sm:py-12">
+        <Breadcrumbs items={[{ label: 'Customer Authentication' }]} />
+
+        <div className="bg-card border border-border-custom/80 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+          {/* Header Branding */}
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 text-primary mb-1">
+              {activeTab === 'login' ? <LogIn className="w-7 h-7" /> : <UserPlus className="w-7 h-7" />}
+            </div>
+            <h1 className="text-2xl font-black text-foreground tracking-tight">
+              {activeTab === 'login' ? 'Customer Sign In' : 'Create Customer Account'}
+            </h1>
+            <p className="text-xs text-muted-custom font-medium">
+              {activeTab === 'login'
+                ? 'Enter your credentials to access your order history and account profile.'
+                : 'Join JSS Marketplace to place orders, track shipments, and save items.'}
+            </p>
+          </div>
+
+          {/* Toggle Tabs */}
+          <div className="grid grid-cols-2 gap-1.5 p-1 bg-background-secondary rounded-2xl border border-border-custom/80 text-xs font-bold">
+            <button
+              type="button"
+              onClick={() => { setActiveTab('login'); setErrorMessage(null); }}
+              className={`py-2.5 rounded-xl transition-all ${
+                activeTab === 'login'
+                  ? 'bg-card text-foreground shadow-xs'
+                  : 'text-muted-custom hover:text-foreground'
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => { setActiveTab('register'); setErrorMessage(null); }}
+              className={`py-2.5 rounded-xl transition-all ${
+                activeTab === 'register'
+                  ? 'bg-card text-foreground shadow-xs'
+                  : 'text-muted-custom hover:text-foreground'
+              }`}
+            >
+              Register
+            </button>
+          </div>
+
+          {errorMessage && (
+            <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-500 text-xs font-semibold flex items-start gap-3">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
+
+          {/* Form Views */}
+          {activeTab === 'login' ? (
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-foreground/80 uppercase tracking-wider block">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-muted-custom absolute left-3.5 top-3.5" />
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="customer@example.com"
+                    className="w-full pl-10 pr-4 py-3 bg-background-secondary border border-border-custom/80 rounded-2xl text-xs font-medium text-foreground placeholder:text-muted-custom focus:outline-none focus:border-primary transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-foreground/80 uppercase tracking-wider block">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-muted-custom absolute left-3.5 top-3.5" />
+                  <input
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    className="w-full pl-10 pr-4 py-3 bg-background-secondary border border-border-custom/80 rounded-2xl text-xs font-medium text-foreground placeholder:text-muted-custom focus:outline-none focus:border-primary transition-all"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3.5 px-4 bg-primary text-white font-extrabold text-xs uppercase tracking-wider rounded-2xl hover:bg-primary-hover transition-all shadow-xs flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {isSubmitting ? (
+                  <Sparkles className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    <span>Sign In</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleRegister} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-foreground/80 uppercase tracking-wider block">
+                  Full Name
+                </label>
+                <div className="relative">
+                  <User className="w-4 h-4 text-muted-custom absolute left-3.5 top-3.5" />
+                  <input
+                    type="text"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Rahul Sharma"
+                    className="w-full pl-10 pr-4 py-3 bg-background-secondary border border-border-custom/80 rounded-2xl text-xs font-medium text-foreground placeholder:text-muted-custom focus:outline-none focus:border-primary transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-foreground/80 uppercase tracking-wider block">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-muted-custom absolute left-3.5 top-3.5" />
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="customer@example.com"
+                    className="w-full pl-10 pr-4 py-3 bg-background-secondary border border-border-custom/80 rounded-2xl text-xs font-medium text-foreground placeholder:text-muted-custom focus:outline-none focus:border-primary transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-foreground/80 uppercase tracking-wider block">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-muted-custom absolute left-3.5 top-3.5" />
+                  <input
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    className="w-full pl-10 pr-4 py-3 bg-background-secondary border border-border-custom/80 rounded-2xl text-xs font-medium text-foreground placeholder:text-muted-custom focus:outline-none focus:border-primary transition-all"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3.5 px-4 bg-primary text-white font-extrabold text-xs uppercase tracking-wider rounded-2xl hover:bg-primary-hover transition-all shadow-xs flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {isSubmitting ? (
+                  <Sparkles className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    <span>Create Account</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ─── AUTHENTICATED: Render Customer Dashboard ──────────────────────────────
   const unreadNotifications = notifications.filter((n) => !n.read_at);
 
   return (
@@ -45,7 +283,7 @@ export default function AccountDashboardPage() {
                   <span>Verified Customer Portal</span>
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                  Welcome Back, {user?.name || 'Customer'}!
+                  Welcome Back, {user.name}!
                 </h1>
                 <p className="text-xs sm:text-sm text-slate-300 font-normal max-w-lg leading-relaxed">
                   Manage your marketplace orders, delivery tracking, account profile, support tickets, and loyalty rewards.

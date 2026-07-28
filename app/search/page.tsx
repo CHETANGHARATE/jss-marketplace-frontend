@@ -165,7 +165,7 @@ function SearchResultsContent() {
               </div>
               <div className="pt-2 border-t border-border/40 flex items-center justify-between">
                 <span className="text-base font-black text-primary">
-                  ₹{(prod.sale_price || prod.original_price).toLocaleString()}
+                  ₹{(prod.offerPrice ?? prod.originalPrice ?? prod.sale_price ?? prod.original_price ?? 0).toLocaleString()}
                 </span>
                 <span className="text-xs font-semibold text-primary group-hover:underline">View Details &rarr;</span>
               </div>
@@ -190,7 +190,7 @@ function SearchResultsContent() {
               </div>
               <div className="shrink-0 text-center sm:text-right space-y-2">
                 <span className="text-xl font-black text-primary block">
-                  ₹{(prod.sale_price || prod.original_price).toLocaleString()}
+                  ₹{(prod.offerPrice ?? prod.originalPrice ?? prod.sale_price ?? prod.original_price ?? 0).toLocaleString()}
                 </span>
                 <span className="inline-block px-4 py-2 bg-primary text-primary-foreground text-xs font-bold rounded-xl">
                   Inspect Item
