@@ -94,6 +94,17 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ categories }) 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 sm:gap-6">
         {displayedCategories.map((cat, idx) => {
           const IconComponent = iconMap[cat.icon] || Sprout;
+          const subcats = cat.subcategories || (cat as any).children || [];
+
+          const getSubName = (sub: any): string => {
+            if (!sub) return '';
+            if (typeof sub === 'string') return sub;
+            if (typeof sub.name === 'string') return sub.name;
+            if (typeof sub.name === 'object' && sub.name !== null) {
+              return sub.name.en || sub.name.hi || sub.name.mr || Object.values(sub.name)[0] || '';
+            }
+            return '';
+          };
 
           return (
             <Link
@@ -112,22 +123,43 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ categories }) 
                   </span>
                 </div>
 
-                {/* Title & Description */}
+                {/* Title & Subcategories List */}
                 <div>
                   <h3 className="font-extrabold text-base text-foreground group-hover:text-primary transition-colors leading-snug">
                     {t(cat.name)}
                   </h3>
-                  <p className="text-xs text-muted-custom line-clamp-2 mt-1.5 leading-relaxed font-normal">
-                    {t(cat.description)}
-                  </p>
+
+                  {subcats.length > 0 ? (
+                    <div className="mt-2.5 space-y-1">
+                      <ul className="space-y-1 text-xs font-medium text-muted-custom">
+                        {subcats.slice(0, 4).map((sub: any, subIdx: number) => (
+                          <li key={sub.id || sub.slug || subIdx} className="flex items-center gap-1.5 truncate">
+                            <span className="text-primary font-black text-xs leading-none">•</span>
+                            <span className="truncate group-hover:text-foreground transition-colors">
+                              {getSubName(sub)}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                      {subcats.length > 4 && (
+                        <span className="inline-block text-[11px] font-bold text-primary mt-1 hover:underline">
+                          + {subcats.length - 4} More
+                        </span>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-muted-custom line-clamp-2 mt-1.5 leading-relaxed font-normal">
+                      {t(cat.description)}
+                    </p>
+                  )}
                 </div>
               </div>
 
               {/* Card Footer: Subcategories / Product Count & Explore CTA */}
               <div className="pt-4 mt-4 border-t border-border-custom/60 flex items-center justify-between">
                 <span className="text-[11px] font-bold text-muted-custom">
-                  {cat.subcategories && cat.subcategories.length > 0
-                    ? `${cat.subcategories.length} Subcategories`
+                  {subcats.length > 0
+                    ? `${subcats.length} Subcategories`
                     : '100+ Products'}
                 </span>
                 

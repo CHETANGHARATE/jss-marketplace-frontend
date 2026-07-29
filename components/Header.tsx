@@ -29,6 +29,8 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCartWishlist } from '../contexts/CartWishlistContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useCategories } from '../hooks/useCategories';
+import { getLocalizedText } from '../utils/translation';
 import { SearchBar } from './SearchBar';
 import { ProductQuickView } from './ProductQuickView';
 import { MegaMenu } from './MegaMenu';
@@ -49,12 +51,14 @@ export const Header: React.FC = () => {
     cartItemCount
   } = useCartWishlist();
 
+  const { data: categories = [] } = useCategories();
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [expandedMobileCat, setExpandedMobileCat] = useState<number | string | null>(null);
 
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
@@ -377,6 +381,54 @@ export const Header: React.FC = () => {
                   <User size={18} />
                   <span>My Account Dashboard</span>
                 </Link>
+              )}
+
+              {/* Mobile Categories & Subcategories Navigation */}
+              {categories.length > 0 && (
+                <div className="pt-4 border-t border-border-custom/80 space-y-2">
+                  <div className="pb-1 text-[10px] font-black text-muted-custom uppercase tracking-wider">
+                    Categories & Subcategories
+                  </div>
+                  <div className="space-y-1.5 max-h-72 overflow-y-auto pr-1">
+                    {categories.map((cat) => {
+                      const subcats = cat.subcategories || cat.children || [];
+                      const catName = getLocalizedText(cat.name, language);
+                      const isExpanded = expandedMobileCat === cat.id;
+
+                      return (
+                        <div key={cat.id} className="rounded-xl border border-border-custom/60 overflow-hidden bg-background-secondary/50">
+                          <button
+                            onClick={() => setExpandedMobileCat(isExpanded ? null : cat.id)}
+                            className="w-full flex items-center justify-between p-3 text-left font-bold text-xs text-foreground hover:bg-card transition-colors"
+                          >
+                            <span className="truncate">{catName}</span>
+                            <ChevronDown size={14} className={`text-muted-custom transition-transform ${isExpanded ? 'rotate-180 text-primary' : ''}`} />
+                          </button>
+
+                          {isExpanded && (
+                            <div className="p-2.5 bg-card border-t border-border-custom/60 space-y-1">
+                              {subcats.length > 0 ? (
+                                subcats.map((sub: any) => (
+                                  <Link
+                                    key={sub.id || sub.slug}
+                                    href={`/category/${sub.slug}`}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="p-2 text-xs font-semibold text-foreground/80 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors flex items-center gap-1.5"
+                                  >
+                                    <span className="text-primary font-black text-xs">•</span>
+                                    <span className="truncate">{getLocalizedText(sub.name, language)}</span>
+                                  </Link>
+                                ))
+                              ) : (
+                                <span className="text-[11px] text-muted-custom p-1 block">No subcategories</span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               )}
             </div>
           </div>

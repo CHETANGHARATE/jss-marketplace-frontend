@@ -81,10 +81,18 @@ export function MegaMenu() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
-                      {currentCategory.children && currentCategory.children.length > 0 ? (
-                        currentCategory.children.map((subCat) => (
+                      {(() => {
+                        const subcats = currentCategory.subcategories || currentCategory.children || [];
+                        if (subcats.length === 0) {
+                          return (
+                            <div className="col-span-2 py-6 text-center text-xs text-foreground/50 bg-muted/20 rounded-xl">
+                              No subcategories available
+                            </div>
+                          );
+                        }
+                        return subcats.map((subCat) => (
                           <Link
-                            key={subCat.id}
+                            key={subCat.id || subCat.slug}
                             href={`/category/${subCat.slug}`}
                             onClick={() => setIsOpen(false)}
                             className="p-3 bg-muted/40 hover:bg-muted rounded-xl transition-colors group"
@@ -94,12 +102,8 @@ export function MegaMenu() {
                             </span>
                             <span className="text-[11px] text-foreground/50">Explore collection</span>
                           </Link>
-                        ))
-                      ) : (
-                        <div className="col-span-2 py-6 text-center text-xs text-foreground/50 bg-muted/20 rounded-xl">
-                          No subcategories available
-                        </div>
-                      )}
+                        ));
+                      })()}
                     </div>
                   </div>
                 )}
