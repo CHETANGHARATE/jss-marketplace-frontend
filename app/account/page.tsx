@@ -336,7 +336,7 @@ function AccountContent() {
               )}
               <div className="space-y-1">
                 <span>{statusMessage.text}</span>
-                {demoOtp && (
+                {process.env.NODE_ENV === 'development' && demoOtp && (
                   <div className="pt-1 text-[11px] font-mono font-bold text-primary">
                     [Development Demo Code: {demoOtp}]
                   </div>
