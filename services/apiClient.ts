@@ -28,7 +28,7 @@ export const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('auth_token');
+      const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -56,6 +56,7 @@ apiClient.interceptors.response.use(
   (error: AxiosError<{ message?: string; errors?: Record<string, string[]> }>) => {
     if (error.response?.status === 401 && typeof window !== 'undefined') {
       localStorage.removeItem('auth_token');
+      sessionStorage.removeItem('auth_token');
     }
 
     const message =

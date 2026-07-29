@@ -23,8 +23,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('auth_token');
-    const storedUser = localStorage.getItem('user_profile');
+    const storedToken = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+    const storedUser = localStorage.getItem('user_profile') || sessionStorage.getItem('user_profile');
 
     if (storedToken) {
       setToken(storedToken);
@@ -37,13 +37,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .getProfile()
         .then((userData) => {
           setUser(userData);
-          localStorage.setItem('user_profile', JSON.stringify(userData));
+          if (localStorage.getItem('auth_token')) {
+            localStorage.setItem('user_profile', JSON.stringify(userData));
+          } else {
+            sessionStorage.setItem('user_profile', JSON.stringify(userData));
+          }
         })
         .catch((err: any) => {
           const isUnauth = err?.response?.status === 401 || err?.status === 401 || err?.message?.includes('401') || err?.message?.includes('Unauthenticated');
           if (isUnauth) {
             localStorage.removeItem('auth_token');
             localStorage.removeItem('user_profile');
+            sessionStorage.removeItem('auth_token');
+            sessionStorage.removeItem('user_profile');
             setToken(null);
             setUser(null);
           }
@@ -56,14 +62,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const login = async (payload: LoginPayload): Promise<ApiUser> => {
+  const login = async (payload: LoginPayload & { rememberMe?: boolean }): Promise<ApiUser> => {
     setIsLoading(true);
     try {
       const data = await authService.login(payload);
       setToken(data.token);
       setUser(data.user);
-      localStorage.setItem('auth_token', data.token);
-      localStorage.setItem('user_profile', JSON.stringify(data.user));
+
+      const remember = payload.rememberMe !== false;
+      if (remember) {
+        localStorage.setItem('auth_token', data.token);
+        localStorage.setItem('user_profile', JSON.stringify(data.user));
+        sessionStorage.removeItem('auth_token');
+        sessionStorage.removeItem('user_profile');
+      } else {
+        sessionStorage.setItem('auth_token', data.token);
+        sessionStorage.setItem('user_profile', JSON.stringify(data.user));
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user_profile');
+      }
 
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('jss-login', { detail: data.user }));
@@ -78,15 +95,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     try {
       const data = await authService.register(payload);
-      setToken(data.token);
-      setUser(data.user);
-      localStorage.setItem('auth_token', data.token);
-      localStorage.setItem('user_profile', JSON.stringify(data.user));
-
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('jss-login', { detail: data.user }));
+      if (data.token) {
+        setToken(data.token);
+        localStorage.setItem('auth_token', data.token);
       }
-      return data.user;
+      if (data.user) {
+        setUser(data.user);
+        localStorage.setItem('user_profile', JSON.stringify(data.user));
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('jss-login', { detail: data.user }));
+        }
+      }
+      return (data.user as ApiUser) || { id: 0, name: payload.name, email: payload.email, role: 'customer' };
     } finally {
       setIsLoading(false);
     }
