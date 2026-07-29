@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import { useOrdersQuery } from '../../hooks/useOrders';
 import { useNotificationsQuery } from '../../hooks/useNotifications';
@@ -23,18 +24,31 @@ import {
   Sparkles
 } from 'lucide-react';
 
-export default function AccountPage() {
+function AccountContent() {
   const { user, isAuthenticated, isLoading, login, register } = useAuth();
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get('tab');
+
   const { data: orders = [] } = useOrdersQuery(isAuthenticated);
   const { data: notifications = [] } = useNotificationsQuery(isAuthenticated);
 
   // Auth Form State for Unauthenticated Users
-  const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
+  const [activeTab, setActiveTab] = useState<'login' | 'register'>(
+    tabParam === 'register' ? 'register' : 'login'
+  );
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (tabParam === 'register') {
+      setActiveTab('register');
+    } else if (tabParam === 'login' || !tabParam) {
+      setActiveTab('login');
+    }
+  }, [tabParam]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -407,5 +421,20 @@ export default function AccountPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AccountPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="py-20 text-center space-y-3">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-xs font-bold text-foreground/60">Loading account...</p>
+        </div>
+      }
+    >
+      <AccountContent />
+    </Suspense>
   );
 }
