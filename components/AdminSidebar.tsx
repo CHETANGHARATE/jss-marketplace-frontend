@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   ShieldAlert,
   Users,
@@ -45,7 +46,21 @@ const MENU_ITEMS = [
 
 export function AdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const { user, logout } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      queryClient.clear();
+      await logout();
+      router.push('/');
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <aside className="w-full lg:w-60 xl:w-64 bg-card border border-border/40 rounded-3xl p-4 shadow-sm shrink-0 lg:sticky lg:top-6 self-start">
@@ -83,11 +98,21 @@ export function AdminSidebar() {
 
         <div className="pt-2 border-t border-border/40 mt-2">
           <button
-            onClick={logout}
-            className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold text-rose-500 hover:bg-rose-500/10 transition-colors text-left"
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold text-rose-500 hover:bg-rose-500/10 transition-colors text-left disabled:opacity-50"
           >
-            <LogOut className="w-4 h-4 shrink-0" />
-            <span>Sign Out</span>
+            {isLoggingOut ? (
+              <>
+                <Sparkles className="w-4 h-4 animate-spin text-rose-500" />
+                <span>Signing Out...</span>
+              </>
+            ) : (
+              <>
+                <LogOut className="w-4 h-4 shrink-0" />
+                <span>Sign Out</span>
+              </>
+            )}
           </button>
         </div>
       </nav>

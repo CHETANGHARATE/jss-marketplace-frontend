@@ -25,6 +25,7 @@ import {
   Sparkles,
   Search
 } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCartWishlist } from '../contexts/CartWishlistContext';
@@ -61,6 +62,21 @@ export const Header: React.FC = () => {
   const [expandedMobileCat, setExpandedMobileCat] = useState<number | string | null>(null);
 
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+
+  const queryClient = useQueryClient();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      queryClient.clear();
+      await logout();
+      setUserMenuOpen(false);
+      router.push('/');
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   const langMenuRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
@@ -288,10 +304,18 @@ export const Header: React.FC = () => {
                       </div>
                       <div className="py-1">
                         <button
-                          onClick={() => logout()}
-                          className="w-full text-left flex items-center gap-2.5 px-4 py-2.5 text-xs font-bold text-rose-500 hover:bg-background-secondary transition-colors"
+                          onClick={handleLogout}
+                          disabled={isLoggingOut}
+                          className="w-full text-left flex items-center gap-2.5 px-4 py-2.5 text-xs font-bold text-rose-500 hover:bg-background-secondary transition-colors disabled:opacity-50"
                         >
-                          {t('nav.logout')}
+                          {isLoggingOut ? (
+                            <>
+                              <Sparkles className="w-4 h-4 animate-spin text-rose-500" />
+                              <span>Signing Out...</span>
+                            </>
+                          ) : (
+                            <span>{t('nav.logout')}</span>
+                          )}
                         </button>
                       </div>
                     </div>
@@ -373,14 +397,31 @@ export const Header: React.FC = () => {
                   </Link>
                 </div>
               ) : (
-                <Link
-                  href="/account"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2.5 p-3.5 bg-primary/10 text-primary border border-primary/20 rounded-2xl"
-                >
-                  <User size={18} />
-                  <span>My Account Dashboard</span>
-                </Link>
+                <div className="space-y-2">
+                  <Link
+                    href="/account"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2.5 p-3.5 bg-primary/10 text-primary border border-primary/20 rounded-2xl"
+                  >
+                    <User size={18} />
+                    <span>My Account Dashboard</span>
+                  </Link>
+
+                  <button
+                    onClick={() => { setMobileMenuOpen(false); handleLogout(); }}
+                    disabled={isLoggingOut}
+                    className="w-full flex items-center justify-center gap-2 p-3 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-2xl text-xs font-bold transition-all disabled:opacity-50"
+                  >
+                    {isLoggingOut ? (
+                      <>
+                        <Sparkles className="w-4 h-4 animate-spin text-rose-500" />
+                        <span>Signing Out...</span>
+                      </>
+                    ) : (
+                      <span>Sign Out</span>
+                    )}
+                  </button>
+                </div>
               )}
 
               {/* Mobile Categories & Subcategories Navigation */}

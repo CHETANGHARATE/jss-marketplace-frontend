@@ -73,9 +73,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     setIsLoading(true);
     try {
-      await authService.logout();
+      await authService.logout().catch(() => {});
     } finally {
       localStorage.removeItem('auth_token');
+      localStorage.removeItem('jss-cart');
+      localStorage.removeItem('jss-wishlist');
+      localStorage.removeItem('user_profile');
+      localStorage.removeItem('recent_searches');
+      sessionStorage.clear();
+
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('jss-logout'));
+      }
+
       setToken(null);
       setUser(null);
       setIsLoading(false);

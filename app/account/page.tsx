@@ -188,10 +188,13 @@ function AccountContent() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 px-4 bg-primary text-white font-extrabold text-xs uppercase tracking-wider rounded-2xl hover:bg-primary-hover transition-all shadow-xs flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-3.5 px-4 bg-primary text-white font-extrabold text-xs uppercase tracking-wider rounded-2xl hover:bg-primary-hover transition-all shadow-xs flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
-                  <Sparkles className="w-4 h-4 animate-spin" />
+                  <>
+                    <Sparkles className="w-4 h-4 animate-spin" />
+                    <span>Signing In...</span>
+                  </>
                 ) : (
                   <>
                     <span>Sign In</span>
@@ -256,10 +259,13 @@ function AccountContent() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 px-4 bg-primary text-white font-extrabold text-xs uppercase tracking-wider rounded-2xl hover:bg-primary-hover transition-all shadow-xs flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-3.5 px-4 bg-primary text-white font-extrabold text-xs uppercase tracking-wider rounded-2xl hover:bg-primary-hover transition-all shadow-xs flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
-                  <Sparkles className="w-4 h-4 animate-spin" />
+                  <>
+                    <Sparkles className="w-4 h-4 animate-spin" />
+                    <span>Creating Account...</span>
+                  </>
                 ) : (
                   <>
                     <span>Create Account</span>

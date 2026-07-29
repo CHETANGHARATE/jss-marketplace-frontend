@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   LayoutDashboard,
   User,
@@ -15,7 +16,8 @@ import {
   Gift,
   Share2,
   LogOut,
-  ShieldCheck
+  ShieldCheck,
+  Sparkles
 } from 'lucide-react';
 
 const MENU_ITEMS = [
@@ -32,7 +34,21 @@ const MENU_ITEMS = [
 
 export function AccountSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const { user, logout } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      queryClient.clear();
+      await logout();
+      router.push('/');
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <aside className="w-full lg:w-72 bg-card border border-border-custom/80 rounded-3xl p-5 shadow-xs space-y-6 shrink-0">
@@ -73,11 +89,21 @@ export function AccountSidebar() {
         })}
 
         <button
-          onClick={logout}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-extrabold text-rose-500 hover:bg-rose-500/10 transition-colors text-left"
+          onClick={handleLogout}
+          disabled={isLoggingOut}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-extrabold text-rose-500 hover:bg-rose-500/10 transition-colors text-left disabled:opacity-50"
         >
-          <LogOut className="w-4 h-4" />
-          <span>Sign Out</span>
+          {isLoggingOut ? (
+            <>
+              <Sparkles className="w-4 h-4 animate-spin text-rose-500" />
+              <span>Signing Out...</span>
+            </>
+          ) : (
+            <>
+              <LogOut className="w-4 h-4" />
+              <span>Sign Out</span>
+            </>
+          )}
         </button>
       </nav>
     </aside>

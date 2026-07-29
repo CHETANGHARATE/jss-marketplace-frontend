@@ -15,6 +15,7 @@ interface CartWishlistContextType {
   toggleWishlist: (product: Product) => void;
   isInWishlist: (productId: string) => boolean;
   clearCart: () => void;
+  resetSessionState: () => void;
   cartTotal: number;
   cartItemCount: number;
 }
@@ -26,6 +27,24 @@ export const CartWishlistProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<Product[]>([]);
   const [mounted, setMounted] = useState(false);
+
+  const resetSessionState = React.useCallback(() => {
+    setCart([]);
+    setWishlist([]);
+    localStorage.removeItem('jss-cart');
+    localStorage.removeItem('jss-wishlist');
+  }, []);
+
+  useEffect(() => {
+    const handleLogout = () => {
+      resetSessionState();
+    };
+
+    window.addEventListener('jss-logout', handleLogout);
+    return () => {
+      window.removeEventListener('jss-logout', handleLogout);
+    };
+  }, [resetSessionState]);
 
   useEffect(() => {
     const savedCart = localStorage.getItem('jss-cart');
@@ -166,6 +185,7 @@ export const CartWishlistProvider: React.FC<{ children: React.ReactNode }> = ({ 
         toggleWishlist,
         isInWishlist,
         clearCart,
+        resetSessionState,
         cartTotal,
         cartItemCount,
       }}
