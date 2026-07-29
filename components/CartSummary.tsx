@@ -2,7 +2,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ShoppingBag, Tag, ShieldCheck } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../contexts/AuthContext';
+import { ShoppingBag, Tag, ShieldCheck, Lock } from 'lucide-react';
 
 interface CartSummaryProps {
   subtotal: number;
@@ -19,6 +21,8 @@ export function CartSummary({
   itemCount,
   onCheckout,
 }: CartSummaryProps) {
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
   const [couponCode, setCouponCode] = useState<string>('');
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
 
@@ -31,6 +35,17 @@ export function CartSummary({
       setAppliedCoupon('JSS10');
     } else {
       alert('Invalid coupon code. Try JSS10 for 10% Off!');
+    }
+  };
+
+  const handleCheckoutClick = (e: React.MouseEvent) => {
+    if (!isAuthenticated) {
+      e.preventDefault();
+      router.push('/account?tab=login&redirect=/checkout');
+      return;
+    }
+    if (onCheckout) {
+      onCheckout();
     }
   };
 
@@ -103,11 +118,11 @@ export function CartSummary({
 
       <Link
         href="/checkout"
-        onClick={onCheckout}
+        onClick={handleCheckoutClick}
         className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3.5 rounded-2xl font-bold hover:bg-primary/90 transition-all shadow-md active:scale-95 text-center"
       >
-        <ShoppingBag className="w-5 h-5" />
-        <span>Proceed to Checkout</span>
+        {isAuthenticated ? <ShoppingBag className="w-5 h-5" /> : <Lock className="w-4 h-4" />}
+        <span>{isAuthenticated ? 'Proceed to Checkout' : 'Sign In / Register to Checkout'}</span>
       </Link>
 
       <div className="flex items-center justify-center gap-1.5 text-xs text-foreground/60 font-medium pt-2">

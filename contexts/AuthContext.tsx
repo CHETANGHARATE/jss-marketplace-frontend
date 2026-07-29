@@ -24,17 +24,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const storedToken = localStorage.getItem('auth_token');
+    const storedUser = localStorage.getItem('user_profile');
+
     if (storedToken) {
       setToken(storedToken);
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (e) {}
+      }
       authService
         .getProfile()
         .then((userData) => {
           setUser(userData);
+          localStorage.setItem('user_profile', JSON.stringify(userData));
         })
-        .catch(() => {
-          localStorage.removeItem('auth_token');
-          setToken(null);
-          setUser(null);
+        .catch((err: any) => {
+          const isUnauth = err?.response?.status === 401 || err?.status === 401 || err?.message?.includes('401') || err?.message?.includes('Unauthenticated');
+          if (isUnauth) {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user_profile');
+            setToken(null);
+            setUser(null);
+          }
         })
         .finally(() => {
           setIsLoading(false);
@@ -51,6 +63,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setToken(data.token);
       setUser(data.user);
       localStorage.setItem('auth_token', data.token);
+      localStorage.setItem('user_profile', JSON.stringify(data.user));
+
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('jss-login', { detail: data.user }));
+      }
       return data.user;
     } finally {
       setIsLoading(false);
@@ -64,6 +81,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setToken(data.token);
       setUser(data.user);
       localStorage.setItem('auth_token', data.token);
+      localStorage.setItem('user_profile', JSON.stringify(data.user));
+
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('jss-login', { detail: data.user }));
+      }
       return data.user;
     } finally {
       setIsLoading(false);
@@ -98,6 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const userData = await authService.getProfile();
       setUser(userData);
+      localStorage.setItem('user_profile', JSON.stringify(userData));
     } catch {
       // Handle error
     }

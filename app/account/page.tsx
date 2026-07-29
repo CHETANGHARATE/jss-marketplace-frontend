@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import { useOrdersQuery } from '../../hooks/useOrders';
 import { useNotificationsQuery } from '../../hooks/useNotifications';
@@ -25,9 +25,11 @@ import {
 } from 'lucide-react';
 
 function AccountContent() {
+  const router = useRouter();
   const { user, isAuthenticated, isLoading, login, register } = useAuth();
   const searchParams = useSearchParams();
   const tabParam = searchParams.get('tab');
+  const redirectParam = searchParams.get('redirect');
 
   const { data: orders = [] } = useOrdersQuery(isAuthenticated);
   const { data: notifications = [] } = useNotificationsQuery(isAuthenticated);
@@ -60,6 +62,9 @@ function AccountContent() {
     setIsSubmitting(true);
     try {
       await login({ email, password });
+      if (redirectParam) {
+        router.replace(redirectParam);
+      }
     } catch (err: any) {
       setErrorMessage(err?.response?.data?.message || err?.message || 'Authentication failed. Please check credentials.');
     } finally {
@@ -77,6 +82,9 @@ function AccountContent() {
     setIsSubmitting(true);
     try {
       await register({ name, email, password, role: 'customer' });
+      if (redirectParam) {
+        router.replace(redirectParam);
+      }
     } catch (err: any) {
       setErrorMessage(err?.response?.data?.message || err?.message || 'Registration failed. Please try again.');
     } finally {

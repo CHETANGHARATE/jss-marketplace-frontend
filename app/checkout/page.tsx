@@ -15,11 +15,13 @@ import { PaymentSelector } from '../../components/PaymentSelector';
 import { ShippingMethodSelector } from '../../components/ShippingMethodSelector';
 import { PaymentStatusModal } from '../../components/PaymentStatusModal';
 import { CartSummary } from '../../components/CartSummary';
+import { useAuth } from '../../contexts/AuthContext';
 import { ApiShippingMethod } from '../../services/shippingService';
-import { ShoppingBag, Plus, Sparkles, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ShoppingBag, Plus, Sparkles, ArrowLeft, CheckCircle2, Lock } from 'lucide-react';
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const { cart, cartTotal, cartItemCount, clearCart } = useCartWishlist();
   const { data: addresses = [], isLoading: isAddressesLoading } = useAddressesQuery();
 
@@ -54,6 +56,41 @@ export default function CheckoutPage() {
       setSelectedAddressId(defaultAddr.id);
     }
   }, [addresses, selectedAddressId]);
+
+  if (isAuthLoading) {
+    return (
+      <div className="py-24 text-center space-y-3">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-xs font-bold text-foreground/60">Verifying session...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="space-y-8">
+        <Breadcrumbs items={[{ label: 'Checkout' }]} />
+        <div className="py-16 px-6 text-center bg-card border border-border-custom/80 rounded-3xl space-y-5 shadow-xl max-w-xl mx-auto">
+          <div className="w-16 h-16 bg-primary/10 text-primary rounded-2xl border border-primary/20 flex items-center justify-center mx-auto shadow-2xs">
+            <Lock className="w-8 h-8" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-black text-foreground">Authentication Required</h2>
+            <p className="text-xs text-muted-custom leading-relaxed font-medium max-w-md mx-auto">
+              Please sign in or create a customer account to select delivery address, process payment, and complete your purchase.
+            </p>
+          </div>
+          <Link
+            href="/account?tab=login&redirect=/checkout"
+            className="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-primary text-white font-extrabold text-xs uppercase tracking-wider rounded-2xl shadow-xs hover:bg-primary-hover transition-all active:scale-95"
+          >
+            <span>Sign In / Register to Checkout</span>
+            <Sparkles className="w-4 h-4" />
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (cart.length === 0 && !isOrderPlaced) {
     return (

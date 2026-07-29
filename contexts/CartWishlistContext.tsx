@@ -23,16 +23,21 @@ interface CartWishlistContextType {
 const CartWishlistContext = createContext<CartWishlistContextType | undefined>(undefined);
 
 export const CartWishlistProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<Product[]>([]);
   const [mounted, setMounted] = useState(false);
+
+  const getCartKey = (u?: typeof user) => (u?.id ? `jss-cart-user-${u.id}` : 'jss-cart-guest');
+  const getWishlistKey = (u?: typeof user) => (u?.id ? `jss-wishlist-user-${u.id}` : 'jss-wishlist-guest');
 
   const resetSessionState = React.useCallback(() => {
     setCart([]);
     setWishlist([]);
     localStorage.removeItem('jss-cart');
+    localStorage.removeItem('jss-cart-guest');
     localStorage.removeItem('jss-wishlist');
+    localStorage.removeItem('jss-wishlist-guest');
   }, []);
 
   useEffect(() => {
@@ -46,31 +51,64 @@ export const CartWishlistProvider: React.FC<{ children: React.ReactNode }> = ({ 
     };
   }, [resetSessionState]);
 
+  // Initial mount load
   useEffect(() => {
-    const savedCart = localStorage.getItem('jss-cart');
-    const savedWishlist = localStorage.getItem('jss-wishlist');
+    const guestCart = localStorage.getItem('jss-cart-guest') || localStorage.getItem('jss-cart');
+    const guestWishlist = localStorage.getItem('jss-wishlist-guest') || localStorage.getItem('jss-wishlist');
 
-    if (savedCart) {
+    if (guestCart) {
       try {
-        setCart(JSON.parse(savedCart));
-      } catch (e) {
-        console.error('Failed to parse cart', e);
-      }
+        setCart(JSON.parse(guestCart));
+      } catch (e) {}
     }
 
-    if (savedWishlist) {
+    if (guestWishlist) {
       try {
-        setWishlist(JSON.parse(savedWishlist));
-      } catch (e) {
-        console.error('Failed to parse wishlist', e);
-      }
+        setWishlist(JSON.parse(guestWishlist));
+      } catch (e) {}
     }
 
     setMounted(true);
   }, []);
 
+  // Cart Restoration & Merging on Auth Change
   useEffect(() => {
-    if (mounted && isAuthenticated) {
+    if (!mounted) return;
+
+    const cartKey = getCartKey(user);
+    const wishlistKey = getWishlistKey(user);
+
+    if (isAuthenticated && user?.id) {
+      const guestCartRaw = localStorage.getItem('jss-cart-guest') || localStorage.getItem('jss-cart');
+      const userCartRaw = localStorage.getItem(cartKey);
+
+      let guestCart: CartItem[] = [];
+      let userCart: CartItem[] = [];
+
+      if (guestCartRaw) {
+        try { guestCart = JSON.parse(guestCartRaw); } catch (e) {}
+      }
+      if (userCartRaw) {
+        try { userCart = JSON.parse(userCartRaw); } catch (e) {}
+      }
+
+      const mergedMap = new Map<string, CartItem>();
+      userCart.forEach((item) => mergedMap.set(item.product.id, { ...item }));
+      guestCart.forEach((item) => {
+        if (mergedMap.has(item.product.id)) {
+          const existing = mergedMap.get(item.product.id)!;
+          mergedMap.set(item.product.id, { ...existing, quantity: existing.quantity + item.quantity });
+        } else {
+          mergedMap.set(item.product.id, { ...item });
+        }
+      });
+
+      const finalCart = Array.from(mergedMap.values());
+      setCart(finalCart);
+      localStorage.setItem(cartKey, JSON.stringify(finalCart));
+      localStorage.removeItem('jss-cart-guest');
+      localStorage.removeItem('jss-cart');
+
       cartService.mergeCart().catch(() => {});
       wishlistService.getWishlist().then((items) => {
         if (items && Array.isArray(items)) {
@@ -98,22 +136,32 @@ export const CartWishlistProvider: React.FC<{ children: React.ReactNode }> = ({ 
             };
           });
           setWishlist(mappedWishlist);
+          localStorage.setItem(wishlistKey, JSON.stringify(mappedWishlist));
         }
       }).catch(() => {});
+    } else if (!user) {
+      const guestCartRaw = localStorage.getItem('jss-cart-guest') || localStorage.getItem('jss-cart');
+      if (guestCartRaw) {
+        try { setCart(JSON.parse(guestCartRaw)); } catch (e) {}
+      } else {
+        setCart([]);
+      }
     }
-  }, [mounted, isAuthenticated]);
+  }, [mounted, user?.id, isAuthenticated]);
 
   useEffect(() => {
     if (mounted) {
-      localStorage.setItem('jss-cart', JSON.stringify(cart));
+      const key = getCartKey(user);
+      localStorage.setItem(key, JSON.stringify(cart));
     }
-  }, [cart, mounted]);
+  }, [cart, mounted, user?.id]);
 
   useEffect(() => {
     if (mounted) {
-      localStorage.setItem('jss-wishlist', JSON.stringify(wishlist));
+      const key = getWishlistKey(user);
+      localStorage.setItem(key, JSON.stringify(wishlist));
     }
-  }, [wishlist, mounted]);
+  }, [wishlist, mounted, user?.id]);
 
   const addToCart = (product: Product, quantity = 1) => {
     setCart((prevCart) => {
