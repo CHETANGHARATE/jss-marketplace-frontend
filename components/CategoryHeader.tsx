@@ -39,7 +39,7 @@ export function CategoryHeader({ category }: CategoryHeaderProps) {
 
         {category.description && (
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal max-w-2xl">
-            {category.description}
+            {typeof category.description === 'string' ? category.description : (category.description.en || category.description.hi || category.description.mr || '')}
           </p>
         )}
 

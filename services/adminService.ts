@@ -242,6 +242,37 @@ export const adminService = {
     await apiClient.delete(`/admin/categories/${id}`);
   },
 
+  // ── Subcategories ──────────────────────────────────────────────────────────
+
+  /** GET /subcategories */
+  async getSubcategories(params?: { category_id?: number; parent_id?: number; search?: string }): Promise<ApiCategory[]> {
+    const response = await apiClient.get<ApiResponse<ApiCategory[]>>('/subcategories', { params });
+    return response.data.data;
+  },
+
+  /** POST /admin/subcategories */
+  async createSubcategory(payload: Partial<ApiCategory>): Promise<ApiCategory> {
+    const response = await apiClient.post<ApiResponse<ApiCategory>>('/admin/subcategories', payload);
+    return response.data.data;
+  },
+
+  /** PUT /admin/subcategories/{id} */
+  async updateSubcategory(id: number, payload: Partial<ApiCategory>): Promise<ApiCategory> {
+    const response = await apiClient.put<ApiResponse<ApiCategory>>(`/admin/subcategories/${id}`, payload);
+    return response.data.data;
+  },
+
+  /** DELETE /admin/subcategories/{id} */
+  async deleteSubcategory(id: number): Promise<void> {
+    await apiClient.delete(`/admin/subcategories/${id}`);
+  },
+
+  /** PATCH /admin/subcategories/{id}/status */
+  async updateSubcategoryStatus(id: number, payload: { is_active?: boolean; sort_order?: number }): Promise<ApiCategory> {
+    const response = await apiClient.patch<ApiResponse<ApiCategory>>(`/admin/subcategories/${id}/status`, payload);
+    return response.data.data;
+  },
+
   // ── Brands ────────────────────────────────────────────────────────────────
 
   /** GET /brands */

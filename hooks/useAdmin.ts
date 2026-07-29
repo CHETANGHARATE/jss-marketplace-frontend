@@ -216,6 +216,70 @@ export function useDeleteCategoryMutation() {
     mutationFn: (id: number) => adminService.deleteCategory(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'categories'] });
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+    },
+  });
+}
+
+// ─── Subcategories ────────────────────────────────────────────────────────────
+
+export function useAdminSubcategoriesQuery(
+  params?: { category_id?: number; parent_id?: number; search?: string },
+  enabled = true
+) {
+  return useQuery({
+    queryKey: ['admin', 'subcategories', params],
+    queryFn: () => adminService.getSubcategories(params),
+    enabled,
+    staleTime: 1000 * 60 * 2,
+  });
+}
+
+export function useCreateSubcategoryMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: Record<string, unknown>) => adminService.createSubcategory(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'subcategories'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'categories'] });
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+    },
+  });
+}
+
+export function useUpdateSubcategoryMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Record<string, unknown> }) =>
+      adminService.updateSubcategory(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'subcategories'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'categories'] });
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+    },
+  });
+}
+
+export function useDeleteSubcategoryMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.deleteSubcategory(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'subcategories'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'categories'] });
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+    },
+  });
+}
+
+export function useUpdateSubcategoryStatusMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: { is_active?: boolean; sort_order?: number } }) =>
+      adminService.updateSubcategoryStatus(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'subcategories'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'categories'] });
     },
   });
 }

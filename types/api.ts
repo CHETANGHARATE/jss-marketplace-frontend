@@ -55,9 +55,14 @@ export interface ApiCategory {
   slug: string;
   icon?: string;
   image?: string;
-  description?: string;
-  parent_id?: number;
+  description?: string | { en?: string; hi?: string; mr?: string; [key: string]: string | undefined };
+  parent_id?: number | null;
+  parent?: ApiCategory;
   children?: ApiCategory[];
+  subcategories?: ApiCategory[];
+  is_active?: boolean;
+  is_featured?: boolean;
+  sort_order?: number;
   created_at?: string;
 }
 

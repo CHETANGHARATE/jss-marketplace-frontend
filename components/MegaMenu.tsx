@@ -66,7 +66,9 @@ export function MegaMenu() {
                           {getLocalizedText(currentCategory.name, language)}
                         </h4>
                         {currentCategory.description && (
-                          <p className="text-xs text-foreground/60 line-clamp-1">{currentCategory.description}</p>
+                          <p className="text-xs text-foreground/60 line-clamp-1">
+                            {typeof currentCategory.description === 'string' ? currentCategory.description : (currentCategory.description?.en || '')}
+                          </p>
                         )}
                       </div>
                       <Link
