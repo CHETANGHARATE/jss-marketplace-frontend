@@ -93,7 +93,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
               </div>
               
               <Link
-                href={`/category/${cat.id}`}
+                href={`/category/${(cat as any).slug || cat.id}`}
                 className="inline-flex items-center gap-2 text-xs font-black text-primary hover:text-primary-hover transition-all w-max bg-primary/10 hover:bg-primary hover:text-white border border-primary/20 px-5 py-3 rounded-2xl shadow-2xs"
               >
                 <Package size={14} />

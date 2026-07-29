@@ -60,8 +60,8 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({
     onClose();
   };
 
-  const handleCategoryClick = (categoryId: string) => {
-    router.push(`/category/${categoryId}`);
+  const handleCategoryClick = (categorySlugOrId: string) => {
+    router.push(`/category/${categorySlugOrId}`);
     onClose();
   };
 
@@ -82,10 +82,10 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({
             <span>Matching Categories</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            {suggestions.categories.map((cat) => (
+            {suggestions.categories.map((cat: any) => (
               <button
                 key={cat.id}
-                onClick={() => handleCategoryClick(cat.id)}
+                onClick={() => handleCategoryClick(cat.slug || cat.id)}
                 className="flex items-center justify-between text-left p-2.5 rounded-xl hover:bg-background-secondary transition-colors group text-sm font-medium border border-transparent hover:border-border-custom"
               >
                 <span className="text-foreground group-hover:text-primary transition-colors">
