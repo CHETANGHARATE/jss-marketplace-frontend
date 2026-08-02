@@ -121,9 +121,9 @@ export const HeroBannerSlider: React.FC = () => {
   const slide = slides[current];
 
   return (
-    <div className="w-full overflow-hidden rounded-2xl" style={{ background: `linear-gradient(135deg, ${slide.bgFrom}, ${slide.bgTo})` }}>
+    <div className="w-full relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${slide.bgFrom}, ${slide.bgTo})` }}>
       {/* Category Nav Strip */}
-      <div className="flex items-center overflow-x-auto no-scrollbar border-b border-white/10 bg-white/5 backdrop-blur-sm">
+      <div className="relative z-20 flex items-center overflow-x-auto no-scrollbar border-b border-white/10 bg-black/30 backdrop-blur-md px-4 sm:px-8 lg:px-12">
         <button
           onClick={prev}
           className="shrink-0 p-3 text-white/60 hover:text-white transition-colors"
@@ -155,83 +155,85 @@ export const HeroBannerSlider: React.FC = () => {
       </div>
 
       {/* Main Hero Area */}
-      <div className="relative h-[340px] sm:h-[400px] md:h-[440px] lg:h-[480px] overflow-hidden">
+      <div className="relative h-[380px] sm:h-[440px] md:h-[480px] lg:h-[520px] overflow-hidden">
+        {/* Full-width Background Image */}
+        <div
+          key={`bg_${current}`}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-700 scale-105"
+          style={{ backgroundImage: `url(${slide.productImage})`, opacity: isAnimating ? 0.3 : 1 }}
+        />
+
+        {/* Gradient Overlay for Text & Badge Legibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-black/30" />
+
         <div
           key={current}
-          className="absolute inset-0 flex items-center transition-opacity duration-500"
+          className="relative z-10 w-full h-full flex items-center justify-between px-6 sm:px-12 md:px-16 lg:px-20 transition-opacity duration-500"
           style={{ opacity: isAnimating ? 0 : 1 }}
         >
           {/* Left: Content */}
-          <div className="relative z-10 w-full md:w-1/2 lg:w-[45%] h-full flex flex-col justify-center px-6 sm:px-10 md:px-14 space-y-5">
+          <div className="w-full md:w-3/5 lg:w-[50%] flex flex-col justify-center space-y-5">
             {/* Tag */}
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold text-white/80 tracking-widest uppercase flex items-center gap-1.5">
-                <span className="w-1 h-4 bg-blue-400 rounded-full inline-block" />
+              <span className="text-[11px] font-bold text-white/90 tracking-widest uppercase flex items-center gap-2 bg-blue-500/20 border border-blue-400/30 px-3 py-1 rounded-full backdrop-blur-sm">
+                <span className="w-2 h-2 bg-blue-400 rounded-full inline-block animate-pulse" />
                 {slide.tag}
               </span>
             </div>
 
             {/* Headline */}
             <div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-black text-white leading-tight tracking-tight drop-shadow-sm">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.8rem] font-black text-white leading-none tracking-tight drop-shadow-md">
                 {slide.title}
               </h1>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-black leading-tight tracking-tight" style={{ color: '#7BC67E' }}>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.8rem] font-black leading-none tracking-tight mt-1" style={{ color: '#7BC67E' }}>
                 {slide.accentTitle}
               </h1>
             </div>
 
             {/* Subtitle */}
-            <p className="text-sm text-white/70 font-medium leading-relaxed whitespace-pre-line">
+            <p className="text-sm sm:text-base text-white/80 font-medium leading-relaxed whitespace-pre-line max-w-xl">
               {slide.subtitle}
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex items-center flex-wrap gap-3 pt-1">
+            <div className="flex items-center flex-wrap gap-4 pt-2">
               <button
                 onClick={() => router.push(slide.ctaLink)}
-                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm px-6 py-3 rounded-full transition-all shadow-lg hover:shadow-blue-500/30 active:scale-95"
+                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-black text-sm px-7 py-3.5 rounded-full transition-all shadow-xl hover:shadow-blue-500/40 active:scale-95"
               >
-                <ShoppingBag size={16} />
+                <ShoppingBag size={18} />
                 {slide.ctaPrimary} →
               </button>
               <button
                 onClick={() => router.push('/search')}
-                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold text-sm px-5 py-3 rounded-full transition-all backdrop-blur-sm"
+                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold text-sm px-6 py-3.5 rounded-full transition-all backdrop-blur-md shadow-sm"
               >
-                <Tag size={14} />
+                <Tag size={16} />
                 {slide.ctaSecondary}
               </button>
             </div>
           </div>
 
-          {/* Center: Product Image */}
-          <div className="absolute inset-0 flex items-end justify-center md:justify-start md:left-[38%] pointer-events-none">
-            <div
-              className="w-full h-full bg-cover bg-center bg-no-repeat"
-              style={{ backgroundImage: `url(${slide.productImage})` }}
-            />
-          </div>
-
           {/* Right: Discount Badge + Trust Badges */}
-          <div className="absolute right-6 sm:right-10 md:right-12 top-1/2 -translate-y-1/2 z-10 flex flex-col items-end gap-4">
+          <div className="hidden sm:flex flex-col items-end gap-5">
             {/* Circular Discount Badge */}
             <div className="relative">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-emerald-400 flex flex-col items-center justify-center text-center shadow-xl shadow-emerald-500/20"
+              <div className="w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 rounded-full border-4 border-emerald-400 flex flex-col items-center justify-center text-center shadow-2xl shadow-emerald-500/30"
                 style={{ background: 'radial-gradient(circle, #0f2a18, #0a1f12)' }}>
-                <span className="text-white text-[9px] font-bold uppercase tracking-widest">UP TO</span>
-                <span className="text-emerald-400 font-black leading-none" style={{ fontSize: '2rem' }}>{slide.discountPercent}</span>
-                <span className="text-white text-[9px] font-bold uppercase tracking-widest">OFF</span>
+                <span className="text-white text-[10px] font-bold uppercase tracking-widest">UP TO</span>
+                <span className="text-emerald-400 font-black leading-none" style={{ fontSize: '2.5rem' }}>{slide.discountPercent}</span>
+                <span className="text-white text-[10px] font-bold uppercase tracking-widest">OFF</span>
               </div>
-              <div className="absolute -inset-1 rounded-full border border-emerald-400/30 animate-ping opacity-20 pointer-events-none" />
+              <div className="absolute -inset-1.5 rounded-full border-2 border-emerald-400/40 animate-ping opacity-25 pointer-events-none" />
             </div>
 
             {/* Trust Badges */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2.5">
               {slide.trustBadges.map((badge, i) => (
-                <div key={i} className="flex items-center gap-2 bg-black/40 backdrop-blur-sm border border-white/10 px-3 py-1.5 rounded-full">
+                <div key={i} className="flex items-center gap-2.5 bg-black/50 backdrop-blur-md border border-white/15 px-3.5 py-2 rounded-full shadow-md">
                   {badge.icon}
-                  <span className="text-white text-[11px] font-semibold whitespace-nowrap">{badge.text}</span>
+                  <span className="text-white text-xs font-bold whitespace-nowrap">{badge.text}</span>
                 </div>
               ))}
             </div>
@@ -241,27 +243,27 @@ export const HeroBannerSlider: React.FC = () => {
         {/* Nav Arrows */}
         <button
           onClick={prev}
-          className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white flex items-center justify-center backdrop-blur-sm transition-all"
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 hover:bg-black/60 border border-white/20 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-lg hover:scale-110 active:scale-95"
           aria-label="Previous"
         >
-          <ChevronLeft size={18} />
+          <ChevronLeft size={22} />
         </button>
         <button
           onClick={next}
-          className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white flex items-center justify-center backdrop-blur-sm transition-all"
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 hover:bg-black/60 border border-white/20 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-lg hover:scale-110 active:scale-95"
           aria-label="Next"
         >
-          <ChevronRight size={18} />
+          <ChevronRight size={22} />
         </button>
 
         {/* Dots */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2.5 z-20">
           {slides.map((_, i) => (
             <button
               key={i}
               onClick={() => goTo(i)}
               className={`rounded-full transition-all duration-300 ${
-                i === current ? 'w-6 h-2.5 bg-blue-400' : 'w-2.5 h-2.5 bg-white/30 hover:bg-white/50'
+                i === current ? 'w-8 h-3 bg-blue-400 shadow-md' : 'w-3 h-3 bg-white/40 hover:bg-white/70'
               }`}
               aria-label={`Slide ${i + 1}`}
             />

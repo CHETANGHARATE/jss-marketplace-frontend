@@ -85,7 +85,7 @@ const banners: PromoBanner[] = [
 
 export const HomePromoBanners: React.FC = () => {
   return (
-    <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <section className="w-full px-4 sm:px-8 lg:px-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
       {banners.map((b) => (
         <Link
           key={b.id}

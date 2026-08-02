@@ -148,7 +148,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="space-y-6 lg:space-y-8">
+    <div className="w-full space-y-8 sm:space-y-12 pb-12">
 
       {/* ─── 1. Hero Banner Slider ─── */}
       <HeroBannerSlider />
@@ -163,7 +163,7 @@ export default function HomePage() {
       <HomeServiceStrip />
 
       {/* ─── 5. Today's Deals & Flash Sales ─── */}
-      <section id="deals" className="bg-card border border-border-custom/80 rounded-3xl p-6 sm:p-10 space-y-8 shadow-sm scroll-mt-24">
+      <section id="deals" className="w-full bg-card border-y border-border-custom/80 py-10 px-4 sm:px-8 lg:px-12 space-y-8 shadow-xs scroll-mt-24">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border-custom/80">
           <div className="flex items-center gap-3.5">
             <div className="h-12 w-12 bg-rose-500 text-white flex items-center justify-center rounded-2xl font-bold shadow-xs shrink-0">
@@ -224,7 +224,7 @@ export default function HomePage() {
       )}
 
       {/* ─── 7. Trending Products Grid ─── */}
-      <section className="space-y-8">
+      <section className="w-full px-4 sm:px-8 lg:px-12 space-y-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-primary uppercase tracking-widest bg-primary/10 px-2.5 py-0.5 rounded-full mb-1">
@@ -252,7 +252,7 @@ export default function HomePage() {
       </section>
 
       {/* ─── 8. Featured Marketplace Vendors ─── */}
-      <section className="space-y-8">
+      <section className="w-full px-4 sm:px-8 lg:px-12 space-y-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border-custom/80 pb-6">
           <div>
             <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-emerald-600 uppercase tracking-widest bg-emerald-500/10 px-2.5 py-0.5 rounded-full mb-1">
@@ -325,7 +325,7 @@ export default function HomePage() {
       <WhyChooseUs />
 
       {/* ─── 10. Newsletter Subscription ─── */}
-      <section className="bg-card border border-border-custom/80 rounded-3xl p-8 sm:p-12 space-y-6 shadow-xs">
+      <section className="w-full bg-card border-y border-border-custom/80 py-12 px-4 sm:px-8 lg:px-12 space-y-6 shadow-xs">
         <div className="max-w-2xl mx-auto text-center space-y-3">
           <div className="inline-flex items-center justify-center gap-2 text-primary font-bold text-xs uppercase tracking-widest bg-primary/10 px-3 py-1 rounded-full">
             <Mail size={14} />
