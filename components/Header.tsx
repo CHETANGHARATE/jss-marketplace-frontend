@@ -99,7 +99,7 @@ export const Header: React.FC = () => {
     <>
       {/* 1. Top Premium Announcement Bar */}
       <div className="bg-slate-950 text-white text-[11px] font-bold py-2 px-4 border-b border-slate-800/80 transition-colors">
-        <div className="w-full px-4 sm:px-8 lg:px-12 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
           <div className="hidden sm:flex items-center gap-2 text-slate-300 font-medium">
             <span className="inline-flex items-center gap-1 bg-slate-800 text-slate-200 px-2 py-0.5 rounded-md text-[10px] font-bold">
               🇮🇳 India
@@ -131,7 +131,7 @@ export const Header: React.FC = () => {
 
       {/* 2. Main Sticky Navigation Header Bar */}
       <header className="sticky top-0 z-40 w-full bg-card/95 backdrop-blur-md border-b border-border-custom/80 shadow-xs transition-colors duration-200">
-        <div className="w-full px-4 sm:px-8 lg:px-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 sm:h-20 items-center justify-between gap-3 sm:gap-6">
             
             {/* Left: Mobile Menu Toggle & Brand Logo */}

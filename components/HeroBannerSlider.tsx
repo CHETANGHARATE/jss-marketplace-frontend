@@ -121,9 +121,9 @@ export const HeroBannerSlider: React.FC = () => {
   const slide = slides[current];
 
   return (
-    <div className="w-full relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${slide.bgFrom}, ${slide.bgTo})` }}>
+    <div className="w-full relative overflow-hidden rounded-3xl shadow-lg border border-border-custom/40" style={{ background: `linear-gradient(135deg, ${slide.bgFrom}, ${slide.bgTo})` }}>
       {/* Category Nav Strip */}
-      <div className="relative z-20 flex items-center overflow-x-auto no-scrollbar border-b border-white/10 bg-black/30 backdrop-blur-md px-4 sm:px-8 lg:px-12">
+      <div className="relative z-20 flex items-center overflow-x-auto no-scrollbar border-b border-white/10 bg-black/30 backdrop-blur-md px-4 sm:px-6">
         <button
           onClick={prev}
           className="shrink-0 p-3 text-white/60 hover:text-white transition-colors"
@@ -155,8 +155,8 @@ export const HeroBannerSlider: React.FC = () => {
       </div>
 
       {/* Main Hero Area */}
-      <div className="relative h-[380px] sm:h-[440px] md:h-[480px] lg:h-[520px] overflow-hidden">
-        {/* Full-width Background Image */}
+      <div className="relative h-[360px] sm:h-[420px] md:h-[460px] lg:h-[480px] overflow-hidden">
+        {/* Full Background Image */}
         <div
           key={`bg_${current}`}
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-700 scale-105"
@@ -168,7 +168,7 @@ export const HeroBannerSlider: React.FC = () => {
 
         <div
           key={current}
-          className="relative z-10 w-full h-full flex items-center justify-between px-6 sm:px-12 md:px-16 lg:px-20 transition-opacity duration-500"
+          className="relative z-10 w-full h-full flex items-center justify-between px-6 sm:px-10 md:px-14 transition-opacity duration-500"
           style={{ opacity: isAnimating ? 0 : 1 }}
         >
           {/* Left: Content */}

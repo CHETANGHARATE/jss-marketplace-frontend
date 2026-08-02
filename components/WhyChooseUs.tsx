@@ -53,7 +53,7 @@ const features = [
 export const WhyChooseUs: React.FC = () => {
   return (
     <section
-      className="w-full relative py-12 sm:py-16 px-4 sm:px-8 lg:px-12 overflow-hidden"
+      className="relative rounded-3xl overflow-hidden py-12 px-6 sm:px-10"
       style={{ background: 'linear-gradient(135deg, #f0f4ff 0%, #f5f0ff 50%, #fff5f0 100%)' }}
     >
       {/* Floating decorative blobs */}

@@ -70,7 +70,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
   }
 
   return (
-    <div className="w-full px-4 sm:px-8 lg:px-12 space-y-16 sm:space-y-20">
+    <div className="space-y-20 lg:space-y-24">
       {categories.map((cat) => {
         const products = featuredData[String(cat.id)] || [];
         if (products.length === 0) return null;

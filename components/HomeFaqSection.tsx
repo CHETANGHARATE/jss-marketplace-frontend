@@ -50,14 +50,14 @@ export const HomeFaqSection: React.FC = () => {
 
   return (
     <section
-      className="w-full relative overflow-hidden"
+      className="relative rounded-3xl overflow-hidden"
       style={{ background: 'linear-gradient(135deg, #f0f4ff 0%, #faf0ff 50%, #fff5f0 100%)' }}
     >
       {/* Decorative blobs */}
       <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-30 pointer-events-none" style={{ background: 'radial-gradient(circle, #c7d2fe, transparent)' }} />
       <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-30 pointer-events-none" style={{ background: 'radial-gradient(circle, #e9d5ff, transparent)' }} />
 
-      <div className="relative z-10 py-12 sm:py-16 px-4 sm:px-8 lg:px-12">
+      <div className="relative z-10 p-6 sm:p-10 lg:p-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
 
           {/* Left Panel */}

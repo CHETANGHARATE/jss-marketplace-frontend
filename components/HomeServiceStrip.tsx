@@ -43,8 +43,8 @@ const services = [
 
 export const HomeServiceStrip: React.FC = () => {
   return (
-    <section className="w-full bg-white dark:bg-card border-y border-border-custom/60 py-6 px-4 sm:px-8 lg:px-12 shadow-xs">
-      <div className="flex flex-wrap items-center justify-around gap-6">
+    <section className="bg-white dark:bg-card border border-border-custom/60 rounded-2xl shadow-sm">
+      <div className="flex flex-wrap items-center justify-around gap-4 py-5 px-4">
         {services.map((svc, i) => {
           const Icon = svc.icon;
           return (
