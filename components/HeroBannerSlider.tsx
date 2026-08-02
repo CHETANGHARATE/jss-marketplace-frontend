@@ -1,234 +1,489 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, ChevronRight, ShoppingBag, Tag, ShieldCheck, Zap, RefreshCw } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  ShoppingBag,
+  Tag,
+  ShieldCheck,
+  Zap,
+  RefreshCw,
+  CloudRain,
+  Home,
+  Sparkles,
+  Sprout,
+  Smartphone,
+  Shirt,
+  Flame,
+  Gem
+} from 'lucide-react';
 
-interface HeroSlide {
-  id: number;
+export interface CategoryHeroSlide {
+  id: string;
+  categoryTitle: string;
+  categoryIcon: React.ReactNode;
   tag: string;
   title: string;
   accentTitle: string;
   subtitle: string;
-  discountBadge: string;
+  description: string;
   discountPercent: string;
-  discountSub: string;
+  offerBadge: string;
   ctaPrimary: string;
   ctaSecondary: string;
   ctaLink: string;
   bgFrom: string;
   bgTo: string;
-  productImage: string;
+  accentColor: string;
+  bgImage: string;
+  foregroundImages: string[];
   trustBadges: { icon: React.ReactNode; text: string }[];
 }
 
-const slides: HeroSlide[] = [
+export const categoryHeroSlides: CategoryHeroSlide[] = [
   {
-    id: 1,
-    tag: '🌧️ MONSOON SPECIAL',
-    title: 'Mega Monsoon',
-    accentTitle: 'Discounts',
-    subtitle: 'Big Savings on Every Category\nShop More • Save More',
-    discountBadge: 'UP TO\n60%\nOFF',
+    id: 'rain_essentials',
+    categoryTitle: 'Rain Essentials',
+    categoryIcon: <CloudRain size={16} />,
+    tag: '🌧️ MONSOON EXCLUSIVE',
+    title: 'Monsoon Rain',
+    accentTitle: 'Essentials 60% OFF',
+    subtitle: 'Heavy Duty Umbrellas • Raincoats • Waterproof Boots',
+    description: 'Protect yourself this monsoon with premium wind-resistant umbrellas, double-layered raincoats, and non-slip waterproof footwear directly from verified Indian manufacturers.',
     discountPercent: '60%',
-    discountSub: '',
-    ctaPrimary: 'Shop Now',
+    offerBadge: 'MONSOON SPECIAL',
+    ctaPrimary: 'Shop Rain Gear',
     ctaSecondary: 'Explore All Deals',
     ctaLink: '/search?tag=monsoon',
-    bgFrom: '#0d1b35',
-    bgTo: '#0a2545',
-    productImage: '/hero-monsoon.jpg',
+    bgFrom: '#091830',
+    bgTo: '#0b264a',
+    accentColor: '#38bdf8',
+    bgImage: '/hero-monsoon.jpg',
+    foregroundImages: ['/categories/footwear.webp', '/categories/auto.webp'],
     trustBadges: [
-      { icon: <ShieldCheck size={14} className="text-emerald-400" />, text: '100% Genuine Products' },
-      { icon: <Zap size={14} className="text-amber-400" />, text: 'Fast & Free Delivery' },
-      { icon: <RefreshCw size={14} className="text-blue-400" />, text: 'Easy Returns & Refunds' },
+      { icon: <ShieldCheck size={14} className="text-emerald-400" />, text: '100% Waterproof Guarantee' },
+      { icon: <Zap size={14} className="text-amber-400" />, text: 'Same Day Dispatch' },
+      { icon: <RefreshCw size={14} className="text-blue-400" />, text: '10-Day Easy Replacement' }
     ]
   },
   {
-    id: 2,
-    tag: '🎉 FESTIVE DEALS',
-    title: 'Festival',
-    accentTitle: 'Mega Savings',
-    subtitle: 'Biggest Festival Sale of the Year\nShop & Celebrate',
-    discountBadge: 'UP TO\n80%\nOFF',
-    discountPercent: '80%',
-    discountSub: '',
-    ctaPrimary: 'Shop Now',
-    ctaSecondary: 'View All Offers',
-    ctaLink: '/search?tag=festival',
-    bgFrom: '#1a0d35',
-    bgTo: '#2d0a45',
-    productImage: '/promo-festival.jpg',
-    trustBadges: [
-      { icon: <ShieldCheck size={14} className="text-emerald-400" />, text: '100% Genuine Products' },
-      { icon: <Zap size={14} className="text-amber-400" />, text: 'Fast & Free Delivery' },
-      { icon: <RefreshCw size={14} className="text-blue-400" />, text: 'Easy Returns & Refunds' },
-    ]
-  },
-  {
-    id: 3,
-    tag: '🌿 FARM FRESH',
-    title: 'Agriculture',
-    accentTitle: 'Direct Tools',
-    subtitle: 'Best Quality • Best Price\nDirect From Manufacturers',
-    discountBadge: 'UP TO\n50%\nOFF',
+    id: 'home_kitchen',
+    categoryTitle: 'Home & Kitchen',
+    categoryIcon: <Home size={16} />,
+    tag: '🏠 HOME & KITCHEN FESTIVAL',
+    title: 'Modern Home &',
+    accentTitle: 'Kitchen Appliances',
+    subtitle: 'High Speed Juicers • Brass Utensils • Solar Appliances',
+    description: 'Upgrade your culinary space with stone-ground mixers, food processors, copper cookware sets, and energy-efficient solar appliances at direct-from-factory prices.',
     discountPercent: '50%',
-    discountSub: '',
-    ctaPrimary: 'Shop Now',
-    ctaSecondary: 'Explore Farm Tools',
-    ctaLink: '/search?tag=agriculture',
-    bgFrom: '#0a2010',
-    bgTo: '#0d2d12',
-    productImage: '/promo-agriculture.jpg',
+    offerBadge: 'KITCHEN SALE',
+    ctaPrimary: 'Shop Kitchenware',
+    ctaSecondary: 'View Appliances',
+    ctaLink: '/category/home-kitchen',
+    bgFrom: '#1c1305',
+    bgTo: '#332005',
+    accentColor: '#f59e0b',
+    bgImage: '/categories/kitchen.webp',
+    foregroundImages: ['/categories/juices.webp', '/categories/kitchen.webp'],
     trustBadges: [
-      { icon: <ShieldCheck size={14} className="text-emerald-400" />, text: '100% Genuine Products' },
-      { icon: <Zap size={14} className="text-amber-400" />, text: 'Fast & Free Delivery' },
-      { icon: <RefreshCw size={14} className="text-blue-400" />, text: 'Easy Returns & Refunds' },
+      { icon: <ShieldCheck size={14} className="text-emerald-400" />, text: '1 Year Brand Warranty' },
+      { icon: <Zap size={14} className="text-amber-400" />, text: 'Free Express Shipping' },
+      { icon: <RefreshCw size={14} className="text-blue-400" />, text: 'GST Invoice Available' }
     ]
   },
+  {
+    id: 'beauty_care',
+    categoryTitle: 'Beauty & Personal Care',
+    categoryIcon: <Sparkles size={16} />,
+    tag: '💄 BEAUTY & SKINCARE',
+    title: 'Organic Beauty &',
+    accentTitle: 'Personal Care',
+    subtitle: 'Ayurvedic Serums • Herbal Shampoos • Makeup Kits',
+    description: 'Transform your daily routine with toxin-free botanical serums, cold-pressed oils, pure aloe vera gels, and branded cosmetic hampers for glowing health.',
+    discountPercent: '40%',
+    offerBadge: 'GLOW DEALS',
+    ctaPrimary: 'Explore Beauty',
+    ctaSecondary: 'View Cosmetics',
+    ctaLink: '/category/beauty-personal-care',
+    bgFrom: '#240a14',
+    bgTo: '#3f1124',
+    accentColor: '#f43f5e',
+    bgImage: '/categories/beauty.webp',
+    foregroundImages: ['/categories/cosmetics.webp', '/categories/beauty.webp'],
+    trustBadges: [
+      { icon: <ShieldCheck size={14} className="text-emerald-400" />, text: 'Dermatologically Tested' },
+      { icon: <Zap size={14} className="text-amber-400" />, text: '100% Organic & Chemical-Free' },
+      { icon: <RefreshCw size={14} className="text-blue-400" />, text: 'Direct Manufacturer Supply' }
+    ]
+  },
+  {
+    id: 'agriculture',
+    categoryTitle: 'Agriculture & Tools',
+    categoryIcon: <Sprout size={16} />,
+    tag: '🌾 AGRI-SOLUTIONS DIRECT',
+    title: 'Bio Fertilizers &',
+    accentTitle: 'High Yield Seeds',
+    subtitle: 'Certified Hybrid Seeds • Drip Kits • Bio Pesticides',
+    description: 'Empowering Indian farmers with government-certified hybrid seeds, organic bio-fertilizers, micro-drip irrigation kits, and hand sprayers delivered to your doorstep.',
+    discountPercent: '45%',
+    offerBadge: 'FARM SAVINGS',
+    ctaPrimary: 'Shop Agri Tools',
+    ctaSecondary: 'Seeds & Fertilizers',
+    ctaLink: '/category/agriculture',
+    bgFrom: '#081c0e',
+    bgTo: '#0e331b',
+    accentColor: '#10b981',
+    bgImage: '/promo-agriculture.jpg',
+    foregroundImages: ['/categories/agriculture.webp', '/categories/oil.webp'],
+    trustBadges: [
+      { icon: <ShieldCheck size={14} className="text-emerald-400" />, text: 'Lab Tested Germination' },
+      { icon: <Zap size={14} className="text-amber-400" />, text: 'Doorstep Village Delivery' },
+      { icon: <RefreshCw size={14} className="text-blue-400" />, text: 'Bulk Kisan Discounts' }
+    ]
+  },
+  {
+    id: 'electronics',
+    categoryTitle: 'Electronics & Gadgets',
+    categoryIcon: <Smartphone size={16} />,
+    tag: '⚡ TECHPULSE ELECTRONICS',
+    title: 'Smart Gadgets &',
+    accentTitle: 'Auto Electronics',
+    subtitle: 'Smartwatches • Wireless Audio • Dashcams & Power Banks',
+    description: 'Experience cutting-edge technology with active noise-canceling headphones, Bluetooth party speakers, high-speed power banks, and solar auto accessories.',
+    discountPercent: '70%',
+    offerBadge: 'MEGA TECH SALE',
+    ctaPrimary: 'Shop Electronics',
+    ctaSecondary: 'View Auto Gear',
+    ctaLink: '/category/electronics',
+    bgFrom: '#0b102b',
+    bgTo: '#171e4d',
+    accentColor: '#6366f1',
+    bgImage: '/categories/electronics.webp',
+    foregroundImages: ['/categories/electronics.webp', '/categories/auto.webp'],
+    trustBadges: [
+      { icon: <ShieldCheck size={14} className="text-emerald-400" />, text: 'Brand Authorized Distributor' },
+      { icon: <Zap size={14} className="text-amber-400" />, text: 'Fast Express Shipping' },
+      { icon: <RefreshCw size={14} className="text-blue-400" />, text: 'Secure Escrow Payment' }
+    ]
+  },
+  {
+    id: 'fashion',
+    categoryTitle: 'Fashion & Lifestyle',
+    categoryIcon: <Shirt size={16} />,
+    tag: '👗 ETHNIC & HANDLOOM',
+    title: 'Handloom Sarees &',
+    accentTitle: 'Ethnic Fashion',
+    subtitle: 'Pure Silk Sarees • Designer Kurtis • Kolhapuri Footwear',
+    description: 'Discover exquisite handwoven sarees, breathable organic cotton kurtas, festive dupattas, and handcrafted Kolhapuri juttis made by master Indian artisans.',
+    discountPercent: '65%',
+    offerBadge: 'FASHION BONANZA',
+    ctaPrimary: 'Explore Fashion',
+    ctaSecondary: 'View Ethnic Wear',
+    ctaLink: '/category/fashion',
+    bgFrom: '#240826',
+    bgTo: '#45104a',
+    accentColor: '#d946ef',
+    bgImage: '/categories/fashion.webp',
+    foregroundImages: ['/categories/fashion.webp', '/categories/footwear.webp'],
+    trustBadges: [
+      { icon: <ShieldCheck size={14} className="text-emerald-400" />, text: 'Authentic Weaver Craft' },
+      { icon: <Zap size={14} className="text-amber-400" />, text: 'Custom Sizing Support' },
+      { icon: <RefreshCw size={14} className="text-blue-400" />, text: 'Hassle Free Exchanges' }
+    ]
+  },
+  {
+    id: 'festive_pooja',
+    categoryTitle: 'Festive & Pooja',
+    categoryIcon: <Flame size={16} />,
+    tag: '🪔 POOJA & FESTIVE SPECIAL',
+    title: 'Pooja Samagri &',
+    accentTitle: 'Fresh Faral Snacks',
+    subtitle: 'Brass Idols • Sandalwood Incense • Homemade Faral Combos',
+    description: 'Prepare for holy celebrations with complete ritual kits, brass oil diyas, organic camphor, and traditional Diwali faral snacks made with pure cow ghee.',
+    discountPercent: '35%',
+    offerBadge: 'FESTIVE OFFER',
+    ctaPrimary: 'Shop Pooja Kits',
+    ctaSecondary: 'Order Faral Combo',
+    ctaLink: '/category/religious-pooja-items',
+    bgFrom: '#241406',
+    bgTo: '#472709',
+    accentColor: '#eab308',
+    bgImage: '/promo-festival.jpg',
+    foregroundImages: ['/categories/pooja.webp', '/categories/diwali.webp'],
+    trustBadges: [
+      { icon: <ShieldCheck size={14} className="text-emerald-400" />, text: 'Pure & Sacred Ingredients' },
+      { icon: <Zap size={14} className="text-amber-400" />, text: 'Fresh Batch Preparation' },
+      { icon: <RefreshCw size={14} className="text-blue-400" />, text: 'Hygienic Eco Packaging' }
+    ]
+  },
+  {
+    id: 'jewellery_crafts',
+    categoryTitle: 'Jewellery & Crafts',
+    categoryIcon: <Gem size={16} />,
+    tag: '💎 ROYAL HERITAGE COLLECTION',
+    title: 'Handcrafted Ornaments &',
+    accentTitle: 'Astro Gemstones',
+    subtitle: 'Silver Jewellery • Certified Gems • Artisan Gifts',
+    description: 'Explore hallmarked silver ornaments, certified planetary gemstones, carved marble idols, and handcrafted gift hampers with authenticity certification.',
+    discountPercent: '50%',
+    offerBadge: 'ROYAL HERITAGE',
+    ctaPrimary: 'Shop Jewellery',
+    ctaSecondary: 'View Astro Stones',
+    ctaLink: '/category/jewellery',
+    bgFrom: '#150a29',
+    bgTo: '#2e1559',
+    accentColor: '#8b5cf6',
+    bgImage: '/categories/jewellery.webp',
+    foregroundImages: ['/categories/jewellery.webp', '/categories/gifts.webp'],
+    trustBadges: [
+      { icon: <ShieldCheck size={14} className="text-emerald-400" />, text: '925 Silver & Hallmarked' },
+      { icon: <Zap size={14} className="text-amber-400" />, text: 'Lab Certified Gemstones' },
+      { icon: <RefreshCw size={14} className="text-blue-400" />, text: 'Insured Transit Shipping' }
+    ]
+  }
 ];
-
-
 
 export const HeroBannerSlider: React.FC = () => {
   const router = useRouter();
   const [current, setCurrent] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const navContainerRef = useRef<HTMLDivElement>(null);
 
-  const goTo = useCallback((idx: number) => {
+  const goTo = useCallback(
+    (idx: number) => {
+      if (isAnimating || idx === current) return;
+      setIsAnimating(true);
+      setCurrent(idx);
+      setTimeout(() => setIsAnimating(false), 500);
+    },
+    [isAnimating, current]
+  );
+
+  const next = useCallback(() => {
     if (isAnimating) return;
     setIsAnimating(true);
-    setCurrent(idx);
+    setCurrent((prev) => (prev + 1) % categoryHeroSlides.length);
     setTimeout(() => setIsAnimating(false), 500);
   }, [isAnimating]);
 
-  const next = useCallback(() => goTo((current + 1) % slides.length), [current, goTo]);
-  const prev = useCallback(() => goTo((current - 1 + slides.length) % slides.length), [current, goTo]);
+  const prev = useCallback(() => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrent((prev) => (prev - 1 + categoryHeroSlides.length) % categoryHeroSlides.length);
+    setTimeout(() => setIsAnimating(false), 500);
+  }, [isAnimating]);
 
+  // Synchronized Auto-Play Interval
   useEffect(() => {
-    const timer = setInterval(next, 5000);
+    if (isPaused) return;
+    const timer = setInterval(() => {
+      next();
+    }, 5000);
     return () => clearInterval(timer);
-  }, [next]);
+  }, [next, isPaused]);
 
-  const slide = slides[current];
+  // Keep active category tab visible in horizontal scroll container
+  useEffect(() => {
+    if (navContainerRef.current) {
+      const activeTab = navContainerRef.current.children[current] as HTMLElement;
+      if (activeTab) {
+        activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }, [current]);
+
+  const slide = categoryHeroSlides[current];
 
   return (
-    <div className="w-full relative overflow-hidden rounded-3xl shadow-lg border border-border-custom/40" style={{ background: `linear-gradient(135deg, ${slide.bgFrom}, ${slide.bgTo})` }}>
-
-
-      {/* Main Hero Area */}
-      <div className="relative h-[400px] sm:h-[460px] md:h-[500px] lg:h-[520px] overflow-hidden">
-        {/* Full Background Image */}
+    <div
+      className="w-full relative rounded-3xl overflow-hidden shadow-xl border border-border-custom/50 transition-all duration-500"
+      style={{ background: `linear-gradient(135deg, ${slide.bgFrom}, ${slide.bgTo})` }}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      {/* ─── 1. Synchronized Header Category Navigation Bar ─── */}
+      <div className="w-full bg-black/40 backdrop-blur-md border-b border-white/10 px-3 sm:px-6 py-2.5 z-30 relative">
         <div
-          key={`bg_${current}`}
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-700 scale-105"
-          style={{ backgroundImage: `url(${slide.productImage})`, opacity: isAnimating ? 0.3 : 1 }}
+          ref={navContainerRef}
+          className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5"
+        >
+          {categoryHeroSlides.map((cat, idx) => {
+            const isActive = idx === current;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => goTo(idx)}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-black transition-all shrink-0 cursor-pointer ${
+                  isActive
+                    ? 'bg-white text-slate-900 shadow-md scale-102 border border-white'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 border border-transparent'
+                }`}
+                style={isActive ? { borderLeft: `4px solid ${cat.accentColor}` } : {}}
+              >
+                <span className={isActive ? 'text-slate-900' : 'text-white/90'}>{cat.categoryIcon}</span>
+                <span className="whitespace-nowrap">{cat.categoryTitle}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ─── 2. Main Synchronized Hero Stage ─── */}
+      <div className="relative h-[420px] sm:h-[480px] md:h-[510px] lg:h-[530px] overflow-hidden">
+        {/* Background Banner Image */}
+        <div
+          key={`bg_${slide.id}`}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700 scale-105"
+          style={{
+            backgroundImage: `url(${slide.bgImage})`,
+            opacity: isAnimating ? 0.25 : 0.85,
+          }}
         />
 
-        {/* Gradient Overlay for Text & Badge Legibility */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-black/30" />
+        {/* Multi-layered Dark Gradient for Optimum Legibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-black/35" />
 
+        {/* Content & Product Showcase Stage */}
         <div
-          key={current}
-          className="relative z-10 w-full h-full flex items-center justify-between px-6 sm:px-10 md:px-14 transition-opacity duration-500"
+          key={`stage_${slide.id}`}
+          className="relative z-10 w-full h-full flex items-center justify-between px-6 sm:px-10 md:px-14 lg:px-16 transition-all duration-500"
           style={{ opacity: isAnimating ? 0 : 1 }}
         >
-          {/* Left: Content */}
-          <div className="w-full md:w-3/5 lg:w-[50%] flex flex-col justify-center space-y-5">
-            {/* Tag */}
+          {/* Left Text & Actions */}
+          <div className="w-full md:w-3/5 lg:w-[54%] flex flex-col justify-center space-y-4 sm:space-y-5 animate-in fade-in slide-in-from-left-4 duration-500">
+            {/* Category Tag */}
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold text-white/90 tracking-widest uppercase flex items-center gap-2 bg-blue-500/20 border border-blue-400/30 px-3 py-1 rounded-full backdrop-blur-sm">
-                <span className="w-2 h-2 bg-blue-400 rounded-full inline-block animate-pulse" />
+              <span
+                className="text-[11px] font-black text-white tracking-widest uppercase flex items-center gap-2 border px-3.5 py-1 rounded-full backdrop-blur-md shadow-xs"
+                style={{ backgroundColor: `${slide.accentColor}25`, borderColor: `${slide.accentColor}50` }}
+              >
+                <span className="w-2 h-2 rounded-full inline-block animate-ping" style={{ backgroundColor: slide.accentColor }} />
                 {slide.tag}
               </span>
             </div>
 
             {/* Headline */}
             <div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.8rem] font-black text-white leading-none tracking-tight drop-shadow-md">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.6rem] font-black text-white leading-none tracking-tight drop-shadow-md">
                 {slide.title}
               </h1>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.8rem] font-black leading-none tracking-tight mt-1" style={{ color: '#7BC67E' }}>
+              <h1
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.6rem] font-black leading-none tracking-tight mt-1 drop-shadow-lg"
+                style={{ color: slide.accentColor }}
+              >
                 {slide.accentTitle}
               </h1>
             </div>
 
-            {/* Subtitle */}
-            <p className="text-sm sm:text-base text-white/80 font-medium leading-relaxed whitespace-pre-line max-w-xl">
-              {slide.subtitle}
-            </p>
+            {/* Subtitle & Description */}
+            <div className="space-y-1.5">
+              <p className="text-xs sm:text-sm font-extrabold text-white/95 tracking-wide">
+                {slide.subtitle}
+              </p>
+              <p className="text-xs sm:text-sm text-white/80 font-medium leading-relaxed max-w-xl line-clamp-2">
+                {slide.description}
+              </p>
+            </div>
 
             {/* CTA Buttons */}
-            <div className="flex items-center flex-wrap gap-4 pt-2">
+            <div className="flex items-center flex-wrap gap-3.5 pt-2">
               <button
                 onClick={() => router.push(slide.ctaLink)}
-                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-black text-sm px-7 py-3.5 rounded-full transition-all shadow-xl hover:shadow-blue-500/40 active:scale-95"
+                className="inline-flex items-center gap-2 text-white font-black text-xs sm:text-sm px-7 py-3.5 rounded-full transition-all shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 cursor-pointer"
+                style={{ backgroundColor: slide.accentColor }}
               >
                 <ShoppingBag size={18} />
-                {slide.ctaPrimary} →
+                <span>{slide.ctaPrimary} &rarr;</span>
               </button>
               <button
                 onClick={() => router.push('/search')}
-                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold text-sm px-6 py-3.5 rounded-full transition-all backdrop-blur-md shadow-sm"
+                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold text-xs sm:text-sm px-6 py-3.5 rounded-full transition-all backdrop-blur-md shadow-2xs hover:scale-105 active:scale-95 cursor-pointer"
               >
                 <Tag size={16} />
-                {slide.ctaSecondary}
+                <span>{slide.ctaSecondary}</span>
               </button>
             </div>
           </div>
 
-          {/* Right: Discount Badge + Trust Badges */}
-          <div className="hidden sm:flex flex-col items-end gap-5">
-            {/* Circular Discount Badge */}
-            <div className="relative">
-              <div className="w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 rounded-full border-4 border-emerald-400 flex flex-col items-center justify-center text-center shadow-2xl shadow-emerald-500/30"
-                style={{ background: 'radial-gradient(circle, #0f2a18, #0a1f12)' }}>
-                <span className="text-white text-[10px] font-bold uppercase tracking-widest">UP TO</span>
-                <span className="text-emerald-400 font-black leading-none" style={{ fontSize: '2.5rem' }}>{slide.discountPercent}</span>
-                <span className="text-white text-[10px] font-bold uppercase tracking-widest">OFF</span>
-              </div>
-              <div className="absolute -inset-1.5 rounded-full border-2 border-emerald-400/40 animate-ping opacity-25 pointer-events-none" />
-            </div>
-
-            {/* Trust Badges */}
-            <div className="flex flex-col gap-2.5">
-              {slide.trustBadges.map((badge, i) => (
-                <div key={i} className="flex items-center gap-2.5 bg-black/50 backdrop-blur-md border border-white/15 px-3.5 py-2 rounded-full shadow-md">
-                  {badge.icon}
-                  <span className="text-white text-xs font-bold whitespace-nowrap">{badge.text}</span>
+          {/* Right Product Cutouts Showcase & Discount Circle */}
+          <div className="hidden sm:flex flex-col items-end justify-center gap-5 lg:gap-6">
+            {/* Foreground Product Cutouts */}
+            <div className="flex items-center gap-3">
+              {slide.foregroundImages.map((img, i) => (
+                <div
+                  key={i}
+                  className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-3xl p-2.5 bg-black/40 border border-white/20 backdrop-blur-md shadow-2xl overflow-hidden hover:scale-110 transition-transform duration-300 flex items-center justify-center"
+                >
+                  <img
+                    src={img}
+                    alt={slide.categoryTitle}
+                    className="w-full h-full object-cover rounded-2xl"
+                  />
                 </div>
               ))}
+            </div>
+
+            {/* Circular Offer Badge */}
+            <div className="flex items-center gap-4">
+              <div
+                className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 flex flex-col items-center justify-center text-center shadow-2xl backdrop-blur-md"
+                style={{
+                  borderColor: slide.accentColor,
+                  background: 'radial-gradient(circle, rgba(0,0,0,0.85), rgba(10,10,10,0.95))',
+                }}
+              >
+                <span className="text-white text-[9px] font-black uppercase tracking-widest">UP TO</span>
+                <span className="font-black leading-none my-0.5 text-2xl sm:text-3xl" style={{ color: slide.accentColor }}>
+                  {slide.discountPercent}
+                </span>
+                <span className="text-white text-[9px] font-black uppercase tracking-widest">OFF</span>
+              </div>
+
+              {/* Trust Badges */}
+              <div className="hidden lg:flex flex-col gap-2">
+                {slide.trustBadges.map((badge, i) => (
+                  <div key={i} className="flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/15 px-3 py-1.5 rounded-2xl shadow-sm">
+                    {badge.icon}
+                    <span className="text-white text-[11px] font-bold whitespace-nowrap">{badge.text}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Nav Arrows */}
+        {/* Previous Navigation Arrow */}
         <button
           onClick={prev}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 hover:bg-black/60 border border-white/20 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-lg hover:scale-110 active:scale-95"
-          aria-label="Previous"
+          aria-label="Previous Slide"
+          className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/40 hover:bg-black/80 border border-white/20 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-lg hover:scale-110 active:scale-95 cursor-pointer"
         >
           <ChevronLeft size={22} />
         </button>
+
+        {/* Next Navigation Arrow */}
         <button
           onClick={next}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 hover:bg-black/60 border border-white/20 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-lg hover:scale-110 active:scale-95"
-          aria-label="Next"
+          aria-label="Next Slide"
+          className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/40 hover:bg-black/80 border border-white/20 text-white flex items-center justify-center backdrop-blur-md transition-all shadow-lg hover:scale-110 active:scale-95 cursor-pointer"
         >
           <ChevronRight size={22} />
         </button>
 
-        {/* Dots */}
-        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2.5 z-20">
-          {slides.map((_, i) => (
+        {/* Synchronized Slide Indicators */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+          {categoryHeroSlides.map((_, i) => (
             <button
               key={i}
               onClick={() => goTo(i)}
-              className={`rounded-full transition-all duration-300 ${
-                i === current ? 'w-8 h-3 bg-blue-400 shadow-md' : 'w-3 h-3 bg-white/40 hover:bg-white/70'
+              className={`rounded-full transition-all duration-300 cursor-pointer ${
+                i === current ? 'w-8 h-2.5 shadow-md' : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/70'
               }`}
-              aria-label={`Slide ${i + 1}`}
+              style={i === current ? { backgroundColor: slide.accentColor } : {}}
+              aria-label={`Go to slide ${i + 1}`}
             />
           ))}
         </div>

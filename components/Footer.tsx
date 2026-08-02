@@ -55,7 +55,7 @@ export const Footer: React.FC = () => {
       
       {/* 1. 4 Trust Badges Bar */}
       <div className="border-b border-border-custom/80 bg-background-secondary/80 py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center">
             
             <div className="flex flex-col items-center p-4 bg-card border border-border-custom/60 rounded-3xl shadow-2xs hover:shadow-xs transition-all">
@@ -95,7 +95,7 @@ export const Footer: React.FC = () => {
       </div>
 
       {/* 2. Main Footer Links & Brand Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10">
           
           {/* Brand Column */}
@@ -244,7 +244,7 @@ export const Footer: React.FC = () => {
 
       {/* Bottom Copyright & Security Note */}
       <div className="border-t border-border-custom/80 bg-background-secondary/80 py-5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-custom font-medium">
+        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-custom font-medium">
           <p>© {new Date().getFullYear()} JSS Solutions Ltd. All rights reserved. Enterprise Multi-Vendor Platform.</p>
           <div className="flex items-center gap-4 text-[11px]">
             <span>UPI</span>
