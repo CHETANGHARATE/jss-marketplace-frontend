@@ -135,11 +135,13 @@ export const HomeCategoryStrip: React.FC<Props> = ({ categories }) => {
     scrollRef.current.scrollBy({ left: dir === 'left' ? -300 : 300, behavior: 'smooth' });
   };
 
-  // Filter out ONLY "Beauty & Care" from homepage category strip while keeping Cosmetics and Beauty & Personal Care
+  // Filter out extra categories "Beauty & Care" and "Agriculture & Seeds" from homepage category strip
   const displayCats = categories.filter(cat => {
     const name = getName(cat.name).toLowerCase().trim();
     const slug = String((cat as any).slug || '').toLowerCase().trim();
-    return name !== 'beauty & care' && name !== 'beauty care' && slug !== 'beauty-care' && slug !== 'beauty_care';
+    const isBeautyCare = name === 'beauty & care' || name === 'beauty care' || slug === 'beauty-care' || slug === 'beauty_care';
+    const isAgriSeeds = name === 'agriculture & seeds' || name === 'agriculture seeds' || slug === 'agriculture-seeds' || slug === 'agriculture_seeds';
+    return !isBeautyCare && !isAgriSeeds;
   });
 
   return (
