@@ -96,8 +96,17 @@ export default function HomePage() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const cats = await categoryService.getCategories();
-        setCategories(cats);
+        const rawCats = await categoryService.getCategories();
+        const seenCatKeys = new Set<string>();
+        const uniqueCats = (rawCats || []).filter((c: any) => {
+          const slug = String(c.slug || c.id || '').toLowerCase().trim();
+          const name = (typeof c.name === 'string' ? c.name : (c.name?.en || c.name?.hi || c.name?.mr || '')).toLowerCase().trim();
+          const key = slug || name;
+          if (!key || seenCatKeys.has(key)) return false;
+          seenCatKeys.add(key);
+          return true;
+        });
+        setCategories(uniqueCats);
 
         const [trendingRes, featuredRes] = await Promise.allSettled([
           productService.getTrendingProducts(),

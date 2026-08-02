@@ -9,17 +9,18 @@ import { Category } from '../types';
 const categoryBgMap: Record<string, string> = {
   juices_syrups:          '#fff7ed', // Soft Amber
   religious_pooja_items:  '#fffbeb', // Soft Yellow/Gold
+  religious_pooja:        '#fffbeb', // Soft Yellow/Gold
   cosmetics:              '#fdf2f8', // Soft Pink
   beauty_personal_care:   '#fff1f2', // Soft Rose
   footwear:               '#eff6ff', // Soft Blue
   pickles:                '#fef2f2', // Soft Red
   masale_spices:          '#fff7ed', // Soft Orange
+  masale:                 '#fff7ed', // Soft Orange
   fashion:                '#fdf2f8', // Soft Pink
   jewellery:              '#fffbeb', // Soft Gold
   agriculture:            '#f0fdf4', // Soft Mint
   auto_accessories:       '#eef2ff', // Soft Indigo
   local_homemade:         '#fff7ed', // Soft Amber
-  pooja_spiritual:        '#faf5ff', // Soft Purple
   gifts_handicrafts:      '#fdf2f8', // Soft Pink
   baby_kids:              '#fefce8', // Soft Yellow
   oil:                    '#f7fee7', // Soft Lime
@@ -43,6 +44,7 @@ const categoryImageMap: Record<string, string> = {
   'juices_syrups':          '/categories/juices.webp',
   'religious-pooja-items':  '/categories/pooja.webp',
   'religious_pooja_items':  '/categories/pooja.webp',
+  'religious_pooja':        '/categories/pooja.webp',
   'cosmetics':              '/categories/cosmetics.webp',
   'beauty-personal-care':   '/categories/beauty.webp',
   'beauty_personal_care':   '/categories/beauty.webp',
@@ -50,6 +52,7 @@ const categoryImageMap: Record<string, string> = {
   'pickles':                '/categories/pickles.webp',
   'masale-spices':          '/categories/spices.webp',
   'masale_spices':          '/categories/spices.webp',
+  'masale':                 '/categories/spices.webp',
   'fashion':                '/categories/fashion.webp',
   'jewellery':              '/categories/jewellery.webp',
   'agriculture':            '/categories/agriculture.webp',
@@ -57,6 +60,7 @@ const categoryImageMap: Record<string, string> = {
   'auto_accessories':       '/categories/auto.webp',
   'local-homemade':         '/categories/homemade.webp',
   'local_homemade':         '/categories/homemade.webp',
+  'local-homemade-products': '/categories/homemade.webp',
   'pooja-spiritual':        '/categories/pooja.webp',
   'pooja_spiritual':        '/categories/pooja.webp',
   'gifts-handicrafts':      '/categories/gifts.webp',
@@ -127,6 +131,47 @@ const getName = (name: any): string => {
   return '';
 };
 
+const normalizeCatKey = (cat: Category): string => {
+  const rawSlug = String((cat as any).slug || cat.id || '').toLowerCase();
+  const nameStr = getName(cat.name).toLowerCase();
+  const cleanStr = (nameStr || rawSlug)
+    .replace(/[-_]/g, ' ')
+    .replace(/&/g, 'and')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  // Map semantic aliases to single canonical keys
+  if (cleanStr.includes('pooja') || cleanStr.includes('religious') || cleanStr.includes('spiritual')) {
+    return 'religious_pooja';
+  }
+  if (cleanStr.includes('gifts') || cleanStr.includes('handicrafts')) {
+    return 'gifts_handicrafts';
+  }
+  if (cleanStr.includes('baby') || cleanStr.includes('kids')) {
+    return 'baby_kids';
+  }
+  if (cleanStr.includes('papad') || cleanStr.includes('kurdai')) {
+    return 'papad_kurdai';
+  }
+  if (cleanStr.includes('astro') || cleanStr.includes('stone')) {
+    return 'astro_stone';
+  }
+  if (cleanStr.includes('homemade') || cleanStr.includes('local')) {
+    return 'local_homemade';
+  }
+  if (cleanStr.includes('masale') || cleanStr.includes('spices')) {
+    return 'masale_spices';
+  }
+  if (cleanStr.includes('juices') || cleanStr.includes('syrups')) {
+    return 'juices_syrups';
+  }
+  if (cleanStr.includes('beauty') && cleanStr.includes('care') && !cleanStr.includes('personal')) {
+    return 'beauty_personal_care';
+  }
+
+  return cleanStr;
+};
+
 export const HomeCategoryStrip: React.FC<Props> = ({ categories }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -135,13 +180,21 @@ export const HomeCategoryStrip: React.FC<Props> = ({ categories }) => {
     scrollRef.current.scrollBy({ left: dir === 'left' ? -300 : 300, behavior: 'smooth' });
   };
 
-  // Filter out extra categories "Beauty & Care" and "Agriculture & Seeds" from homepage category strip
-  const displayCats = categories.filter(cat => {
-    const name = getName(cat.name).toLowerCase().trim();
-    const slug = String((cat as any).slug || '').toLowerCase().trim();
-    const isBeautyCare = name === 'beauty & care' || name === 'beauty care' || slug === 'beauty-care' || slug === 'beauty_care';
-    const isAgriSeeds = name === 'agriculture & seeds' || name === 'agriculture seeds' || slug === 'agriculture-seeds' || slug === 'agriculture_seeds';
-    return !isBeautyCare && !isAgriSeeds;
+  // Strict deduplication by ID, Slug, and Semantic Key
+  const seenKeys = new Set<string>();
+  const displayCats = categories.filter((cat) => {
+    const idKey = String(cat.id).toLowerCase();
+    const slugKey = String((cat as any).slug || '').toLowerCase();
+    const semanticKey = normalizeCatKey(cat);
+
+    if (seenKeys.has(idKey) || (slugKey && seenKeys.has(slugKey)) || (semanticKey && seenKeys.has(semanticKey))) {
+      return false;
+    }
+
+    if (idKey) seenKeys.add(idKey);
+    if (slugKey) seenKeys.add(slugKey);
+    if (semanticKey) seenKeys.add(semanticKey);
+    return true;
   });
 
   return (
@@ -167,20 +220,22 @@ export const HomeCategoryStrip: React.FC<Props> = ({ categories }) => {
             const slug = String((cat as any).slug || '').toLowerCase();
             const idStr = String(cat.id).toLowerCase();
             const slugUnderscore = slug.replace(/-/g, '_');
+            const semanticKey = normalizeCatKey(cat);
 
             // FORCE local /categories/*.webp image, ignoring API cat.image completely
             const imgUrl = categoryImageMap[slug]
               || categoryImageMap[idStr]
               || categoryImageMap[slugUnderscore]
+              || categoryImageMap[semanticKey]
               || `/categories/${slug.split('-')[0]}.webp`
               || defaultCategoryImages[idx % defaultCategoryImages.length];
 
-            const bgTint = categoryBgMap[slug] || categoryBgMap[slugUnderscore] || categoryBgMap[idStr] || '#f8fafc';
+            const bgTint = categoryBgMap[slug] || categoryBgMap[slugUnderscore] || categoryBgMap[idStr] || categoryBgMap[semanticKey] || '#f8fafc';
             const label = getName(cat.name);
 
             return (
               <Link
-                key={cat.id}
+                key={`cat_strip_${cat.id}_${slug}`}
                 href={`/category/${id}`}
                 className="flex flex-col items-center group shrink-0"
                 style={{ scrollSnapAlign: 'start' }}
