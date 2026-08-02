@@ -76,10 +76,29 @@ export function useAdminVendorsQuery(
   });
 }
 
+export function useAdminVendorStatsQuery() {
+  return useQuery({
+    queryKey: ['admin', 'vendors', 'stats'],
+    queryFn: () => adminService.getVendorStats(),
+    staleTime: 1000 * 30,
+  });
+}
+
 export function useApproveVendorMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: number) => adminService.approveVendor(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'vendors'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
+    },
+  });
+}
+
+export function useRejectVendorMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.rejectVendor(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'vendors'] });
       queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
@@ -93,6 +112,18 @@ export function useSuspendVendorMutation() {
     mutationFn: (id: number) => adminService.suspendVendor(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'vendors'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
+    },
+  });
+}
+
+export function useActivateVendorMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.activateVendor(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'vendors'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
     },
   });
 }

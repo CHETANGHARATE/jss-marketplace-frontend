@@ -133,4 +133,16 @@ export const vendorService = {
       }
     }
   },
+
+  async registerVendorStore(payload: {
+    store_name: string;
+    store_email?: string;
+    store_phone?: string;
+    description?: string;
+    gstin?: string;
+    category?: string;
+  }): Promise<ApiVendorStore> {
+    const response = await apiClient.post<ApiResponse<ApiVendorStore>>('/vendor/store', payload);
+    return response.data.data;
+  },
 };

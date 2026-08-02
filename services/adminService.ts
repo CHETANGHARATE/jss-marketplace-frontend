@@ -180,15 +180,33 @@ export const adminService = {
     return response.data;
   },
 
+  /** GET /admin/vendor/stats */
+  async getVendorStats(): Promise<{ pending_count: number; approved_count: number; suspended_count: number; rejected_count: number; total_count: number }> {
+    const response = await apiClient.get<ApiResponse<{ pending_count: number; approved_count: number; suspended_count: number; rejected_count: number; total_count: number }>>('/admin/vendor/stats');
+    return response.data.data;
+  },
+
   /** POST /admin/vendor/stores/{id}/approve */
   async approveVendor(id: number): Promise<ApiVendorStore> {
     const response = await apiClient.post<ApiResponse<ApiVendorStore>>(`/admin/vendor/stores/${id}/approve`);
     return response.data.data;
   },
 
+  /** POST /admin/vendor/stores/{id}/reject */
+  async rejectVendor(id: number): Promise<ApiVendorStore> {
+    const response = await apiClient.post<ApiResponse<ApiVendorStore>>(`/admin/vendor/stores/${id}/reject`);
+    return response.data.data;
+  },
+
   /** POST /admin/vendor/stores/{id}/suspend */
   async suspendVendor(id: number): Promise<ApiVendorStore> {
     const response = await apiClient.post<ApiResponse<ApiVendorStore>>(`/admin/vendor/stores/${id}/suspend`);
+    return response.data.data;
+  },
+
+  /** POST /admin/vendor/stores/{id}/activate */
+  async activateVendor(id: number): Promise<ApiVendorStore> {
+    const response = await apiClient.post<ApiResponse<ApiVendorStore>>(`/admin/vendor/stores/${id}/activate`);
     return response.data.data;
   },
 

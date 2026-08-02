@@ -211,6 +211,8 @@ export interface ApiReview {
 export interface ApiVendorStore {
   id: number;
   user_id: number;
+  owner_name?: string;
+  user?: ApiUser;
   store_name: string;
   slug: string;
   store_email?: string;
@@ -218,8 +220,8 @@ export interface ApiVendorStore {
   logo?: string;
   banner?: string;
   description?: string;
-  kyc_status: 'pending' | 'verified' | 'rejected';
-  status: 'pending' | 'active' | 'suspended';
+  kyc_status: 'pending' | 'verified' | 'rejected' | string;
+  status: 'pending' | 'active' | 'approved' | 'rejected' | 'suspended' | 'inactive' | string;
   commission_rate: number;
   created_at: string;
 }
