@@ -84,14 +84,14 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ productId, o
         </button>
 
         {/* Product Image Section */}
-        <div className="w-full md:w-1/2 bg-background-secondary flex items-center justify-center relative p-6 border-r border-border-custom h-[300px] md:h-auto">
+        <div className="w-full md:w-1/2 bg-slate-50 dark:bg-slate-900/40 flex items-center justify-center relative p-6 sm:p-8 border-r border-border-custom/80 h-[300px] md:h-[380px] shrink-0">
           <img
             src={product.image}
             alt={product.name}
-            className="max-h-full max-w-full object-contain rounded-2xl shadow-sm mix-blend-multiply dark:mix-blend-normal"
+            className="max-h-full max-w-full w-auto h-auto object-contain object-center rounded-2xl transition-transform duration-300 select-none"
           />
           {product.discountPercent > 0 && (
-            <span className="absolute top-6 left-6 bg-accent text-white text-xs font-black px-3.5 py-1.5 rounded-full shadow-sm">
+            <span className="absolute top-6 left-6 bg-rose-500 text-white text-xs font-black px-3.5 py-1.5 rounded-full shadow-xs uppercase tracking-wider">
               {product.discountPercent}% OFF
             </span>
           )}

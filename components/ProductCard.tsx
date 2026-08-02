@@ -75,25 +75,25 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
         </span>
       )}
 
-      {/* Image Container with aspect-square ratio */}
+      {/* Image Container with aspect-square ratio & perfect contain fit */}
       <div 
         onClick={handleProductClick}
-        className="w-full aspect-square bg-slate-50 dark:bg-slate-900/40 flex items-center justify-center p-5 relative overflow-hidden shrink-0 cursor-pointer border-b border-border-custom/60"
+        className="w-full aspect-square bg-slate-50 dark:bg-slate-900/40 flex items-center justify-center p-4 sm:p-5 relative overflow-hidden shrink-0 cursor-pointer border-b border-border-custom/60"
       >
         <img
           src={product.image}
           alt={product.name}
-          className="max-h-full max-w-full object-contain transition-transform duration-300 ease-out group-hover:scale-105"
+          className="max-h-full max-w-full w-auto h-auto object-contain object-center transition-transform duration-300 ease-out group-hover:scale-105 select-none"
           loading="lazy"
         />
         {/* Quick View Hover Tag */}
-        <div className="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center backdrop-blur-3xs">
+        <div className="absolute inset-0 bg-slate-950/25 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center backdrop-blur-3xs">
           <button
             onClick={(e) => {
               e.stopPropagation();
               onQuickView(product.id);
             }}
-            className="bg-slate-950/80 hover:bg-primary backdrop-blur-md text-white text-xs font-black px-4 py-2 rounded-2xl flex items-center gap-1.5 shadow-md border border-slate-700/80 transition-colors"
+            className="bg-slate-950/85 hover:bg-primary backdrop-blur-md text-white text-xs font-black px-4 py-2 rounded-2xl flex items-center gap-1.5 shadow-md border border-slate-700/80 transition-colors"
           >
             <Eye size={14} />
             {t('prod.quick_view')}
