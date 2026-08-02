@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 
 interface PromoBanner {
   id: string;
@@ -11,75 +10,70 @@ interface PromoBanner {
   title: string;
   titleColor: string;
   subtitle: string;
+  subtitleColor: string;
   cta: string;
-  ctaColor: string;
   ctaBg: string;
   href: string;
   image: string;
-  bgFrom: string;
-  bgTo: string;
+  bgGradient: string;
 }
 
 const banners: PromoBanner[] = [
   {
     id: 'agriculture',
     tag: 'Farm Fresh',
-    tagColor: '#16a34a',
+    tagColor: '#166534',
     title: 'Agriculture Tools',
-    titleColor: '#0f172a',
+    titleColor: '#064e3b',
     subtitle: 'Best Quality • Best Price',
+    subtitleColor: '#14532d',
     cta: 'Shop Now →',
-    ctaColor: '#ffffff',
-    ctaBg: '#16a34a',
+    ctaBg: '#15803d',
     href: '/category/agriculture',
-    image: '/promo-agriculture.jpg',
-    bgFrom: '#d1fae5',
-    bgTo: '#a7f3d0',
+    image: '/promo-agriculture.webp',
+    bgGradient: 'linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 60%, #c8e6c9 100%)',
   },
   {
     id: 'kitchen',
     tag: 'Upgrade Your Home',
-    tagColor: '#1d4ed8',
+    tagColor: '#1e40af',
     title: 'Up to 50% Off',
-    titleColor: '#0f172a',
+    titleColor: '#1e3a8a',
     subtitle: 'Wide Range of Home & Kitchen',
+    subtitleColor: '#1e40af',
     cta: 'Shop Now →',
-    ctaColor: '#ffffff',
-    ctaBg: '#1d4ed8',
+    ctaBg: '#2563eb',
     href: '/category/home-kitchen',
-    image: '/promo-kitchen.jpg',
-    bgFrom: '#dbeafe',
-    bgTo: '#bfdbfe',
+    image: '/promo-kitchen.webp',
+    bgGradient: 'linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 60%, #bae6fd 100%)',
   },
   {
     id: 'beauty',
     tag: 'Beauty Essentials',
-    tagColor: '#be185d',
+    tagColor: '#9f1239',
     title: 'Special Offers',
-    titleColor: '#0f172a',
+    titleColor: '#881337',
     subtitle: 'Look Good. Feel Good.',
+    subtitleColor: '#9f1239',
     cta: 'Shop Now →',
-    ctaColor: '#ffffff',
-    ctaBg: '#be185d',
+    ctaBg: '#be123c',
     href: '/category/beauty-personal-care',
-    image: '/promo-beauty.jpg',
-    bgFrom: '#fce7f3',
-    bgTo: '#fbcfe8',
+    image: '/promo-beauty.webp',
+    bgGradient: 'linear-gradient(135deg, #fce7f3 0%, #fff1f2 60%, #fbcfe8 100%)',
   },
   {
     id: 'festival',
     tag: 'Festival Deals',
-    tagColor: '#b45309',
+    tagColor: '#92400e',
     title: 'Mega Savings',
-    titleColor: '#0f172a',
+    titleColor: '#78350f',
     subtitle: 'Limited Time Offer!',
+    subtitleColor: '#92400e',
     cta: 'Shop Now →',
-    ctaColor: '#ffffff',
-    ctaBg: '#f59e0b',
+    ctaBg: '#ea580c',
     href: '/search?tag=festival',
-    image: '/promo-festival.jpg',
-    bgFrom: '#fef3c7',
-    bgTo: '#fde68a',
+    image: '/promo-festival.webp',
+    bgGradient: 'linear-gradient(135deg, #fef3c7 0%, #fffbeb 60%, #fde68a 100%)',
   },
 ];
 
@@ -90,40 +84,52 @@ export const HomePromoBanners: React.FC = () => {
         <Link
           key={b.id}
           href={b.href}
-          className="relative rounded-2xl overflow-hidden group block h-[180px] sm:h-[200px] hover:shadow-lg transition-all duration-300"
-          style={{ background: `linear-gradient(135deg, ${b.bgFrom}, ${b.bgTo})` }}
+          className="relative rounded-2xl overflow-hidden group block h-[165px] sm:h-[175px] border border-black/5 shadow-2xs hover:shadow-md transition-all duration-300"
+          style={{ background: b.bgGradient }}
         >
-          {/* Background product image */}
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60 group-hover:opacity-70 transition-opacity duration-300"
-            style={{ backgroundImage: `url(${b.image})` }}
-          />
+          {/* Right-aligned Studio Product Photography */}
+          <div className="absolute right-0 bottom-0 top-0 w-[52%] h-full p-2 flex items-center justify-end z-0 pointer-events-none overflow-hidden">
+            <img
+              src={b.image}
+              alt={b.title}
+              className="w-full h-full object-contain object-right group-hover:scale-105 transition-transform duration-500 filter drop-shadow-md"
+            />
+          </div>
 
-          {/* Dark gradient overlay for text legibility */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-
-          {/* Content */}
-          <div className="absolute inset-0 p-4 flex flex-col justify-between">
-            {/* Top: Tag */}
+          {/* Left Text Overlay Container */}
+          <div className="relative z-10 h-full w-[62%] p-4 sm:p-4.5 flex flex-col justify-between bg-gradient-to-r from-white/90 via-white/60 to-transparent">
+            {/* Tag / Category Label */}
             <span
-              className="text-[11px] font-bold uppercase tracking-wide w-fit"
+              className="text-[11px] sm:text-xs font-bold tracking-tight block"
               style={{ color: b.tagColor }}
             >
               {b.tag}
             </span>
 
-            {/* Bottom: Title, subtitle, CTA */}
-            <div className="space-y-1">
-              <h3 className="font-black text-base sm:text-lg leading-tight text-gray-900 drop-shadow-sm">
+            {/* Main Title & Subtitle */}
+            <div className="my-auto py-1">
+              <h3
+                className="font-black text-base sm:text-lg leading-tight tracking-tight"
+                style={{ color: b.titleColor }}
+              >
                 {b.title}
               </h3>
-              <p className="text-xs text-gray-700 font-medium">{b.subtitle}</p>
-              <button
-                className="mt-1 inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-full transition-all group-hover:scale-105"
-                style={{ background: b.ctaBg, color: b.ctaColor }}
+              <p
+                className="text-[11px] sm:text-xs font-semibold mt-0.5 line-clamp-1"
+                style={{ color: b.subtitleColor }}
+              >
+                {b.subtitle}
+              </p>
+            </div>
+
+            {/* Solid Pill CTA Button */}
+            <div>
+              <span
+                className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-extrabold px-3.5 py-1.5 rounded-xl text-white shadow-xs group-hover:shadow-sm group-hover:scale-105 transition-all duration-300"
+                style={{ backgroundColor: b.ctaBg }}
               >
                 {b.cta}
-              </button>
+              </span>
             </div>
           </div>
         </Link>
