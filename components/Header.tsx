@@ -24,7 +24,13 @@ import {
   PhoneCall,
   Sparkles,
   Search,
-  Grid
+  Grid,
+  LayoutDashboard,
+  Boxes,
+  Wallet,
+  Settings,
+  Package,
+  ShoppingBag
 } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTheme } from '../contexts/ThemeContext';
@@ -181,13 +187,15 @@ export const Header: React.FC = () => {
               </button>
 
               {/* Become Vendor Link */}
-              <Link
-                href="/seller/register"
-                className="hidden xl:flex items-center gap-1.5 text-xs font-bold bg-accent/10 text-accent border border-accent/20 px-3 py-2 rounded-2xl hover:bg-accent hover:text-white transition-all shadow-2xs"
-              >
-                <Store size={14} />
-                <span>Sell Products</span>
-              </Link>
+              {(!user || user.role !== 'seller') && (
+                <Link
+                  href="/seller/register"
+                  className="hidden xl:flex items-center gap-1.5 text-xs font-bold bg-accent/10 text-accent border border-accent/20 px-3 py-2 rounded-2xl hover:bg-accent hover:text-white transition-all shadow-2xs"
+                >
+                  <Store size={14} />
+                  <span>Sell Products</span>
+                </Link>
+              )}
 
               {/* Language Selector */}
               <div ref={langMenuRef} className="relative">
@@ -289,21 +297,46 @@ export const Header: React.FC = () => {
                         </span>
                       </div>
                       <div className="py-1 text-xs font-medium">
-                        <Link href="/account" className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors">
-                          <User size={15} className="text-muted-custom" />
-                          {t('nav.profile')}
-                        </Link>
-                        {user.role === 'seller' && (
-                          <Link href="/vendor" className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors">
-                            <Store size={15} className="text-muted-custom" />
-                            Vendor Portal
-                          </Link>
-                        )}
-                        {user.role === 'admin' && (
-                          <Link href="/admin" className="flex items-center gap-2.5 px-4 py-2.5 text-rose-500 hover:bg-background-secondary transition-colors font-bold">
-                            <ShieldCheck size={15} />
-                            Admin Dashboard
-                          </Link>
+                        {user.role === 'seller' ? (
+                          <>
+                            <Link href="/vendor" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
+                              <LayoutDashboard size={15} className="text-primary" />
+                              <span>Vendor Dashboard</span>
+                            </Link>
+                            <Link href="/vendor/products" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
+                              <Package size={15} className="text-primary" />
+                              <span>My Products</span>
+                            </Link>
+                            <Link href="/vendor/orders" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
+                              <ShoppingBag size={15} className="text-primary" />
+                              <span>Orders</span>
+                            </Link>
+                            <Link href="/vendor/inventory" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
+                              <Boxes size={15} className="text-primary" />
+                              <span>Inventory</span>
+                            </Link>
+                            <Link href="/vendor/wallet" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
+                              <Wallet size={15} className="text-primary" />
+                              <span>Earnings</span>
+                            </Link>
+                            <Link href="/vendor/settings" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
+                              <Settings size={15} className="text-primary" />
+                              <span>Settings</span>
+                            </Link>
+                          </>
+                        ) : (
+                          <>
+                            <Link href="/account" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors">
+                              <User size={15} className="text-muted-custom" />
+                              {t('nav.profile')}
+                            </Link>
+                            {user.role === 'admin' && (
+                              <Link href="/admin" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-rose-500 hover:bg-background-secondary transition-colors font-bold">
+                                <ShieldCheck size={15} />
+                                Admin Dashboard
+                              </Link>
+                            )}
+                          </>
                         )}
                       </div>
                       <div className="py-1">
