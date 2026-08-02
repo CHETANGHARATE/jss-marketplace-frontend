@@ -38,33 +38,70 @@ const categoryBgMap: Record<string, string> = {
 
 // Studio product cutout photo map matching reference UI (all local assets)
 const categoryImageMap: Record<string, string> = {
-  juices_syrups:          '/categories/juices.webp',
-  religious_pooja_items:  '/categories/pooja.webp',
-  cosmetics:              '/categories/cosmetics.webp',
-  beauty_personal_care:   '/categories/beauty.webp',
-  footwear:               '/categories/footwear.webp',
-  pickles:                '/categories/pickles.webp',
-  masale_spices:          '/categories/spices.webp',
-  fashion:                '/categories/fashion.webp',
-  jewellery:              '/categories/jewellery.webp',
-  agriculture:            '/categories/agriculture.webp',
-  auto_accessories:       '/categories/auto.webp',
-  local_homemade:         '/categories/homemade.webp',
-  pooja_spiritual:        '/categories/pooja.webp',
-  gifts_handicrafts:      '/categories/gifts.webp',
-  baby_kids:              '/categories/baby.webp',
-  oil:                    '/categories/oil.webp',
-  papad_kurdai:           '/categories/papad.webp',
-  astro_stone:            '/categories/astro.webp',
-  diwali_faral:           '/categories/diwali.webp',
-  electronics:            '/categories/electronics.webp',
-  home_kitchen:           '/categories/kitchen.webp',
-  furniture:              '/categories/furniture.webp',
-  books:                  '/categories/books.webp',
-  sports:                 '/categories/sports.webp',
-  groceries:              '/categories/groceries.webp',
-  pet_supplies:           '/categories/pet.webp',
-  health:                 '/categories/health.webp',
+  // Slugs with hyphens (from Backend API) & underscores (from Mock)
+  'juices-syrups':          '/categories/juices.webp',
+  'juices_syrups':          '/categories/juices.webp',
+  'religious-pooja-items':  '/categories/pooja.webp',
+  'religious_pooja_items':  '/categories/pooja.webp',
+  'cosmetics':              '/categories/cosmetics.webp',
+  'beauty-personal-care':   '/categories/beauty.webp',
+  'beauty_personal_care':   '/categories/beauty.webp',
+  'footwear':               '/categories/footwear.webp',
+  'pickles':                '/categories/pickles.webp',
+  'masale-spices':          '/categories/spices.webp',
+  'masale_spices':          '/categories/spices.webp',
+  'fashion':                '/categories/fashion.webp',
+  'jewellery':              '/categories/jewellery.webp',
+  'agriculture':            '/categories/agriculture.webp',
+  'auto-accessories':       '/categories/auto.webp',
+  'auto_accessories':       '/categories/auto.webp',
+  'local-homemade':         '/categories/homemade.webp',
+  'local_homemade':         '/categories/homemade.webp',
+  'pooja-spiritual':        '/categories/pooja.webp',
+  'pooja_spiritual':        '/categories/pooja.webp',
+  'gifts-handicrafts':      '/categories/gifts.webp',
+  'gifts_handicrafts':      '/categories/gifts.webp',
+  'baby-kids':              '/categories/baby.webp',
+  'baby_kids':              '/categories/baby.webp',
+  'oil':                    '/categories/oil.webp',
+  'papad-kurdai':           '/categories/papad.webp',
+  'papad_kurdai':           '/categories/papad.webp',
+  'astro-stone':            '/categories/astro.webp',
+  'astro_stone':            '/categories/astro.webp',
+  'diwali-faral':           '/categories/diwali.webp',
+  'diwali_faral':           '/categories/diwali.webp',
+  'electronics':            '/categories/electronics.webp',
+  'home-kitchen':           '/categories/kitchen.webp',
+  'home_kitchen':           '/categories/kitchen.webp',
+  'furniture':              '/categories/furniture.webp',
+  'books':                  '/categories/books.webp',
+  'sports':                 '/categories/sports.webp',
+  'groceries':              '/categories/groceries.webp',
+  'pet-supplies':           '/categories/pet.webp',
+  'pet_supplies':           '/categories/pet.webp',
+  'health':                 '/categories/health.webp',
+
+  // Numeric IDs (1 to 20 from DB)
+  '1':                      '/categories/juices.webp',
+  '2':                      '/categories/pooja.webp',
+  '3':                      '/categories/cosmetics.webp',
+  '4':                      '/categories/beauty.webp',
+  '5':                      '/categories/footwear.webp',
+  '6':                      '/categories/pickles.webp',
+  '7':                      '/categories/spices.webp',
+  '8':                      '/categories/fashion.webp',
+  '9':                      '/categories/jewellery.webp',
+  '10':                     '/categories/agriculture.webp',
+  '11':                     '/categories/auto.webp',
+  '12':                     '/categories/homemade.webp',
+  '13':                     '/categories/gifts.webp',
+  '14':                     '/categories/baby.webp',
+  '15':                     '/categories/oil.webp',
+  '16':                     '/categories/papad.webp',
+  '17':                     '/categories/astro.webp',
+  '18':                     '/categories/diwali.webp',
+  '19':                     '/categories/electronics.webp',
+  '20':                     '/categories/kitchen.webp',
 };
 
 const defaultCategoryImages = [
@@ -120,11 +157,18 @@ export const HomeCategoryStrip: React.FC<Props> = ({ categories }) => {
         >
           {displayCats.map((cat, idx) => {
             const id = (cat as any).slug || cat.id;
-            const imgUrl = (cat as any).image
-              || categoryImageMap[cat.id]
-              || categoryImageMap[id]
+            const slug = String((cat as any).slug || '').toLowerCase();
+            const idStr = String(cat.id).toLowerCase();
+            const slugUnderscore = slug.replace(/-/g, '_');
+
+            // FORCE local /categories/*.webp image, ignoring API cat.image completely
+            const imgUrl = categoryImageMap[slug]
+              || categoryImageMap[idStr]
+              || categoryImageMap[slugUnderscore]
+              || `/categories/${slug.split('-')[0]}.webp`
               || defaultCategoryImages[idx % defaultCategoryImages.length];
-            const bgTint = categoryBgMap[cat.id] || categoryBgMap[id] || '#f8fafc';
+
+            const bgTint = categoryBgMap[slug] || categoryBgMap[slugUnderscore] || categoryBgMap[idStr] || '#f8fafc';
             const label = getName(cat.name);
 
             return (
