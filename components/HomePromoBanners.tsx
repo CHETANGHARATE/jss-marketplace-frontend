@@ -30,7 +30,7 @@ const banners: PromoBanner[] = [
     cta: 'Shop Now →',
     ctaBg: '#15803d',
     href: '/category/agriculture',
-    image: '/promo-agriculture.webp',
+    image: '/promo/agriculture.png',
     bgGradient: 'linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 60%, #c8e6c9 100%)',
   },
   {
@@ -44,7 +44,7 @@ const banners: PromoBanner[] = [
     cta: 'Shop Now →',
     ctaBg: '#2563eb',
     href: '/category/home-kitchen',
-    image: '/promo-kitchen.webp',
+    image: '/promo/kitchen.png',
     bgGradient: 'linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 60%, #bae6fd 100%)',
   },
   {
@@ -58,7 +58,7 @@ const banners: PromoBanner[] = [
     cta: 'Shop Now →',
     ctaBg: '#be123c',
     href: '/category/beauty-personal-care',
-    image: '/promo-beauty.webp',
+    image: '/promo/beauty.png',
     bgGradient: 'linear-gradient(135deg, #fce7f3 0%, #fff1f2 60%, #fbcfe8 100%)',
   },
   {
@@ -72,7 +72,7 @@ const banners: PromoBanner[] = [
     cta: 'Shop Now →',
     ctaBg: '#ea580c',
     href: '/search?tag=festival',
-    image: '/promo-festival.webp',
+    image: '/promo/festival.png',
     bgGradient: 'linear-gradient(135deg, #fef3c7 0%, #fffbeb 60%, #fde68a 100%)',
   },
 ];
@@ -87,12 +87,12 @@ export const HomePromoBanners: React.FC = () => {
           className="relative rounded-2xl overflow-hidden group block h-[165px] sm:h-[175px] border border-black/5 shadow-2xs hover:shadow-md transition-all duration-300"
           style={{ background: b.bgGradient }}
         >
-          {/* Right-aligned Studio Product Photography */}
-          <div className="absolute right-0 bottom-0 top-0 w-[52%] h-full p-2 flex items-center justify-end z-0 pointer-events-none overflow-hidden">
+          {/* Right-aligned Transparent PNG Product Cutout (No rectangular box, 48% width) */}
+          <div className="absolute right-0 bottom-0 top-0 w-[48%] h-full p-1.5 flex items-end justify-end z-0 pointer-events-none overflow-hidden">
             <img
               src={b.image}
               alt={b.title}
-              className="w-full h-full object-contain object-right group-hover:scale-105 transition-transform duration-500 filter drop-shadow-md"
+              className="w-full h-[96%] object-contain object-right-bottom group-hover:scale-105 transition-transform duration-500 filter drop-shadow-sm"
             />
           </div>
 
