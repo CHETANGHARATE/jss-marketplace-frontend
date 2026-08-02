@@ -47,7 +47,7 @@ export const Header: React.FC = () => {
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
   const { language, setLanguage, t } = useLanguage();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, isSeller, isAdmin, logout } = useAuth();
   const {
     cart,
     wishlist,
@@ -186,8 +186,8 @@ export const Header: React.FC = () => {
                 <Search size={18} />
               </button>
 
-              {/* Become Vendor Link */}
-              {(!user || user.role !== 'seller') && (
+              {/* Become Vendor Link - Hidden for Sellers */}
+              {!isSeller && (
                 <Link
                   href="/seller/register"
                   className="hidden xl:flex items-center gap-1.5 text-xs font-bold bg-accent/10 text-accent border border-accent/20 px-3 py-2 rounded-2xl hover:bg-accent hover:text-white transition-all shadow-2xs"
@@ -297,7 +297,7 @@ export const Header: React.FC = () => {
                         </span>
                       </div>
                       <div className="py-1 text-xs font-medium">
-                        {user.role === 'seller' ? (
+                        {isSeller ? (
                           <>
                             <Link href="/vendor" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
                               <LayoutDashboard size={15} className="text-primary" />
@@ -321,7 +321,7 @@ export const Header: React.FC = () => {
                             </Link>
                             <Link href="/vendor/settings" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
                               <Settings size={15} className="text-primary" />
-                              <span>Settings</span>
+                              <span>Store Settings</span>
                             </Link>
                           </>
                         ) : (
@@ -330,7 +330,7 @@ export const Header: React.FC = () => {
                               <User size={15} className="text-muted-custom" />
                               {t('nav.profile')}
                             </Link>
-                            {user.role === 'admin' && (
+                            {isAdmin && (
                               <Link href="/admin" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-rose-500 hover:bg-background-secondary transition-colors font-bold">
                                 <ShieldCheck size={15} />
                                 Admin Dashboard
@@ -407,14 +407,67 @@ export const Header: React.FC = () => {
             </div>
 
             <div className="flex-1 overflow-y-auto space-y-4 text-xs font-bold">
-              <Link
-                href="/seller/register"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2.5 p-3.5 bg-accent/10 border border-accent/20 text-accent rounded-2xl shadow-2xs"
-              >
-                <Store size={18} />
-                <span>Become Vendor / Sell Products</span>
-              </Link>
+              {isSeller ? (
+                <div className="space-y-1.5 pt-2">
+                  <Link
+                    href="/vendor"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2.5 p-3.5 bg-primary/10 text-primary border border-primary/20 rounded-2xl font-bold"
+                  >
+                    <LayoutDashboard size={18} />
+                    <span>Vendor Dashboard</span>
+                  </Link>
+                  <Link
+                    href="/vendor/products"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-2xl font-semibold"
+                  >
+                    <Package size={16} />
+                    <span>My Products</span>
+                  </Link>
+                  <Link
+                    href="/vendor/orders"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-2xl font-semibold"
+                  >
+                    <ShoppingBag size={16} />
+                    <span>Orders</span>
+                  </Link>
+                  <Link
+                    href="/vendor/inventory"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-2xl font-semibold"
+                  >
+                    <Boxes size={16} />
+                    <span>Inventory</span>
+                  </Link>
+                  <Link
+                    href="/vendor/wallet"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-2xl font-semibold"
+                  >
+                    <Wallet size={16} />
+                    <span>Earnings</span>
+                  </Link>
+                  <Link
+                    href="/vendor/settings"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-2xl font-semibold"
+                  >
+                    <Settings size={16} />
+                    <span>Store Settings</span>
+                  </Link>
+                </div>
+              ) : (
+                <Link
+                  href="/seller/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 p-3.5 bg-accent/10 border border-accent/20 text-accent rounded-2xl shadow-2xs"
+                >
+                  <Store size={18} />
+                  <span>Become Vendor / Sell Products</span>
+                </Link>
+              )}
 
               {!isAuthenticated ? (
                 <div className="grid grid-cols-2 gap-2.5 pt-2">

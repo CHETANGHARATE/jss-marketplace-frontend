@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { ApiUser } from '../types/api';
 import { authService, LoginPayload, RegisterPayload } from '../services/authService';
 
@@ -9,6 +9,8 @@ interface AuthContextType {
   token: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isSeller: boolean;
+  isAdmin: boolean;
   login: (payload: LoginPayload) => Promise<ApiUser>;
   register: (payload: RegisterPayload) => Promise<ApiUser>;
   logout: () => Promise<void>;
@@ -22,6 +24,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const fetchLatestProfile = useCallback(async () => {
+    try {
+      const userData = await authService.getProfile();
+      setUser(userData);
+      if (localStorage.getItem('auth_token')) {
+        localStorage.setItem('user_profile', JSON.stringify(userData));
+      } else if (sessionStorage.getItem('auth_token')) {
+        sessionStorage.setItem('user_profile', JSON.stringify(userData));
+      }
+      return userData;
+    } catch (err: any) {
+      const isUnauth =
+        err?.response?.status === 401 ||
+        err?.status === 401 ||
+        err?.message?.includes('401') ||
+        err?.message?.includes('Unauthenticated');
+      if (isUnauth) {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user_profile');
+        sessionStorage.removeItem('auth_token');
+        sessionStorage.removeItem('user_profile');
+        setToken(null);
+        setUser(null);
+      }
+      return null;
+    }
+  }, []);
+
   useEffect(() => {
     const storedToken = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
     const storedUser = localStorage.getItem('user_profile') || sessionStorage.getItem('user_profile');
@@ -33,34 +63,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(JSON.parse(storedUser));
         } catch (e) {}
       }
-      authService
-        .getProfile()
-        .then((userData) => {
-          setUser(userData);
-          if (localStorage.getItem('auth_token')) {
-            localStorage.setItem('user_profile', JSON.stringify(userData));
-          } else {
-            sessionStorage.setItem('user_profile', JSON.stringify(userData));
-          }
-        })
-        .catch((err: any) => {
-          const isUnauth = err?.response?.status === 401 || err?.status === 401 || err?.message?.includes('401') || err?.message?.includes('Unauthenticated');
-          if (isUnauth) {
-            localStorage.removeItem('auth_token');
-            localStorage.removeItem('user_profile');
-            sessionStorage.removeItem('auth_token');
-            sessionStorage.removeItem('user_profile');
-            setToken(null);
-            setUser(null);
-          }
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+      fetchLatestProfile().finally(() => {
+        setIsLoading(false);
+      });
     } else {
       setIsLoading(false);
     }
-  }, []);
+  }, [fetchLatestProfile]);
+
+  // Sync latest user profile on window focus to immediately capture Admin approval/revocation
+  useEffect(() => {
+    const onFocus = () => {
+      const activeToken = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+      if (activeToken) {
+        fetchLatestProfile();
+      }
+    };
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, [fetchLatestProfile]);
 
   const login = async (payload: LoginPayload & { rememberMe?: boolean }): Promise<ApiUser> => {
     setIsLoading(true);
@@ -81,6 +102,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user_profile');
       }
+
+      // Re-fetch latest profile from /api/v1/auth/me to ensure role synchronization
+      try {
+        const freshUser = await authService.getProfile();
+        setUser(freshUser);
+        if (remember) {
+          localStorage.setItem('user_profile', JSON.stringify(freshUser));
+        } else {
+          sessionStorage.setItem('user_profile', JSON.stringify(freshUser));
+        }
+      } catch (e) {}
 
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('jss-login', { detail: data.user }));
@@ -135,16 +167,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const refreshUser = async () => {
-    const activeToken = token || localStorage.getItem('auth_token');
-    if (!activeToken) return;
-    try {
-      const userData = await authService.getProfile();
-      setUser(userData);
-      localStorage.setItem('user_profile', JSON.stringify(userData));
-    } catch {
-      // Handle error
-    }
+    await fetchLatestProfile();
   };
+
+  const roleStr = String(user?.role || '').toLowerCase();
+  const isSeller = roleStr === 'seller' || roleStr === 'vendor';
+  const isAdmin = roleStr === 'admin';
 
   return (
     <AuthContext.Provider
@@ -153,6 +181,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         token,
         isLoading,
         isAuthenticated: !!user && !!token,
+        isSeller,
+        isAdmin,
         login,
         register,
         logout,

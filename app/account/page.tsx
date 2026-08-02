@@ -80,9 +80,14 @@ function AccountContent() {
     }
     setIsSubmitting(true);
     try {
-      await login({ email, password, rememberMe });
+      const loggedUser = await login({ email, password, rememberMe });
+      const userRole = String(loggedUser?.role || '').toLowerCase();
       if (redirectParam) {
         router.replace(redirectParam);
+      } else if (userRole === 'seller' || userRole === 'vendor') {
+        router.replace('/vendor');
+      } else if (userRole === 'admin') {
+        router.replace('/admin');
       }
     } catch (err: any) {
       const msg = err?.response?.data?.message || err?.message || 'Authentication failed. Please check credentials.';
@@ -141,9 +146,12 @@ function AccountContent() {
         localStorage.setItem('user_profile', JSON.stringify(res.user));
         await refreshUser();
       }
+      const role = String(res.user?.role || '').toLowerCase();
       setStatusMessage({ type: 'success', text: 'Email verified successfully!' });
       if (redirectParam) {
         router.replace(redirectParam);
+      } else if (role === 'seller' || role === 'vendor') {
+        router.replace('/vendor');
       } else {
         window.location.reload();
       }
