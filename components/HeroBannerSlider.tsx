@@ -285,12 +285,25 @@ export const HeroBannerSlider: React.FC = () => {
     return () => clearInterval(timer);
   }, [next, isPaused]);
 
-  // Keep active category tab visible in horizontal scroll container
+  // Keep active category tab visible ONLY inside the horizontal category bar (DO NOT scroll window)
   useEffect(() => {
-    if (navContainerRef.current) {
-      const activeTab = navContainerRef.current.children[current] as HTMLElement;
+    const container = navContainerRef.current;
+    if (container) {
+      const activeTab = container.children[current] as HTMLElement;
       if (activeTab) {
-        activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        const containerLeft = container.scrollLeft;
+        const containerWidth = container.clientWidth;
+        const tabLeft = activeTab.offsetLeft;
+        const tabWidth = activeTab.clientWidth;
+
+        // Scroll ONLY the inner horizontal container, never the outer window
+        if (tabLeft < containerLeft || tabLeft + tabWidth > containerLeft + containerWidth) {
+          const targetScrollLeft = tabLeft - containerWidth / 2 + tabWidth / 2;
+          container.scrollTo({
+            left: targetScrollLeft,
+            behavior: 'smooth',
+          });
+        }
       }
     }
   }, [current]);
