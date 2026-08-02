@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
 import { ShoppingBag, Tag, ShieldCheck, Lock } from 'lucide-react';
 
+import { useToast } from './Toast';
+
 interface CartSummaryProps {
   subtotal: number;
   tax?: number;
@@ -23,6 +25,7 @@ export function CartSummary({
 }: CartSummaryProps) {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
+  const { error, success } = useToast();
   const [couponCode, setCouponCode] = useState<string>('');
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
 
@@ -33,8 +36,9 @@ export function CartSummary({
     e.preventDefault();
     if (couponCode.toUpperCase() === 'JSS10') {
       setAppliedCoupon('JSS10');
+      success('Coupon JSS10 applied! 10% discount added.');
     } else {
-      alert('Invalid coupon code. Try JSS10 for 10% Off!');
+      error('Invalid coupon code. Try JSS10 for 10% Off!');
     }
   };
 

@@ -9,6 +9,7 @@ import { LanguageProvider } from '../contexts/LanguageContext';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { SkipLink } from '../components/SkipLink';
+import { ToastProvider } from '../components/Toast';
 import { seoService } from '../services/seoService';
 
 
@@ -86,11 +87,13 @@ export default function RootLayout({
             <LanguageProvider>
               <AuthProvider>
                 <CartWishlistProvider>
-                  <Header />
-                  <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 focus:outline-none">
-                    {children}
-                  </main>
-                  <Footer />
+                  <ToastProvider>
+                    <Header />
+                    <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 focus:outline-none">
+                      {children}
+                    </main>
+                    <Footer />
+                  </ToastProvider>
                 </CartWishlistProvider>
               </AuthProvider>
             </LanguageProvider>

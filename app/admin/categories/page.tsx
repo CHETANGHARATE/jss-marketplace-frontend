@@ -15,6 +15,7 @@ import {
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { AdminSidebar } from '../../../components/AdminSidebar';
 import { ApiCategory } from '../../../types/api';
+import { useToast } from '../../../components/Toast';
 import {
   Layers,
   Plus,
@@ -41,6 +42,7 @@ const getCategoryName = (name: ApiCategory['name'] | undefined): string => {
 };
 
 export default function CategoriesPage() {
+  const { error: toastError, success: toastSuccess } = useToast();
   const { data: categories = [], isLoading: isCategoriesLoading } = useAdminCategoriesQuery();
   const { data: subcategoriesList = [], isLoading: isSubcategoriesLoading } = useAdminSubcategoriesQuery();
 
@@ -215,8 +217,9 @@ export default function CategoriesPage() {
     try {
       await deleteSubcategory.mutateAsync(id);
       setDeleteConfirmId(null);
+      toastSuccess('Subcategory deleted successfully.');
     } catch (err: any) {
-      alert(err.message || 'Failed to delete subcategory.');
+      toastError(err.message || 'Failed to delete subcategory.');
     }
   };
 
@@ -226,8 +229,9 @@ export default function CategoriesPage() {
         id: sub.id,
         payload: { is_active: !sub.is_active },
       });
+      toastSuccess(`Subcategory ${!sub.is_active ? 'activated' : 'deactivated'}.`);
     } catch (err: any) {
-      alert(err.message || 'Failed to toggle status.');
+      toastError(err.message || 'Failed to toggle status.');
     }
   };
 

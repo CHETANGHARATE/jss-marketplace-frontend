@@ -1,9 +1,11 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { Star, ShoppingCart, Heart, Eye, ShieldCheck } from 'lucide-react';
 import { useCartWishlist } from '../contexts/CartWishlistContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useToast } from './Toast';
 import { Product } from '../types';
 
 interface ProductCardProps {
@@ -14,23 +16,30 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   const { t } = useLanguage();
   const { addToCart, toggleWishlist, isInWishlist } = useCartWishlist();
+  const { cartSuccess, wishlistSuccess } = useToast();
+  const router = useRouter();
 
   const isWish = isInWishlist(product.id);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart(product, 1);
+    cartSuccess('✓ Product added to cart successfully.');
   };
 
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart(product, 1);
-    alert(`Proceeding to secure checkout with ${product.name}`);
+    router.push('/checkout');
   };
 
   const handleWishlistClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    const wasInWishlist = isInWishlist(product.id);
     toggleWishlist(product);
+    if (!wasInWishlist) {
+      wishlistSuccess('❤️ Added to Wishlist');
+    }
   };
 
   const savingsAmount = product.originalPrice > product.offerPrice 

@@ -1,9 +1,13 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { AnimatePresence } from 'framer-motion';
 import { X, Heart, Star, ShoppingCart, ShieldCheck, Truck, RefreshCw } from 'lucide-react';
 import { useCartWishlist } from '../contexts/CartWishlistContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useToast } from './Toast';
+import { CheckoutLoadingOverlay } from './Toast';
 import { getProductById } from '../services/product';
 import { Product } from '../types';
 
@@ -15,8 +19,11 @@ interface ProductQuickViewProps {
 export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ productId, onClose }) => {
   const { t } = useLanguage();
   const { addToCart, toggleWishlist, isInWishlist } = useCartWishlist();
+  const { cartSuccess, wishlistSuccess } = useToast();
+  const router = useRouter();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -55,11 +62,16 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ productId, o
 
   const handleBuyNow = () => {
     addToCart(product, 1);
-    alert('Proceeding to secure mock checkout with ' + product.name);
     onClose();
+    setCheckoutLoading(true);
+    router.push('/checkout');
   };
 
   return (
+    <>
+      <AnimatePresence>
+        {checkoutLoading && <CheckoutLoadingOverlay />}
+      </AnimatePresence>
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
       <div className="relative bg-card text-card-foreground border border-border-custom w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] md:max-h-none overflow-y-auto md:overflow-hidden animate-zoom-in">
         
@@ -190,7 +202,11 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ productId, o
           {/* Action Row */}
           <div className="flex gap-3">
             <button
-              onClick={() => toggleWishlist(product)}
+                          onClick={() => {
+                const wasInWishlist = isInWishlist(product.id);
+                toggleWishlist(product);
+                if (!wasInWishlist) wishlistSuccess('❤️ Added to Wishlist');
+              }}
               className={`p-3.5 rounded-2xl border transition-all ${
                 inWish
                   ? 'bg-accent/10 border-accent text-accent hover:bg-accent/20'
@@ -203,7 +219,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ productId, o
             <button
               onClick={() => {
                 addToCart(product, 1);
-                alert(`${product.name} added to cart!`);
+                cartSuccess('✓ Product added to cart successfully.');
               }}
               className="flex-1 bg-primary text-white font-bold py-3.5 rounded-2xl hover:bg-primary-hover transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-primary/20"
             >
@@ -222,5 +238,6 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ productId, o
 
       </div>
     </div>
+    </>
   );
 };

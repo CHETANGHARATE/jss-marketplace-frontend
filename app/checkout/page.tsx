@@ -16,12 +16,14 @@ import { ShippingMethodSelector } from '../../components/ShippingMethodSelector'
 import { PaymentStatusModal } from '../../components/PaymentStatusModal';
 import { CartSummary } from '../../components/CartSummary';
 import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../components/Toast';
 import { ApiShippingMethod } from '../../services/shippingService';
 import { ShoppingBag, Plus, Sparkles, ArrowLeft, CheckCircle2, Lock } from 'lucide-react';
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { warning, error: toastError } = useToast();
   const { cart, cartTotal, cartItemCount, clearCart } = useCartWishlist();
   const { data: addresses = [], isLoading: isAddressesLoading } = useAddressesQuery();
 
@@ -150,7 +152,7 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = () => {
     if (!selectedAddressId) {
-      alert('Please select or add a shipping address.');
+      warning('Please select or add a shipping address.', 'Address Required');
       return;
     }
 
@@ -234,7 +236,7 @@ export default function CheckoutPage() {
           }
         },
         onError: (err: any) => {
-          alert(err.message || 'Failed to process checkout.');
+          toastError(err.message || 'Failed to process checkout.', 'Checkout Failed');
         },
       }
     );

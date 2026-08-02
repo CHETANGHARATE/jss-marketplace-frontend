@@ -19,8 +19,11 @@ import {
   AlertCircle
 } from 'lucide-react';
 
+import { useToast } from '../../../components/Toast';
+
 export default function OrderDetailPage() {
   const params = useParams();
+  const { success: toastSuccess, error: toastError } = useToast();
   const orderNumber = typeof params?.orderNumber === 'string' ? params.orderNumber : '';
 
   const { data: order, isLoading, isError } = useOrderByNumberQuery(orderNumber);
@@ -61,12 +64,19 @@ export default function OrderDetailPage() {
     }
   };
 
-  const handleCancelOrder = () => {
-    if (confirm(`Are you sure you want to cancel Order #${order.order_number}?`)) {
-      cancelMutation.mutate(order.order_number, {
-        onSuccess: () => alert('Order cancelled successfully.'),
-      });
-    }
+  const [showCancelModal, setShowCancelModal] = React.useState(false);
+
+  const confirmCancelOrder = () => {
+    cancelMutation.mutate(order.order_number, {
+      onSuccess: () => {
+        toastSuccess(`Order #${order.order_number} cancelled successfully.`);
+        setShowCancelModal(false);
+      },
+      onError: (err: any) => {
+        toastError(err.message || 'Failed to cancel order.');
+        setShowCancelModal(false);
+      },
+    });
   };
 
   const canCancel = ['pending', 'confirmed'].includes(order.status.toLowerCase());
@@ -105,7 +115,7 @@ export default function OrderDetailPage() {
 
           {canCancel && (
             <button
-              onClick={handleCancelOrder}
+              onClick={() => setShowCancelModal(true)}
               disabled={cancelMutation.isPending}
               className="inline-flex items-center gap-1.5 px-4 py-2 border border-rose-500/30 text-rose-500 bg-rose-500/10 rounded-xl text-xs font-bold hover:bg-rose-500/20 transition-colors"
             >
@@ -202,6 +212,32 @@ export default function OrderDetailPage() {
           </div>
         </div>
       </div>
+
+      {showCancelModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="bg-card text-card-foreground p-6 rounded-3xl border border-border/40 max-w-sm w-full shadow-2xl space-y-4">
+            <h3 className="text-lg font-bold text-foreground">Cancel Order #{order.order_number}?</h3>
+            <p className="text-xs text-muted-custom leading-relaxed">
+              Are you sure you want to cancel this order? This action cannot be undone.
+            </p>
+            <div className="flex gap-3 justify-end pt-2">
+              <button
+                onClick={() => setShowCancelModal(false)}
+                className="px-4 py-2 rounded-xl text-xs font-bold border border-border/40 hover:bg-muted transition-colors"
+              >
+                Keep Order
+              </button>
+              <button
+                onClick={confirmCancelOrder}
+                disabled={cancelMutation.isPending}
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-500 hover:bg-rose-600 text-white transition-colors"
+              >
+                {cancelMutation.isPending ? 'Cancelling...' : 'Yes, Cancel'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

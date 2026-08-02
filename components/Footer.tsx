@@ -4,9 +4,11 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Mail, ShieldCheck, Truck, RefreshCw, Headphones, Send, Smartphone, Lock, Award, Heart } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useToast } from './Toast';
 
 export const Footer: React.FC = () => {
   const { t } = useLanguage();
+  const { info } = useToast();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -220,14 +222,14 @@ export const Footer: React.FC = () => {
             <p className="text-xs text-muted-custom font-medium">{t('home.download_app_desc')}</p>
             <div className="flex flex-wrap lg:justify-end gap-3 pt-1">
               <button
-                onClick={() => alert('Opening Google Play Store to download JSS Marketplace App')}
+                onClick={() => info('Opening Google Play Store to download JSS Marketplace App', 'Google Play')}
                 className="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2.5 rounded-2xl text-left border border-slate-800 transition-colors shadow-2xs"
               >
                 <span className="text-[9px] uppercase font-bold text-slate-400 block">Get it on</span>
                 <span className="text-xs font-black text-white block">Google Play</span>
               </button>
               <button
-                onClick={() => alert('Opening Apple App Store to download JSS Marketplace App')}
+                onClick={() => info('Opening Apple App Store to download JSS Marketplace App', 'App Store')}
                 className="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2.5 rounded-2xl text-left border border-slate-800 transition-colors shadow-2xs"
               >
                 <span className="text-[9px] uppercase font-bold text-slate-400 block">Download on</span>

@@ -5,9 +5,11 @@ import { useAdminBrandsQuery, useCreateBrandMutation, useUpdateBrandMutation, us
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { AdminSidebar } from '../../../components/AdminSidebar';
 import { ApiBrand } from '../../../types/api';
+import { useToast } from '../../../components/Toast';
 import { Award, Plus, Pencil, Trash2, Search, ImageOff } from 'lucide-react';
 
 export default function BrandsPage() {
+  const { error: toastError, success: toastSuccess } = useToast();
   const { data: brandsRes, isLoading } = useAdminBrandsQuery();
   const brands = brandsRes?.data || [];
   const createBrand = useCreateBrandMutation();
@@ -86,8 +88,9 @@ export default function BrandsPage() {
     try {
       await deleteBrand.mutateAsync(id);
       setDeleteConfirmId(null);
+      toastSuccess('Brand deleted successfully');
     } catch (err: any) {
-      alert(err.message || 'Failed to delete brand');
+      toastError(err.message || 'Failed to delete brand');
     }
   };
 
