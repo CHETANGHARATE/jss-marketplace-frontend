@@ -53,7 +53,7 @@ export const Footer: React.FC = () => {
       
       {/* 1. 4 Trust Badges Bar */}
       <div className="border-b border-border-custom/80 bg-background-secondary/80 py-10">
-        <div className="max-w-[1440px] w-[95%] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center">
             
             <div className="flex flex-col items-center p-4 bg-card border border-border-custom/60 rounded-3xl shadow-2xs hover:shadow-xs transition-all">

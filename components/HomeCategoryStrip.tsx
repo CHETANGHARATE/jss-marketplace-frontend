@@ -2,76 +2,63 @@
 
 import React, { useRef } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, Grid3X3 } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Category } from '../types';
 
 // Pastel background tint per category matching reference e-commerce UI
 const categoryBgMap: Record<string, string> = {
   juices_syrups:          '#fff7ed', // Soft Amber
-  'juices-syrups':        '#fff7ed',
   religious_pooja_items:  '#fffbeb', // Soft Yellow/Gold
-  'religious-pooja-items': '#fffbeb',
   cosmetics:              '#fdf2f8', // Soft Pink
   beauty_personal_care:   '#fff1f2', // Soft Rose
-  'beauty-personal-care': '#fff1f2',
   footwear:               '#eff6ff', // Soft Blue
   pickles:                '#fef2f2', // Soft Red
   masale_spices:          '#fff7ed', // Soft Orange
-  'masale-spices':        '#fff7ed',
   fashion:                '#fdf2f8', // Soft Pink
   jewellery:              '#fffbeb', // Soft Gold
   agriculture:            '#f0fdf4', // Soft Mint
   auto_accessories:       '#eef2ff', // Soft Indigo
-  'auto-accessories':     '#eef2ff',
   local_homemade:         '#fff7ed', // Soft Amber
-  'local-homemade':       '#fff7ed',
   pooja_spiritual:        '#faf5ff', // Soft Purple
-  'pooja-spiritual':      '#faf5ff',
   gifts_handicrafts:      '#fdf2f8', // Soft Pink
-  'gifts-handicrafts':    '#fdf2f8',
   baby_kids:              '#fefce8', // Soft Yellow
-  'baby-kids':            '#fefce8',
   oil:                    '#f7fee7', // Soft Lime
   papad_kurdai:           '#fff7ed', // Soft Amber
-  'papad-kurdai':         '#fff7ed',
   astro_stone:            '#f5f3ff', // Soft Violet
-  'astro-stone':          '#f5f3ff',
   diwali_faral:           '#fffbeb', // Soft Gold
-  'diwali-faral':         '#fffbeb',
   electronics:            '#f0f9ff', // Soft Sky Blue
   home_kitchen:           '#f8fafc', // Soft Slate
-  'home-kitchen':         '#f8fafc',
   furniture:              '#fff7ed', // Soft Amber
   books:                  '#eff6ff', // Soft Blue
   sports:                 '#f0fdf4', // Soft Green
   groceries:              '#f0fdf4', // Soft Green
   pet_supplies:           '#f0fdf4', // Soft Green
-  'pet-supplies':         '#f0fdf4',
   health:                 '#ecfeff', // Soft Cyan
 };
 
-// Transparent PNG cutout photo map matching reference UI (all local PNG assets)
+// Studio product cutout photo map matching reference UI (all local assets)
 const categoryImageMap: Record<string, string> = {
-  'juices-syrups':          '/categories/juices.png',
-  'juices_syrups':          '/categories/juices.png',
-  'religious-pooja-items':  '/categories/pooja.png',
-  'religious_pooja_items':  '/categories/pooja.png',
-  'cosmetics':              '/categories/cosmetics.png',
-  'beauty-personal-care':   '/categories/beauty.png',
-  'beauty_personal_care':   '/categories/beauty.png',
-  'footwear':               '/categories/footwear.png',
-  'pickles':                '/categories/pickles.png',
-  'masale-spices':          '/categories/spices.png',
-  'masale_spices':          '/categories/spices.png',
-  'fashion':                '/categories/fashion.png',
-  'jewellery':              '/categories/jewellery.png',
-  'agriculture':            '/categories/agriculture.png',
+  // Slugs with hyphens (from Backend API) & underscores (from Mock)
+  'juices-syrups':          '/categories/juices.webp',
+  'juices_syrups':          '/categories/juices.webp',
+  'religious-pooja-items':  '/categories/pooja.webp',
+  'religious_pooja_items':  '/categories/pooja.webp',
+  'cosmetics':              '/categories/cosmetics.webp',
+  'beauty-personal-care':   '/categories/beauty.webp',
+  'beauty_personal_care':   '/categories/beauty.webp',
+  'footwear':               '/categories/footwear.webp',
+  'pickles':                '/categories/pickles.webp',
+  'masale-spices':          '/categories/spices.webp',
+  'masale_spices':          '/categories/spices.webp',
+  'fashion':                '/categories/fashion.webp',
+  'jewellery':              '/categories/jewellery.webp',
+  'agriculture':            '/categories/agriculture.webp',
   'auto-accessories':       '/categories/auto.webp',
   'auto_accessories':       '/categories/auto.webp',
   'local-homemade':         '/categories/homemade.webp',
   'local_homemade':         '/categories/homemade.webp',
-  'pooja-spiritual':        '/categories/pooja.png',
-  'pooja_spiritual':        '/categories/pooja.png',
+  'pooja-spiritual':        '/categories/pooja.webp',
+  'pooja_spiritual':        '/categories/pooja.webp',
   'gifts-handicrafts':      '/categories/gifts.webp',
   'gifts_handicrafts':      '/categories/gifts.webp',
   'baby-kids':              '/categories/baby.webp',
@@ -95,24 +82,34 @@ const categoryImageMap: Record<string, string> = {
   'health':                 '/categories/health.webp',
 
   // Numeric IDs (1 to 20 from DB)
-  '1':                      '/categories/juices.png',
-  '2':                      '/categories/pooja.png',
-  '3':                      '/categories/cosmetics.png',
-  '4':                      '/categories/beauty.png',
-  '5':                      '/categories/footwear.png',
-  '6':                      '/categories/pickles.png',
-  '7':                      '/categories/spices.png',
-  '8':                      '/categories/fashion.png',
-  '9':                      '/categories/jewellery.png',
-  '10':                     '/categories/agriculture.png',
+  '1':                      '/categories/juices.webp',
+  '2':                      '/categories/pooja.webp',
+  '3':                      '/categories/cosmetics.webp',
+  '4':                      '/categories/beauty.webp',
+  '5':                      '/categories/footwear.webp',
+  '6':                      '/categories/pickles.webp',
+  '7':                      '/categories/spices.webp',
+  '8':                      '/categories/fashion.webp',
+  '9':                      '/categories/jewellery.webp',
+  '10':                     '/categories/agriculture.webp',
+  '11':                     '/categories/auto.webp',
+  '12':                     '/categories/homemade.webp',
+  '13':                     '/categories/gifts.webp',
+  '14':                     '/categories/baby.webp',
+  '15':                     '/categories/oil.webp',
+  '16':                     '/categories/papad.webp',
+  '17':                     '/categories/astro.webp',
+  '18':                     '/categories/diwali.webp',
+  '19':                     '/categories/electronics.webp',
+  '20':                     '/categories/kitchen.webp',
 };
 
 const defaultCategoryImages = [
-  '/categories/juices.png',
-  '/categories/cosmetics.png',
-  '/categories/pickles.png',
-  '/categories/footwear.png',
-  '/categories/fashion.png',
+  '/categories/juices.webp',
+  '/categories/cosmetics.webp',
+  '/categories/pickles.webp',
+  '/categories/auto.webp',
+  '/categories/homemade.webp',
 ];
 
 interface Props {
@@ -164,11 +161,11 @@ export const HomeCategoryStrip: React.FC<Props> = ({ categories }) => {
             const idStr = String(cat.id).toLowerCase();
             const slugUnderscore = slug.replace(/-/g, '_');
 
-            // FORCE local transparent PNG cutout, ignoring API cat.image completely
+            // FORCE local /categories/*.webp image, ignoring API cat.image completely
             const imgUrl = categoryImageMap[slug]
               || categoryImageMap[idStr]
               || categoryImageMap[slugUnderscore]
-              || `/categories/${slug.split('-')[0]}.png`
+              || `/categories/${slug.split('-')[0]}.webp`
               || defaultCategoryImages[idx % defaultCategoryImages.length];
 
             const bgTint = categoryBgMap[slug] || categoryBgMap[slugUnderscore] || categoryBgMap[idStr] || '#f8fafc';
@@ -181,7 +178,7 @@ export const HomeCategoryStrip: React.FC<Props> = ({ categories }) => {
                 className="flex flex-col items-center group shrink-0"
                 style={{ scrollSnapAlign: 'start' }}
               >
-                {/* Pastel Rounded Card container with transparent PNG cutout matching reference UI */}
+                {/* Pastel Rounded Card container matching reference UI */}
                 <div
                   className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center p-2.5 shadow-2xs group-hover:shadow-md group-hover:scale-105 transition-all duration-300 border border-black/5 relative overflow-hidden"
                   style={{ backgroundColor: bgTint }}
@@ -189,7 +186,7 @@ export const HomeCategoryStrip: React.FC<Props> = ({ categories }) => {
                   <img
                     src={imgUrl}
                     alt={label}
-                    className="w-full h-full object-contain filter drop-shadow-xs group-hover:scale-110 transition-transform duration-300"
+                    className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-300"
                   />
                 </div>
                 {/* Category Name */}
@@ -199,20 +196,6 @@ export const HomeCategoryStrip: React.FC<Props> = ({ categories }) => {
               </Link>
             );
           })}
-
-          {/* View All Button Card matching reference image */}
-          <Link
-            href="/categories"
-            className="flex flex-col items-center group shrink-0"
-            style={{ scrollSnapAlign: 'start' }}
-          >
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center p-2.5 shadow-2xs group-hover:shadow-md group-hover:scale-105 transition-all duration-300 border border-black/5 bg-slate-50 relative overflow-hidden text-blue-600">
-              <Grid3X3 size={26} className="group-hover:scale-110 transition-transform duration-300" />
-            </div>
-            <span className="text-[11px] sm:text-xs font-bold text-center text-foreground group-hover:text-primary transition-colors max-w-[88px] sm:max-w-[100px] mt-2 line-clamp-1 leading-tight">
-              View All
-            </span>
-          </Link>
         </div>
 
         {/* Scroll Right */}

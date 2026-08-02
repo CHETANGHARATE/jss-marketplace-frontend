@@ -131,7 +131,7 @@ export const Header: React.FC = () => {
 
       {/* 2. Main Sticky Navigation Header Bar */}
       <header className="sticky top-0 z-40 w-full bg-card/95 backdrop-blur-md border-b border-border-custom/80 shadow-xs transition-colors duration-200">
-        <div className="max-w-[1440px] w-[95%] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 sm:h-20 items-center justify-between gap-3 sm:gap-6">
             
             {/* Left: Mobile Menu Toggle & Brand Logo */}
