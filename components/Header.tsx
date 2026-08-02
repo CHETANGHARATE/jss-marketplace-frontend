@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   Heart,
-  ShoppingBag,
+  ShoppingCart,
   Sun,
   Moon,
   Globe,
@@ -23,7 +23,8 @@ import {
   Tag,
   PhoneCall,
   Sparkles,
-  Search
+  Search,
+  Grid
 } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTheme } from '../contexts/ThemeContext';
@@ -129,13 +130,13 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Main Sticky Navigation Header Bar */}
+      {/* 2. Main Single-Row Sticky Header Bar (Amazon / Flipkart Style) */}
       <header className="sticky top-0 z-40 w-full bg-card/95 backdrop-blur-md border-b border-border-custom/80 shadow-xs transition-colors duration-200">
         <div className="max-w-[1536px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
-          <div className="flex h-16 sm:h-20 items-center justify-between gap-3 sm:gap-6">
+          <div className="flex h-18 sm:h-20 items-center justify-between gap-3 sm:gap-4 md:gap-6">
             
-            {/* Left: Mobile Menu Toggle & Brand Logo */}
-            <div className="flex items-center gap-3">
+            {/* ─── LEFT: Logo & Marketplace Badge ─── */}
+            <div className="flex items-center gap-3 shrink-0">
               <button 
                 onClick={() => setMobileMenuOpen(true)}
                 className="lg:hidden p-2 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80 transition-colors"
@@ -144,7 +145,7 @@ export const Header: React.FC = () => {
                 <Menu size={20} />
               </button>
 
-              <Link href="/" className="flex items-center gap-2.5 group">
+              <Link href="/" className="flex items-center gap-2 group shrink-0">
                 <span className="text-xl sm:text-2xl font-black tracking-tight text-primary flex items-center">
                   JSS<span className="text-accent group-hover:text-primary transition-colors">Solutions</span>
                 </span>
@@ -154,18 +155,21 @@ export const Header: React.FC = () => {
               </Link>
             </div>
 
-            {/* Middle: Mega Menu Dropdown */}
-            <div className="hidden lg:flex items-center gap-2 shrink-0">
-              <MegaMenu />
+            {/* ─── CENTER: All Categories Button + Large Search Bar ─── */}
+            <div className="hidden lg:flex items-center gap-3 flex-1 max-w-3xl mx-2">
+              {/* All Categories Dropdown Trigger */}
+              <div className="shrink-0">
+                <MegaMenu />
+              </div>
+
+              {/* Large Search Bar */}
+              <div className="flex-1">
+                <SearchBar />
+              </div>
             </div>
 
-            {/* Middle: Search Bar */}
-            <div className="hidden lg:block flex-1 max-w-xl mx-2">
-              <SearchBar />
-            </div>
-
-            {/* Right Actions Toolbar */}
-            <div className="flex items-center gap-1.5 sm:gap-2.5">
+            {/* ─── RIGHT: Language, Wishlist, Cart, Login & Sign Up ─── */}
+            <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 shrink-0">
               
               {/* Mobile Search Button */}
               <button
@@ -176,25 +180,25 @@ export const Header: React.FC = () => {
                 <Search size={18} />
               </button>
 
-              {/* Become Vendor Action */}
+              {/* Become Vendor Link */}
               <Link
                 href="/seller/register"
-                className="hidden md:flex items-center gap-1.5 text-xs font-bold bg-accent/10 text-accent border border-accent/20 px-3.5 py-2 rounded-2xl hover:bg-accent hover:text-white transition-all shadow-2xs"
+                className="hidden xl:flex items-center gap-1.5 text-xs font-bold bg-accent/10 text-accent border border-accent/20 px-3 py-2 rounded-2xl hover:bg-accent hover:text-white transition-all shadow-2xs"
               >
-                <Store size={15} />
-                <span>Become Vendor</span>
+                <Store size={14} />
+                <span>Sell Products</span>
               </Link>
 
               {/* Language Selector */}
               <div ref={langMenuRef} className="relative">
                 <button
                   onClick={() => setLangMenuOpen(!langMenuOpen)}
-                  className="p-2 sm:px-3 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80 transition-colors flex items-center gap-1.5 text-xs font-bold"
+                  className="p-2 sm:px-3 py-2 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80 transition-colors flex items-center gap-1.5 text-xs font-bold"
                   aria-label="Language Selector"
                 >
                   <Globe size={17} className="text-primary" />
-                  <span className="uppercase hidden xl:inline">{language}</span>
-                  <ChevronDown size={12} className="text-muted-custom hidden xl:inline" />
+                  <span className="uppercase hidden sm:inline">{language}</span>
+                  <ChevronDown size={12} className="text-muted-custom hidden sm:inline" />
                 </button>
                 {langMenuOpen && (
                   <div className="absolute right-0 mt-2 w-36 bg-card border border-border-custom rounded-2xl shadow-xl z-50 overflow-hidden py-1.5">
@@ -218,10 +222,10 @@ export const Header: React.FC = () => {
                 )}
               </div>
 
-              {/* Dark Mode Toggle */}
+              {/* Dark / Light Mode Toggle */}
               <button
                 onClick={toggleTheme}
-                className="p-2.5 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80 transition-colors"
+                className="p-2.5 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80 transition-colors hidden sm:flex"
                 aria-label="Toggle Theme"
               >
                 {theme === 'light' ? <Moon size={17} /> : <Sun size={17} />}
@@ -244,10 +248,10 @@ export const Header: React.FC = () => {
               {/* Cart Button */}
               <button
                 onClick={() => setCartOpen(true)}
-                className="p-2 sm:px-3.5 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80 transition-colors relative flex items-center gap-2"
+                className="p-2 sm:px-3 py-2 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80 transition-colors relative flex items-center gap-2"
                 aria-label="Cart"
               >
-                <ShoppingBag size={18} className="text-primary" />
+                <ShoppingCart size={18} className="text-primary" />
                 {cartItemCount > 0 && (
                   <>
                     <span className="bg-primary text-white text-[10px] font-black px-1.5 py-0.5 rounded-lg shadow-2xs">
@@ -322,18 +326,18 @@ export const Header: React.FC = () => {
                   )}
                 </div>
               ) : (
-                /* Unauthenticated Guest Actions */
+                /* Unauthenticated Guest Login & Sign Up Buttons */
                 <div className="hidden sm:flex items-center gap-2">
                   <Link
                     href="/account"
-                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-background-secondary text-foreground border border-border-custom/80 text-xs font-bold hover:border-primary transition-all"
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-card hover:bg-background-secondary text-foreground border border-border-custom/90 text-xs font-bold transition-all hover:border-primary shadow-2xs"
                   >
-                    <LogIn size={14} />
+                    <User size={15} className="text-primary" />
                     <span>Login</span>
                   </Link>
                   <Link
                     href="/account?tab=register"
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-primary text-white text-xs font-bold hover:bg-primary-hover transition-all shadow-xs"
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary hover:bg-primary-hover text-white text-xs font-bold transition-all shadow-md hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <UserPlus size={14} />
                     <span>Sign Up</span>
@@ -487,7 +491,7 @@ export const Header: React.FC = () => {
               <X size={18} />
             </button>
             <h2 className="text-lg font-black text-foreground mb-6 flex items-center gap-2 border-b border-border-custom/80 pb-4">
-              <ShoppingBag className="text-primary" size={22} />
+              <ShoppingCart className="text-primary" size={22} />
               <span>{t('nav.cart')}</span>
               <span className="text-xs bg-primary/10 text-primary border border-primary/20 px-2.5 py-0.5 rounded-xl font-extrabold">
                 {cartItemCount} Items
@@ -497,7 +501,7 @@ export const Header: React.FC = () => {
             <div className="flex-1 overflow-y-auto space-y-3 pr-1">
               {cart.length === 0 ? (
                 <div className="h-64 flex flex-col items-center justify-center text-center space-y-2">
-                  <ShoppingBag size={48} className="text-muted-custom/40" />
+                  <ShoppingCart size={48} className="text-muted-custom/40" />
                   <p className="text-xs font-semibold text-muted-custom">{t('cart.empty')}</p>
                 </div>
               ) : (
