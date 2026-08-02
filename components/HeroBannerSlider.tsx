@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
+
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight, ShoppingBag, Tag, ShieldCheck, Zap, RefreshCw } from 'lucide-react';
 
@@ -89,14 +89,7 @@ const slides: HeroSlide[] = [
   },
 ];
 
-const categoryNav = [
-  { icon: '☔', label: 'Rain Essentials', href: '/category/rain-essentials' },
-  { icon: '🏠', label: 'Home & Kitchen', href: '/category/home-kitchen' },
-  { icon: '🧴', label: 'Beauty & Personal Care', href: '/category/beauty-personal-care' },
-  { icon: '🌾', label: 'Agriculture & Tools', href: '/category/agriculture-tools' },
-  { icon: '💻', label: 'Electronics & Gadgets', href: '/category/electronics-gadgets' },
-  { icon: '👗', label: 'Fashion & Lifestyle', href: '/category/fashion-lifestyle' },
-];
+
 
 export const HeroBannerSlider: React.FC = () => {
   const router = useRouter();
@@ -122,40 +115,10 @@ export const HeroBannerSlider: React.FC = () => {
 
   return (
     <div className="w-full relative overflow-hidden rounded-3xl shadow-lg border border-border-custom/40" style={{ background: `linear-gradient(135deg, ${slide.bgFrom}, ${slide.bgTo})` }}>
-      {/* Category Nav Strip */}
-      <div className="relative z-20 flex items-center overflow-x-auto no-scrollbar border-b border-white/10 bg-black/30 backdrop-blur-md px-4 sm:px-6">
-        <button
-          onClick={prev}
-          className="shrink-0 p-3 text-white/60 hover:text-white transition-colors"
-          aria-label="Scroll categories left"
-        >
-          <ChevronLeft size={16} />
-        </button>
-        {categoryNav.map((cat, idx) => (
-          <Link
-            key={idx}
-            href={cat.href}
-            className={`shrink-0 flex items-center gap-2 px-5 py-3 text-xs font-semibold transition-all border-b-2 whitespace-nowrap ${
-              idx === 0
-                ? 'text-white border-blue-400 bg-blue-600/30'
-                : 'text-white/70 border-transparent hover:text-white hover:bg-white/10'
-            }`}
-          >
-            <span>{cat.icon}</span>
-            <span>{cat.label}</span>
-          </Link>
-        ))}
-        <button
-          onClick={next}
-          className="shrink-0 p-3 text-white/60 hover:text-white transition-colors ml-auto"
-          aria-label="Scroll categories right"
-        >
-          <ChevronRight size={16} />
-        </button>
-      </div>
+
 
       {/* Main Hero Area */}
-      <div className="relative h-[360px] sm:h-[420px] md:h-[460px] lg:h-[480px] overflow-hidden">
+      <div className="relative h-[400px] sm:h-[460px] md:h-[500px] lg:h-[520px] overflow-hidden">
         {/* Full Background Image */}
         <div
           key={`bg_${current}`}
