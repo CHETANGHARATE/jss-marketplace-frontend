@@ -30,6 +30,7 @@ export function mapApiProductToProduct(apiProd: ApiProduct): Product {
 
   return {
     id: String(apiProd.id),
+    slug: apiProd.slug || String(apiProd.id),
     name: apiProd.name,
     brand: apiProd.brand?.name || 'Generic',
     seller: {

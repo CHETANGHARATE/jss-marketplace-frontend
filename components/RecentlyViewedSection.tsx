@@ -32,7 +32,7 @@ export function RecentlyViewedSection() {
         {recentlyViewed.map((prod) => (
           <Link
             key={prod.id}
-            href={`/product/${prod.slug}`}
+            href={`/product/${prod.slug || prod.id}`}
             className="group bg-card border border-border/40 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-primary/50 transition-all space-y-2"
           >
             <div className="aspect-square w-full bg-muted/20 rounded-xl p-2 flex items-center justify-center overflow-hidden">

@@ -46,6 +46,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
     ? product.originalPrice - product.offerPrice 
     : 0;
 
+  const targetSlug = product.slug || product.id;
+
+  const handleProductClick = () => {
+    router.push(`/product/${targetSlug}`);
+  };
+
   return (
     <div className="group bg-card text-card-foreground border border-border-custom/80 hover:border-primary/50 rounded-3xl shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between overflow-hidden relative hover:-translate-y-1">
       
@@ -71,7 +77,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
 
       {/* Image Container with aspect-square ratio */}
       <div 
-        onClick={() => onQuickView(product.id)}
+        onClick={handleProductClick}
         className="w-full aspect-square bg-slate-50 dark:bg-slate-900/40 flex items-center justify-center p-5 relative overflow-hidden shrink-0 cursor-pointer border-b border-border-custom/60"
       >
         <img
@@ -82,10 +88,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
         />
         {/* Quick View Hover Tag */}
         <div className="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center backdrop-blur-3xs">
-          <span className="bg-slate-950/80 backdrop-blur-md text-white text-xs font-black px-4 py-2 rounded-2xl flex items-center gap-1.5 shadow-md border border-slate-700/80">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onQuickView(product.id);
+            }}
+            className="bg-slate-950/80 hover:bg-primary backdrop-blur-md text-white text-xs font-black px-4 py-2 rounded-2xl flex items-center gap-1.5 shadow-md border border-slate-700/80 transition-colors"
+          >
             <Eye size={14} />
             {t('prod.quick_view')}
-          </span>
+          </button>
         </div>
       </div>
 
@@ -115,7 +127,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
 
           {/* Product Title */}
           <h3 
-            onClick={() => onQuickView(product.id)}
+            onClick={handleProductClick}
             className="font-extrabold text-sm text-foreground line-clamp-2 leading-snug group-hover:text-primary transition-colors cursor-pointer"
           >
             {product.name}

@@ -7,6 +7,7 @@ import { useRecentlyViewed } from '../../../hooks/useRecentlyViewed';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { ProductGallery } from '../../../components/ProductGallery';
 import { ProductDetailsInfo } from '../../../components/ProductDetailsInfo';
+import { ProductTabsSection } from '../../../components/ProductTabsSection';
 import { RecentlyViewedSection } from '../../../components/RecentlyViewedSection';
 import { seoService } from '../../../services/seoService';
 import { Sparkles, AlertCircle, ShoppingBag, ArrowRight } from 'lucide-react';
@@ -16,9 +17,9 @@ import { mapApiProductToProduct } from '../../../services/productService';
 
 export default function ProductDetailPage() {
   const params = useParams();
-  const slug = typeof params?.slug === 'string' ? params.slug : '';
+  const rawSlug = typeof params?.slug === 'string' ? params.slug : '';
 
-  const { data: product, isLoading, isError } = useProductBySlug(slug);
+  const { data: product, isLoading, isError } = useProductBySlug(rawSlug);
   const { data: relatedProducts = [] } = useRelatedProducts(product?.id || '');
   const { addRecentlyViewed } = useRecentlyViewed();
 
@@ -30,8 +31,11 @@ export default function ProductDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="py-24 flex flex-col items-center justify-center gap-3 text-foreground/60">
-        <Sparkles className="w-8 h-8 text-primary animate-spin" />
+      <div className="py-24 flex flex-col items-center justify-center gap-4 text-foreground/70 min-h-[50vh]">
+        <div className="relative w-12 h-12">
+          <div className="absolute inset-0 rounded-full border-4 border-slate-200 dark:border-slate-800" />
+          <div className="absolute inset-0 rounded-full border-4 border-t-primary border-r-transparent border-b-transparent border-l-transparent animate-spin" />
+        </div>
         <p className="text-sm font-black tracking-wide">Loading Product Details...</p>
       </div>
     );
@@ -39,7 +43,7 @@ export default function ProductDetailPage() {
 
   if (isError || !product) {
     return (
-      <div className="py-20 text-center space-y-4 max-w-md mx-auto">
+      <div className="py-20 text-center space-y-4 max-w-md mx-auto min-h-[50vh] flex flex-col justify-center items-center">
         <div className="h-16 w-16 rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20 flex items-center justify-center mx-auto">
           <AlertCircle className="w-8 h-8" />
         </div>
@@ -60,8 +64,14 @@ export default function ProductDetailPage() {
 
   const productJsonLd = seoService.generateProductJsonLd(product);
   const breadcrumbItems = [
+    { label: 'Home', href: '/' },
     ...(product.category
-      ? [{ label: typeof product.category.name === 'string' ? product.category.name : 'Category', href: `/category/${product.category.slug}` }]
+      ? [
+          {
+            label: typeof product.category.name === 'string' ? product.category.name : 'Category',
+            href: `/category/${product.category.slug}`,
+          },
+        ]
       : []),
     ...(product.brand
       ? [{ label: product.brand.name, href: `/brand/${product.brand.slug}` }]
@@ -71,7 +81,7 @@ export default function ProductDetailPage() {
   const breadcrumbJsonLd = seoService.generateBreadcrumbJsonLd(breadcrumbItems);
 
   return (
-    <div className="space-y-12 sm:space-y-16">
+    <div className="space-y-10 sm:space-y-14 pb-12">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
@@ -81,9 +91,10 @@ export default function ProductDetailPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
+      {/* Section 11: Breadcrumb Navigation */}
       <Breadcrumbs items={breadcrumbItems} />
 
-      {/* Main Details Card Grid */}
+      {/* Main Details Card Grid (Section 1 - Gallery & Section 2-6 - Info/Pricing/Actions/Offers/Delivery) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-start bg-card border border-border-custom/80 p-6 sm:p-10 rounded-3xl shadow-xs">
         <div className="lg:col-span-6">
           <ProductGallery images={product.images} name={product.name} />
@@ -93,13 +104,16 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      {/* Related Products Showcase */}
+      {/* Section 7 & 8: Tabs & Reviews */}
+      <ProductTabsSection product={product} />
+
+      {/* Section 9: Related Products Showcase */}
       {relatedProducts.length > 0 && (
-        <section className="space-y-6 pt-8 border-t border-border-custom/80">
+        <section className="space-y-6 pt-6 border-t border-border-custom/80">
           <div className="flex justify-between items-end">
             <div>
               <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-primary uppercase tracking-widest bg-primary/10 px-2.5 py-0.5 rounded-full mb-1">
-                <span>Recommendations</span>
+                <span>Category Showcase</span>
               </div>
               <h3 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
                 Related Marketplace Products
@@ -122,7 +136,7 @@ export default function ProductDetailPage() {
         </section>
       )}
 
-      {/* Recently Viewed Items */}
+      {/* Section 10: Recently Viewed Products */}
       <RecentlyViewedSection />
     </div>
   );

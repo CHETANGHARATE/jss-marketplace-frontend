@@ -114,6 +114,7 @@ export interface ApiProduct {
   features?: string[];
   image?: string;
   images?: string[];
+  specifications?: { key?: string; value?: string; spec_key?: string; spec_value?: string }[];
   category?: ApiCategory;
   brand?: ApiBrand;
   seller?: { id: number; name: string };
