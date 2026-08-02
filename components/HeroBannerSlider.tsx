@@ -10,14 +10,15 @@ import {
   ShieldCheck,
   Zap,
   RefreshCw,
-  CloudRain,
+  Umbrella,
   Home,
   Sparkles,
   Sprout,
-  Smartphone,
+  Tv,
   Shirt,
   Flame,
-  Gem
+  Gem,
+  Tractor
 } from 'lucide-react';
 
 export interface CategoryHeroSlide {
@@ -46,7 +47,7 @@ export const categoryHeroSlides: CategoryHeroSlide[] = [
   {
     id: 'rain_essentials',
     categoryTitle: 'Rain Essentials',
-    categoryIcon: <CloudRain size={16} />,
+    categoryIcon: <Umbrella size={17} className="text-white" />,
     tag: '🌧️ MONSOON EXCLUSIVE',
     title: 'Monsoon Rain',
     accentTitle: 'Essentials 60% OFF',
@@ -71,7 +72,7 @@ export const categoryHeroSlides: CategoryHeroSlide[] = [
   {
     id: 'home_kitchen',
     categoryTitle: 'Home & Kitchen',
-    categoryIcon: <Home size={16} />,
+    categoryIcon: <Home size={17} className="text-white" />,
     tag: '🏠 HOME & KITCHEN FESTIVAL',
     title: 'Modern Home &',
     accentTitle: 'Kitchen Appliances',
@@ -96,7 +97,7 @@ export const categoryHeroSlides: CategoryHeroSlide[] = [
   {
     id: 'beauty_care',
     categoryTitle: 'Beauty & Personal Care',
-    categoryIcon: <Sparkles size={16} />,
+    categoryIcon: <Sparkles size={17} className="text-white" />,
     tag: '💄 BEAUTY & SKINCARE',
     title: 'Organic Beauty &',
     accentTitle: 'Personal Care',
@@ -121,7 +122,7 @@ export const categoryHeroSlides: CategoryHeroSlide[] = [
   {
     id: 'agriculture',
     categoryTitle: 'Agriculture & Tools',
-    categoryIcon: <Sprout size={16} />,
+    categoryIcon: <Tractor size={17} className="text-white" />,
     tag: '🌾 AGRI-SOLUTIONS DIRECT',
     title: 'Bio Fertilizers &',
     accentTitle: 'High Yield Seeds',
@@ -146,7 +147,7 @@ export const categoryHeroSlides: CategoryHeroSlide[] = [
   {
     id: 'electronics',
     categoryTitle: 'Electronics & Gadgets',
-    categoryIcon: <Smartphone size={16} />,
+    categoryIcon: <Tv size={17} className="text-white" />,
     tag: '⚡ TECHPULSE ELECTRONICS',
     title: 'Smart Gadgets &',
     accentTitle: 'Auto Electronics',
@@ -171,7 +172,7 @@ export const categoryHeroSlides: CategoryHeroSlide[] = [
   {
     id: 'fashion',
     categoryTitle: 'Fashion & Lifestyle',
-    categoryIcon: <Shirt size={16} />,
+    categoryIcon: <Shirt size={17} className="text-white" />,
     tag: '👗 ETHNIC & HANDLOOM',
     title: 'Handloom Sarees &',
     accentTitle: 'Ethnic Fashion',
@@ -196,7 +197,7 @@ export const categoryHeroSlides: CategoryHeroSlide[] = [
   {
     id: 'festive_pooja',
     categoryTitle: 'Festive & Pooja',
-    categoryIcon: <Flame size={16} />,
+    categoryIcon: <Flame size={17} className="text-white" />,
     tag: '🪔 POOJA & FESTIVE SPECIAL',
     title: 'Pooja Samagri &',
     accentTitle: 'Fresh Faral Snacks',
@@ -221,7 +222,7 @@ export const categoryHeroSlides: CategoryHeroSlide[] = [
   {
     id: 'jewellery_crafts',
     categoryTitle: 'Jewellery & Crafts',
-    categoryIcon: <Gem size={16} />,
+    categoryIcon: <Gem size={17} className="text-white" />,
     tag: '💎 ROYAL HERITAGE COLLECTION',
     title: 'Handcrafted Ornaments &',
     accentTitle: 'Astro Gemstones',
@@ -276,6 +277,18 @@ export const HeroBannerSlider: React.FC = () => {
     setTimeout(() => setIsAnimating(false), 500);
   }, [isAnimating]);
 
+  const scrollNavLeft = () => {
+    if (navContainerRef.current) {
+      navContainerRef.current.scrollBy({ left: -220, behavior: 'smooth' });
+    }
+  };
+
+  const scrollNavRight = () => {
+    if (navContainerRef.current) {
+      navContainerRef.current.scrollBy({ left: 220, behavior: 'smooth' });
+    }
+  };
+
   // Synchronized Auto-Play Interval
   useEffect(() => {
     if (isPaused) return;
@@ -285,18 +298,18 @@ export const HeroBannerSlider: React.FC = () => {
     return () => clearInterval(timer);
   }, [next, isPaused]);
 
-  // Keep active category tab visible ONLY inside the horizontal category bar (DO NOT scroll window)
+  // Keep active category tab visible inside the horizontal category bar
   useEffect(() => {
     const container = navContainerRef.current;
     if (container) {
-      const activeTab = container.children[current] as HTMLElement;
+      // Multiply by 2 because of separators
+      const activeTab = container.children[current * 2] as HTMLElement;
       if (activeTab) {
         const containerLeft = container.scrollLeft;
         const containerWidth = container.clientWidth;
         const tabLeft = activeTab.offsetLeft;
         const tabWidth = activeTab.clientWidth;
 
-        // Scroll ONLY the inner horizontal container, never the outer window
         if (tabLeft < containerLeft || tabLeft + tabWidth > containerLeft + containerWidth) {
           const targetScrollLeft = tabLeft - containerWidth / 2 + tabWidth / 2;
           container.scrollTo({
@@ -312,40 +325,66 @@ export const HeroBannerSlider: React.FC = () => {
 
   return (
     <div
-      className="w-full relative rounded-3xl overflow-hidden shadow-xl border border-border-custom/50 transition-all duration-500"
-      style={{ background: `linear-gradient(135deg, ${slide.bgFrom}, ${slide.bgTo})` }}
+      className="w-full relative rounded-3xl overflow-hidden shadow-2xl border border-blue-900/40 transition-all duration-500 bg-[#060D1B]"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* ─── 1. Synchronized Header Category Navigation Bar ─── */}
-      <div className="w-full bg-black/40 backdrop-blur-md border-b border-white/10 px-3 sm:px-6 py-2.5 z-30 relative">
+      {/* ─── 1. Refined Header Category Navigation Bar (Matched to Reference Image) ─── */}
+      <div className="w-full bg-[#081224] border-b border-blue-900/50 px-2 sm:px-4 py-2 z-30 relative flex items-center justify-between shadow-md">
+        {/* Left Arrow inside Category Bar */}
+        <button
+          onClick={scrollNavLeft}
+          aria-label="Scroll Categories Left"
+          className="hidden sm:flex items-center justify-center w-7 h-7 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors shrink-0 mr-1.5 cursor-pointer"
+        >
+          <ChevronLeft size={18} />
+        </button>
+
+        {/* Categories Strip */}
         <div
           ref={navContainerRef}
-          className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5"
+          className="flex-1 flex items-center overflow-x-auto no-scrollbar py-1 gap-1 sm:gap-1.5 scroll-smooth"
         >
           {categoryHeroSlides.map((cat, idx) => {
             const isActive = idx === current;
             return (
-              <button
-                key={cat.id}
-                onClick={() => goTo(idx)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-black transition-all shrink-0 cursor-pointer ${
-                  isActive
-                    ? 'bg-white text-slate-900 shadow-md scale-102 border border-white'
-                    : 'text-white/80 hover:text-white hover:bg-white/10 border border-transparent'
-                }`}
-                style={isActive ? { borderLeft: `4px solid ${cat.accentColor}` } : {}}
-              >
-                <span className={isActive ? 'text-slate-900' : 'text-white/90'}>{cat.categoryIcon}</span>
-                <span className="whitespace-nowrap">{cat.categoryTitle}</span>
-              </button>
+              <React.Fragment key={cat.id}>
+                <button
+                  onClick={() => goTo(idx)}
+                  className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 shrink-0 cursor-pointer ${
+                    isActive
+                      ? 'bg-gradient-to-r from-[#1565FF] to-[#0052EA] text-white shadow-[0_4px_20px_rgba(21,101,255,0.65)] border-t border-white/40 scale-[1.02]'
+                      : 'bg-transparent text-white/90 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  <span className="shrink-0">{cat.categoryIcon}</span>
+                  <span className="whitespace-nowrap font-bold text-xs tracking-tight">{cat.categoryTitle}</span>
+                </button>
+
+                {/* Separator between items */}
+                {idx < categoryHeroSlides.length - 1 && (
+                  <div className="h-4 w-[1px] bg-white/15 shrink-0 mx-0.5" />
+                )}
+              </React.Fragment>
             );
           })}
         </div>
+
+        {/* Right Arrow inside Category Bar */}
+        <button
+          onClick={scrollNavRight}
+          aria-label="Scroll Categories Right"
+          className="hidden sm:flex items-center justify-center w-7 h-7 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors shrink-0 ml-1.5 cursor-pointer"
+        >
+          <ChevronRight size={18} />
+        </button>
       </div>
 
       {/* ─── 2. Main Synchronized Hero Stage ─── */}
-      <div className="relative h-[420px] sm:h-[480px] md:h-[510px] lg:h-[530px] overflow-hidden">
+      <div
+        className="relative h-[420px] sm:h-[480px] md:h-[510px] lg:h-[530px] overflow-hidden"
+        style={{ background: `linear-gradient(135deg, ${slide.bgFrom}, ${slide.bgTo})` }}
+      >
         {/* Background Banner Image */}
         <div
           key={`bg_${slide.id}`}
