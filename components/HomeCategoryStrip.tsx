@@ -135,7 +135,12 @@ export const HomeCategoryStrip: React.FC<Props> = ({ categories }) => {
     scrollRef.current.scrollBy({ left: dir === 'left' ? -300 : 300, behavior: 'smooth' });
   };
 
-  const displayCats = categories;
+  // Filter out ONLY "Beauty & Care" from homepage category strip while keeping Cosmetics and Beauty & Personal Care
+  const displayCats = categories.filter(cat => {
+    const name = getName(cat.name).toLowerCase().trim();
+    const slug = String((cat as any).slug || '').toLowerCase().trim();
+    return name !== 'beauty & care' && name !== 'beauty care' && slug !== 'beauty-care' && slug !== 'beauty_care';
+  });
 
   return (
     <section className="bg-card border border-border-custom/80 rounded-3xl p-4 sm:p-5 shadow-xs overflow-hidden">
