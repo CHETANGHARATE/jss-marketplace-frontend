@@ -10,6 +10,7 @@ import {
   ApiCoupon,
   ApiResponse,
   PaginatedApiResponse,
+  ApiAttributeTemplate,
 } from '../types/api';
 
 // ─── Dashboard & Analytics ────────────────────────────────────────────────────
@@ -224,6 +225,30 @@ export const adminService = {
     return response.data;
   },
 
+  /** GET /admin/products/pending */
+  async getPendingProducts(params?: { page?: number }): Promise<PaginatedApiResponse<ApiProduct>> {
+    const response = await apiClient.get<PaginatedApiResponse<ApiProduct>>('/admin/products/pending', { params });
+    return response.data;
+  },
+
+  /** POST /admin/products/{id}/approve */
+  async approveProduct(id: number): Promise<ApiProduct> {
+    const response = await apiClient.post<ApiResponse<ApiProduct>>(`/admin/products/${id}/approve`);
+    return response.data.data;
+  },
+
+  /** POST /admin/products/{id}/reject */
+  async rejectProduct(id: number, reason: string): Promise<ApiProduct> {
+    const response = await apiClient.post<ApiResponse<ApiProduct>>(`/admin/products/${id}/reject`, { reason });
+    return response.data.data;
+  },
+
+  /** POST /admin/products/{id}/request-changes */
+  async requestProductChanges(id: number, instructions: string): Promise<ApiProduct> {
+    const response = await apiClient.post<ApiResponse<ApiProduct>>(`/admin/products/${id}/request-changes`, { instructions });
+    return response.data.data;
+  },
+
   /** PATCH /admin/products/{id}/status */
   async updateProductStatus(id: number, status: string): Promise<ApiProduct> {
     const response = await apiClient.patch<ApiResponse<ApiProduct>>(`/admin/products/${id}/status`, { status });
@@ -233,6 +258,39 @@ export const adminService = {
   /** DELETE /admin/products/{id} */
   async deleteProduct(id: number): Promise<void> {
     await apiClient.delete(`/admin/products/${id}`);
+  },
+
+  // ── Attribute Templates ───────────────────────────────────────────────────
+
+  async getAttributeTemplates(params?: { category_id?: number; search?: string }): Promise<ApiAttributeTemplate[]> {
+    const response = await apiClient.get<ApiResponse<ApiAttributeTemplate[]>>('/admin/attribute-templates', { params });
+    return response.data.data;
+  },
+
+  async createAttributeTemplate(payload: {
+    name: string;
+    code?: string;
+    category_id?: number | null;
+    description?: string;
+    attributes?: Array<{ attribute_id: number; is_required?: boolean; sort_order?: number }>;
+  }): Promise<ApiAttributeTemplate> {
+    const response = await apiClient.post<ApiResponse<ApiAttributeTemplate>>('/admin/attribute-templates', payload);
+    return response.data.data;
+  },
+
+  async updateAttributeTemplate(id: number, payload: Partial<{
+    name: string;
+    code: string;
+    category_id: number | null;
+    description: string;
+    attributes: Array<{ attribute_id: number; is_required?: boolean; sort_order?: number }>;
+  }>): Promise<ApiAttributeTemplate> {
+    const response = await apiClient.put<ApiResponse<ApiAttributeTemplate>>(`/admin/attribute-templates/${id}`, payload);
+    return response.data.data;
+  },
+
+  async deleteAttributeTemplate(id: number): Promise<void> {
+    await apiClient.delete(`/admin/attribute-templates/${id}`);
   },
 
   // ── Categories ────────────────────────────────────────────────────────────

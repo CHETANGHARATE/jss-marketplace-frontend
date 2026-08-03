@@ -31,6 +31,47 @@ export function useCreateVendorProductMutation() {
   });
 }
 
+export function useUpdateVendorProductMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: Partial<CreateVendorProductPayload> }) => vendorService.updateProduct(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['vendor', 'products'] });
+      queryClient.invalidateQueries({ queryKey: ['vendor', 'dashboard'] });
+    },
+  });
+}
+
+export function useSubmitVendorProductMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => vendorService.submitProductForReview(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['vendor', 'products'] });
+      queryClient.invalidateQueries({ queryKey: ['vendor', 'dashboard'] });
+    },
+  });
+}
+
+export function useDuplicateVendorProductMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => vendorService.duplicateProduct(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['vendor', 'products'] });
+    },
+  });
+}
+
+export function useCategoryAttributesQuery(categoryId: number | null, enabled = true) {
+  return useQuery({
+    queryKey: ['category', categoryId, 'attributes'],
+    queryFn: () => vendorService.getCategoryAttributes(categoryId!),
+    enabled: enabled && !!categoryId,
+    staleTime: 1000 * 60 * 10,
+  });
+}
+
 export function useDeleteVendorProductMutation() {
   const queryClient = useQueryClient();
   return useMutation({

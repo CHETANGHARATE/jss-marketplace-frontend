@@ -14,13 +14,43 @@ export interface VendorDashboardData {
 export interface CreateVendorProductPayload {
   name: string;
   category_id?: number;
+  subcategory_id?: number;
+  child_category_id?: number;
   brand_id?: number;
   sku?: string;
-  original_price: number;
-  sale_price?: number;
-  stock_quantity: number;
+  short_description?: string;
   description?: string;
+  original_price: number;
+  offer_price?: number;
+  sale_price?: number;
+  cost_price?: number;
+  gst_percent?: number;
+  tax_inclusive?: boolean;
+  stock_quantity: number;
   images?: string[];
+  attribute_values?: number[];
+  variants?: any[];
+  weight?: number;
+  length?: number;
+  width?: number;
+  height?: number;
+  dispatch_days?: number;
+  shipping_charge?: number;
+  is_free_shipping?: boolean;
+  is_cod_available?: boolean;
+  return_policy?: string;
+  replacement_policy?: string;
+  warranty_summary?: string;
+  guarantee_summary?: string;
+  cancellation_policy?: string;
+  meta_title?: string;
+  meta_description?: string;
+  meta_keywords?: string;
+  canonical_url?: string;
+  og_image?: string;
+  highlights?: string[];
+  search_keywords?: string;
+  status?: string;
 }
 
 export interface VendorSettlement {
@@ -63,6 +93,26 @@ export const vendorService = {
 
   async createProduct(payload: CreateVendorProductPayload): Promise<ApiProduct> {
     const response = await apiClient.post<ApiResponse<ApiProduct>>('/vendor/products', payload);
+    return response.data.data;
+  },
+
+  async updateProduct(id: number, payload: Partial<CreateVendorProductPayload>): Promise<ApiProduct> {
+    const response = await apiClient.put<ApiResponse<ApiProduct>>(`/vendor/products/${id}`, payload);
+    return response.data.data;
+  },
+
+  async submitProductForReview(id: number): Promise<ApiProduct> {
+    const response = await apiClient.post<ApiResponse<ApiProduct>>(`/vendor/products/${id}/submit`);
+    return response.data.data;
+  },
+
+  async duplicateProduct(id: number): Promise<ApiProduct> {
+    const response = await apiClient.post<ApiResponse<ApiProduct>>(`/vendor/products/${id}/duplicate`);
+    return response.data.data;
+  },
+
+  async getCategoryAttributes(categoryId: number): Promise<{ category_id: number; category_name: any; attributes: any[]; templates: any[] }> {
+    const response = await apiClient.get<ApiResponse<{ category_id: number; category_name: any; attributes: any[]; templates: any[] }>>(`/categories/${categoryId}/attributes`);
     return response.data.data;
   },
 

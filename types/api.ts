@@ -88,10 +88,48 @@ export interface ApiAttribute {
   values?: ApiAttributeValue[];
 }
 
+export interface ApiAttributeTemplateItem {
+  id: number;
+  attribute_template_id: number;
+  attribute_id: number;
+  is_required: boolean;
+  sort_order: number;
+  attribute?: ApiAttribute;
+}
+
+export interface ApiAttributeTemplate {
+  id: number;
+  category_id?: number | null;
+  name: string;
+  code: string;
+  description?: string;
+  category?: ApiCategory;
+  attributes?: ApiAttribute[];
+  items?: ApiAttributeTemplateItem[];
+  created_at?: string;
+}
+
+export interface ApiProductVariant {
+  id?: number;
+  product_id?: number;
+  sku: string;
+  barcode?: string;
+  title: string;
+  price: number;
+  offer_price?: number;
+  stock_quantity: number;
+  image?: string;
+  attributes?: Record<string, string>;
+  is_default?: boolean;
+  status?: string;
+}
+
 export interface ApiProduct {
   id: number;
   seller_id?: number;
   category_id?: number;
+  subcategory_id?: number;
+  child_category_id?: number;
   brand_id?: number;
   name: string;
   slug: string;
@@ -101,23 +139,56 @@ export interface ApiProduct {
   offer_price?: number;
   offerPrice?: number;
   sale_price?: number;
+  cost_price?: number;
+  gst_percent?: number;
+  tax_inclusive?: boolean;
   discountPercent?: number;
   stock_quantity?: number;
   stockQuantity?: number;
   stock_status?: string;
   stockStatus?: string;
+  weight?: number;
+  length?: number;
+  width?: number;
+  height?: number;
+  dispatch_days?: number;
+  shipping_charge?: number;
+  is_free_shipping?: boolean;
+  is_cod_available?: boolean;
+  return_policy?: string;
+  replacement_policy?: string;
+  warranty_summary?: string;
+  guarantee_summary?: string;
+  cancellation_policy?: string;
+  meta_title?: string;
+  meta_description?: string;
+  meta_keywords?: string;
+  canonical_url?: string;
+  og_image?: string;
+  highlights?: string[];
+  search_keywords?: string;
+  ai_description?: string;
+  ai_seo?: Record<string, any>;
+  ai_highlights?: string[];
+  ai_keywords?: string[];
   status: string;
+  rejection_reason?: string;
   rating?: number;
   reviews_count?: number;
   reviewsCount?: number;
   description?: string;
+  short_description?: string;
   features?: string[];
   image?: string;
   images?: string[];
   specifications?: { key?: string; value?: string; spec_key?: string; spec_value?: string }[];
   category?: ApiCategory;
+  subcategory?: ApiCategory;
+  child_category?: ApiCategory;
   brand?: ApiBrand;
   seller?: { id: number; name: string };
+  variants?: ApiProductVariant[];
+  attribute_values?: ApiAttributeValue[];
   created_at?: string;
 }
 

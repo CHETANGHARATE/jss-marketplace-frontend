@@ -1,48 +1,52 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import {
   useVendorProductsQuery,
-  useCreateVendorProductMutation,
+  useSubmitVendorProductMutation,
+  useDuplicateVendorProductMutation,
   useDeleteVendorProductMutation
 } from '../../../hooks/useVendor';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { VendorSidebar } from '../../../components/VendorSidebar';
-import { Package, Plus, Search, Trash2, X, Sparkles, Star } from 'lucide-react';
+import { Package, Plus, Search, Trash2, Copy, Send, Star, AlertCircle, Clock, CheckCircle } from 'lucide-react';
 
 export default function VendorProductsPage() {
   const [search, setSearch] = useState<string>('');
-  const { data, isLoading } = useVendorProductsQuery({ search });
-  const createMutation = useCreateVendorProductMutation();
-  const deleteMutation = useDeleteVendorProductMutation();
+  const [statusFilter, setStatusFilter] = useState<string>('');
+  const { data, isLoading } = useVendorProductsQuery({ search, status: statusFilter || undefined });
 
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    sku: '',
-    original_price: 1000,
-    sale_price: 899,
-    stock_quantity: 25,
-    description: '',
-  });
+  const submitMutation = useSubmitVendorProductMutation();
+  const duplicateMutation = useDuplicateVendorProductMutation();
+  const deleteMutation = useDeleteVendorProductMutation();
 
   const products = data?.data || [];
 
-  const handleCreateSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    createMutation.mutate(formData, {
-      onSuccess: () => {
-        setIsModalOpen(false);
-        setFormData({
-          name: '',
-          sku: '',
-          original_price: 1000,
-          sale_price: 899,
-          stock_quantity: 25,
-          description: '',
-        });
-      },
-    });
+  const handleDuplicate = async (id: number) => {
+    try {
+      await duplicateMutation.mutateAsync(id);
+    } catch (err: any) {
+      alert(err?.response?.data?.message || err.message || 'Error duplicating product.');
+    }
+  };
+
+  const handleSubmitReview = async (id: number) => {
+    try {
+      await submitMutation.mutateAsync(id);
+      alert('Product submitted for Admin approval.');
+    } catch (err: any) {
+      alert(err?.response?.data?.message || err.message || 'Error submitting product.');
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this product?')) return;
+    try {
+      await deleteMutation.mutateAsync(id);
+    } catch (err: any) {
+      alert(err?.response?.data?.message || err.message || 'Error deleting product.');
+    }
   };
 
   return (
@@ -57,31 +61,46 @@ export default function VendorProductsPage() {
             <div>
               <h1 className="text-2xl font-extrabold text-foreground flex items-center gap-2">
                 <Package className="w-6 h-6 text-primary" />
-                <span>Vendor Product Catalog</span>
+                <span>Vendor Product Catalog (Module 14)</span>
               </h1>
               <p className="text-xs text-foreground/60 font-medium mt-1">
-                List new items, update prices, and manage product status.
+                Manage your product listings, drafts, review status, and variants.
               </p>
             </div>
 
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground text-xs font-bold rounded-2xl hover:bg-primary/90 transition-all shadow-sm"
+            <Link
+              href="/vendor/products/create"
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-primary text-white text-xs font-bold rounded-2xl hover:bg-primary/90 transition-all shadow-md self-start sm:self-auto"
             >
               <Plus className="w-4 h-4" />
-              <span>Add New Product</span>
-            </button>
+              <span>+ Add New Product</span>
+            </Link>
           </div>
 
-          <div className="relative">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by product title or SKU..."
-              className="w-full bg-muted/30 border border-border/40 rounded-2xl py-3 pl-11 pr-4 text-xs font-semibold text-foreground focus:outline-none focus:border-primary"
-            />
-            <Search className="w-4 h-4 text-foreground/40 absolute left-4 top-3.5" />
+          {/* Search & Status Filters */}
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="relative flex-1 w-full">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search by product title or SKU..."
+                className="w-full bg-muted/30 border border-border/40 rounded-2xl py-3 pl-11 pr-4 text-xs font-semibold text-foreground focus:outline-none focus:border-primary"
+              />
+              <Search className="w-4 h-4 text-foreground/40 absolute left-4 top-3.5" />
+            </div>
+
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-4 py-3 bg-muted/30 border border-border/40 rounded-2xl text-xs font-semibold text-foreground focus:outline-none focus:border-primary w-full sm:w-auto"
+            >
+              <option value="">All Statuses</option>
+              <option value="draft">Drafts</option>
+              <option value="pending_approval">Pending Review</option>
+              <option value="approved">Approved & Live</option>
+              <option value="rejected">Rejected</option>
+            </select>
           </div>
 
           {isLoading ? (
@@ -92,7 +111,7 @@ export default function VendorProductsPage() {
             <div className="py-16 text-center space-y-3">
               <Package className="w-10 h-10 text-foreground/30 mx-auto" />
               <h3 className="text-base font-bold text-foreground">No Products Listed</h3>
-              <p className="text-xs text-foreground/60">Start adding products to sell on the marketplace.</p>
+              <p className="text-xs text-foreground/60">Click "+ Add New Product" to launch the dynamic creation wizard.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -103,7 +122,7 @@ export default function VendorProductsPage() {
                     <th className="pb-3 px-2">SKU</th>
                     <th className="pb-3 px-2">Price</th>
                     <th className="pb-3 px-2">Stock</th>
-                    <th className="pb-3 px-2">Rating</th>
+                    <th className="pb-3 px-2">Status</th>
                     <th className="pb-3 px-2 text-right">Actions</th>
                   </tr>
                 </thead>
@@ -119,7 +138,14 @@ export default function VendorProductsPage() {
                           <div className="h-10 w-10 shrink-0 bg-muted/30 rounded-xl p-1 flex items-center justify-center overflow-hidden">
                             <img src={displayImage} alt={prod.name} className="max-w-full max-h-full object-contain" />
                           </div>
-                          <span className="font-bold text-foreground line-clamp-1">{prod.name}</span>
+                          <div>
+                            <span className="font-bold text-foreground line-clamp-1">{prod.name}</span>
+                            {prod.rejection_reason && (
+                              <span className="text-[10px] text-rose-500 font-medium block">
+                                Rejection Note: {prod.rejection_reason}
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="py-3.5 px-2 font-mono text-foreground/60">{prod.sku || 'N/A'}</td>
                         <td className="py-3.5 px-2 font-black text-primary">
@@ -127,7 +153,7 @@ export default function VendorProductsPage() {
                         </td>
                         <td className="py-3.5 px-2">
                           <span
-                            className={`font-bold px-2 py-0.5 rounded-full text-[10px] ${
+                            className={`font-bold px-2.5 py-1 rounded-full text-[10px] ${
                               stockQty <= 5
                                 ? 'bg-rose-500/10 text-rose-500'
                                 : 'bg-emerald-500/10 text-emerald-600'
@@ -136,133 +162,56 @@ export default function VendorProductsPage() {
                             {stockQty} in stock
                           </span>
                         </td>
-                      <td className="py-3.5 px-2">
-                        <span className="inline-flex items-center gap-1 text-amber-500 font-bold">
-                          <Star className="w-3.5 h-3.5 fill-current" />
-                          <span>{prod.rating ? Number(prod.rating).toFixed(1) : '5.0'}</span>
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-2 text-right">
-                        <button
-                          onClick={() => deleteMutation.mutate(prod.id)}
-                          className="p-1.5 text-foreground/40 hover:text-rose-500 transition-colors"
-                          title="Delete Product"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </td>
-                    </tr>
-                      );
-                    })}
+                        <td className="py-3.5 px-2">
+                          <span
+                            className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                              prod.status === 'approved'
+                                ? 'bg-emerald-500/10 text-emerald-600'
+                                : prod.status === 'pending_approval' || prod.status === 'pending_review'
+                                ? 'bg-amber-500/10 text-amber-600'
+                                : prod.status === 'rejected'
+                                ? 'bg-rose-500/10 text-rose-600'
+                                : 'bg-slate-500/10 text-slate-600'
+                            }`}
+                          >
+                            {prod.status}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-2 text-right space-x-1">
+                          {(prod.status === 'draft' || prod.status === 'rejected') && (
+                            <button
+                              onClick={() => handleSubmitReview(prod.id)}
+                              className="px-2 py-1 bg-primary text-white rounded-xl text-[10px] font-bold hover:bg-primary/90 transition-all inline-flex items-center gap-1 shadow-xs"
+                              title="Submit for Admin Approval"
+                            >
+                              <Send className="w-3 h-3" />
+                              <span>Submit</span>
+                            </button>
+                          )}
+                          <button
+                            onClick={() => handleDuplicate(prod.id)}
+                            className="p-1.5 text-foreground/60 hover:text-primary transition-colors"
+                            title="Duplicate as Draft"
+                          >
+                            <Copy className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(prod.id)}
+                            className="p-1.5 text-foreground/40 hover:text-rose-500 transition-colors"
+                            title="Delete Product"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
           )}
         </div>
       </div>
-
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-card text-foreground w-full max-w-lg border border-border/40 rounded-3xl p-6 shadow-2xl space-y-5 relative max-h-[90vh] overflow-y-auto">
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-5 right-5 p-2 text-foreground/50 hover:text-foreground"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <h3 className="text-xl font-extrabold text-foreground flex items-center gap-2">
-              <Plus className="w-5 h-5 text-primary" />
-              <span>List New Vendor Product</span>
-            </h3>
-
-            <form onSubmit={handleCreateSubmit} className="space-y-4 text-xs font-semibold">
-              <div className="space-y-1">
-                <label className="text-foreground/70">Product Name *</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="e.g. Wireless Bluetooth Noise-Cancelling Headphones"
-                  className="w-full bg-muted/30 border border-border/40 rounded-xl px-3.5 py-2.5 text-foreground focus:outline-none focus:border-primary"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <label className="text-foreground/70">SKU Code</label>
-                  <input
-                    type="text"
-                    value={formData.sku}
-                    onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                    placeholder="SKU-98401"
-                    className="w-full bg-muted/30 border border-border/40 rounded-xl px-3.5 py-2.5 text-foreground focus:outline-none focus:border-primary font-mono"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-foreground/70">Initial Stock Quantity *</label>
-                  <input
-                    type="number"
-                    required
-                    min={1}
-                    value={formData.stock_quantity}
-                    onChange={(e) => setFormData({ ...formData, stock_quantity: Number(e.target.value) })}
-                    className="w-full bg-muted/30 border border-border/40 rounded-xl px-3.5 py-2.5 text-foreground focus:outline-none focus:border-primary"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <label className="text-foreground/70">Original Price (₹) *</label>
-                  <input
-                    type="number"
-                    required
-                    value={formData.original_price}
-                    onChange={(e) => setFormData({ ...formData, original_price: Number(e.target.value) })}
-                    className="w-full bg-muted/30 border border-border/40 rounded-xl px-3.5 py-2.5 text-foreground focus:outline-none focus:border-primary"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-foreground/70">Sale Offer Price (₹)</label>
-                  <input
-                    type="number"
-                    value={formData.sale_price}
-                    onChange={(e) => setFormData({ ...formData, sale_price: Number(e.target.value) })}
-                    className="w-full bg-muted/30 border border-border/40 rounded-xl px-3.5 py-2.5 text-foreground focus:outline-none focus:border-primary"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-foreground/70">Description</label>
-                <textarea
-                  rows={3}
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Detailed product overview and key specifications..."
-                  className="w-full bg-muted/30 border border-border/40 rounded-xl p-3.5 text-foreground focus:outline-none focus:border-primary resize-none"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={createMutation.isPending}
-                className="w-full py-3.5 bg-primary text-primary-foreground font-bold rounded-2xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
-              >
-                {createMutation.isPending ? (
-                  <Sparkles className="w-4 h-4 animate-spin" />
-                ) : (
-                  <span>Publish Product to Marketplace</span>
-                )}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -31,6 +31,7 @@ const MENU_ITEMS = [
   { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
   { href: '/admin/products', label: 'Products', icon: Package },
   { href: '/admin/categories', label: 'Categories', icon: Layers },
+  { href: '/admin/attribute-templates', label: 'Attribute Templates', icon: Tag },
   { href: '/admin/brands', label: 'Brands', icon: Award },
   { href: '/admin/inventory', label: 'Inventory', icon: Warehouse },
   { href: '/admin/vendors', label: 'Vendors', icon: Store },

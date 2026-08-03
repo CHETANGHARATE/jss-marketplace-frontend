@@ -153,6 +153,48 @@ export function useAdminProductsQuery(
   });
 }
 
+export function useAdminPendingProductsQuery(params?: { page?: number }, enabled = true) {
+  return useQuery({
+    queryKey: ['admin', 'products', 'pending', params],
+    queryFn: () => adminService.getPendingProducts(params),
+    enabled,
+    staleTime: 1000 * 30,
+  });
+}
+
+export function useApproveProductMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.approveProduct(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
+    },
+  });
+}
+
+export function useRejectProductMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, reason }: { id: number; reason: string }) => adminService.rejectProduct(id, reason),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
+    },
+  });
+}
+
+export function useRequestProductChangesMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, instructions }: { id: number; instructions: string }) => adminService.requestProductChanges(id, instructions),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
+    },
+  });
+}
+
 export function useUpdateProductStatusMutation() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -175,34 +217,55 @@ export function useDeleteProductMutation() {
   });
 }
 
-// Keep legacy aliases so existing pages continue to compile
-export function useApproveProductMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: number) => adminService.updateProductStatus(id, 'published'),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
-      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
-    },
-  });
-}
-
-export function useRejectProductMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: number) => adminService.updateProductStatus(id, 'rejected'),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
-    },
-  });
-}
-
 export function useToggleFeatureProductMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: number) => adminService.updateProductStatus(id, 'published'),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+    },
+  });
+}
+
+// ─── Attribute Templates ───────────────────────────────────────────────────
+
+export function useAdminAttributeTemplatesQuery(params?: { category_id?: number; search?: string }, enabled = true) {
+  return useQuery({
+    queryKey: ['admin', 'attribute-templates', params],
+    queryFn: () => adminService.getAttributeTemplates(params),
+    enabled,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+export function useCreateAttributeTemplateMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: Parameters<typeof adminService.createAttributeTemplate>[0]) =>
+      adminService.createAttributeTemplate(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'attribute-templates'] });
+    },
+  });
+}
+
+export function useUpdateAttributeTemplateMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: Parameters<typeof adminService.updateAttributeTemplate>[1] }) =>
+      adminService.updateAttributeTemplate(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'attribute-templates'] });
+    },
+  });
+}
+
+export function useDeleteAttributeTemplateMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.deleteAttributeTemplate(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'attribute-templates'] });
     },
   });
 }
