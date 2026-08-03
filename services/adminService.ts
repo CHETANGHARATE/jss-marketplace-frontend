@@ -219,9 +219,9 @@ export const adminService = {
 
   // ── Products ──────────────────────────────────────────────────────────────
 
-  /** GET /products (public endpoint, supports admin filters) */
+  /** GET /admin/products */
   async getProducts(params?: { search?: string; status?: string; page?: number; per_page?: number }): Promise<PaginatedApiResponse<ApiProduct>> {
-    const response = await apiClient.get<PaginatedApiResponse<ApiProduct>>('/products', { params });
+    const response = await apiClient.get<PaginatedApiResponse<ApiProduct>>('/admin/products', { params });
     return response.data;
   },
 
@@ -229,6 +229,30 @@ export const adminService = {
   async getPendingProducts(params?: { page?: number }): Promise<PaginatedApiResponse<ApiProduct>> {
     const response = await apiClient.get<PaginatedApiResponse<ApiProduct>>('/admin/products/pending', { params });
     return response.data;
+  },
+
+  /** GET /admin/products/{id} */
+  async getProductDetails(id: number): Promise<ApiProduct> {
+    const response = await apiClient.get<ApiResponse<ApiProduct>>(`/admin/products/${id}`);
+    return response.data.data;
+  },
+
+  /** POST /admin/products */
+  async createProduct(payload: Record<string, any>): Promise<ApiProduct> {
+    const response = await apiClient.post<ApiResponse<ApiProduct>>('/admin/products', payload);
+    return response.data.data;
+  },
+
+  /** PUT /admin/products/{id} */
+  async updateProduct(id: number, payload: Record<string, any>): Promise<ApiProduct> {
+    const response = await apiClient.put<ApiResponse<ApiProduct>>(`/admin/products/${id}`, payload);
+    return response.data.data;
+  },
+
+  /** POST /admin/products/{id}/duplicate */
+  async duplicateProduct(id: number): Promise<ApiProduct> {
+    const response = await apiClient.post<ApiResponse<ApiProduct>>(`/admin/products/${id}/duplicate`);
+    return response.data.data;
   },
 
   /** POST /admin/products/{id}/approve */
