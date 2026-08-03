@@ -135,6 +135,8 @@ export default function CreateAdminProductPage() {
       canonical_url: canonicalUrl,
       og_image: ogImage,
       status: statusOverride,
+      specifications: customSpecifications,
+      custom_specifications: customSpecifications,
     };
 
     try {
@@ -146,7 +148,15 @@ export default function CreateAdminProductPage() {
       );
       router.push('/admin/products');
     } catch (err: any) {
-      alert(err?.response?.data?.message || err.message || 'Error saving product.');
+      const responseData = err?.response?.data;
+      if (responseData?.errors && typeof responseData.errors === 'object') {
+        const errorList = Object.entries(responseData.errors)
+          .map(([field, msgs]: [string, any]) => `• ${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
+          .join('\n');
+        alert(`${responseData.message || 'Validation Error'}:\n${errorList}`);
+      } else {
+        alert(responseData?.message || err.message || 'Error saving product.');
+      }
     }
   };
 

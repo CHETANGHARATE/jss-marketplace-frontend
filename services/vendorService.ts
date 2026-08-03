@@ -29,6 +29,8 @@ export interface CreateVendorProductPayload {
   stock_quantity: number;
   images?: string[];
   attribute_values?: number[];
+  specifications?: any[];
+  custom_specifications?: any[];
   variants?: any[];
   weight?: number;
   length?: number;

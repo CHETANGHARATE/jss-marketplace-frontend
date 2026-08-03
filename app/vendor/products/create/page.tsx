@@ -132,6 +132,8 @@ export default function CreateVendorProductPage() {
         stock_quantity: stockQuantity,
         images,
         attribute_values: selectedAttributeValues,
+        specifications: customSpecifications,
+        custom_specifications: customSpecifications,
         variants,
         weight,
         length,
@@ -153,14 +155,22 @@ export default function CreateVendorProductPage() {
         status: targetStatus,
       });
 
-      alert(
-        targetStatus === 'pending_approval'
-          ? 'Product successfully submitted for Admin Review!'
-          : 'Product draft saved successfully.'
-      );
+      const successMsg = targetStatus === 'pending_approval'
+        ? 'Product successfully submitted for Admin Review!'
+        : 'Product draft saved successfully.';
+      
+      alert(successMsg);
       router.push('/vendor/products');
     } catch (err: any) {
-      setFormError(err?.response?.data?.message || err.message || 'Failed to create product.');
+      const responseData = err?.response?.data;
+      if (responseData?.errors && typeof responseData.errors === 'object') {
+        const errorList = Object.entries(responseData.errors)
+          .map(([field, msgs]: [string, any]) => `• ${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
+          .join('\n');
+        setFormError(`${responseData.message || 'Validation Error'}:\n${errorList}`);
+      } else {
+        setFormError(responseData?.message || err.message || 'Failed to submit product.');
+      }
     } finally {
       setIsSubmitting(false);
     }
