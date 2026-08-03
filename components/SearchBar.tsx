@@ -3,18 +3,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSearchSuggestionsQuery } from '../hooks/useSearchSuggestions';
-import { useCategories } from '../hooks/useCategories';
-import { useLanguage } from '../contexts/LanguageContext';
-import { getLocalizedText } from '../utils/translation';
-import { Search, X, Sparkles, TrendingUp, History, ChevronDown } from 'lucide-react';
+import { Search, X, Sparkles, TrendingUp, History } from 'lucide-react';
 
 export function SearchBar() {
   const router = useRouter();
-  const { language } = useLanguage();
-  const { data: categories = [] } = useCategories();
 
   const [query, setQuery] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -42,7 +36,7 @@ export function SearchBar() {
 
   const handleExecuteSearch = (searchTerm?: string) => {
     const term = (searchTerm !== undefined ? searchTerm : query).trim();
-    
+
     if (term) {
       const updated = [term, ...recentSearches.filter((s) => s !== term)].slice(0, 5);
       setRecentSearches(updated);
@@ -50,14 +44,13 @@ export function SearchBar() {
     }
 
     setIsOpen(false);
-    
-    let searchUrl = `/search?`;
-    if (term) searchUrl += `q=${encodeURIComponent(term)}&`;
-    if (selectedCategory && selectedCategory !== 'all') {
-      searchUrl += `category=${encodeURIComponent(selectedCategory)}`;
+
+    let searchUrl = `/search`;
+    if (term) {
+      searchUrl += `?q=${encodeURIComponent(term)}`;
     }
-    
-    router.push(searchUrl.replace(/[?&]$/, ''));
+
+    router.push(searchUrl);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -68,14 +61,14 @@ export function SearchBar() {
 
   return (
     <div ref={containerRef} className="relative w-full">
-      {/* Search Input Bar Container */}
+      {/* Modern Full-Width Search Bar */}
       <div className="flex items-center w-full bg-background-secondary/80 hover:bg-card border border-border-custom/90 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 rounded-2xl transition-all shadow-2xs">
-        {/* Left Search Icon */}
-        <div className="pl-4 pr-1 text-foreground/40 flex items-center justify-center shrink-0">
+        {/* Search Icon */}
+        <div className="pl-4 pr-2 text-foreground/40 flex items-center justify-center shrink-0">
           <Search size={18} />
         </div>
 
-        {/* Input Field */}
+        {/* Input Field expanding full width */}
         <input
           type="text"
           value={query}
@@ -85,51 +78,32 @@ export function SearchBar() {
             setIsOpen(true);
           }}
           onKeyDown={handleKeyDown}
-          placeholder="Search products, brands, or categories..."
-          className="w-full bg-transparent py-2.5 px-2 text-xs font-semibold text-foreground placeholder:text-muted-custom focus:outline-none"
+          placeholder="Search products, brands or categories..."
+          className="w-full bg-transparent py-2.5 px-1 text-xs sm:text-sm font-semibold text-foreground placeholder:text-muted-custom focus:outline-none"
         />
 
         {query && (
           <button
             onClick={() => setQuery('')}
-            className="p-1 text-foreground/40 hover:text-foreground shrink-0 mr-1"
+            className="p-1 text-foreground/40 hover:text-foreground shrink-0 mr-2 transition-colors"
+            title="Clear search"
           >
-            <X size={15} />
+            <X size={16} />
           </button>
         )}
 
-        {/* Vertical Divider */}
-        <div className="h-6 w-[1px] bg-border-custom/80 my-auto shrink-0 mx-1 hidden sm:block" />
-
-        {/* Category Dropdown inside Search Bar */}
-        <div className="relative shrink-0 hidden sm:block">
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="bg-transparent text-[11px] font-bold text-foreground/80 hover:text-foreground py-2 pl-2 pr-6 focus:outline-none cursor-pointer appearance-none truncate max-w-[130px]"
-          >
-            <option value="all">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={(cat as any).slug || cat.id}>
-                {getLocalizedText(cat.name, language)}
-              </option>
-            ))}
-          </select>
-          <ChevronDown size={12} className="text-foreground/40 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-        </div>
-
-        {/* Right Blue Search Action Button */}
+        {/* Right Search Button */}
         <button
           onClick={() => handleExecuteSearch()}
-          className="bg-primary hover:bg-primary-hover text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs shrink-0 my-1 mr-1 ml-1 cursor-pointer hover:scale-[1.02] active:scale-95"
+          className="bg-primary hover:bg-primary-hover text-white px-4 sm:px-6 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs shrink-0 my-1 mr-1 cursor-pointer hover:scale-[1.02] active:scale-95"
           title="Search Marketplace"
         >
           <Search size={15} />
-          <span className="hidden md:inline">Search</span>
+          <span className="hidden sm:inline">Search</span>
         </button>
       </div>
 
-      {/* Instant Suggestions Dropdown */}
+      {/* Instant Suggestions & Recent Searches Dropdown */}
       {isOpen && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border-custom/80 rounded-3xl shadow-2xl p-4 z-50 space-y-4">
           {suggestions.length > 0 && (
