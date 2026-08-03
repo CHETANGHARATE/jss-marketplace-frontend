@@ -249,6 +249,18 @@ export const adminService = {
     return response.data.data;
   },
 
+  /** POST /admin/products/{id}/unpublish */
+  async unpublishProduct(id: number): Promise<ApiProduct> {
+    const response = await apiClient.post<ApiResponse<ApiProduct>>(`/admin/products/${id}/unpublish`);
+    return response.data.data;
+  },
+
+  /** POST /admin/products/{id}/publish */
+  async publishProduct(id: number): Promise<ApiProduct> {
+    const response = await apiClient.post<ApiResponse<ApiProduct>>(`/admin/products/${id}/publish`);
+    return response.data.data;
+  },
+
   /** PATCH /admin/products/{id}/status */
   async updateProductStatus(id: number, status: string): Promise<ApiProduct> {
     const response = await apiClient.patch<ApiResponse<ApiProduct>>(`/admin/products/${id}/status`, { status });

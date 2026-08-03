@@ -7,12 +7,26 @@ import {
   useApproveProductMutation,
   useRejectProductMutation,
   useRequestProductChangesMutation,
+  useUnpublishProductMutation,
+  usePublishProductMutation,
   useToggleFeatureProductMutation
-} from '../../../hooks/useAdmin';
-import { Breadcrumbs } from '../../../components/Breadcrumbs';
-import { AdminSidebar } from '../../../components/AdminSidebar';
-import { Package, Search, CheckCircle2, XCircle, Sparkles, Clock, AlertTriangle, Eye } from 'lucide-react';
-import { ApiProduct } from '../../../types/api';
+} from '@/hooks/useAdmin';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
+import { AdminSidebar } from '@/components/AdminSidebar';
+import {
+  Package,
+  Search,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  AlertTriangle,
+  Eye,
+  EyeOff,
+  RotateCcw,
+  Globe,
+  Edit3
+} from 'lucide-react';
+import { ApiProduct } from '@/types/api';
 
 export default function AdminProductsPage() {
   const [search, setSearch] = useState<string>('');
@@ -24,10 +38,16 @@ export default function AdminProductsPage() {
   const approveMutation = useApproveProductMutation();
   const rejectMutation = useRejectProductMutation();
   const requestChangesMutation = useRequestProductChangesMutation();
+  const unpublishMutation = useUnpublishProductMutation();
+  const publishMutation = usePublishProductMutation();
   const featureMutation = useToggleFeatureProductMutation();
 
   const [rejectingProduct, setRejectingProduct] = useState<ApiProduct | null>(null);
   const [rejectReason, setRejectReason] = useState('');
+
+  const [requestingChangesProduct, setRequestingChangesProduct] = useState<ApiProduct | null>(null);
+  const [changeInstructions, setChangeInstructions] = useState('');
+
   const [inspectingProduct, setInspectingProduct] = useState<ApiProduct | null>(null);
 
   const products = activeTab === 'pending'
@@ -44,6 +64,22 @@ export default function AdminProductsPage() {
     }
   };
 
+  const handleUnpublish = async (id: number) => {
+    try {
+      await unpublishMutation.mutateAsync(id);
+    } catch (err: any) {
+      alert(err?.response?.data?.message || err.message || 'Error unpublishing product.');
+    }
+  };
+
+  const handlePublish = async (id: number) => {
+    try {
+      await publishMutation.mutateAsync(id);
+    } catch (err: any) {
+      alert(err?.response?.data?.message || err.message || 'Error publishing product.');
+    }
+  };
+
   const handleConfirmReject = async () => {
     if (!rejectingProduct || !rejectReason.trim()) return;
     try {
@@ -53,6 +89,98 @@ export default function AdminProductsPage() {
     } catch (err: any) {
       alert(err?.response?.data?.message || err.message || 'Error rejecting product.');
     }
+  };
+
+  const handleConfirmRequestChanges = async () => {
+    if (!requestingChangesProduct || !changeInstructions.trim()) return;
+    try {
+      await requestChangesMutation.mutateAsync({ id: requestingChangesProduct.id, instructions: changeInstructions });
+      setRequestingChangesProduct(null);
+      setChangeInstructions('');
+    } catch (err: any) {
+      alert(err?.response?.data?.message || err.message || 'Error requesting changes.');
+    }
+  };
+
+  const renderActions = (prod: ApiProduct) => {
+    const status = prod.status;
+
+    return (
+      <div className="flex items-center justify-end gap-1.5 flex-wrap">
+        {/* Always Show Inspect */}
+        <button
+          onClick={() => setInspectingProduct(prod)}
+          className="px-2.5 py-1 bg-muted/60 text-foreground rounded-xl text-[10px] font-bold hover:bg-muted transition-all inline-flex items-center gap-1"
+        >
+          <Eye className="w-3 h-3" />
+          <span>Inspect</span>
+        </button>
+
+        {/* STATUS = Pending Review / pending_approval */}
+        {(status === 'pending_approval' || status === 'pending_review') && (
+          <>
+            <button
+              onClick={() => handleApprove(prod.id)}
+              disabled={approveMutation.isPending}
+              className="px-2.5 py-1 bg-emerald-500 text-white rounded-xl text-[10px] font-bold hover:bg-emerald-600 transition-all inline-flex items-center gap-1 shadow-xs"
+            >
+              <CheckCircle2 className="w-3 h-3" />
+              <span>Approve</span>
+            </button>
+            <button
+              onClick={() => setRequestingChangesProduct(prod)}
+              className="px-2.5 py-1 bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 rounded-xl text-[10px] font-bold transition-all inline-flex items-center gap-1"
+            >
+              <Edit3 className="w-3 h-3" />
+              <span>Request Changes</span>
+            </button>
+            <button
+              onClick={() => setRejectingProduct(prod)}
+              className="px-2.5 py-1 bg-rose-500/10 text-rose-500 rounded-xl text-[10px] font-bold hover:bg-rose-500/20 transition-all inline-flex items-center gap-1"
+            >
+              <XCircle className="w-3 h-3" />
+              <span>Reject</span>
+            </button>
+          </>
+        )}
+
+        {/* STATUS = Approved */}
+        {status === 'approved' && (
+          <button
+            onClick={() => handleUnpublish(prod.id)}
+            disabled={unpublishMutation.isPending}
+            className="px-2.5 py-1 bg-slate-500/10 text-slate-700 dark:text-slate-300 hover:bg-slate-500/20 rounded-xl text-[10px] font-bold transition-all inline-flex items-center gap-1"
+          >
+            <EyeOff className="w-3 h-3" />
+            <span>Unpublish</span>
+          </button>
+        )}
+
+        {/* STATUS = Rejected */}
+        {status === 'rejected' && (
+          <button
+            onClick={() => handleApprove(prod.id)}
+            disabled={approveMutation.isPending}
+            className="px-2.5 py-1 bg-emerald-500 text-white rounded-xl text-[10px] font-bold hover:bg-emerald-600 transition-all inline-flex items-center gap-1 shadow-xs"
+          >
+            <RotateCcw className="w-3 h-3" />
+            <span>Re-Approve</span>
+          </button>
+        )}
+
+        {/* STATUS = Hidden */}
+        {status === 'hidden' && (
+          <button
+            onClick={() => handlePublish(prod.id)}
+            disabled={publishMutation.isPending}
+            className="px-2.5 py-1 bg-emerald-500 text-white rounded-xl text-[10px] font-bold hover:bg-emerald-600 transition-all inline-flex items-center gap-1 shadow-xs"
+          >
+            <Globe className="w-3 h-3" />
+            <span>Publish</span>
+          </button>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -67,10 +195,10 @@ export default function AdminProductsPage() {
             <div>
               <h1 className="text-2xl font-extrabold text-foreground flex items-center gap-2">
                 <Package className="w-6 h-6 text-rose-500" />
-                <span>Catalog Moderation & Approvals (Module 15)</span>
+                <span>Catalog Moderation & Workflow Actions</span>
               </h1>
               <p className="text-xs text-foreground/60 font-medium mt-1">
-                Vendor products must be approved by Admin before becoming live on the marketplace.
+                Perform state-specific moderation actions (Approve, Request Changes, Reject, Unpublish, Publish) based on product status.
               </p>
             </div>
 
@@ -175,35 +303,16 @@ export default function AdminProductsPage() {
                                 ? 'bg-amber-500/10 text-amber-600'
                                 : prod.status === 'rejected'
                                 ? 'bg-rose-500/10 text-rose-600'
-                                : 'bg-slate-500/10 text-slate-600'
+                                : prod.status === 'hidden'
+                                ? 'bg-slate-500/10 text-slate-600'
+                                : 'bg-muted text-foreground/60'
                             }`}
                           >
                             {prod.status}
                           </span>
                         </td>
-                        <td className="py-3.5 px-2 text-right space-x-2">
-                          <button
-                            onClick={() => setInspectingProduct(prod)}
-                            className="px-2.5 py-1 bg-muted/60 text-foreground rounded-xl text-[10px] font-bold hover:bg-muted transition-all inline-flex items-center gap-1"
-                          >
-                            <Eye className="w-3 h-3" />
-                            <span>Inspect</span>
-                          </button>
-                          <button
-                            onClick={() => handleApprove(prod.id)}
-                            disabled={approveMutation.isPending}
-                            className="px-2.5 py-1 bg-emerald-500 text-white rounded-xl text-[10px] font-bold hover:bg-emerald-600 transition-all inline-flex items-center gap-1 shadow-xs disabled:opacity-50"
-                          >
-                            <CheckCircle2 className="w-3 h-3" />
-                            <span>Approve</span>
-                          </button>
-                          <button
-                            onClick={() => setRejectingProduct(prod)}
-                            className="px-2.5 py-1 bg-rose-500/10 text-rose-500 rounded-xl text-[10px] font-bold hover:bg-rose-500/20 transition-all inline-flex items-center gap-1"
-                          >
-                            <XCircle className="w-3 h-3" />
-                            <span>Reject</span>
-                          </button>
+                        <td className="py-3.5 px-2 text-right">
+                          {renderActions(prod)}
                         </td>
                       </tr>
                     );
@@ -251,6 +360,42 @@ export default function AdminProductsPage() {
         </div>
       )}
 
+      {/* Request Changes Modal */}
+      {requestingChangesProduct && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-card rounded-3xl p-6 sm:p-8 w-full max-w-md shadow-xl border border-border/40 space-y-4">
+            <h3 className="font-extrabold text-base text-foreground flex items-center gap-2">
+              <Edit3 className="w-5 h-5 text-amber-500" /> Request Changes from Vendor
+            </h3>
+            <p className="text-xs text-foreground/60">
+              Enter instructions for vendor <strong>{requestingChangesProduct.seller?.name || 'Seller'}</strong>. The product status will revert to Draft for edits.
+            </p>
+            <textarea
+              rows={3}
+              placeholder="Specify required changes (e.g. Please update product dimensions, clarify warranty period)..."
+              value={changeInstructions}
+              onChange={(e) => setChangeInstructions(e.target.value)}
+              className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-amber-500 outline-none resize-none"
+            />
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                onClick={() => setRequestingChangesProduct(null)}
+                className="px-4 py-2 text-xs font-bold text-foreground/70 hover:bg-muted/40 rounded-xl"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmRequestChanges}
+                disabled={!changeInstructions.trim()}
+                className="px-5 py-2 bg-amber-500 text-white font-bold text-xs rounded-xl hover:bg-amber-600 transition-colors disabled:opacity-50"
+              >
+                Send Instructions
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Product Detail Inspector Modal */}
       {inspectingProduct && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
@@ -272,6 +417,10 @@ export default function AdminProductsPage() {
 
               <div className="space-y-3">
                 <div>
+                  <span className="font-bold text-foreground/50 block">Status:</span>
+                  <span className="font-extrabold text-xs uppercase text-rose-500">{inspectingProduct.status}</span>
+                </div>
+                <div>
                   <span className="font-bold text-foreground/50 block">MRP / Offer Price:</span>
                   <span className="font-black text-sm text-rose-500">₹{(inspectingProduct.offerPrice ?? inspectingProduct.originalPrice ?? 0).toLocaleString()}</span>
                 </div>
@@ -291,15 +440,28 @@ export default function AdminProductsPage() {
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-4 border-t border-border/40">
-              <button
-                onClick={() => {
-                  handleApprove(inspectingProduct.id);
-                  setInspectingProduct(null);
-                }}
-                className="px-5 py-2 bg-emerald-500 text-white font-bold text-xs rounded-xl hover:bg-emerald-600 transition-colors"
-              >
-                Approve Product
-              </button>
+              {(inspectingProduct.status === 'pending_approval' || inspectingProduct.status === 'pending_review' || inspectingProduct.status === 'rejected') && (
+                <button
+                  onClick={() => {
+                    handleApprove(inspectingProduct.id);
+                    setInspectingProduct(null);
+                  }}
+                  className="px-5 py-2 bg-emerald-500 text-white font-bold text-xs rounded-xl hover:bg-emerald-600 transition-colors"
+                >
+                  Approve Product
+                </button>
+              )}
+              {inspectingProduct.status === 'approved' && (
+                <button
+                  onClick={() => {
+                    handleUnpublish(inspectingProduct.id);
+                    setInspectingProduct(null);
+                  }}
+                  className="px-5 py-2 bg-slate-500/10 text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl hover:bg-slate-500/20 transition-colors"
+                >
+                  Unpublish Product
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -307,4 +469,3 @@ export default function AdminProductsPage() {
     </div>
   );
 }
-

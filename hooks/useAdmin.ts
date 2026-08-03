@@ -195,6 +195,28 @@ export function useRequestProductChangesMutation() {
   });
 }
 
+export function useUnpublishProductMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.unpublishProduct(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
+    },
+  });
+}
+
+export function usePublishProductMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.publishProduct(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
+    },
+  });
+}
+
 export function useUpdateProductStatusMutation() {
   const queryClient = useQueryClient();
   return useMutation({
