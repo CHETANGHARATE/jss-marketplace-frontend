@@ -63,6 +63,7 @@ export default function EditAdminProductPage() {
 
   // Dynamic Attributes & Images & Variants
   const [selectedAttributeValues, setSelectedAttributeValues] = useState<number[]>([]);
+  const [customSpecifications, setCustomSpecifications] = useState<{ key: string; value: string }[]>([]);
   const [images, setImages] = useState<string[]>([]);
   const [variants, setVariants] = useState<ApiProductVariant[]>([]);
 
@@ -411,6 +412,8 @@ export default function EditAdminProductPage() {
                 categoryId={categoryId}
                 selectedAttributeValues={selectedAttributeValues}
                 onChangeAttributeValues={setSelectedAttributeValues}
+                customSpecifications={customSpecifications}
+                onChangeCustomSpecifications={setCustomSpecifications}
               />
 
               <div className="flex justify-between pt-4">

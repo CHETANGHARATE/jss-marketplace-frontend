@@ -90,7 +90,7 @@ export function MegaMenu() {
                             </div>
                           );
                         }
-                        return subcats.map((subCat) => (
+                        return subcats.map((subCat: any) => (
                           <Link
                             key={subCat.id || subCat.slug}
                             href={`/category/${subCat.slug}`}

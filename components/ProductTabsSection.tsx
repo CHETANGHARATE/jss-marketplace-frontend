@@ -94,15 +94,27 @@ export function ProductTabsSection({ product }: ProductTabsSectionProps) {
     toastSuccess('Thank you! Your review has been submitted successfully.');
   };
 
-  const specsList = product.specifications && product.specifications.length > 0
-    ? product.specifications
+  let rawSpecs = product.specifications || (product as any).custom_specifications;
+  if (typeof rawSpecs === 'string') {
+    try {
+      rawSpecs = JSON.parse(rawSpecs);
+    } catch (e) {
+      rawSpecs = [];
+    }
+  }
+
+  const specsList = Array.isArray(rawSpecs) && rawSpecs.length > 0
+    ? rawSpecs.map((item: any) => ({
+        spec_key: item.spec_key || item.key || item.name || 'Specification',
+        spec_value: item.spec_value || item.value || 'N/A'
+      }))
     : [
         { spec_key: 'Brand', spec_value: product.brand?.name || 'Verified Brand' },
-        { spec_key: 'Category', spec_value: typeof product.category?.name === 'string' ? product.category.name : 'Marketplace Catalog' },
+        { spec_key: 'Category', spec_value: typeof product.category?.name === 'string' ? product.category.name : product.category?.name?.en || 'Marketplace Catalog' },
         { spec_key: 'SKU', spec_value: product.sku || `JSS-PROD-${product.id}` },
         { spec_key: 'Country of Origin', spec_value: 'India' },
-        { spec_key: 'Warranty', spec_value: '1 Year Manufacturer Guarantee' },
-        { spec_key: 'Shelf Life / Guarantee', spec_value: 'Best Quality Sealed Product' },
+        { spec_key: 'Warranty', spec_value: product.warranty_summary || '1 Year Manufacturer Guarantee' },
+        { spec_key: 'Return Policy', spec_value: product.return_policy || '7 Days Replacement Policy' },
       ];
 
   return (
