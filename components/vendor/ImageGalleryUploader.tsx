@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import { mediaService } from '../../services/mediaService';
 import {
   UploadCloud,
   Image as ImageIcon,
@@ -42,7 +43,7 @@ export function ImageGalleryUploader({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Handle local file selection / drag & drop
-  const handleFiles = (files: FileList | File[]) => {
+  const handleFiles = async (files: FileList | File[]) => {
     const validFiles: File[] = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
@@ -65,23 +66,16 @@ export function ImageGalleryUploader({
 
     setIsUploading(true);
 
-    const newUrls: string[] = [];
-    let processed = 0;
-
-    filesToProcess.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target?.result) {
-          newUrls.push(e.target.result as string);
-        }
-        processed++;
-        if (processed === filesToProcess.length) {
-          onChangeImages([...images, ...newUrls]);
-          setIsUploading(false);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+    try {
+      const uploadedUrls = await Promise.all(
+        filesToProcess.map((file) => mediaService.uploadFile(file, 'products'))
+      );
+      onChangeImages([...images, ...uploadedUrls]);
+    } catch (e) {
+      console.error('Image upload error:', e);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleAddUrl = () => {
