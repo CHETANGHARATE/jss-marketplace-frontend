@@ -64,9 +64,17 @@ export default function AdminProductsPage() {
   const [deletingProduct, setDeletingProduct] = useState<ApiProduct | null>(null);
   const [inspectingProduct, setInspectingProduct] = useState<ApiProduct | null>(null);
 
+  const extractProductsArray = (resData: any): ApiProduct[] => {
+    if (!resData) return [];
+    if (Array.isArray(resData)) return resData;
+    if (Array.isArray(resData?.data)) return resData.data;
+    if (Array.isArray(resData?.data?.data)) return resData.data.data;
+    return [];
+  };
+
   const products = activeTab === 'pending'
-    ? (pendingProductsData?.data || [])
-    : (allProductsData?.data || []);
+    ? extractProductsArray(pendingProductsData?.data)
+    : extractProductsArray(allProductsData?.data);
 
   const isLoading = activeTab === 'pending' ? isLoadingPending : isLoadingAll;
 
