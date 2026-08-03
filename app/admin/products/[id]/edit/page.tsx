@@ -569,7 +569,7 @@ export default function EditAdminProductPage() {
                     className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none font-bold uppercase"
                   >
                     <option value="approved">Approved & Live</option>
-                    <option value="pending_approval">Pending Moderation</option>
+                    <option value="pending_review">Pending Moderation</option>
                     <option value="draft">Draft</option>
                     <option value="hidden">Hidden / Unpublished</option>
                     <option value="rejected">Rejected</option>

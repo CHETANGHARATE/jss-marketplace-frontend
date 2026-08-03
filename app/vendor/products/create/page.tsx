@@ -94,7 +94,7 @@ export default function CreateVendorProductPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  const handleSubmit = async (targetStatus: 'draft' | 'pending_approval') => {
+  const handleSubmit = async (targetStatus: 'draft' | 'pending_review') => {
     if (!name.trim()) {
       setFormError('Product Name is required.');
       setActiveTab('basic');
@@ -155,7 +155,7 @@ export default function CreateVendorProductPage() {
         status: targetStatus,
       });
 
-      const successMsg = targetStatus === 'pending_approval'
+      const successMsg = targetStatus === 'pending_review'
         ? 'Product successfully submitted for Admin Review!'
         : 'Product draft saved successfully.';
       
@@ -208,7 +208,7 @@ export default function CreateVendorProductPage() {
           </button>
           <button
             type="button"
-            onClick={() => handleSubmit('pending_approval')}
+            onClick={() => handleSubmit('pending_review')}
             disabled={isSubmitting}
             className="px-5 py-2.5 bg-primary text-white font-bold text-xs rounded-xl hover:bg-primary/90 transition-colors shadow-md flex items-center gap-1.5 disabled:opacity-50"
           >

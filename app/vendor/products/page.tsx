@@ -97,7 +97,7 @@ export default function VendorProductsPage() {
             >
               <option value="">All Statuses</option>
               <option value="draft">Drafts</option>
-              <option value="pending_approval">Pending Review</option>
+              <option value="pending_review">Pending Review</option>
               <option value="approved">Approved & Live</option>
               <option value="rejected">Rejected</option>
             </select>
