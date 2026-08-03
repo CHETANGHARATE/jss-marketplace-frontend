@@ -11,13 +11,28 @@ function getCategoryNameString(name: any): string {
 
 export function deduplicateCategories(categories: any[]): any[] {
   if (!Array.isArray(categories)) return [];
-  const seen = new Set<string>();
+  const seenIds = new Set<number | string>();
+  const seenSlugs = new Set<string>();
+  const seenNames = new Set<string>();
   const result: any[] = [];
 
   for (const cat of categories) {
-    const key = cat.slug || getCategoryNameString(cat.name);
-    if (key && !seen.has(key)) {
-      seen.add(key);
+    if (!cat) continue;
+
+    const id = cat.id;
+    const slug = (cat.slug || '').trim().toLowerCase();
+    const nameStr = getCategoryNameString(cat.name);
+
+    const isDuplicate =
+      (id && seenIds.has(id)) ||
+      (slug && seenSlugs.has(slug)) ||
+      (nameStr && seenNames.has(nameStr));
+
+    if (!isDuplicate) {
+      if (id) seenIds.add(id);
+      if (slug) seenSlugs.add(slug);
+      if (nameStr) seenNames.add(nameStr);
+
       const cleanCat = { ...cat };
       if (Array.isArray(cleanCat.children) && cleanCat.children.length > 0) {
         cleanCat.children = deduplicateCategories(cleanCat.children);
