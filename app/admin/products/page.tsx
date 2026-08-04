@@ -73,8 +73,8 @@ export default function AdminProductsPage() {
   };
 
   const products = activeTab === 'pending'
-    ? extractProductsArray(pendingProductsData?.data)
-    : extractProductsArray(allProductsData?.data);
+    ? extractProductsArray(pendingProductsData)
+    : extractProductsArray(allProductsData);
 
   const isLoading = activeTab === 'pending' ? isLoadingPending : isLoadingAll;
 
