@@ -158,7 +158,7 @@ export function useAdminPendingProductsQuery(params?: { page?: number }, enabled
     queryKey: ['admin', 'products', 'pending', params],
     queryFn: () => adminService.getPendingProducts(params),
     enabled,
-    staleTime: 1000 * 30,
+    staleTime: 0,
   });
 }
 

@@ -27,6 +27,7 @@ export function useCreateVendorProductMutation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vendor', 'products'] });
       queryClient.invalidateQueries({ queryKey: ['vendor', 'dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
     },
   });
 }
@@ -38,6 +39,7 @@ export function useUpdateVendorProductMutation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vendor', 'products'] });
       queryClient.invalidateQueries({ queryKey: ['vendor', 'dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
     },
   });
 }
@@ -49,6 +51,7 @@ export function useSubmitVendorProductMutation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vendor', 'products'] });
       queryClient.invalidateQueries({ queryKey: ['vendor', 'dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
     },
   });
 }
