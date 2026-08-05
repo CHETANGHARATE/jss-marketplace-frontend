@@ -12,14 +12,15 @@ export interface VendorDashboardData {
 }
 
 export interface CreateVendorProductPayload {
-  name: string;
+  name: string | { en: string; hi?: string; mr?: string };
+  slug?: string;
   category_id?: number;
   subcategory_id?: number;
   child_category_id?: number;
   brand_id?: number;
   sku?: string;
-  short_description?: string;
-  description?: string;
+  short_description?: string | { en: string; hi?: string; mr?: string };
+  description?: string | { en: string; hi?: string; mr?: string };
   original_price: number;
   offer_price?: number;
   sale_price?: number;

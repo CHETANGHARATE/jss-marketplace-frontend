@@ -98,7 +98,7 @@ export const authService = {
   },
 
   async getProfile(): Promise<ApiUser> {
-    const response = await apiClient.get<ApiResponse<ApiUser>>('/me');
+    const response = await apiClient.get<ApiResponse<ApiUser>>('/auth/me');
     return response.data.data;
   },
 

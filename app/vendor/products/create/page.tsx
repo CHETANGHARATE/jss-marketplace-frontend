@@ -116,14 +116,38 @@ export default function CreateVendorProductPage() {
         .map((h) => h.trim())
         .filter(Boolean);
 
+      const generatedSlug = (name || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '') + '-' + Math.random().toString(36).substring(2, 7);
+
+      const multilingualName = {
+        en: name,
+        hi: name,
+        mr: name,
+      };
+
+      const multilingualShortDesc = {
+        en: shortDescription || '',
+        hi: shortDescription || '',
+        mr: shortDescription || '',
+      };
+
+      const multilingualDesc = {
+        en: description || '',
+        hi: description || '',
+        mr: description || '',
+      };
+
       await createProductMutation.mutateAsync({
-        name,
+        name: multilingualName as any,
+        slug: generatedSlug,
         category_id: categoryId || undefined,
         subcategory_id: subcategoryId || undefined,
         brand_id: brandId || undefined,
         sku: sku || undefined,
-        short_description: shortDescription,
-        description,
+        short_description: multilingualShortDesc as any,
+        description: multilingualDesc as any,
         original_price: originalPrice,
         offer_price: offerPrice || originalPrice,
         cost_price: costPrice,
