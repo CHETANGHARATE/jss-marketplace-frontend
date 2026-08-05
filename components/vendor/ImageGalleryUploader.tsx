@@ -71,8 +71,9 @@ export function ImageGalleryUploader({
         filesToProcess.map((file) => mediaService.uploadFile(file, 'products'))
       );
       onChangeImages([...images, ...uploadedUrls]);
-    } catch (e) {
+    } catch (e: any) {
       console.error('Image upload error:', e);
+      alert(e.message || 'Image upload failed. Please try again.');
     } finally {
       setIsUploading(false);
     }

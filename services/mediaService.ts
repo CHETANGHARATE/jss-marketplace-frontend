@@ -13,11 +13,7 @@ export const mediaService = {
     formData.append('collection', collection);
 
     try {
-      const response = await apiClient.post<{ success: boolean; data: MediaUploadResponse }>('/media/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await apiClient.post<{ success: boolean; data: MediaUploadResponse }>('/media/upload', formData);
 
       const url = response.data?.data?.url;
       if (url) {
