@@ -43,6 +43,14 @@ apiClient.interceptors.request.use(
         config.headers['X-Session-ID'] = guestSessionId;
       }
     }
+
+    // CRITICAL: When body is FormData, delete the instance-level Content-Type
+    // so Axios does NOT run JSON.stringify on it and the browser sets
+    // "multipart/form-data; boundary=..." automatically.
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
+    }
+
     return config;
   },
   (error) => Promise.reject(error)
