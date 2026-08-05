@@ -41,10 +41,11 @@ import { ApiProduct } from '@/types/api';
 
 export default function AdminProductsPage() {
   const [search, setSearch] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'all' | 'pending'>('all');
+  const [activeTab, setActiveTab] = useState<'all' | 'pending' | 'approved' | 'draft' | 'rejected' | 'hidden'>('all');
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
 
-  const { data: allProductsData, isLoading: isLoadingAll } = useAdminProductsQuery({ search });
+  const statusParam = (activeTab !== 'all' && activeTab !== 'pending') ? activeTab : undefined;
+  const { data: allProductsData, isLoading: isLoadingAll } = useAdminProductsQuery({ search, status: statusParam });
   const { data: pendingProductsData, isLoading: isLoadingPending } = useAdminPendingProductsQuery();
 
   const approveMutation = useApproveProductMutation();
@@ -180,20 +181,20 @@ export default function AdminProductsPage() {
               </Link>
 
               {/* Filter Tabs */}
-              <div className="flex items-center gap-1 bg-muted/40 p-1 rounded-2xl border border-border/40">
+              <div className="flex flex-wrap items-center gap-1 bg-muted/40 p-1 rounded-2xl border border-border/40">
                 <button
                   onClick={() => setActiveTab('all')}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                     activeTab === 'all'
                       ? 'bg-rose-500 text-white shadow-xs'
                       : 'text-foreground/70 hover:text-foreground'
                   }`}
                 >
-                  All Products
+                  All
                 </button>
                 <button
                   onClick={() => setActiveTab('pending')}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                     activeTab === 'pending'
                       ? 'bg-rose-500 text-white shadow-xs'
                       : 'text-foreground/70 hover:text-foreground'
@@ -206,6 +207,46 @@ export default function AdminProductsPage() {
                       {pendingProductsData.data.length}
                     </span>
                   ) : null}
+                </button>
+                <button
+                  onClick={() => setActiveTab('approved')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    activeTab === 'approved'
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'text-foreground/70 hover:text-foreground'
+                  }`}
+                >
+                  Approved
+                </button>
+                <button
+                  onClick={() => setActiveTab('draft')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    activeTab === 'draft'
+                      ? 'bg-slate-600 text-white shadow-xs'
+                      : 'text-foreground/70 hover:text-foreground'
+                  }`}
+                >
+                  Draft
+                </button>
+                <button
+                  onClick={() => setActiveTab('rejected')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    activeTab === 'rejected'
+                      ? 'bg-rose-600 text-white shadow-xs'
+                      : 'text-foreground/70 hover:text-foreground'
+                  }`}
+                >
+                  Rejected
+                </button>
+                <button
+                  onClick={() => setActiveTab('hidden')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    activeTab === 'hidden'
+                      ? 'bg-amber-600 text-white shadow-xs'
+                      : 'text-foreground/70 hover:text-foreground'
+                  }`}
+                >
+                  Hidden
                 </button>
               </div>
             </div>
