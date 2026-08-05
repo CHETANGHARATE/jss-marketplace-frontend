@@ -12,6 +12,9 @@ import {
   usePublishProductMutation,
   useDeleteAdminProductMutation,
   useDuplicateAdminProductMutation,
+  useArchiveProductMutation,
+  useRestoreProductMutation,
+  useBulkActionProductsMutation,
 } from '@/hooks/useAdmin';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { AdminSidebar } from '@/components/AdminSidebar';
@@ -35,14 +38,19 @@ import {
   Tag,
   Layers,
   Truck,
-  ShieldCheck
+  ShieldCheck,
+  Archive,
+  RefreshCw,
+  CheckSquare,
+  Square
 } from 'lucide-react';
 import { ApiProduct } from '@/types/api';
 
 export default function AdminProductsPage() {
   const [search, setSearch] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'all' | 'pending' | 'approved' | 'draft' | 'rejected' | 'hidden'>('all');
+  const [activeTab, setActiveTab] = useState<'all' | 'pending' | 'approved' | 'draft' | 'rejected' | 'hidden' | 'archived'>('all');
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const statusParam = (activeTab !== 'all' && activeTab !== 'pending') ? activeTab : undefined;
   const { data: allProductsData, isLoading: isLoadingAll } = useAdminProductsQuery({ search, status: statusParam });
@@ -53,8 +61,11 @@ export default function AdminProductsPage() {
   const requestChangesMutation = useRequestProductChangesMutation();
   const unpublishMutation = useUnpublishProductMutation();
   const publishMutation = usePublishProductMutation();
+  const archiveMutation = useArchiveProductMutation();
+  const restoreMutation = useRestoreProductMutation();
   const deleteMutation = useDeleteAdminProductMutation();
   const duplicateMutation = useDuplicateAdminProductMutation();
+  const bulkActionMutation = useBulkActionProductsMutation();
 
   const [rejectingProduct, setRejectingProduct] = useState<ApiProduct | null>(null);
   const [rejectReason, setRejectReason] = useState('');
@@ -113,6 +124,50 @@ export default function AdminProductsPage() {
       alert('Product duplicated as a Draft copy.');
     } catch (err: any) {
       alert(err?.response?.data?.message || err.message || 'Error cloning product.');
+    }
+  };
+
+  const handleArchive = async (id: number) => {
+    try {
+      await archiveMutation.mutateAsync(id);
+      setOpenMenuId(null);
+    } catch (err: any) {
+      alert(err?.response?.data?.message || err.message || 'Error archiving product.');
+    }
+  };
+
+  const handleRestore = async (id: number) => {
+    try {
+      await restoreMutation.mutateAsync(id);
+      setOpenMenuId(null);
+    } catch (err: any) {
+      alert(err?.response?.data?.message || err.message || 'Error restoring product.');
+    }
+  };
+
+  const toggleSelectProduct = (id: number) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === products.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(products.map((p) => p.id));
+    }
+  };
+
+  const handleBulkAction = async (action: string) => {
+    if (selectedIds.length === 0) return;
+    if (!confirm(`Are you sure you want to apply '${action}' to ${selectedIds.length} selected products?`)) return;
+
+    try {
+      await bulkActionMutation.mutateAsync({ product_ids: selectedIds, action });
+      setSelectedIds([]);
+    } catch (err: any) {
+      alert(err?.response?.data?.message || err.message || 'Error executing bulk action.');
     }
   };
 
@@ -248,9 +303,60 @@ export default function AdminProductsPage() {
                 >
                   Hidden
                 </button>
+                <button
+                  onClick={() => setActiveTab('archived')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    activeTab === 'archived'
+                      ? 'bg-purple-600 text-white shadow-xs'
+                      : 'text-foreground/70 hover:text-foreground'
+                  }`}
+                >
+                  Archived
+                </button>
               </div>
             </div>
           </div>
+
+          {/* Bulk Operations Toolbar */}
+          {selectedIds.length > 0 && (
+            <div className="bg-rose-500/10 border border-rose-500/30 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <span className="font-extrabold text-rose-500">
+                {selectedIds.length} item(s) selected
+              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  onClick={() => handleBulkAction('publish')}
+                  className="px-3 py-1.5 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-all text-[11px]"
+                >
+                  Bulk Publish
+                </button>
+                <button
+                  onClick={() => handleBulkAction('unpublish')}
+                  className="px-3 py-1.5 bg-slate-600 text-white font-bold rounded-xl hover:bg-slate-700 transition-all text-[11px]"
+                >
+                  Bulk Unpublish
+                </button>
+                <button
+                  onClick={() => handleBulkAction('approve')}
+                  className="px-3 py-1.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all text-[11px]"
+                >
+                  Bulk Approve
+                </button>
+                <button
+                  onClick={() => handleBulkAction('archive')}
+                  className="px-3 py-1.5 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-700 transition-all text-[11px]"
+                >
+                  Bulk Archive
+                </button>
+                <button
+                  onClick={() => handleBulkAction('delete')}
+                  className="px-3 py-1.5 bg-rose-600 text-white font-bold rounded-xl hover:bg-rose-700 transition-all text-[11px]"
+                >
+                  Bulk Delete
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Search Bar */}
           <div className="relative">
@@ -285,6 +391,14 @@ export default function AdminProductsPage() {
               <table className="w-full text-left text-xs font-semibold">
                 <thead>
                   <tr className="border-b border-border/40 text-foreground/50 uppercase text-[10px]">
+                    <th className="pb-3 px-2 w-8">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.length === products.length && products.length > 0}
+                        onChange={toggleSelectAll}
+                        className="rounded border-border/60 text-rose-500 focus:ring-rose-500 cursor-pointer"
+                      />
+                    </th>
                     <th className="pb-3 px-2">Item</th>
                     <th className="pb-3 px-2">Vendor / Seller</th>
                     <th className="pb-3 px-2">Price</th>
@@ -301,10 +415,18 @@ export default function AdminProductsPage() {
                     const isPending = prod.status === 'pending_approval' || prod.status === 'pending_review';
 
                     return (
-                      <tr key={prod.id} className="hover:bg-muted/20">
+                      <tr key={prod.id} className={`hover:bg-muted/20 ${selectedIds.includes(prod.id) ? 'bg-rose-500/5' : ''}`}>
+                        <td className="py-3.5 px-2">
+                          <input
+                            type="checkbox"
+                            checked={selectedIds.includes(prod.id)}
+                            onChange={() => toggleSelectProduct(prod.id)}
+                            className="rounded border-border/60 text-rose-500 focus:ring-rose-500 cursor-pointer"
+                          />
+                        </td>
                         <td className="py-3.5 px-2 flex items-center gap-3">
-                          <div className="h-10 w-10 shrink-0 bg-muted/30 rounded-xl p-1 flex items-center justify-center overflow-hidden">
-                            <img src={displayImage} alt={prod.name} className="max-w-full max-h-full object-contain" />
+                          <div className="h-10 w-10 shrink-0 bg-[#ECEFF3] dark:bg-slate-900/40 rounded-xl overflow-hidden relative border border-border/40">
+                            <img src={displayImage} alt={prod.name} className="w-full h-full object-cover object-center" />
                           </div>
                           <div>
                             <span className="font-bold text-foreground line-clamp-1">{prod.name}</span>
@@ -331,6 +453,8 @@ export default function AdminProductsPage() {
                                 ? 'bg-rose-500/10 text-rose-600'
                                 : prod.status === 'hidden'
                                 ? 'bg-slate-500/10 text-slate-600'
+                                : prod.status === 'archived'
+                                ? 'bg-purple-500/10 text-purple-600'
                                 : 'bg-muted text-foreground/60'
                             }`}
                           >
@@ -437,6 +561,24 @@ export default function AdminProductsPage() {
                                 <Copy className="w-3.5 h-3.5 text-purple-500" />
                                 <span>Clone Product</span>
                               </button>
+
+                              {prod.status !== 'archived' ? (
+                                <button
+                                  onClick={() => handleArchive(prod.id)}
+                                  className="w-full px-3 py-1.5 hover:bg-purple-500/10 flex items-center gap-2 text-purple-600"
+                                >
+                                  <Archive className="w-3.5 h-3.5" />
+                                  <span>Archive</span>
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => handleRestore(prod.id)}
+                                  className="w-full px-3 py-1.5 hover:bg-emerald-500/10 flex items-center gap-2 text-emerald-600"
+                                >
+                                  <RefreshCw className="w-3.5 h-3.5" />
+                                  <span>Restore</span>
+                                </button>
+                              )}
 
                               <div className="border-t border-border/40 my-1" />
 

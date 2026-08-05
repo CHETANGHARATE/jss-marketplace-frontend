@@ -291,6 +291,31 @@ export const adminService = {
     return response.data.data;
   },
 
+  /** POST /admin/products/{id}/archive */
+  async archiveProduct(id: number): Promise<ApiProduct> {
+    const response = await apiClient.post<ApiResponse<ApiProduct>>(`/admin/products/${id}/archive`);
+    return response.data.data;
+  },
+
+  /** POST /admin/products/{id}/restore */
+  async restoreProduct(id: number): Promise<ApiProduct> {
+    const response = await apiClient.post<ApiResponse<ApiProduct>>(`/admin/products/${id}/restore`);
+    return response.data.data;
+  },
+
+  /** POST /admin/products/bulk-action */
+  async bulkActionProducts(payload: {
+    product_ids: number[];
+    action: string;
+    category_id?: number;
+    brand_id?: number;
+    gst_percent?: number;
+    stock_quantity?: number;
+    rejection_reason?: string;
+  }): Promise<void> {
+    await apiClient.post('/admin/products/bulk-action', payload);
+  },
+
   /** DELETE /admin/products/{id} */
   async deleteProduct(id: number): Promise<void> {
     await apiClient.delete(`/admin/products/${id}`);

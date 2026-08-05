@@ -225,16 +225,75 @@ export function useDuplicateAdminProductMutation() {
   });
 }
 
+export function usePublishProductMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.publishProduct(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+    },
+  });
+}
+
+export function useUnpublishProductMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.unpublishProduct(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+    },
+  });
+}
+
 export function useRejectProductMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ id, reason }: { id: number; reason: string }) => adminService.rejectProduct(id, reason),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+    },
+  });
+}
+
+export function useArchiveProductMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.archiveProduct(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+    },
+  });
+}
+
+export function useRestoreProductMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.restoreProduct(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+    },
+  });
+}
+
+export function useBulkActionProductsMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: {
+      product_ids: number[];
+      action: string;
+      category_id?: number;
+      brand_id?: number;
+      gst_percent?: number;
+      stock_quantity?: number;
+      rejection_reason?: string;
+    }) => adminService.bulkActionProducts(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
       queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
     },
   });
 }
+
 
 export function useRequestProductChangesMutation() {
   const queryClient = useQueryClient();
@@ -247,27 +306,7 @@ export function useRequestProductChangesMutation() {
   });
 }
 
-export function useUnpublishProductMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: number) => adminService.unpublishProduct(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
-      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
-    },
-  });
-}
 
-export function usePublishProductMutation() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: number) => adminService.publishProduct(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
-      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] });
-    },
-  });
-}
 
 export function useUpdateProductStatusMutation() {
   const queryClient = useQueryClient();
