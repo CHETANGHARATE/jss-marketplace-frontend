@@ -8,6 +8,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useToast } from './Toast';
 import { Product } from '../types';
 
+import { ProductImageFrame } from './ProductImageFrame';
+
 interface ProductCardProps {
   product: Product;
   onQuickView: (productId: string) => void;
@@ -53,7 +55,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
   };
 
   return (
-    <div className="group bg-card text-card-foreground border border-border-custom/80 hover:border-primary/50 rounded-3xl shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between overflow-hidden relative hover:-translate-y-1">
+    <div className="group bg-card text-card-foreground border border-border-custom/80 hover:border-primary/50 rounded-[12px] shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between overflow-hidden relative hover:-translate-y-1">
       
       {/* Wishlist Button Overlay */}
       <button
@@ -75,19 +77,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
         </span>
       )}
 
-      {/* Image Container with aspect-square ratio & perfect contain fit */}
-      <div 
+      {/* Premium Product Image Frame */}
+      <ProductImageFrame
+        src={product.image}
+        alt={product.name}
         onClick={handleProductClick}
-        className="w-full aspect-square bg-slate-50 dark:bg-slate-900/40 flex items-center justify-center p-4 sm:p-5 relative overflow-hidden shrink-0 cursor-pointer border-b border-border-custom/60"
       >
-        <img
-          src={product.image}
-          alt={product.name}
-          className="max-h-full max-w-full w-auto h-auto object-contain object-center transition-transform duration-300 ease-out group-hover:scale-105 select-none"
-          loading="lazy"
-        />
         {/* Quick View Hover Tag */}
-        <div className="absolute inset-0 bg-slate-950/25 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center backdrop-blur-3xs">
+        <div className="absolute inset-0 bg-slate-950/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-3xs">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -99,7 +96,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
             {t('prod.quick_view')}
           </button>
         </div>
-      </div>
+      </ProductImageFrame>
 
       {/* Product Details Container */}
       <div className="p-5 flex flex-col justify-between flex-1 space-y-4">
