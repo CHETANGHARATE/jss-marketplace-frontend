@@ -4,11 +4,16 @@ import { Product } from '../types';
 
 export interface ProductQueryParams {
   category?: string;
+  category_id?: number | string;
+  subcategory?: string;
   brand?: string;
   min_price?: number;
   max_price?: number;
   rating?: number;
+  discount?: number;
+  stock_status?: string;
   sort?: 'newest' | 'price_low_high' | 'price_high_low' | 'popularity' | 'best_selling' | 'rating';
+  sort_by?: string;
   search?: string;
   page?: number;
   per_page?: number;
