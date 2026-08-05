@@ -122,6 +122,8 @@ export default function CreateAdminProductPage() {
       mr: description || '',
     };
 
+    const cleanImages = (images || []).filter((img) => typeof img === 'string' && img.trim().length > 0 && !img.startsWith('data:image'));
+
     const payload = {
       name: multilingualName as any,
       slug: generatedSlug,
@@ -137,7 +139,7 @@ export default function CreateAdminProductPage() {
       gst_percent: gstPercent,
       tax_inclusive: taxInclusive,
       stock_quantity: stockQuantity,
-      images,
+      images: cleanImages,
       attribute_values: selectedAttributeValues,
       variants,
       weight,

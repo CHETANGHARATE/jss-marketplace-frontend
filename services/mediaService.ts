@@ -19,18 +19,15 @@ export const mediaService = {
         },
       });
 
-      if (response.data?.data?.url) {
-        return response.data.data.url;
+      const url = response.data?.data?.url;
+      if (url) {
+        return url;
       }
-    } catch (error) {
-      console.warn('Multipart upload API failed, falling back to data URL:', error);
+      throw new Error('Media upload API returned empty URL response.');
+    } catch (error: any) {
+      console.error('Media upload failed:', error);
+      const msg = error?.response?.data?.message || error.message || 'Image upload failed. Please try again.';
+      throw new Error(msg);
     }
-
-    // Fallback: Read file to Data URL if upload endpoint fails
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = (e) => resolve(e.target?.result as string);
-      reader.readAsDataURL(file);
-    });
   },
 };

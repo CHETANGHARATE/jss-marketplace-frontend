@@ -139,6 +139,8 @@ export default function CreateVendorProductPage() {
         mr: description || '',
       };
 
+      const cleanImages = (images || []).filter((img) => typeof img === 'string' && img.trim().length > 0 && !img.startsWith('data:image'));
+
       await createProductMutation.mutateAsync({
         name: multilingualName as any,
         slug: generatedSlug,
@@ -154,7 +156,7 @@ export default function CreateVendorProductPage() {
         gst_percent: gstPercent,
         tax_inclusive: taxInclusive,
         stock_quantity: stockQuantity,
-        images,
+        images: cleanImages,
         attribute_values: selectedAttributeValues,
         specifications: customSpecifications,
         custom_specifications: customSpecifications,
