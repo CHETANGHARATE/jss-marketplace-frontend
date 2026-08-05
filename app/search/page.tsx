@@ -148,11 +148,11 @@ function SearchResultsContent() {
               href={`/product/${prod.slug}`}
               className="group bg-card border border-border/40 rounded-3xl p-4 shadow-sm hover:shadow-md hover:border-primary/50 transition-all space-y-3 flex flex-col justify-between"
             >
-              <div className="aspect-square w-full bg-muted/20 rounded-2xl p-4 flex items-center justify-center overflow-hidden">
+              <div className="w-full h-[180px] sm:h-[220px] md:h-[250px] bg-[#ECEFF3] dark:bg-slate-900/40 rounded-t-[16px] overflow-hidden relative">
                 <img
                   src={prod.images?.[0] || '/placeholder-product.png'}
                   alt={prod.name}
-                  className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform"
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
               <div className="space-y-1">
@@ -180,8 +180,8 @@ function SearchResultsContent() {
               href={`/product/${prod.slug}`}
               className="group bg-card border border-border/40 rounded-3xl p-4 shadow-sm hover:shadow-md hover:border-primary/50 transition-all flex flex-col sm:flex-row gap-5 items-center justify-between"
             >
-              <div className="h-32 w-32 shrink-0 bg-muted/20 rounded-2xl p-3 flex items-center justify-center">
-                <img src={prod.images?.[0] || '/placeholder-product.png'} alt={prod.name} className="max-w-full max-h-full object-contain" />
+              <div className="h-32 w-32 shrink-0 bg-[#ECEFF3] dark:bg-slate-900/40 rounded-2xl overflow-hidden relative">
+                <img src={prod.images?.[0] || '/placeholder-product.png'} alt={prod.name} className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300" />
               </div>
               <div className="flex-1 space-y-2 text-center sm:text-left">
                 {prod.brand && <span className="text-xs font-bold text-primary uppercase">{prod.brand.name}</span>}

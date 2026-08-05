@@ -64,11 +64,11 @@ export function PersonalizedSection() {
             className="group bg-card border border-border/40 rounded-3xl p-4 shadow-sm hover:border-primary/40 transition-all space-y-3 flex flex-col justify-between"
           >
             <Link href={`/product/${product.slug || product.id}`} className="space-y-3 block">
-              <div className="h-36 w-full bg-slate-50 dark:bg-slate-900/40 rounded-2xl p-3 flex items-center justify-center overflow-hidden border border-border-custom/40">
+              <div className="h-36 w-full bg-[#ECEFF3] dark:bg-slate-900/40 rounded-2xl overflow-hidden relative border border-border-custom/40">
                 <img
                   src={product.images?.[0] || '/placeholder-product.png'}
                   alt={product.name}
-                  className="max-h-full max-w-full w-auto h-auto object-contain object-center group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
               <div className="space-y-1">

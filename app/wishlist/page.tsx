@@ -58,11 +58,11 @@ export default function WishlistPage() {
             key={prod.id}
             className="group bg-card border border-border/40 rounded-3xl p-4 shadow-sm hover:shadow-md hover:border-primary/40 transition-all space-y-3 flex flex-col justify-between"
           >
-            <div className="aspect-square w-full bg-muted/20 rounded-2xl p-4 flex items-center justify-center overflow-hidden relative">
+            <div className="w-full h-[180px] sm:h-[220px] md:h-[250px] bg-[#ECEFF3] dark:bg-slate-900/40 rounded-t-[16px] overflow-hidden relative">
               <img
                 src={prod.image}
                 alt={prod.name}
-                className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform"
+                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
               />
               <button
                 onClick={() => toggleWishlist(prod)}

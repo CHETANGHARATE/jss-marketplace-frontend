@@ -55,7 +55,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
   };
 
   return (
-    <div className="group bg-card text-card-foreground border border-border-custom/80 hover:border-primary/50 rounded-[12px] shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between overflow-hidden relative hover:-translate-y-1">
+    <div className="group bg-card text-card-foreground border border-border-custom/80 hover:border-primary/50 rounded-[16px] shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between overflow-hidden relative hover:-translate-y-1">
       
       {/* Wishlist Button Overlay */}
       <button

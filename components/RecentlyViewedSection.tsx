@@ -35,11 +35,11 @@ export function RecentlyViewedSection() {
             href={`/product/${prod.slug || prod.id}`}
             className="group bg-card border border-border/40 rounded-2xl p-3 shadow-sm hover:shadow-md hover:border-primary/50 transition-all space-y-2"
           >
-            <div className="aspect-square w-full bg-slate-50 dark:bg-slate-900/40 rounded-xl p-3 flex items-center justify-center overflow-hidden border border-border-custom/40">
+            <div className="aspect-square w-full bg-[#ECEFF3] dark:bg-slate-900/40 rounded-xl overflow-hidden relative border border-border-custom/40">
               <img
                 src={prod.image || prod.images?.[0] || '/placeholder-product.png'}
                 alt={prod.name}
-                className="max-h-full max-w-full w-auto h-auto object-contain object-center group-hover:scale-105 transition-transform duration-300"
+                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
               />
             </div>
             <h4 className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
