@@ -158,13 +158,35 @@ export default function AdminBulkImportPage() {
     }, 400);
 
     try {
-      // Filter valid rows only (or all rows if update mode)
-      const rowsToImport = validationResult.rows.filter((r: any) => r.is_valid || (updateExisting && r.is_update));
+      // 1. Resolve rowsToImport from validationResult or rawParsedRows fallback
+      let rowsToImport: any[] = [];
+      if (validationResult && Array.isArray(validationResult.rows) && validationResult.rows.length > 0) {
+        rowsToImport = validationResult.rows.filter((r: any) => r.is_valid || (updateExisting && r.is_update));
+      }
+
+      if (!rowsToImport || rowsToImport.length === 0) {
+        rowsToImport = rawParsedRows;
+      }
+
+      // 2. Sanitize loadedImages map to prevent oversized base64 strings breaking HTTP POST limits
+      const sanitizedImagesMap: Record<string, string> = {};
+      if (loadedImages && typeof loadedImages === 'object') {
+        Object.entries(loadedImages).forEach(([filename, val]) => {
+          if (typeof val === 'string' && val.length < 50000) {
+            sanitizedImagesMap[filename] = val;
+          }
+        });
+      }
+
+      console.log('Dispatching executeBulkImport payload:', {
+        products_count: rowsToImport.length,
+        update_existing: updateExisting,
+      });
 
       const response = await executeMutation.mutateAsync({
         products: rowsToImport,
         updateExisting,
-        imagesMap: loadedImages,
+        imagesMap: sanitizedImagesMap,
       });
 
       clearInterval(interval);
