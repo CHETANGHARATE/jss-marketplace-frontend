@@ -322,6 +322,13 @@ export default function AdminProductsPage() {
   const pendingProductsCount = pendingProducts.length || allProducts.filter((p) => p.status === 'pending_approval' || p.status === 'pending_review' || p.status === 'pending').length;
   const approvedProductsCount = allProducts.filter((p) => p.status === 'approved').length;
 
+  // Check if selected products contain any unapproved or vendor products needing moderation
+  const selectedProductsNeedApproval = useMemo(() => {
+    if (selectedIds.length === 0) return false;
+    const selectedProds = allProducts.filter((p) => selectedIds.includes(p.id));
+    return selectedProds.some((p) => p.status !== 'approved' || (p.seller_id && p.seller_id !== 1));
+  }, [allProducts, selectedIds]);
+
   return (
     <div className="space-y-8" onClick={() => setOpenMenuId(null)}>
       <Breadcrumbs items={[{ label: 'Admin Dashboard', href: '/admin' }, { label: 'Category-Wise Product Catalog' }]} />
@@ -440,23 +447,28 @@ export default function AdminProductsPage() {
                 {selectedIds.length} item(s) selected
               </span>
               <div className="flex flex-wrap items-center gap-2">
-                <button
-                  onClick={() => handleBulkAction('publish')}
-                  className="px-3 py-1.5 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-all text-[11px]"
-                >
-                  Bulk Publish
-                </button>
+                {/* Hide Bulk Publish / Bulk Approve if ALL selected products are already approved Super Admin products */}
+                {selectedProductsNeedApproval && (
+                  <>
+                    <button
+                      onClick={() => handleBulkAction('publish')}
+                      className="px-3 py-1.5 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-all text-[11px]"
+                    >
+                      Bulk Publish
+                    </button>
+                    <button
+                      onClick={() => handleBulkAction('approve')}
+                      className="px-3 py-1.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all text-[11px]"
+                    >
+                      Bulk Approve
+                    </button>
+                  </>
+                )}
                 <button
                   onClick={() => handleBulkAction('unpublish')}
                   className="px-3 py-1.5 bg-slate-600 text-white font-bold rounded-xl hover:bg-slate-700 transition-all text-[11px]"
                 >
                   Bulk Unpublish
-                </button>
-                <button
-                  onClick={() => handleBulkAction('approve')}
-                  className="px-3 py-1.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all text-[11px]"
-                >
-                  Bulk Approve
                 </button>
                 <button
                   onClick={() => handleBulkAction('archive')}
