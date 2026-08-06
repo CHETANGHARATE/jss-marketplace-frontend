@@ -17,6 +17,7 @@ export interface ProductQueryParams {
   search?: string;
   page?: number;
   per_page?: number;
+  in_stock_first?: number;
 }
 
 export function mapApiProductToProduct(apiProd: ApiProduct): Product {

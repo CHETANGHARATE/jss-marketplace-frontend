@@ -88,8 +88,12 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
       try {
         const promises = uniqueCategories.map(async (cat) => {
           try {
-            const response = await productService.getProducts({ category: String(cat.id), per_page: 12 });
-            const products = (response.data || []).map(mapApiProductToProduct);
+            const response = await productService.getProducts({
+              category: String(cat.id),
+              per_page: 4,
+              in_stock_first: 1
+            });
+            const products = (response.data || []).map(mapApiProductToProduct).slice(0, 4);
             return { categoryId: String(cat.id), products };
           } catch {
             return { categoryId: String(cat.id), products: [] };
@@ -99,7 +103,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
         const results = await Promise.all(promises);
         const dataMap: Record<string, Product[]> = {};
         results.forEach((res) => {
-          dataMap[res.categoryId] = res.products;
+          dataMap[res.categoryId] = res.products.slice(0, 4);
         });
 
         setFeaturedData(dataMap);
@@ -122,7 +126,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
           <div key={idx} className="space-y-4 animate-pulse">
             <div className="h-8 bg-background-secondary rounded-2xl w-1/4" />
             <div className="h-4 bg-background-secondary rounded-xl w-1/3" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 pt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
               {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="h-80 bg-background-secondary rounded-3xl" />
               ))}
@@ -136,7 +140,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
   return (
     <div className="space-y-20 lg:space-y-24">
       {uniqueCategories.map((cat) => {
-        const products = featuredData[String(cat.id)] || [];
+        const products = (featuredData[String(cat.id)] || []).slice(0, 4);
         if (products.length === 0) return null;
 
         return (
@@ -166,8 +170,8 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
               </Link>
             </div>
 
-            {/* Products grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-2">
+            {/* Products grid - Strictly 4-column single row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-2">
               {products.map((prod) => (
                 <ProductCard
                   key={prod.id}
