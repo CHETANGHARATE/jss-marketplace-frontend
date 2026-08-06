@@ -578,4 +578,80 @@ export const adminService = {
     });
     return response.data.data;
   },
+
+  // ── Bulk Product Import ────────────────────────────────────────────────────
+
+  /** POST /admin/products/import/validate */
+  async validateBulkImport(products: any[], updateExisting = false): Promise<{
+    success: boolean;
+    summary: {
+      total: number;
+      valid: number;
+      invalid: number;
+      duplicate_skus: number;
+      missing_images: number;
+      invalid_categories: number;
+    };
+    rows: Array<{
+      row_number: number;
+      name: string;
+      category: string;
+      category_id?: number | null;
+      subcategory?: string;
+      subcategory_id?: number | null;
+      brand?: string;
+      brand_id?: number | null;
+      sku: string;
+      slug: string;
+      price: number;
+      offer_price: number;
+      stock: number;
+      status: string;
+      short_description?: string;
+      description?: string;
+      seo_title?: string;
+      seo_description?: string;
+      tags?: string;
+      image_filename: string;
+      image_url?: string | null;
+      is_valid: boolean;
+      is_update: boolean;
+      errors: string[];
+      warnings: string[];
+    }>;
+  }> {
+    const response = await apiClient.post('/admin/products/import/validate', {
+      products,
+      update_existing: updateExisting,
+    });
+    return response.data;
+  },
+
+  /** POST /admin/products/import/execute */
+  async executeBulkImport(products: any[], updateExisting = false, imagesMap?: Record<string, string>): Promise<{
+    success: boolean;
+    message: string;
+    report: {
+      total_processed: number;
+      imported_successfully: number;
+      skipped: number;
+      duplicate_sku: number;
+      missing_images: number;
+      invalid_category: number;
+      errors: number;
+      failed_rows: Array<{
+        row_number: number;
+        product_name: string;
+        sku: string;
+        error: string;
+      }>;
+    };
+  }> {
+    const response = await apiClient.post('/admin/products/import/execute', {
+      products,
+      update_existing: updateExisting,
+      images: imagesMap,
+    });
+    return response.data;
+  },
 };

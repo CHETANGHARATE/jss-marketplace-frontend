@@ -49,6 +49,7 @@ import {
   Grid,
   CheckSquare,
   Square,
+  FileSpreadsheet,
 } from 'lucide-react';
 import { ApiProduct } from '@/types/api';
 
@@ -342,6 +343,13 @@ export default function AdminProductsPage() {
             </div>
 
             <div className="flex items-center gap-3 self-start sm:self-auto">
+              <Link
+                href="/admin/products/import"
+                className="px-4 py-2.5 bg-emerald-600 text-white font-bold text-xs rounded-2xl hover:bg-emerald-700 transition-all inline-flex items-center gap-1.5 shadow-sm"
+              >
+                <FileSpreadsheet className="w-4 h-4" />
+                <span>Bulk Import</span>
+              </Link>
               <Link
                 href="/admin/products/create"
                 className="px-4 py-2.5 bg-rose-500 text-white font-bold text-xs rounded-2xl hover:bg-rose-600 transition-all inline-flex items-center gap-1.5 shadow-sm"

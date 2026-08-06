@@ -24,12 +24,14 @@ import {
   Warehouse,
   Ticket,
   Zap,
+  FileSpreadsheet,
 } from 'lucide-react';
 
 const MENU_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: ShieldAlert, exact: true },
   { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
-  { href: '/admin/products', label: 'Products', icon: Package },
+  { href: '/admin/products', label: 'Products', icon: Package, exact: true },
+  { href: '/admin/products/import', label: 'Bulk Import', icon: FileSpreadsheet },
   { href: '/admin/categories', label: 'Categories', icon: Layers },
   { href: '/admin/attribute-templates', label: 'Attribute Templates', icon: Tag },
   { href: '/admin/brands', label: 'Brands', icon: Award },

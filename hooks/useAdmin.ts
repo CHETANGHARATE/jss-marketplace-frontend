@@ -771,3 +771,33 @@ export function useAdminReportsQuery(range = '30d', enabled = true) {
   const start = new Date(Date.now() - days * 86400000).toISOString().split('T')[0];
   return useAdminSalesAnalyticsQuery({ start_date: start, end_date: end }, enabled);
 }
+
+// ─── Bulk Product Import ──────────────────────────────────────────────────────
+
+export function useValidateBulkImportMutation() {
+  return useMutation({
+    mutationFn: ({ products, updateExisting }: { products: any[]; updateExisting?: boolean }) =>
+      adminService.validateBulkImport(products, updateExisting),
+  });
+}
+
+export function useExecuteBulkImportMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      products,
+      updateExisting,
+      imagesMap,
+    }: {
+      products: any[];
+      updateExisting?: boolean;
+      imagesMap?: Record<string, string>;
+    }) => adminService.executeBulkImport(products, updateExisting, imagesMap),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+      queryClient.invalidateQueries({ queryKey: ['brands'] });
+    },
+  });
+}
