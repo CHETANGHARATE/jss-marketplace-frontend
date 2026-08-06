@@ -25,7 +25,7 @@ export const Footer: React.FC = () => {
     shop: [
       { name: 'cat.fashion', href: '/category/fashion' },
       { name: 'cat.electronics', href: '/category/electronics' },
-      { name: 'cat.agriculture', href: '/category/agriculture' },
+      { name: 'cat.home_kitchen', href: '/category/home-kitchen' },
       { name: 'cat.jewellery', href: '/category/jewellery' },
       { name: 'cat.beauty_personal_care', href: '/category/beauty-personal-care' },
       { name: 'cat.gifts_handicrafts', href: '/category/gifts-handicrafts' }

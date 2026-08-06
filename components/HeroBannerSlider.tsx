@@ -120,31 +120,6 @@ export const categoryHeroSlides: CategoryHeroSlide[] = [
     ]
   },
   {
-    id: 'agriculture',
-    categoryTitle: 'Agriculture & Tools',
-    categoryIcon: <Tractor size={17} className="text-white" />,
-    tag: '🌾 AGRI-SOLUTIONS DIRECT',
-    title: 'Bio Fertilizers &',
-    accentTitle: 'High Yield Seeds',
-    subtitle: 'Certified Hybrid Seeds • Drip Kits • Bio Pesticides',
-    description: 'Empowering Indian farmers with government-certified hybrid seeds, organic bio-fertilizers, micro-drip irrigation kits, and hand sprayers delivered to your doorstep.',
-    discountPercent: '45%',
-    offerBadge: 'FARM SAVINGS',
-    ctaPrimary: 'Shop Agri Tools',
-    ctaSecondary: 'Seeds & Fertilizers',
-    ctaLink: '/category/agriculture',
-    bgFrom: '#081c0e',
-    bgTo: '#0e331b',
-    accentColor: '#10b981',
-    bgImage: '/promo-agriculture.jpg',
-    foregroundImages: ['/categories/agriculture.webp', '/categories/oil.webp'],
-    trustBadges: [
-      { icon: <ShieldCheck size={14} className="text-emerald-400" />, text: 'Lab Tested Germination' },
-      { icon: <Zap size={14} className="text-amber-400" />, text: 'Doorstep Village Delivery' },
-      { icon: <RefreshCw size={14} className="text-blue-400" />, text: 'Bulk Kisan Discounts' }
-    ]
-  },
-  {
     id: 'electronics',
     categoryTitle: 'Electronics & Gadgets',
     categoryIcon: <Tv size={17} className="text-white" />,

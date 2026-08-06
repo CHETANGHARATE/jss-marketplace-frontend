@@ -23,6 +23,11 @@ export function deduplicateCategories(categories: any[]): any[] {
     const slug = (cat.slug || '').trim().toLowerCase();
     const nameStr = getCategoryNameString(cat.name);
 
+    // Exclude Agriculture & Seeds category from frontend
+    if (slug === 'agriculture-seeds' || slug === 'agriculture' || nameStr.includes('agriculture')) {
+      continue;
+    }
+
     const isDuplicate =
       (id && seenIds.has(id)) ||
       (slug && seenSlugs.has(slug)) ||

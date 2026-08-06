@@ -187,6 +187,10 @@ export const HomeCategoryStrip: React.FC<Props> = ({ categories }) => {
     const slugKey = String((cat as any).slug || '').toLowerCase();
     const semanticKey = normalizeCatKey(cat);
 
+    if (slugKey.includes('agriculture') || slugKey.includes('seed') || semanticKey.includes('agriculture')) {
+      return false;
+    }
+
     if (seenKeys.has(idKey) || (slugKey && seenKeys.has(slugKey)) || (semanticKey && seenKeys.has(semanticKey))) {
       return false;
     }
