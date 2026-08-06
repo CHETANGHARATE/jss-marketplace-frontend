@@ -620,10 +620,14 @@ export const adminService = {
       warnings: string[];
     }>;
   }> {
-    const response = await apiClient.post('/admin/products/import/validate', {
-      products,
-      update_existing: updateExisting,
-    });
+    const response = await apiClient.post(
+      '/admin/products/import/validate',
+      {
+        products,
+        update_existing: updateExisting,
+      },
+      { timeout: 300000 } // 5 minutes timeout for validation
+    );
     return response.data;
   },
 
@@ -647,11 +651,15 @@ export const adminService = {
       }>;
     };
   }> {
-    const response = await apiClient.post('/admin/products/import/execute', {
-      products,
-      update_existing: updateExisting,
-      images: imagesMap,
-    });
+    const response = await apiClient.post(
+      '/admin/products/import/execute',
+      {
+        products,
+        update_existing: updateExisting,
+        images: imagesMap,
+      },
+      { timeout: 300000 } // 5 minutes timeout for bulk import execution
+    );
     return response.data;
   },
 };

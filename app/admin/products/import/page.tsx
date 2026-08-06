@@ -145,11 +145,17 @@ export default function AdminBulkImportPage() {
     }
 
     setStep('importing');
-    setImportProgress(10);
+    setImportProgress(5);
 
+    // Smoothly increment progress bar up to 95% while awaiting response
     const interval = setInterval(() => {
-      setImportProgress((prev) => (prev < 90 ? prev + 15 : prev));
-    }, 300);
+      setImportProgress((prev) => {
+        if (prev < 30) return prev + 5;
+        if (prev < 70) return prev + 3;
+        if (prev < 95) return prev + 1;
+        return 95;
+      });
+    }, 400);
 
     try {
       // Filter valid rows only (or all rows if update mode)
@@ -552,7 +558,7 @@ export default function AdminBulkImportPage() {
             {/* STEP 3: DATABASE IMPORT IN PROGRESS */}
             {/* ───────────────────────────────────────────────────────────── */}
             {step === 'importing' && (
-              <div className="py-16 text-center space-y-6 max-w-md mx-auto">
+              <div className="py-12 text-center space-y-6 max-w-md mx-auto">
                 <div className="w-16 h-16 bg-emerald-500/20 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto animate-pulse">
                   <RefreshCw className="w-8 h-8 animate-spin" />
                 </div>
@@ -560,7 +566,18 @@ export default function AdminBulkImportPage() {
                 <div className="space-y-2">
                   <h3 className="text-xl font-extrabold text-foreground">Importing Products into Marketplace Database</h3>
                   <p className="text-xs text-foreground/60 font-medium">
-                    Processing database transactions, creating categories, brands, specifications, and storing images...
+                    Processing database transactions, creating categories, brands, specifications, and saving images...
+                  </p>
+                </div>
+
+                {/* Reassurance Banner */}
+                <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-left text-xs font-semibold text-amber-600 space-y-1">
+                  <p className="font-extrabold flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-amber-500" />
+                    <span>Please do not close or refresh this tab</span>
+                  </p>
+                  <p className="text-[11px] text-amber-700/80 font-normal">
+                    Batch importing products with image resolution and database transactions can take 1 to 3 minutes depending on catalog size.
                   </p>
                 </div>
 
