@@ -51,14 +51,16 @@ export default function EditAdminProductPage() {
   const [sku, setSku] = useState('');
   const [shortDescription, setShortDescription] = useState('');
   const [description, setDescription] = useState('');
+  const [highlightsText, setHighlightsText] = useState('');
+  const [searchKeywords, setSearchKeywords] = useState('');
 
   // Pricing & Inventory
-  const [originalPrice, setOriginalPrice] = useState<number>(999);
-  const [offerPrice, setOfferPrice] = useState<number>(899);
-  const [costPrice, setCostPrice] = useState<number>(500);
+  const [originalPrice, setOriginalPrice] = useState<number>(0);
+  const [offerPrice, setOfferPrice] = useState<number>(0);
+  const [costPrice, setCostPrice] = useState<number>(0);
   const [gstPercent, setGstPercent] = useState<number>(18);
   const [taxInclusive, setTaxInclusive] = useState<boolean>(true);
-  const [stockQuantity, setStockQuantity] = useState<number>(50);
+  const [stockQuantity, setStockQuantity] = useState<number>(0);
   const [status, setStatus] = useState<string>('approved');
 
   // Dynamic Attributes & Images & Variants
@@ -86,55 +88,112 @@ export default function EditAdminProductPage() {
 
   const [metaTitle, setMetaTitle] = useState('');
   const [metaDescription, setMetaDescription] = useState('');
+  const [metaKeywords, setMetaKeywords] = useState('');
 
   // Prepopulate form data when product details load
   useEffect(() => {
     if (product) {
-      setName(product.name || '');
+      // 1. Basic Information
+      const pName = product.name as any;
+      const nameVal = typeof pName === 'string'
+        ? pName
+        : (pName?.en || pName?.hi || pName?.mr || (product as any).name_translations?.en || '');
+      setName(nameVal);
+
       setCategoryId(product.category_id || product.category?.id || null);
-      setSubcategoryId(product.subcategory_id || null);
+      setSubcategoryId(product.subcategory_id || product.subcategory?.id || null);
       setBrandId(product.brand_id || product.brand?.id || null);
       setSku(product.sku || '');
-      setShortDescription(product.short_description || '');
-      setDescription(product.description || '');
 
-      setOriginalPrice(product.originalPrice ?? product.original_price ?? 999);
-      setOfferPrice(product.offerPrice ?? product.offer_price ?? product.sale_price ?? 899);
-      setCostPrice(product.cost_price ?? 0);
-      setGstPercent(product.gst_percent ?? 18);
-      setTaxInclusive(product.tax_inclusive ?? true);
-      setStockQuantity(product.stockQuantity ?? product.stock_quantity ?? 50);
+      const pShort = product.short_description as any;
+      const shortDescVal = typeof pShort === 'string'
+        ? pShort
+        : (pShort?.en || pShort?.hi || pShort?.mr || '');
+      setShortDescription(shortDescVal);
+
+      const pDesc = product.description as any;
+      const descVal = typeof pDesc === 'string'
+        ? pDesc
+        : (pDesc?.en || pDesc?.hi || pDesc?.mr || '');
+      setDescription(descVal);
+
+      if (Array.isArray(product.highlights)) {
+        setHighlightsText(product.highlights.join('\n'));
+      } else if (typeof product.highlights === 'string') {
+        setHighlightsText(product.highlights);
+      } else {
+        setHighlightsText('');
+      }
+
+      setSearchKeywords((product as any).search_keywords || '');
+
+      // 2. Pricing & Inventory
+      setOriginalPrice(product.originalPrice ?? product.original_price ?? 0);
+      setOfferPrice(product.offerPrice ?? product.offer_price ?? 0);
+      setCostPrice((product as any).cost_price ?? 0);
+      setGstPercent((product as any).gst_percent ?? 18);
+      setTaxInclusive((product as any).tax_inclusive ?? true);
+      setStockQuantity(product.stockQuantity ?? product.stock_quantity ?? 0);
       setStatus(product.status || 'approved');
 
-      const existingImages = product.images?.map((img: any) => img.image_path || img.image) || (product.image ? [product.image] : []);
+      // 3. Gallery Images & Cover Selection
+      let existingImages: string[] = [];
+      if (Array.isArray(product.images) && product.images.length > 0) {
+        existingImages = product.images.map((img: any) =>
+          typeof img === 'string' ? img : (img.image_url || img.image_path || img.image || '')
+        ).filter(Boolean);
+      }
+      if (existingImages.length === 0 && product.image) {
+        existingImages = [product.image];
+      }
       setImages(existingImages);
 
-      if (product.variants) {
+      // 4. Variants
+      if (Array.isArray(product.variants) && product.variants.length > 0) {
         setVariants(product.variants);
+      } else {
+        setVariants([]);
       }
 
+      // 5. Dynamic Attributes & Custom Specifications
       const attrVals = (product as any).attributeValues || (product as any).attribute_values;
-      if (attrVals && Array.isArray(attrVals)) {
+      if (Array.isArray(attrVals)) {
         setSelectedAttributeValues(attrVals.map((v: any) => typeof v === 'number' ? v : v.id));
+      } else {
+        setSelectedAttributeValues([]);
       }
 
-      setWeight(product.weight ?? 0.5);
-      setLength(product.length ?? 10);
-      setWidth(product.width ?? 10);
-      setHeight(product.height ?? 10);
-      setDispatchDays(product.dispatch_days ?? 1);
-      setShippingCharge(product.shipping_charge ?? 0);
-      setIsFreeShipping(product.is_free_shipping ?? true);
-      setIsCodAvailable(product.is_cod_available ?? true);
+      const specs = (product as any).specifications || (product as any).custom_specifications;
+      if (Array.isArray(specs)) {
+        setCustomSpecifications(specs.map((s: any) => ({
+          key: s.spec_key || s.key || '',
+          value: s.spec_value || s.value || ''
+        })));
+      } else {
+        setCustomSpecifications([]);
+      }
 
-      setReturnPolicy(product.return_policy || '7 Days Return');
-      setReplacementPolicy(product.replacement_policy || '');
-      setWarrantySummary(product.warranty_summary || '');
-      setGuaranteeSummary(product.guarantee_summary || '');
-      setCancellationPolicy(product.cancellation_policy || '');
+      // 6. Shipping & Logistics
+      setWeight((product as any).weight ?? 0.5);
+      setLength((product as any).length ?? 10);
+      setWidth((product as any).width ?? 10);
+      setHeight((product as any).height ?? 10);
+      setDispatchDays((product as any).dispatch_days ?? 1);
+      setShippingCharge((product as any).shipping_charge ?? 0);
+      setIsFreeShipping((product as any).is_free_shipping ?? true);
+      setIsCodAvailable((product as any).is_cod_available ?? true);
 
-      setMetaTitle(product.meta_title || '');
-      setMetaDescription(product.meta_description || '');
+      // 7. Store Policies
+      setReturnPolicy((product as any).return_policy || '7 Days Return & Replacement');
+      setReplacementPolicy((product as any).replacement_policy || '');
+      setWarrantySummary((product as any).warranty_summary || '');
+      setGuaranteeSummary((product as any).guarantee_summary || '');
+      setCancellationPolicy((product as any).cancellation_policy || '');
+
+      // 8. SEO Metadata
+      setMetaTitle((product as any).meta_title || '');
+      setMetaDescription((product as any).meta_description || '');
+      setMetaKeywords((product as any).meta_keywords || '');
     }
   }, [product]);
 
@@ -145,6 +204,11 @@ export default function EditAdminProductPage() {
       return;
     }
 
+    const highlights = highlightsText
+      .split('\n')
+      .map((h) => h.trim())
+      .filter(Boolean);
+
     const payload = {
       name,
       category_id: categoryId || undefined,
@@ -153,6 +217,8 @@ export default function EditAdminProductPage() {
       sku: sku || undefined,
       short_description: shortDescription,
       description,
+      highlights,
+      search_keywords: searchKeywords,
       original_price: originalPrice,
       offer_price: offerPrice,
       cost_price: costPrice,
@@ -161,6 +227,8 @@ export default function EditAdminProductPage() {
       stock_quantity: stockQuantity,
       images,
       attribute_values: selectedAttributeValues,
+      specifications: customSpecifications,
+      custom_specifications: customSpecifications,
       variants,
       weight,
       length,
@@ -177,6 +245,7 @@ export default function EditAdminProductPage() {
       cancellation_policy: cancellationPolicy,
       meta_title: metaTitle,
       meta_description: metaDescription,
+      meta_keywords: metaKeywords,
       status,
     };
 
@@ -391,6 +460,28 @@ export default function EditAdminProductPage() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-foreground mb-1 block">Product Highlights (One per line)</label>
+                <textarea
+                  rows={3}
+                  placeholder="• Active Noise Cancellation&#10;• 30 Hours Battery Life&#10;• Bluetooth 5.3 Quick Connect"
+                  value={highlightsText}
+                  onChange={(e) => setHighlightsText(e.target.value)}
+                  className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-foreground mb-1 block">Search Keywords (Comma separated)</label>
+                <input
+                  type="text"
+                  placeholder="wireless, headphones, bluetooth, audio"
+                  value={searchKeywords}
+                  onChange={(e) => setSearchKeywords(e.target.value)}
+                  className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none"
                 />
               </div>
 
