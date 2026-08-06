@@ -19,6 +19,8 @@ const categoryBgMap: Record<string, string> = {
   fashion:                '#fdf2f8', // Soft Pink
   jewellery:              '#fffbeb', // Soft Gold
   agriculture:            '#f0fdf4', // Soft Mint
+  agriculture_seeds:      '#f0fdf4', // Soft Mint
+  'agriculture-seeds':    '#f0fdf4', // Soft Mint
   auto_accessories:       '#eef2ff', // Soft Indigo
   local_homemade:         '#fff7ed', // Soft Amber
   gifts_handicrafts:      '#fdf2f8', // Soft Pink
@@ -55,7 +57,12 @@ const categoryImageMap: Record<string, string> = {
   'masale':                 '/categories/spices.webp',
   'fashion':                '/categories/fashion.webp',
   'jewellery':              '/categories/jewellery.webp',
-  'agriculture':            '/categories/agriculture.webp',
+  'agriculture':            '/categories/agriculture-seeds.webp',
+  'agriculture-seeds':      '/categories/agriculture-seeds.webp',
+  'agriculture_seeds':      '/categories/agriculture-seeds.webp',
+  'agriculture-and-seeds':  '/categories/agriculture-seeds.webp',
+  'agriculture_and_seeds':  '/categories/agriculture-seeds.webp',
+  'agriculture-&-seeds':    '/categories/agriculture-seeds.webp',
   'auto-accessories':       '/categories/auto.webp',
   'auto_accessories':       '/categories/auto.webp',
   'local-homemade':         '/categories/homemade.webp',
@@ -95,7 +102,7 @@ const categoryImageMap: Record<string, string> = {
   '7':                      '/categories/spices.webp',
   '8':                      '/categories/fashion.webp',
   '9':                      '/categories/jewellery.webp',
-  '10':                     '/categories/agriculture.webp',
+  '10':                     '/categories/agriculture-seeds.webp',
   '11':                     '/categories/auto.webp',
   '12':                     '/categories/homemade.webp',
   '13':                     '/categories/gifts.webp',
@@ -141,6 +148,9 @@ const normalizeCatKey = (cat: Category): string => {
     .trim();
 
   // Map semantic aliases to single canonical keys
+  if (cleanStr.includes('agriculture') || cleanStr.includes('seed') || cleanStr.includes('agri')) {
+    return 'agriculture_seeds';
+  }
   if (cleanStr.includes('pooja') || cleanStr.includes('religious') || cleanStr.includes('spiritual')) {
     return 'religious_pooja';
   }
@@ -165,7 +175,7 @@ const normalizeCatKey = (cat: Category): string => {
   if (cleanStr.includes('juices') || cleanStr.includes('syrups')) {
     return 'juices_syrups';
   }
-  if (cleanStr.includes('beauty') && cleanStr.includes('care') && !cleanStr.includes('personal')) {
+  if (cleanStr.includes('beauty') || cleanStr.includes('cosmetic') || cleanStr.includes('personal care')) {
     return 'beauty_personal_care';
   }
 
@@ -222,11 +232,11 @@ export const HomeCategoryStrip: React.FC<Props> = ({ categories }) => {
             const slugUnderscore = slug.replace(/-/g, '_');
             const semanticKey = normalizeCatKey(cat);
 
-            // FORCE local /categories/*.webp image, ignoring API cat.image completely
+            // Priority: slug -> semanticKey -> slugUnderscore -> idStr (if not 18 or fallback) -> default
             const imgUrl = categoryImageMap[slug]
-              || categoryImageMap[idStr]
-              || categoryImageMap[slugUnderscore]
               || categoryImageMap[semanticKey]
+              || categoryImageMap[slugUnderscore]
+              || (idStr !== '18' && categoryImageMap[idStr])
               || `/categories/${slug.split('-')[0]}.webp`
               || defaultCategoryImages[idx % defaultCategoryImages.length];
 
