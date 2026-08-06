@@ -20,6 +20,20 @@ interface PromoBanner {
 
 const banners: PromoBanner[] = [
   {
+    id: 'agriculture',
+    tag: 'Farm Fresh & Seeds',
+    tagColor: '#166534',
+    title: 'Agriculture & Seeds',
+    titleColor: '#064e3b',
+    subtitle: 'Best Quality • Direct Supply',
+    subtitleColor: '#14532d',
+    cta: 'Shop Now →',
+    ctaBg: '#15803d',
+    href: '/category/agriculture-seeds',
+    image: '/promo/agriculture.png',
+    bgGradient: 'linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 60%, #c8e6c9 100%)',
+  },
+  {
     id: 'kitchen',
     tag: 'Upgrade Your Home',
     tagColor: '#1e40af',

@@ -23,6 +23,7 @@ export const Footer: React.FC = () => {
 
   const footerLinks = {
     shop: [
+      { name: 'Agriculture & Seeds', href: '/category/agriculture-seeds' },
       { name: 'cat.fashion', href: '/category/fashion' },
       { name: 'cat.electronics', href: '/category/electronics' },
       { name: 'cat.home_kitchen', href: '/category/home-kitchen' },

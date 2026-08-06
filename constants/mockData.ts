@@ -170,6 +170,19 @@ export const mockCategories: Category[] = [
     ]
   },
   {
+    id: 'agriculture-seeds',
+    name: 'Agriculture & Seeds',
+    icon: 'Sprout',
+    description: 'High-quality seeds, organic fertilizers, crop protection tools, and smart farming accessories.',
+    image: 'https://picsum.photos/seed/agriculture-hero/600/600',
+    subcategories: ['Organic Seeds', 'Fertilizers', 'Pest Control', 'Gardening Tools', 'Drip Irrigation'],
+    popularBrands: ['Mahyco', 'UPL', 'IFFCO', 'JSS Agro', 'TATA Rallis'],
+    faqs: [
+      { question: 'What is the return policy for Agriculture products?', answer: 'We offer a hassle-free 10-day return policy for unused or defective products with original packaging intact.' },
+      { question: 'Do you offer cash on delivery (COD)?', answer: 'Yes, cash on delivery is available on all Agriculture purchases across major pin codes.' }
+    ]
+  },
+  {
     id: 'auto_accessories',
     name: 'cat.auto_accessories',
     icon: 'Car',
