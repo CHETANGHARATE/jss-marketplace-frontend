@@ -77,8 +77,8 @@ export default function AdminProductsPage() {
   const [categorySorts, setCategorySorts] = useState<Record<string, string>>({});
 
   const statusParam = (activeTab !== 'all' && activeTab !== 'pending') ? activeTab : undefined;
-  const { data: allProductsData, isLoading: isLoadingAll } = useAdminProductsQuery({ search, status: statusParam });
-  const { data: pendingProductsData, isLoading: isLoadingPending } = useAdminPendingProductsQuery();
+  const { data: allProductsData, isLoading: isLoadingAll } = useAdminProductsQuery({ per_page: 500, search, status: statusParam });
+  const { data: pendingProductsData, isLoading: isLoadingPending } = useAdminPendingProductsQuery({ per_page: 500 });
 
   const approveMutation = useApproveProductMutation();
   const rejectMutation = useRejectProductMutation();

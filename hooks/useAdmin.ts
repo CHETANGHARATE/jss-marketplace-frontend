@@ -142,21 +142,23 @@ export function useUpdateVendorKYCMutation() {
 // ─── Products ─────────────────────────────────────────────────────────────────
 
 export function useAdminProductsQuery(
-  params?: { search?: string; status?: string; page?: number },
+  params?: { search?: string; status?: string; category_id?: number | string; page?: number; per_page?: number },
   enabled = true
 ) {
+  const mergedParams = { per_page: 500, ...params };
   return useQuery({
-    queryKey: ['admin', 'products', params],
-    queryFn: () => adminService.getProducts(params),
+    queryKey: ['admin', 'products', mergedParams],
+    queryFn: () => adminService.getProducts(mergedParams),
     enabled,
     staleTime: 0,
   });
 }
 
-export function useAdminPendingProductsQuery(params?: { page?: number }, enabled = true) {
+export function useAdminPendingProductsQuery(params?: { page?: number; per_page?: number }, enabled = true) {
+  const mergedParams = { per_page: 500, ...params };
   return useQuery({
-    queryKey: ['admin', 'products', 'pending', params],
-    queryFn: () => adminService.getPendingProducts(params),
+    queryKey: ['admin', 'products', 'pending', mergedParams],
+    queryFn: () => adminService.getPendingProducts(mergedParams),
     enabled,
     staleTime: 0,
   });
