@@ -52,14 +52,14 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-card text-card-foreground border-t border-border-custom/80 mt-auto transition-colors">
+    <footer className="bg-[#F4F8FC] text-card-foreground border-t border-[#E1EAF4] mt-auto transition-colors">
       
       {/* 1. 4 Trust Badges Bar */}
-      <div className="border-b border-border-custom/80 bg-background-secondary/80 py-10">
+      <div className="border-b border-[#E1EAF4] bg-[#EBF2F9] py-10">
         <div className="max-w-[1536px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center">
             
-            <div className="flex flex-col items-center p-4 bg-card border border-border-custom/60 rounded-3xl shadow-2xs hover:shadow-xs transition-all">
+            <div className="flex flex-col items-center p-4 bg-white border border-[#E1EAF4] rounded-3xl shadow-2xs hover:shadow-xs transition-all">
               <div className="h-14 w-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-3 border border-primary/20 shadow-2xs">
                 <Truck size={24} />
               </div>
@@ -67,7 +67,7 @@ export const Footer: React.FC = () => {
               <p className="text-xs text-muted-custom mt-1 font-medium">On all orders above ₹499 across India</p>
             </div>
 
-            <div className="flex flex-col items-center p-4 bg-card border border-border-custom/60 rounded-3xl shadow-2xs hover:shadow-xs transition-all">
+            <div className="flex flex-col items-center p-4 bg-white border border-[#E1EAF4] rounded-3xl shadow-2xs hover:shadow-xs transition-all">
               <div className="h-14 w-14 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center mb-3 border border-emerald-500/20 shadow-2xs">
                 <RefreshCw size={24} />
               </div>
@@ -75,7 +75,7 @@ export const Footer: React.FC = () => {
               <p className="text-xs text-muted-custom mt-1 font-medium">Easy 10-day replacement policy</p>
             </div>
 
-            <div className="flex flex-col items-center p-4 bg-card border border-border-custom/60 rounded-3xl shadow-2xs hover:shadow-xs transition-all">
+            <div className="flex flex-col items-center p-4 bg-white border border-[#E1EAF4] rounded-3xl shadow-2xs hover:shadow-xs transition-all">
               <div className="h-14 w-14 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center mb-3 border border-amber-500/20 shadow-2xs">
                 <ShieldCheck size={24} />
               </div>
@@ -83,7 +83,7 @@ export const Footer: React.FC = () => {
               <p className="text-xs text-muted-custom mt-1 font-medium">Directly from certified sellers</p>
             </div>
 
-            <div className="flex flex-col items-center p-4 bg-card border border-border-custom/60 rounded-3xl shadow-2xs hover:shadow-xs transition-all">
+            <div className="flex flex-col items-center p-4 bg-white border border-[#E1EAF4] rounded-3xl shadow-2xs hover:shadow-xs transition-all">
               <div className="h-14 w-14 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center mb-3 border border-indigo-500/20 shadow-2xs">
                 <Headphones size={24} />
               </div>
@@ -113,7 +113,7 @@ export const Footer: React.FC = () => {
               JSS Solutions Marketplace connects verified manufacturers, farmers, and brands directly with retail & wholesale buyers across India. Enjoy fast express shipping, secure escrow payments, and authentic quality products.
             </p>
             <div className="pt-1 flex items-center gap-2">
-              <span className="text-xs font-bold text-foreground inline-flex items-center gap-1.5 bg-background-secondary border border-border-custom/80 px-3.5 py-1.5 rounded-2xl shadow-2xs">
+              <span className="text-xs font-bold text-foreground inline-flex items-center gap-1.5 bg-white border border-[#DDE7F2] px-3.5 py-1.5 rounded-2xl shadow-2xs">
                 🇮🇳 Proudly Made in India
               </span>
               <span className="text-xs font-bold text-emerald-600 inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-2xl">
@@ -178,7 +178,7 @@ export const Footer: React.FC = () => {
 
         </div>
 
-        <hr className="border-border-custom/80 my-10" />
+        <hr className="border-[#DDE7F2] my-10" />
 
         {/* Newsletter & App Download Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -197,7 +197,7 @@ export const Footer: React.FC = () => {
                 placeholder={t('home.newsletter_placeholder')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 bg-background-secondary text-foreground text-xs px-4 py-3 rounded-2xl border border-border-custom/80 focus:border-primary focus:outline-none transition-colors"
+                className="flex-1 bg-white text-foreground text-xs px-4 py-3 rounded-2xl border border-[#DDE7F2] focus:border-primary focus:outline-none transition-colors"
               />
               <button
                 type="submit"
@@ -244,7 +244,7 @@ export const Footer: React.FC = () => {
       </div>
 
       {/* Bottom Copyright & Security Note */}
-      <div className="border-t border-border-custom/80 bg-background-secondary/80 py-5">
+      <div className="border-t border-[#DDE7F2] bg-[#E5EFF8] py-5">
         <div className="max-w-[1536px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-custom font-medium">
           <p>© {new Date().getFullYear()} JSS Solutions Ltd. All rights reserved. Enterprise Multi-Vendor Platform.</p>
           <div className="flex items-center gap-4 text-[11px]">
