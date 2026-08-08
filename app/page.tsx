@@ -9,6 +9,7 @@ import { HeroBannerSlider } from '../components/HeroBannerSlider';
 import { HomeCategoryStrip } from '../components/HomeCategoryStrip';
 import { HomePromoBanners } from '../components/HomePromoBanners';
 import { HomeServiceStrip } from '../components/HomeServiceStrip';
+import { FlashSaleCarousel } from '../components/FlashSaleCarousel';
 import { WhyChooseUs } from '../components/WhyChooseUs';
 import { HomeFaqSection } from '../components/HomeFaqSection';
 
@@ -68,17 +69,17 @@ export default function HomePage() {
         });
         setCategories(uniqueCats);
 
-        const [trendingRes, featuredRes] = await Promise.allSettled([
+        const [trendingRes, featuredRes, allProdsRes] = await Promise.allSettled([
           productService.getTrendingProducts(),
-          productService.getFeaturedProducts()
+          productService.getFeaturedProducts(),
+          productService.getProducts({ per_page: 50, in_stock_first: 1 })
         ]);
 
         let trending: Product[] = [];
         if (trendingRes.status === 'fulfilled' && trendingRes.value.length > 0) {
           trending = trendingRes.value.map(mapApiProductToProduct);
-        } else {
-          const allProds = await productService.getProducts({ per_page: 8 });
-          trending = (allProds.data || []).map(mapApiProductToProduct);
+        } else if (allProdsRes.status === 'fulfilled' && allProdsRes.value.data) {
+          trending = (allProdsRes.value.data || []).map(mapApiProductToProduct);
         }
 
         let featured: Product[] = [];
@@ -86,8 +87,8 @@ export default function HomePage() {
           featured = featuredRes.value.map(mapApiProductToProduct);
         }
 
-        setTrendingProducts(trending.slice(0, 4));
-        setNewArrivals(trending.slice(4, 8));
+        setTrendingProducts(trending);
+        setNewArrivals(trending.slice(4, 12));
         setBestSellers(featured.length > 0 ? featured : trending);
       } catch (err) {
         console.error('Failed to load homepage data from backend services', err);
@@ -111,58 +112,12 @@ export default function HomePage() {
       {/* ─── 4. Service Strip (trust signals) ─── */}
       <HomeServiceStrip />
 
-      {/* ─── 5. Today's Deals & Flash Sales ─── */}
-      <section id="deals" className="bg-card border border-border-custom/80 rounded-3xl p-6 sm:p-10 space-y-8 shadow-sm scroll-mt-24">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border-custom/80">
-          <div className="flex items-center gap-3.5">
-            <div className="h-12 w-12 bg-rose-500 text-white flex items-center justify-center rounded-2xl font-bold shadow-xs shrink-0">
-              <Clock size={24} />
-            </div>
-            <div>
-              <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-rose-500 uppercase tracking-widest bg-rose-500/10 px-2.5 py-0.5 rounded-full mb-1">
-                <span>Limited Time Offer</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight flex items-center gap-2">
-                Today's Flash Sales
-              </h2>
-              <p className="text-xs text-muted-custom mt-0.5 font-medium">Verified marketplace discounts directly from source. Deal ends in:</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 text-foreground font-black">
-            <div className="flex flex-col items-center">
-              <span className="bg-background-secondary border border-border-custom px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-mono shadow-xs">
-                {String(timeLeft.hours).padStart(2, '0')}
-              </span>
-              <span className="text-[9px] text-muted-custom font-semibold uppercase mt-1">Hours</span>
-            </div>
-            <span className="text-rose-500 font-black text-lg mb-4">:</span>
-            <div className="flex flex-col items-center">
-              <span className="bg-background-secondary border border-border-custom px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-mono shadow-xs">
-                {String(timeLeft.minutes).padStart(2, '0')}
-              </span>
-              <span className="text-[9px] text-muted-custom font-semibold uppercase mt-1">Mins</span>
-            </div>
-            <span className="text-rose-500 font-black text-lg mb-4">:</span>
-            <div className="flex flex-col items-center">
-              <span className="bg-background-secondary border border-border-custom px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-mono shadow-xs">
-                {String(timeLeft.seconds).padStart(2, '0')}
-              </span>
-              <span className="text-[9px] text-muted-custom font-semibold uppercase mt-1">Secs</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {trendingProducts.map((prod) => (
-            <ProductCard
-              key={`flash_${prod.id}`}
-              product={prod}
-              onQuickView={setQuickViewProductId}
-            />
-          ))}
-        </div>
-      </section>
+      {/* ─── 5. Today's Deals & Flash Sales (Auto Carousel) ─── */}
+      <FlashSaleCarousel
+        products={trendingProducts}
+        onQuickView={setQuickViewProductId}
+        timeLeft={timeLeft}
+      />
 
       {/* ─── 6. Featured Categories & Products Showcase ─── */}
       {categories.length > 0 && (
