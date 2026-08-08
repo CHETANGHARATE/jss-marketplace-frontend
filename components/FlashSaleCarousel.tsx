@@ -16,10 +16,9 @@ export const FlashSaleCarousel: React.FC<FlashSaleCarouselProps> = ({
   onQuickView,
   timeLeft
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const [visibleCount, setVisibleCount] = useState(5);
-  const touchStartX = useRef<number | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [withTransition, setWithTransition] = useState(true);
 
   // Update visible columns based on viewport width
   useEffect(() => {
@@ -41,35 +40,86 @@ export const FlashSaleCarousel: React.FC<FlashSaleCarouselProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const maxIndex = Math.max(0, products.length - visibleCount);
+  const realCount = products ? products.length : 0;
+  const isLooping = realCount > visibleCount;
 
-  // Auto-slide interval (4.5s) when products > visibleCount and not paused
+  // Infinite circular carousel items
+  // Head clones (last visibleCount items) + Real items + Tail clones (first visibleCount + 1 items)
+  const cloneHead = isLooping ? products.slice(-visibleCount) : [];
+  const cloneTail = isLooping ? products.slice(0, visibleCount + 1) : [];
+  const displayItems = isLooping ? [...cloneHead, ...products, ...cloneTail] : products;
+
+  const startIndex = isLooping ? visibleCount : 0;
+  const [currentIndex, setCurrentIndex] = useState(startIndex);
+  const touchStartX = useRef<number | null>(null);
+
+  // Keep index synchronized when product count or visible columns change
   useEffect(() => {
-    if (products.length <= visibleCount || isPaused) return;
+    if (isLooping) {
+      setCurrentIndex(visibleCount);
+    } else {
+      setCurrentIndex(0);
+    }
+  }, [realCount, visibleCount, isLooping]);
+
+  // Handle invisible snap after transition finishes at clone boundaries (500ms)
+  useEffect(() => {
+    if (!isLooping) return;
+
+    // Boundary check when sliding forward into cloneTail
+    if (currentIndex >= startIndex + realCount) {
+      const timer = setTimeout(() => {
+        setWithTransition(false);
+        setCurrentIndex(startIndex);
+      }, 500); // matches duration-500
+      return () => clearTimeout(timer);
+    }
+
+    // Boundary check when sliding backward into cloneHead
+    if (currentIndex < startIndex) {
+      const timer = setTimeout(() => {
+        setWithTransition(false);
+        setCurrentIndex(startIndex + realCount - 1);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [currentIndex, isLooping, realCount, startIndex]);
+
+  // Re-enable smooth transition state after an instantaneous snap
+  useEffect(() => {
+    if (!withTransition) {
+      const raf = requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setWithTransition(true);
+        });
+      });
+      return () => cancelAnimationFrame(raf);
+    }
+  }, [withTransition]);
+
+  // Auto-slide ONLY FORWARD every 4.5s
+  useEffect(() => {
+    if (!isLooping || isPaused) return;
 
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+      setWithTransition(true);
+      setCurrentIndex((prev) => prev + 1);
     }, 4500);
 
     return () => clearInterval(interval);
-  }, [products.length, visibleCount, maxIndex, isPaused]);
-
-  // Adjust currentIndex if window resize lowers maxIndex
-  useEffect(() => {
-    if (currentIndex > maxIndex) {
-      setCurrentIndex(maxIndex);
-    }
-  }, [maxIndex, currentIndex]);
+  }, [isLooping, isPaused]);
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
+    setWithTransition(true);
+    setCurrentIndex((prev) => prev - 1);
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+    setWithTransition(true);
+    setCurrentIndex((prev) => prev + 1);
   };
 
-  // Touch handlers for mobile swiping
+  // Touch swiping handlers for mobile
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
   };
@@ -143,7 +193,7 @@ export const FlashSaleCarousel: React.FC<FlashSaleCarouselProps> = ({
           </div>
 
           {/* Carousel Manual Arrows */}
-          {products.length > visibleCount && (
+          {isLooping && (
             <div className="flex items-center gap-2 pl-2 border-l border-border-custom/80">
               <button
                 onClick={handlePrev}
@@ -171,12 +221,12 @@ export const FlashSaleCarousel: React.FC<FlashSaleCarouselProps> = ({
         onTouchEnd={handleTouchEnd}
       >
         <div
-          className="flex gap-6 transition-transform duration-500 ease-in-out"
+          className={`flex gap-6 ${withTransition ? 'transition-transform duration-500 ease-in-out' : ''}`}
           style={{
             transform: `translateX(calc(-${currentIndex} * (100% + 1.5rem) / ${visibleCount}))`
           }}
         >
-          {products.map((prod, idx) => (
+          {displayItems.map((prod, idx) => (
             <div
               key={`flash_${prod.id}_${idx}`}
               className="flex-none w-full sm:w-[calc((100%-1.5rem)/2)] md:w-[calc((100%-2*1.5rem)/3)] lg:w-[calc((100%-4*1.5rem)/5)]"
