@@ -8,6 +8,7 @@ import {
 } from '../hooks/usePersonalization';
 import { Sparkles, Star, ShoppingCart } from 'lucide-react';
 import { useCartWishlist } from '../contexts/CartWishlistContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { ApiProduct } from '../types/api';
 import { Product } from '../types';
 
@@ -15,6 +16,7 @@ export function PersonalizedSection() {
   const { data: recs = [] } = usePersonalizedRecommendationsQuery();
   const { data: trending = [] } = useTrendingProductsQuery();
   const { addToCart } = useCartWishlist();
+  const { t } = useLanguage();
 
   const displayProducts = recs.length > 0 ? recs : trending;
 
@@ -52,9 +54,9 @@ export function PersonalizedSection() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-primary" />
-          <h2 className="text-xl font-extrabold text-foreground tracking-tight">Recommended for You</h2>
+          <h2 className="text-xl font-extrabold text-foreground tracking-tight">{t('home.recommended_for_you')}</h2>
         </div>
-        <span className="text-xs font-bold text-foreground/50">Personalized Insights</span>
+        <span className="text-xs font-bold text-foreground/50">{t('home.personalized_insights')}</span>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -64,7 +66,7 @@ export function PersonalizedSection() {
             className="group bg-card border border-border/40 rounded-3xl p-4 shadow-sm hover:border-primary/40 transition-all space-y-3 flex flex-col justify-between"
           >
             <Link href={`/product/${product.slug || product.id}`} className="space-y-3 block">
-              <div className="h-36 w-full bg-[#ECEFF3] dark:bg-slate-900/40 rounded-2xl overflow-hidden relative border border-border-custom/40">
+              <div className="h-36 w-full bg-background-secondary rounded-2xl overflow-hidden relative border border-border-custom/40">
                 <img
                   src={product.images?.[0] || '/placeholder-product.png'}
                   alt={product.name}
@@ -92,7 +94,7 @@ export function PersonalizedSection() {
               className="w-full py-2 bg-muted/40 hover:bg-primary hover:text-primary-foreground text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5"
             >
               <ShoppingCart className="w-3.5 h-3.5" />
-              <span>Add to Cart</span>
+              <span>{t('prod.add_to_cart')}</span>
             </button>
           </div>
         ))}

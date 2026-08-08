@@ -10,7 +10,7 @@ import { ApiCategory } from '../types/api';
 
 export function MegaMenu() {
   const { data: categories = [], isLoading } = useCategories();
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<ApiCategory | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -24,7 +24,7 @@ export function MegaMenu() {
     >
       <button className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary font-semibold rounded-lg hover:bg-primary/20 transition-all duration-200">
         <Grid className="w-4 h-4" />
-        <span>All Categories</span>
+        <span>{t('nav.all_categories')}</span>
       </button>
 
       {isOpen && (
@@ -32,7 +32,7 @@ export function MegaMenu() {
           {isLoading ? (
             <div className="col-span-12 py-12 text-center text-sm text-foreground/60 flex items-center justify-center gap-2">
               <Sparkles className="w-4 h-4 animate-spin text-primary" />
-              <span>Loading Categories...</span>
+              <span>{t('nav.loading_categories')}</span>
             </div>
           ) : (
             <>
@@ -76,7 +76,7 @@ export function MegaMenu() {
                         className="text-xs font-semibold text-primary hover:underline"
                         onClick={() => setIsOpen(false)}
                       >
-                        View All Products &rarr;
+                        {t('home.view_all_products')} &rarr;
                       </Link>
                     </div>
 
@@ -86,7 +86,7 @@ export function MegaMenu() {
                         if (subcats.length === 0) {
                           return (
                             <div className="col-span-2 py-6 text-center text-xs text-foreground/50 bg-muted/20 rounded-xl">
-                              No subcategories available
+                              {t('nav.categories')}
                             </div>
                           );
                         }
@@ -100,7 +100,7 @@ export function MegaMenu() {
                             <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors block">
                               {getLocalizedText(subCat.name, language)}
                             </span>
-                            <span className="text-[11px] text-foreground/50">Explore collection</span>
+                            <span className="text-[11px] text-foreground/50">{t('home.view_all')} &rarr;</span>
                           </Link>
                         ));
                       })()}

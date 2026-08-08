@@ -3,10 +3,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSearchSuggestionsQuery } from '../hooks/useSearchSuggestions';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Search, X, Sparkles, TrendingUp, History } from 'lucide-react';
 
 export function SearchBar() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [query, setQuery] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -78,7 +80,7 @@ export function SearchBar() {
             setIsOpen(true);
           }}
           onKeyDown={handleKeyDown}
-          placeholder="Search products, brands or categories..."
+          placeholder={t('search.placeholder')}
           className="w-full bg-transparent py-2.5 px-1 text-xs sm:text-sm font-semibold text-foreground placeholder:text-muted-custom focus:outline-none"
         />
 
@@ -99,7 +101,7 @@ export function SearchBar() {
           title="Search Marketplace"
         >
           <Search size={15} />
-          <span className="hidden sm:inline">Search</span>
+          <span className="hidden sm:inline">{t('search.button')}</span>
         </button>
       </div>
 
@@ -110,7 +112,7 @@ export function SearchBar() {
             <div className="space-y-1.5">
               <span className="text-[10px] font-extrabold uppercase text-primary flex items-center gap-1">
                 <Sparkles size={12} />
-                <span>Instant Suggestions</span>
+                <span>{t('search.instant_suggestions')}</span>
               </span>
               <div className="space-y-1">
                 {suggestions.map((sug, idx) => (
@@ -133,7 +135,7 @@ export function SearchBar() {
             <div className="space-y-1.5">
               <span className="text-[10px] font-extrabold uppercase text-foreground/50 flex items-center gap-1">
                 <History size={12} />
-                <span>Recent Searches</span>
+                <span>{t('search.recent_searches')}</span>
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {recentSearches.map((rec, idx) => (
@@ -153,7 +155,7 @@ export function SearchBar() {
             <div className="space-y-1.5 pt-1">
               <span className="text-[10px] font-extrabold uppercase text-amber-500 flex items-center gap-1">
                 <TrendingUp size={12} />
-                <span>Popular Searches</span>
+                <span>{t('search.popular_searches')}</span>
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {['Wireless Headphones', 'Gaming Laptops', 'Smart Watches', 'Running Shoes'].map((pop, idx) => (

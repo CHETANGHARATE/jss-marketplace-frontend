@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Sparkles, Package } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { getLocalizedText } from '../utils/translation';
 import { Category, Product } from '../types';
 import { productService, mapApiProductToProduct } from '../services/productService';
 import { ProductCard } from './ProductCard';
@@ -61,7 +62,7 @@ const normalizeCatKey = (cat: Category): string => {
 };
 
 export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categories, onQuickView }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [featuredData, setFeaturedData] = useState<Record<string, Product[]>>({});
   const [loading, setLoading] = useState(true);
 
@@ -153,10 +154,10 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
                   <span>{t('home.curated_collection')}</span>
                 </div>
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tight mt-1">
-                  {t(cat.name)}
+                  {getLocalizedText(cat.name, language)}
                 </h2>
                 <p className="text-xs sm:text-sm text-muted-custom mt-1 max-w-2xl font-medium">
-                  {cat.description || `${t('home.popular_categories_desc')} - ${t(cat.name)}.`}
+                  {getLocalizedText(cat.description, language) || t('home.popular_categories_desc')}
                 </p>
               </div>
 
@@ -164,7 +165,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
                 href={`/category/${cat.id}`}
                 className="inline-flex items-center gap-2 text-xs font-black text-primary hover:text-primary-hover bg-primary/10 hover:bg-primary/20 border border-primary/20 px-4 py-2.5 rounded-2xl transition-all self-start md:self-auto shrink-0 shadow-2xs group"
               >
-                <span>{t('home.view_all')} {t(cat.name)}</span>
+                <span>{t('home.view_all')} {getLocalizedText(cat.name, language)}</span>
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>

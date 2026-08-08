@@ -11,7 +11,7 @@ interface CategoryHeaderProps {
 }
 
 export function CategoryHeader({ category }: CategoryHeaderProps) {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const categoryName = getLocalizedText(category.name, language);
 
   return (
@@ -25,11 +25,11 @@ export function CategoryHeader({ category }: CategoryHeaderProps) {
         <div className="flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary/20 border border-primary/30 text-white text-[11px] font-extrabold rounded-full uppercase tracking-wider">
             <Layers size={13} className="text-primary" />
-            <span>Official Marketplace Catalog</span>
+            <span>{t('home.official_catalog')}</span>
           </span>
           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-extrabold rounded-full">
             <ShieldCheck size={13} />
-            <span>Verified Source Products</span>
+            <span>{t('home.verified_source')}</span>
           </span>
         </div>
 
@@ -39,17 +39,17 @@ export function CategoryHeader({ category }: CategoryHeaderProps) {
 
         {category.description && (
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal max-w-2xl">
-            {typeof category.description === 'string' ? category.description : (category.description.en || category.description.hi || category.description.mr || '')}
+            {getLocalizedText(category.description, language)}
           </p>
         )}
 
         <div className="pt-2 flex items-center gap-3 text-xs font-bold text-slate-400">
-          <span className="flex items-center gap-1 text-accent">
-            <Sparkles size={14} />
-            Direct Manufacturer Pricing
-          </span>
-          <span>•</span>
-          <span>100% Genuine Escrow Guarantee</span>
+            <span className="flex items-center gap-1 text-accent">
+              <Sparkles size={14} />
+              {t('home.direct_manufacturer_pricing')}
+            </span>
+            <span>•</span>
+            <span>{t('home.genuine_escrow')}</span>
         </div>
       </div>
     </div>

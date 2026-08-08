@@ -30,6 +30,7 @@ import {
   Layers
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { getLocalizedText } from '../utils/translation';
 import { Category } from '../types';
 
 // Map icon strings to components — one entry per official category
@@ -61,7 +62,7 @@ interface CategorySectionProps {
 }
 
 export const CategorySection: React.FC<CategorySectionProps> = ({ categories }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Top 10 by default; expand to all 20 when toggled
@@ -74,19 +75,19 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ categories }) 
         <div>
           <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-primary uppercase tracking-widest bg-primary/10 px-2.5 py-0.5 rounded-full mb-1">
             <Grid size={12} />
-            <span>Marketplace Catalog</span>
+            <span>{t('home.marketplace_catalog')}</span>
           </div>
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tight mt-1">
-            Explore Popular Categories
+            {t('home.explore_categories')}
           </h2>
           <p className="text-xs sm:text-sm text-muted-custom mt-1 font-medium max-w-xl">
-            Browse verified multi-vendor products across all official marketplace categories direct from source.
+            {t('home.explore_categories_desc')}
           </p>
         </div>
 
         <div className="inline-flex items-center gap-2 bg-primary/10 text-primary border border-primary/20 text-xs font-black px-4 py-2 rounded-2xl w-max shadow-2xs">
           <Layers size={14} />
-          <span>{categories.length} Categories Available</span>
+          <span>{categories.length} {t('home.categories_available')}</span>
         </div>
       </div>
 
@@ -126,7 +127,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ categories }) 
                 {/* Title & Subcategories List */}
                 <div>
                   <h3 className="font-extrabold text-base text-foreground group-hover:text-primary transition-colors leading-snug">
-                    {t(cat.name)}
+                    {getLocalizedText(cat.name, language)}
                   </h3>
 
                   {subcats.length > 0 ? (
@@ -149,7 +150,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ categories }) 
                     </div>
                   ) : (
                     <p className="text-xs text-muted-custom line-clamp-2 mt-1.5 leading-relaxed font-normal">
-                      {t(cat.description)}
+                      {getLocalizedText(cat.description, language) || t('home.popular_categories_desc')}
                     </p>
                   )}
                 </div>
@@ -159,12 +160,12 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ categories }) 
               <div className="pt-4 mt-4 border-t border-border-custom/60 flex items-center justify-between">
                 <span className="text-[11px] font-bold text-muted-custom">
                   {subcats.length > 0
-                    ? `${subcats.length} Subcategories`
-                    : '100+ Products'}
+                    ? `${subcats.length} ${t('home.subcategories')}`
+                    : `100+ ${t('home.products')}`}
                 </span>
                 
                 <span className="inline-flex items-center gap-1.5 text-xs font-black text-primary group-hover:translate-x-1 transition-transform">
-                  <span>Explore</span>
+                  <span>{t('home.explore')}</span>
                   <ArrowRight size={14} />
                 </span>
               </div>
@@ -180,7 +181,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ categories }) 
             onClick={() => setIsExpanded(!isExpanded)}
             className="inline-flex items-center gap-2.5 text-xs font-black text-primary bg-primary/10 hover:bg-primary hover:text-white border border-primary/20 px-7 py-3.5 rounded-2xl transition-all shadow-xs active:scale-95"
           >
-            <span>{isExpanded ? 'Show Fewer Categories' : 'View All 20 Categories'}</span>
+            <span>{isExpanded ? t('home.show_fewer') : t('home.view_all_categories')}</span>
             {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
           </button>
         </div>

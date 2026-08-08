@@ -2,16 +2,21 @@ export type Language = 'en' | 'hi' | 'mr';
 
 export const translations: Record<Language, Record<string, string>> = {
   en: {
-    // Header & Announcement Bar
+    // ── Header & Announcement Bar ──────────────────────────────────────────
     'nav.search_placeholder': 'Search for products, brands, categories...',
     'nav.all_categories': 'All Categories',
     'nav.wishlist': 'Wishlist',
     'nav.cart': 'Cart',
     'nav.login': 'Login / Register',
+    'nav.login_btn': 'Login',
+    'nav.sign_up': 'Sign Up',
     'nav.become_seller': 'Become a Seller',
+    'nav.sell_products': 'Sell Products',
     'nav.notifications': 'Notifications',
     'nav.profile': 'My Profile',
     'nav.logout': 'Logout',
+    'nav.signing_out': 'Signing Out...',
+    'nav.signed_in_as': 'Signed in as',
     'nav.home': 'Home',
     'nav.products': 'Products',
     'nav.vendors': 'Vendors',
@@ -21,16 +26,31 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.account': 'Account',
     'nav.orders': 'My Orders',
     'nav.seller_dashboard': 'Seller Dashboard',
+    'nav.vendor_dashboard': 'Vendor Dashboard',
+    'nav.my_products': 'My Products',
+    'nav.my_orders_menu': 'Orders',
+    'nav.inventory': 'Inventory',
+    'nav.earnings': 'Earnings',
+    'nav.store_settings': 'Store Settings',
+    'nav.admin_dashboard': 'Admin Dashboard',
     'nav.india_platform': 'Direct-from-source Multi-Vendor Platform',
     'nav.festive_deals': 'Festive Deals',
     'nav.free_shipping_notice': 'Free Express Shipping on all orders above ₹499!',
     'nav.helpline': 'Helpline: 1800-JSS-MARKET',
-    
-    // UI Theme
+    'nav.loading_categories': 'Loading Categories...',
+
+    // ── UI Theme ────────────────────────────────────────────────────────────
     'theme.light': 'Light Mode',
     'theme.dark': 'Dark Mode',
-    
-    // Categories (20 official categories)
+
+    // ── Search Bar ──────────────────────────────────────────────────────────
+    'search.placeholder': 'Search products, brands or categories...',
+    'search.button': 'Search',
+    'search.instant_suggestions': 'Instant Suggestions',
+    'search.recent_searches': 'Recent Searches',
+    'search.popular_searches': 'Popular Searches',
+
+    // ── Category Names (20 official) ────────────────────────────────────────
     'cat.juices_syrups': 'Juices & Syrups',
     'cat.religious_pooja_items': 'Religious & Pooja Items',
     'cat.cosmetics': 'Cosmetics',
@@ -41,6 +61,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'cat.fashion': 'Fashion',
     'cat.jewellery': 'Jewellery',
     'cat.agriculture': 'Agriculture',
+    'cat.agriculture_seeds': 'Agriculture & Seeds',
     'cat.auto_accessories': 'Auto Accessories',
     'cat.local_homemade': 'Local & Homemade Products',
     'cat.pooja_spiritual': 'Pooja & Spiritual',
@@ -51,11 +72,13 @@ export const translations: Record<Language, Record<string, string>> = {
     'cat.astro_stone': 'Astro Stone',
     'cat.diwali_faral': 'Diwali Faral',
     'cat.electronics': 'Electronics',
-    
-    // Home Sections
+    'cat.home_kitchen': 'Home & Kitchen',
+
+    // ── Home Sections ───────────────────────────────────────────────────────
     'home.hero_sub': 'Premium Multi-Vendor Marketplace',
     'home.popular_categories': 'Popular Categories',
     'home.popular_categories_desc': 'Explore top categories curated for your shopping needs',
+    'home.curated_collection': 'Curated Collection',
     'home.view_all_products': 'View All Products',
     'home.view_all': 'View All',
     'home.trending_products': 'Trending Products',
@@ -74,8 +97,9 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.newsletter_desc': 'Get updates on latest trends, sales, and weekly offers.',
     'home.newsletter_placeholder': 'Enter your email address',
     'home.subscribe': 'Subscribe',
-    
-    // Flash Sale & Timer
+    'home.subscribe_success': '✓ Thank you! You have successfully subscribed to weekly deal alerts.',
+
+    // ── Flash Sale & Timer ──────────────────────────────────────────────────
     'home.flash_sales': "Today's Flash Sales",
     'home.limited_offer': 'Limited Time Offer',
     'home.ends_in': 'Verified marketplace discounts directly from source. Deal ends in:',
@@ -83,10 +107,20 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.mins': 'Mins',
     'home.secs': 'Secs',
 
-    // Why Choose & FAQ
+    // ── Why Choose JSS Marketplace ──────────────────────────────────────────
     'home.why_choose_title': 'Why Choose JSS Marketplace?',
     'home.why_choose_sub': "India's most trusted direct-from-source multi-vendor platform for retail & wholesale buyers.",
     'home.excellence': 'Marketplace Excellence',
+    'home.why_secure_payments': 'Secure Payments',
+    'home.why_fast_delivery': 'Fast Delivery',
+    'home.why_trusted_sellers': 'Trusted Sellers',
+    'home.why_quality_products': 'Quality Products',
+    'home.why_secure_desc': 'Your payments are safely held in escrow until your order is delivered & verified.',
+    'home.why_fast_desc': 'Real-time shipment tracking with express dispatch across 25,000+ PIN codes in India.',
+    'home.why_trusted_desc': 'Buy directly from GSTIN & compliance-verified manufacturers, farmers, and distributors.',
+    'home.why_quality_desc': 'Every item is inspected and dispatched directly from source with 100% authenticity.',
+
+    // ── FAQ Section ─────────────────────────────────────────────────────────
     'home.faq_center': 'FAQ Center',
     'home.faq_title': 'Frequently Asked Questions',
     'home.faq_sub': "Got questions about orders, payments, delivery, vendor onboarding, or anything else? We're here to help!",
@@ -94,8 +128,51 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.reach_helpline': 'Reach out to our helpline at',
     'home.support_247': 'Our support team is here to help you 24/7',
     'home.tip': 'Tip',
-    
-    // Product details & cards
+    'home.faq_q1': 'How do I track my order delivery?',
+    'home.faq_a1': 'Once your order is shipped, you will receive a tracking link via SMS or email. You can also track your order from the "My Orders" section in your account.',
+    'home.faq_tip1': 'You can also contact our support team for real-time delivery updates.',
+    'home.faq_q2': 'What payment modes are supported?',
+    'home.faq_a2': 'We support all major payment methods including UPI (GPay, PhonePe, Paytm), Credit/Debit cards, Net Banking, Wallets, and Cash on Delivery across most PIN codes.',
+    'home.faq_q3': 'How can I register as a seller?',
+    'home.faq_a3': 'Visit our Seller Registration page and complete the GSTIN verification process. Once approved, you can list your products and start selling within 24 hours.',
+    'home.faq_q4': 'Are there any shipping charges?',
+    'home.faq_a4': 'Free shipping is available on orders above ₹499. For orders below ₹499, a nominal delivery fee of ₹49–₹99 applies depending on your location and seller.',
+    'home.faq_badge_secure': 'Secure Transactions',
+    'home.faq_badge_delivery': 'Fast & Reliable Delivery',
+    'home.faq_badge_trusted': 'Trusted by Thousands',
+    'home.faq_badge_support': '24/7 Customer Support',
+
+    // ── Flash Sale Banner & Service Strip ──────────────────────────────────
+    'home.flash_sale_live': 'Flash Sale Live Event',
+    'home.flash_sale_up_to': 'Up to',
+    'home.flash_sale_desc': 'on top electronics and fashion!',
+    'home.shop_sale_now': 'Shop Sale Now',
+    'home.service_secure_payment': '100% Secure Payment',
+    'home.service_secure_payment_sub': 'Safe & Trusted Transactions',
+    'home.service_easy_returns': 'Easy Returns',
+    'home.service_easy_returns_sub': '7 Days Return Policy',
+    'home.service_free_shipping': 'Free Shipping',
+    'home.service_free_shipping_sub': 'On Orders Above ₹499',
+    'home.service_support': '24/7 Support',
+    'home.service_support_sub': 'Dedicated Support',
+    'home.service_trusted_vendors': 'Trusted Vendors',
+    'home.service_trusted_vendors_sub': 'Quality Assured',
+    'home.marketplace_catalog': 'Marketplace Catalog',
+    'home.explore_categories': 'Explore Popular Categories',
+    'home.explore_categories_desc': 'Browse verified multi-vendor products across all official marketplace categories direct from source.',
+    'home.categories_available': 'Categories Available',
+    'home.subcategories': 'Subcategories',
+    'home.products': 'Products',
+    'home.explore': 'Explore',
+    'home.show_fewer': 'Show Fewer Categories',
+    'home.view_all_categories': 'View All 20 Categories',
+    'home.personalized_insights': 'Personalized Insights',
+    'home.official_catalog': 'Official Marketplace Catalog',
+    'home.verified_source': 'Verified Source Products',
+    'home.direct_manufacturer_pricing': 'Direct Manufacturer Pricing',
+    'home.genuine_escrow': '100% Genuine Escrow Guarantee',
+
+    // ── Product Details & Cards ─────────────────────────────────────────────
     'prod.brand': 'Brand',
     'prod.seller': 'Seller',
     'prod.seller_label': 'Seller:',
@@ -111,8 +188,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'prod.cart_added': 'Added to cart',
     'prod.save': 'Save',
     'prod.off': 'OFF',
-    
-    // Category Page & Filters
+
+    // ── Category Page & Filters ─────────────────────────────────────────────
     'cat.filter_by': 'Filters',
     'cat.price_range': 'Price Range',
     'cat.min': 'Min',
@@ -134,7 +211,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'cat.reviews_heading': 'Customer Reviews & Feedback',
     'cat.related_categories': 'Related Categories',
 
-    // Footer
+    // ── Footer ──────────────────────────────────────────────────────────────
     'footer.shipping_title': 'Free Express Shipping',
     'footer.shipping_sub': 'On all orders above ₹499 across India',
     'footer.returns_title': 'Hassle-Free Returns',
@@ -161,15 +238,19 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.made_in_india': 'Proudly Made in India',
     'footer.escrow_protected': 'Escrow Protected',
     'footer.copyright': 'All rights reserved. Enterprise Multi-Vendor Platform.',
-    
-    // Common
+    'footer.get_it_on': 'Get it on',
+    'footer.download_on': 'Download on',
+    'footer.google_play': 'Google Play',
+    'footer.app_store': 'App Store',
+
+    // ── Common ──────────────────────────────────────────────────────────────
     'faq.title': 'Frequently Asked Questions',
     'cart.summary': 'Order Summary',
     'cart.checkout': 'Proceed to Checkout',
     'cart.empty': 'Your cart is empty',
     'wishlist.empty': 'Your wishlist is empty',
-    
-    // Banner promotions
+
+    // ── Banner Promotions ───────────────────────────────────────────────────
     'banner.diwali_title': 'Diwali Dhamaka Sale',
     'banner.diwali_subtitle': 'Up to 80% Off on Electronics & Fashion',
     'banner.monsoon_title': 'Monsoon Mega Discounts',
@@ -178,17 +259,23 @@ export const translations: Record<Language, Record<string, string>> = {
     'banner.billion_subtitle': 'Premium Brands at Unbeatable Prices',
     'banner.cta': 'Shop Now',
   },
+
   hi: {
-    // Header & Announcement Bar
+    // ── Header & Announcement Bar ──────────────────────────────────────────
     'nav.search_placeholder': 'उत्पाद, ब्रांड, श्रेणियां खोजें...',
     'nav.all_categories': 'सभी श्रेणियां',
     'nav.wishlist': 'इच्छा-सूची',
     'nav.cart': 'कार्ट',
     'nav.login': 'लॉगिन / पंजीकरण',
+    'nav.login_btn': 'लॉगिन',
+    'nav.sign_up': 'साइन अप',
     'nav.become_seller': 'विक्रेता बनें',
+    'nav.sell_products': 'उत्पाद बेचें',
     'nav.notifications': 'सूचनाएं',
     'nav.profile': 'मेरी प्रोफाइल',
     'nav.logout': 'लॉगआउट',
+    'nav.signing_out': 'साइन आउट हो रहे हैं...',
+    'nav.signed_in_as': 'साइन इन किया गया',
     'nav.home': 'होम',
     'nav.products': 'उत्पाद',
     'nav.vendors': 'विक्रेता',
@@ -198,16 +285,31 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.account': 'खाता',
     'nav.orders': 'मेरे ऑर्डर',
     'nav.seller_dashboard': 'विक्रेता डैशबोर्ड',
+    'nav.vendor_dashboard': 'विक्रेता डैशबोर्ड',
+    'nav.my_products': 'मेरे उत्पाद',
+    'nav.my_orders_menu': 'ऑर्डर',
+    'nav.inventory': 'इन्वेंटरी',
+    'nav.earnings': 'कमाई',
+    'nav.store_settings': 'स्टोर सेटिंग्स',
+    'nav.admin_dashboard': 'एडमिन डैशबोर्ड',
     'nav.india_platform': 'स्रोत से सीधे मल्टी-वेंडर प्लेटफॉर्म',
     'nav.festive_deals': 'त्योहार डील्स',
     'nav.free_shipping_notice': '₹499 से अधिक के सभी ऑर्डरों पर मुफ्त एक्सप्रेस शिपिंग!',
     'nav.helpline': 'हेल्पलाइन: 1800-JSS-MARKET',
-    
-    // UI Theme
+    'nav.loading_categories': 'श्रेणियां लोड हो रही हैं...',
+
+    // ── UI Theme ────────────────────────────────────────────────────────────
     'theme.light': 'लाइट मोड',
     'theme.dark': 'डार्क मोड',
-    
-    // Categories (20 official categories)
+
+    // ── Search Bar ──────────────────────────────────────────────────────────
+    'search.placeholder': 'उत्पाद, ब्रांड, श्रेणियां खोजें...',
+    'search.button': 'खोजें',
+    'search.instant_suggestions': 'त्वरित सुझाव',
+    'search.recent_searches': 'हाल की खोजें',
+    'search.popular_searches': 'लोकप्रिय खोजें',
+
+    // ── Category Names ──────────────────────────────────────────────────────
     'cat.juices_syrups': 'जूस और सिरप',
     'cat.religious_pooja_items': 'धार्मिक और पूजा सामग्री',
     'cat.cosmetics': 'कॉस्मेटिक्स',
@@ -218,6 +320,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'cat.fashion': 'फैशन',
     'cat.jewellery': 'आभूषण',
     'cat.agriculture': 'कृषि उत्पाद',
+    'cat.agriculture_seeds': 'कृषि और बीज',
     'cat.auto_accessories': 'ऑटो एक्सेसरीज',
     'cat.local_homemade': 'स्थानीय और घरेलू उत्पाद',
     'cat.pooja_spiritual': 'पूजा और आध्यात्मिक',
@@ -228,11 +331,13 @@ export const translations: Record<Language, Record<string, string>> = {
     'cat.astro_stone': 'ज्योतिष रत्न',
     'cat.diwali_faral': 'दिवाली फराळ',
     'cat.electronics': 'इलेक्ट्रॉनिक्स',
-    
-    // Home Sections
+    'cat.home_kitchen': 'घर और रसोई',
+
+    // ── Home Sections ───────────────────────────────────────────────────────
     'home.hero_sub': 'प्रीमियम मल्टी-वेंडर मार्केटप्लेस',
     'home.popular_categories': 'लोकप्रिय श्रेणियां',
     'home.popular_categories_desc': 'अपनी खरीदारी की जरूरतों के लिए चुनी गई शीर्ष श्रेणियां देखें',
+    'home.curated_collection': 'चुनिंदा संग्रह',
     'home.view_all_products': 'सभी उत्पाद देखें',
     'home.view_all': 'सभी देखें',
     'home.trending_products': 'ट्रेंडिंग उत्पाद',
@@ -251,8 +356,9 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.newsletter_desc': 'नवीनतम रुझानों, बिक्री और साप्ताहिक ऑफ़र पर अपडेट प्राप्त करें।',
     'home.newsletter_placeholder': 'अपना ईमेल पता दर्ज करें',
     'home.subscribe': 'सदस्य बनें',
-    
-    // Flash Sale & Timer
+    'home.subscribe_success': '✓ धन्यवाद! आप सफलतापूर्वक साप्ताहिक डील अलर्ट की सदस्यता ले चुके हैं।',
+
+    // ── Flash Sale & Timer ──────────────────────────────────────────────────
     'home.flash_sales': 'आज की फ्लैश सेल',
     'home.limited_offer': 'सीमित समय की छूट',
     'home.ends_in': 'स्रोत से सीधे सत्यापित मार्केटप्लेस छूट। डील समाप्त होने में समय:',
@@ -260,10 +366,20 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.mins': 'मिनट',
     'home.secs': 'सेकंड',
 
-    // Why Choose & FAQ
+    // ── Why Choose ──────────────────────────────────────────────────────────
     'home.why_choose_title': 'जेएसएस मार्केटप्लेस क्यों चुनें?',
     'home.why_choose_sub': 'खुदरा और थोक खरीदारों के लिए भारत का सबसे विश्वसनीय डायरेक्ट-फ्रॉम-सोर्स मल्टी-वेंडर प्लेटफॉर्म।',
     'home.excellence': 'मार्केटप्लेस उत्कृष्टता',
+    'home.why_secure_payments': 'सुरक्षित भुगतान',
+    'home.why_fast_delivery': 'तेज़ डिलीवरी',
+    'home.why_trusted_sellers': 'भरोसेमंद विक्रेता',
+    'home.why_quality_products': 'गुणवत्ता उत्पाद',
+    'home.why_secure_desc': 'आपका भुगतान एस्क्रो में सुरक्षित रखा जाता है जब तक आपका ऑर्डर डिलीवर और सत्यापित नहीं हो जाता।',
+    'home.why_fast_desc': 'भारत भर में 25,000+ पिन कोड पर एक्सप्रेस डिस्पैच के साथ रियल-टाइम शिपमेंट ट्रैकिंग।',
+    'home.why_trusted_desc': 'GSTIN और अनुपालन-सत्यापित निर्माताओं, किसानों और वितरकों से सीधे खरीदें।',
+    'home.why_quality_desc': 'हर वस्तु का निरीक्षण किया जाता है और 100% प्रामाणिकता के साथ सीधे स्रोत से भेजा जाता है।',
+
+    // ── FAQ Section ─────────────────────────────────────────────────────────
     'home.faq_center': 'प्रश्न उत्तर केंद्र',
     'home.faq_title': 'अक्सर पूछे जाने वाले प्रश्न',
     'home.faq_sub': 'ऑर्डर, भुगतान, डिलीवरी, विक्रेता पंजीकरण या किसी अन्य चीज़ के बारे में प्रश्न हैं? हम आपकी सहायता के लिए यहाँ हैं!',
@@ -271,8 +387,51 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.reach_helpline': 'हमारी हेल्पलाइन पर संपर्क करें',
     'home.support_247': 'हमारी सहायता टीम 24/7 आपकी मदद के लिए यहाँ है',
     'home.tip': 'सुझाव',
-    
-    // Product details & cards
+    'home.faq_q1': 'मैं अपनी ऑर्डर डिलीवरी कैसे ट्रैक करूं?',
+    'home.faq_a1': 'एक बार आपका ऑर्डर शिप हो जाने पर, आपको SMS या ईमेल के जरिए ट्रैकिंग लिंक मिलेगा। आप अपने खाते के "मेरे ऑर्डर" सेक्शन से भी ट्रैक कर सकते हैं।',
+    'home.faq_tip1': 'रियल-टाइम डिलीवरी अपडेट के लिए आप हमारी सहायता टीम से भी संपर्क कर सकते हैं।',
+    'home.faq_q2': 'कौन-कौन से भुगतान तरीके उपलब्ध हैं?',
+    'home.faq_a2': 'हम UPI (GPay, PhonePe, Paytm), क्रेडिट/डेबिट कार्ड, नेट बैंकिंग, वॉलेट और अधिकांश पिन कोड में कैश ऑन डिलीवरी सहित सभी प्रमुख भुगतान तरीकों का समर्थन करते हैं।',
+    'home.faq_q3': 'मैं विक्रेता के रूप में कैसे पंजीकरण करूं?',
+    'home.faq_a3': 'हमारे विक्रेता पंजीकरण पेज पर जाएं और GSTIN सत्यापन प्रक्रिया पूरी करें। स्वीकृत होने के बाद, आप 24 घंटों के भीतर अपने उत्पाद सूचीबद्ध करके बिक्री शुरू कर सकते हैं।',
+    'home.faq_q4': 'क्या कोई शिपिंग शुल्क है?',
+    'home.faq_a4': '₹499 से अधिक के ऑर्डर पर मुफ्त शिपिंग उपलब्ध है। ₹499 से कम के ऑर्डर पर आपके स्थान और विक्रेता के आधार पर ₹49–₹99 का मामूली डिलीवरी शुल्क लागू होता है।',
+    'home.faq_badge_secure': 'सुरक्षित लेनदेन',
+    'home.faq_badge_delivery': 'तेज़ और विश्वसनीय डिलीवरी',
+    'home.faq_badge_trusted': 'हजारों द्वारा विश्वसनीय',
+    'home.faq_badge_support': '24/7 ग्राहक सहायता',
+
+    // ── Flash Sale Banner & Service Strip ──────────────────────────────────
+    'home.flash_sale_live': 'फ्लैश सेल लाइव इवेंट',
+    'home.flash_sale_up_to': 'तक',
+    'home.flash_sale_desc': 'शीर्ष इलेक्ट्रॉनिक्स और फैशन पर!',
+    'home.shop_sale_now': 'सेल से अभी खरीदें',
+    'home.service_secure_payment': '100% सुरक्षित भुगतान',
+    'home.service_secure_payment_sub': 'सुरक्षित एवं विश्वसनीय लेनदेन',
+    'home.service_easy_returns': 'आसान वापसी',
+    'home.service_easy_returns_sub': '7 दिनों की वापसी नीति',
+    'home.service_free_shipping': 'मुफ्त शिपिंग',
+    'home.service_free_shipping_sub': '₹499 से अधिक के ऑर्डर पर',
+    'home.service_support': '24/7 सहायता',
+    'home.service_support_sub': 'समर्पित ग्राहक सेवा',
+    'home.service_trusted_vendors': 'विश्वसनीय विक्रेता',
+    'home.service_trusted_vendors_sub': 'गुणवत्ता आश्वासन',
+    'home.marketplace_catalog': 'मार्केटप्लेस कैटलॉग',
+    'home.explore_categories': 'लोकप्रिय श्रेणियां देखें',
+    'home.explore_categories_desc': 'स्रोत से सीधे सभी आधिकारिक मार्केटप्लेस श्रेणियों में सत्यापित बहु-विक्रेता उत्पाद ब्राउज़ करें।',
+    'home.categories_available': 'श्रेणियां उपलब्ध',
+    'home.subcategories': 'उपश्रेणियां',
+    'home.products': 'उत्पाद',
+    'home.explore': 'देखें',
+    'home.show_fewer': 'कम श्रेणियां दिखाएं',
+    'home.view_all_categories': 'सभी 20 श्रेणियां देखें',
+    'home.personalized_insights': 'व्यक्तिगत सुझाव',
+    'home.official_catalog': 'आधिकारिक मार्केटप्लेस कैटलॉग',
+    'home.verified_source': 'सत्यापित स्रोत उत्पाद',
+    'home.direct_manufacturer_pricing': 'सीधे निर्माता मूल्य निर्धारण',
+    'home.genuine_escrow': '100% वास्तविक एस्क्रौ गारंटी',
+
+    // ── Product Details & Cards ─────────────────────────────────────────────
     'prod.brand': 'ब्रांड',
     'prod.seller': 'विक्रेता',
     'prod.seller_label': 'विक्रेता:',
@@ -282,14 +441,14 @@ export const translations: Record<Language, Record<string, string>> = {
     'prod.rating': 'रेटिंग',
     'prod.reviews': 'समीक्षाएं',
     'prod.quick_view': 'त्वरित दृश्य',
-    'prod.add_to_cart': 'कार्ट में जोड़ें',
+    'prod.add_to_cart': 'कार्ट में जोड़ें',
     'prod.buy_now': 'अभी खरीदें',
     'prod.wishlist_added': 'इच्छा-सूची में जोड़ा गया',
     'prod.cart_added': 'कार्ट में जोड़ा गया',
     'prod.save': 'बचत',
     'prod.off': 'छूट',
-    
-    // Category Page & Filters
+
+    // ── Category Page & Filters ─────────────────────────────────────────────
     'cat.filter_by': 'फ़िल्टर',
     'cat.price_range': 'मूल्य सीमा',
     'cat.min': 'न्यूनतम',
@@ -311,7 +470,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'cat.reviews_heading': 'ग्राहक समीक्षाएं और प्रतिक्रिया',
     'cat.related_categories': 'संबंधित श्रेणियां',
 
-    // Footer
+    // ── Footer ──────────────────────────────────────────────────────────────
     'footer.shipping_title': 'मुफ्त एक्सप्रेस शिपिंग',
     'footer.shipping_sub': 'पूरे भारत में ₹499 से अधिक के सभी ऑर्डरों पर',
     'footer.returns_title': 'आसान रिटर्न नीति',
@@ -338,15 +497,19 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.made_in_india': 'गर्व से भारत में निर्मित',
     'footer.escrow_protected': 'एस्क्रौ सुरक्षित',
     'footer.copyright': 'सर्वाधिकार सुरक्षित। एंटरप्राइज मल्टी-वेंडर प्लेटफॉर्म।',
-    
-    // Common
+    'footer.get_it_on': 'यहाँ से डाउनलोड करें',
+    'footer.download_on': 'डाउनलोड करें',
+    'footer.google_play': 'Google Play',
+    'footer.app_store': 'App Store',
+
+    // ── Common ──────────────────────────────────────────────────────────────
     'faq.title': 'अक्सर पूछे जाने वाले प्रश्न',
     'cart.summary': 'ऑर्डर सारांश',
     'cart.checkout': 'चेकआउट के लिए आगे बढ़ें',
     'cart.empty': 'आपकी कार्ट खाली है',
     'wishlist.empty': 'आपकी इच्छा-सूची खाली है',
-    
-    // Banner promotions
+
+    // ── Banner Promotions ───────────────────────────────────────────────────
     'banner.diwali_title': 'दिवाली धमाका सेल',
     'banner.diwali_subtitle': 'इलेक्ट्रॉनिक्स और फैशन पर 80% तक की छूट',
     'banner.monsoon_title': 'मानसून मेगा डिस्काउंट',
@@ -355,17 +518,23 @@ export const translations: Record<Language, Record<string, string>> = {
     'banner.billion_subtitle': 'अद्वितीय कीमतों पर प्रीमियम ब्रांड',
     'banner.cta': 'अभी खरीदें',
   },
+
   mr: {
-    // Header & Announcement Bar
+    // ── Header & Announcement Bar ──────────────────────────────────────────
     'nav.search_placeholder': 'उत्पाद, ब्रँड, श्रेणी शोधा...',
     'nav.all_categories': 'सर्व श्रेण्या',
     'nav.wishlist': 'इच्छा-सूची',
     'nav.cart': 'कार्ट',
     'nav.login': 'लॉगिन / नोंदणी',
+    'nav.login_btn': 'लॉगिन',
+    'nav.sign_up': 'साइन अप',
     'nav.become_seller': 'विक्रेता व्हा',
+    'nav.sell_products': 'उत्पादने विका',
     'nav.notifications': 'सूचना',
     'nav.profile': 'माझी प्रोफाईल',
     'nav.logout': 'लॉगआउट',
+    'nav.signing_out': 'साइन आउट होत आहे...',
+    'nav.signed_in_as': 'साइन इन केले',
     'nav.home': 'होम',
     'nav.products': 'उत्पादने',
     'nav.vendors': 'विक्रेते',
@@ -375,16 +544,31 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.account': 'खाते',
     'nav.orders': 'माझे ऑर्डर्स',
     'nav.seller_dashboard': 'विक्रेता डॅशबोर्ड',
+    'nav.vendor_dashboard': 'विक्रेता डॅशबोर्ड',
+    'nav.my_products': 'माझी उत्पादने',
+    'nav.my_orders_menu': 'ऑर्डर्स',
+    'nav.inventory': 'इन्व्हेंटरी',
+    'nav.earnings': 'कमाई',
+    'nav.store_settings': 'स्टोर सेटिंग्ज',
+    'nav.admin_dashboard': 'ॲडमिन डॅशबोर्ड',
     'nav.india_platform': 'थेट स्त्रोताकडून मल्टी-व्हेंडर प्लॅटफॉर्म',
     'nav.festive_deals': 'सण डील्स',
     'nav.free_shipping_notice': '₹४९९ पेक्षा जास्त सर्व ऑर्डर्सवर मोफत एक्सप्रेस शिपिंग!',
     'nav.helpline': 'हेल्पलाइन: १८००-JSS-MARKET',
-    
-    // UI Theme
+    'nav.loading_categories': 'श्रेण्या लोड होत आहेत...',
+
+    // ── UI Theme ────────────────────────────────────────────────────────────
     'theme.light': 'लाइट मोड',
     'theme.dark': 'डार्क मोड',
-    
-    // Categories (20 official categories)
+
+    // ── Search Bar ──────────────────────────────────────────────────────────
+    'search.placeholder': 'उत्पादने, ब्रँड, श्रेण्या शोधा...',
+    'search.button': 'शोधा',
+    'search.instant_suggestions': 'त्वरित सुचना',
+    'search.recent_searches': 'अलीकडील शोध',
+    'search.popular_searches': 'लोकप्रिय शोध',
+
+    // ── Category Names ──────────────────────────────────────────────────────
     'cat.juices_syrups': 'ज्यूस आणि सरबत',
     'cat.religious_pooja_items': 'धार्मिक आणि पूजा साहित्य',
     'cat.cosmetics': 'कॉस्मेटिक्स',
@@ -395,6 +579,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'cat.fashion': 'फॅशन',
     'cat.jewellery': 'दागिने',
     'cat.agriculture': 'कृषी उत्पादने',
+    'cat.agriculture_seeds': 'कृषी आणि बियाणे',
     'cat.auto_accessories': 'ऑटो अॅक्सेसरीज',
     'cat.local_homemade': 'स्थानिक आणि घरगुती उत्पादने',
     'cat.pooja_spiritual': 'पूजा आणि आध्यात्मिक',
@@ -405,11 +590,13 @@ export const translations: Record<Language, Record<string, string>> = {
     'cat.astro_stone': 'ज्योतिष रत्न',
     'cat.diwali_faral': 'दिवाळी फराळ',
     'cat.electronics': 'इलेक्ट्रॉनिक्स',
-    
-    // Home Sections
+    'cat.home_kitchen': 'घर आणि स्वयंपाकघर',
+
+    // ── Home Sections ───────────────────────────────────────────────────────
     'home.hero_sub': 'प्रीमियम मल्टी-व्हेंडर मार्केटप्लेस',
     'home.popular_categories': 'लोकप्रिय श्रेण्या',
     'home.popular_categories_desc': 'तुमच्या खरेदीच्या गरजांसाठी निवडलेल्या प्रमुख श्रेण्या शोधा',
+    'home.curated_collection': 'निवडलेला संग्रह',
     'home.view_all_products': 'सर्व उत्पादने पहा',
     'home.view_all': 'सर्व पहा',
     'home.trending_products': 'ट्रेन्डिंग उत्पादने',
@@ -428,8 +615,9 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.newsletter_desc': 'नवीनतम ट्रेंड, विक्री आणि साप्ताहिक ऑफरवर अद्यतने मिळवा.',
     'home.newsletter_placeholder': 'तुमचा ईमेल पत्ता प्रविष्ट करा',
     'home.subscribe': 'सदस्य व्हा',
-    
-    // Flash Sale & Timer
+    'home.subscribe_success': '✓ धन्यवाद! तुम्ही यशस्वीरित्या साप्ताहिक डील अलर्टची सदस्यता घेतली आहे.',
+
+    // ── Flash Sale & Timer ──────────────────────────────────────────────────
     'home.flash_sales': 'आजचा फ्लॅश सेल',
     'home.limited_offer': 'मर्यादित वेळेची ऑफर',
     'home.ends_in': 'स्त्रोताकडून थेट सत्यापित मार्केटप्लेस सवलत. डील संपण्यास वेळ:',
@@ -437,10 +625,20 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.mins': 'मिने',
     'home.secs': 'सेकंद',
 
-    // Why Choose & FAQ
+    // ── Why Choose ──────────────────────────────────────────────────────────
     'home.why_choose_title': 'जेएसएस मार्केटप्लेस का निवडावे?',
     'home.why_choose_sub': 'किरकोळ आणि घाऊक ग्राहकांसाठी भारतातील सर्वात विश्वासू थेट स्त्रोताकडून मल्टी-व्हेंडर प्लॅटफॉर्म.',
     'home.excellence': 'मार्केटप्लेस उत्कृष्टता',
+    'home.why_secure_payments': 'सुरक्षित पेमेंट',
+    'home.why_fast_delivery': 'जलद डिलिव्हरी',
+    'home.why_trusted_sellers': 'विश्वासू विक्रेते',
+    'home.why_quality_products': 'दर्जेदार उत्पादने',
+    'home.why_secure_desc': 'तुमचे पेमेंट एस्क्रोमध्ये सुरक्षित ठेवले जाते जोपर्यंत तुमची ऑर्डर डिलिव्हर आणि सत्यापित होत नाही.',
+    'home.why_fast_desc': 'भारतातील २५,०००+ पिन कोडवर एक्सप्रेस डिस्पॅचसह रिअल-टाइम शिपमेंट ट्रॅकिंग.',
+    'home.why_trusted_desc': 'GSTIN आणि अनुपालन-सत्यापित उत्पादक, शेतकरी आणि वितरकांकडून थेट खरेदी करा.',
+    'home.why_quality_desc': 'प्रत्येक वस्तू तपासली जाते आणि १००% सत्यतेसह थेट स्त्रोताकडून पाठवली जाते.',
+
+    // ── FAQ Section ─────────────────────────────────────────────────────────
     'home.faq_center': 'प्रश्न उत्तर केंद्र',
     'home.faq_title': 'नेहमी विचारले जाणारे प्रश्न',
     'home.faq_sub': 'ऑर्डर, पेमेंट, डिलिव्हरी, विक्रेता नोंदणी किंवा इतर कोणत्याही गोष्टीबद्दल प्रश्न आहेत? आम्ही मदतीसाठी येथे आहोत!',
@@ -448,8 +646,51 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.reach_helpline': 'आमच्या हेल्पलाइनवर संपर्क साधा',
     'home.support_247': 'आमची सपोर्ट टीम २४/७ तुमच्या मदतीसाठी येथे आहे',
     'home.tip': 'टीप',
-    
-    // Product details & cards
+    'home.faq_q1': 'मी माझ्या ऑर्डरची डिलिव्हरी कशी ट्रॅक करू?',
+    'home.faq_a1': 'तुमची ऑर्डर शिप झाल्यावर, तुम्हाला SMS किंवा ईमेलद्वारे ट्रॅकिंग लिंक मिळेल. तुम्ही तुमच्या खात्यातील "माझे ऑर्डर्स" विभागातूनही ट्रॅक करू शकता.',
+    'home.faq_tip1': 'रिअल-टाइम डिलिव्हरी अपडेटसाठी तुम्ही आमच्या सपोर्ट टीमशीही संपर्क करू शकता.',
+    'home.faq_q2': 'कोणते पेमेंट मोड उपलब्ध आहेत?',
+    'home.faq_a2': 'आम्ही UPI (GPay, PhonePe, Paytm), क्रेडिट/डेबिट कार्ड, नेट बँकिंग, वॉलेट आणि बहुतेक पिन कोडवर कॅश ऑन डिलिव्हरीसह सर्व प्रमुख पेमेंट पद्धतींना समर्थन देतो.',
+    'home.faq_q3': 'मी विक्रेता म्हणून नोंदणी कशी करू?',
+    'home.faq_a3': 'आमच्या विक्रेता नोंदणी पेजवर जा आणि GSTIN सत्यापन प्रक्रिया पूर्ण करा. मंजूर झाल्यावर, तुम्ही २४ तासांत तुमची उत्पादने सूचीबद्ध करून विक्री सुरू करू शकता.',
+    'home.faq_q4': 'काही शिपिंग शुल्क आहे का?',
+    'home.faq_a4': '₹४९९ पेक्षा जास्त ऑर्डरवर मोफत शिपिंग उपलब्ध आहे. ₹४९९ पेक्षा कमी ऑर्डरसाठी, तुमचे स्थान आणि विक्रेत्यानुसार ₹४९–₹९९ चे मामुली डिलिव्हरी शुल्क लागू होते.',
+    'home.faq_badge_secure': 'सुरक्षित व्यवहार',
+    'home.faq_badge_delivery': 'जलद आणि विश्वासार्ह डिलिव्हरी',
+    'home.faq_badge_trusted': 'हजारोंनी विश्वास ठेवलेले',
+    'home.faq_badge_support': '२४/७ ग्राहक सेवा',
+
+    // ── Flash Sale Banner & Service Strip ──────────────────────────────────
+    'home.flash_sale_live': 'फ्लॅश सेल लाईव्ह इव्हेंट',
+    'home.flash_sale_up_to': 'पर्यंत',
+    'home.flash_sale_desc': 'टॉप इलेक्ट्रॉनिक्स आणि फॅशनवर!',
+    'home.shop_sale_now': 'सेलवरून आता खरेदी करा',
+    'home.service_secure_payment': '100% सुरक्षित पेमेंट',
+    'home.service_secure_payment_sub': 'सुरक्षित आणि विश्वासार्ह व्यवहार',
+    'home.service_easy_returns': 'सोपी परतफेड',
+    'home.service_easy_returns_sub': '7 दिवसांची रिटर्न पॉलिसी',
+    'home.service_free_shipping': 'मोफत शिपिंग',
+    'home.service_free_shipping_sub': '₹४९९ पेक्षा जास्त ऑर्डरवर',
+    'home.service_support': '24/7 ग्राहक सेवा',
+    'home.service_support_sub': 'समर्पित ग्राहक सेवा',
+    'home.service_trusted_vendors': 'विश्वासार्ह विक्रेते',
+    'home.service_trusted_vendors_sub': 'गुणवत्तेची खात्री',
+    'home.marketplace_catalog': 'मार्केटप्लेस कॅटलॉग',
+    'home.explore_categories': 'लोकप्रिय वर्ग शोधा',
+    'home.explore_categories_desc': 'स्त्रोताकडून थेट सर्व अधिकृत मार्केटप्लेस श्रेणींमध्ये सत्यापित बहु-विक्रेता उत्पादने ब्राउझ करा.',
+    'home.categories_available': 'वर्ग उपलब्ध',
+    'home.subcategories': 'उपवर्ग',
+    'home.products': 'उत्पादने',
+    'home.explore': 'शोधा',
+    'home.show_fewer': 'कमी वर्ग दाखवा',
+    'home.view_all_categories': 'सर्व 20 वर्ग पहा',
+    'home.personalized_insights': 'वैयक्तिक शिफारसी',
+    'home.official_catalog': 'अधिकृत मार्केटप्लेस कॅटलॉग',
+    'home.verified_source': 'सत्यापित स्त्रोत उत्पादने',
+    'home.direct_manufacturer_pricing': 'थेट उत्पादक दर',
+    'home.genuine_escrow': '100% अस्सल एस्क्रो गॅरंटी',
+
+    // ── Product Details & Cards ─────────────────────────────────────────────
     'prod.brand': 'ब्रँड',
     'prod.seller': 'विक्रेता',
     'prod.seller_label': 'विक्रेता:',
@@ -465,8 +706,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'prod.cart_added': 'कार्टमध्ये जोडले',
     'prod.save': 'बचत',
     'prod.off': 'सूट',
-    
-    // Category Page & Filters
+
+    // ── Category Page & Filters ─────────────────────────────────────────────
     'cat.filter_by': 'फिल्टर्स',
     'cat.price_range': 'किंमत श्रेणी',
     'cat.min': 'किमान',
@@ -488,7 +729,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'cat.reviews_heading': 'ग्राहक पुनरावलोकने आणि अभिप्राय',
     'cat.related_categories': 'संबंधित श्रेण्या',
 
-    // Footer
+    // ── Footer ──────────────────────────────────────────────────────────────
     'footer.shipping_title': 'मोफत एक्सप्रेस शिपिंग',
     'footer.shipping_sub': 'संपूर्ण भारतात ₹४९९ पेक्षा जास्त सर्व ऑर्डर्सवर',
     'footer.returns_title': 'हॅसल-फ्री रिटर्न्स',
@@ -515,15 +756,19 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.made_in_india': 'सभिमानाने भारतात बनवलेले',
     'footer.escrow_protected': 'एस्क्रौ सुरक्षित',
     'footer.copyright': 'सर्व हक्क राखीव. एंटरप्राइज मल्टी-व्हेंडर प्लॅटफॉर्म.',
-    
-    // Common
+    'footer.get_it_on': 'येथून डाउनलोड करा',
+    'footer.download_on': 'डाउनलोड करा',
+    'footer.google_play': 'Google Play',
+    'footer.app_store': 'App Store',
+
+    // ── Common ──────────────────────────────────────────────────────────────
     'faq.title': 'नेहमी विचारले जाणारे प्रश्न',
     'cart.summary': 'ऑर्डर सारांश',
     'cart.checkout': 'चेकआउटवर जा',
     'cart.empty': 'तुमची कार्ट रिकामी आहे',
     'wishlist.empty': 'तुमची इच्छा-सूची रिकामी आहे',
-    
-    // Banner promotions
+
+    // ── Banner Promotions ───────────────────────────────────────────────────
     'banner.diwali_title': 'दिवाळी धमाका सेल',
     'banner.diwali_subtitle': 'इलेक्ट्रॉनिक्स आणि फॅशनवर ८०% पर्यंत सूट',
     'banner.monsoon_title': 'मान्सून मेगा डिस्काउंट',
@@ -531,5 +776,5 @@ export const translations: Record<Language, Record<string, string>> = {
     'banner.billion_title': 'बिग बिलियन शॉपिंग डेज',
     'banner.billion_subtitle': 'अद्वितीय किमतीत प्रीमियम ब्रँड',
     'banner.cta': 'आता खरेदी करा',
-  }
+  },
 };

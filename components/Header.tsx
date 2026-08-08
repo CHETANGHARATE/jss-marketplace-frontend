@@ -156,7 +156,7 @@ export const Header: React.FC = () => {
                   JSS<span className="text-accent group-hover:text-primary transition-colors">Solutions</span>
                 </span>
                 <span className="hidden sm:inline-block text-[9px] font-extrabold bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-lg uppercase tracking-widest shadow-2xs">
-                  Marketplace
+                  {t('nav.all_categories').includes('All') ? 'Marketplace' : 'मार्केट'}
                 </span>
               </Link>
             </div>
@@ -193,7 +193,7 @@ export const Header: React.FC = () => {
                   className="hidden xl:flex items-center gap-1.5 text-xs font-bold bg-accent/10 text-accent border border-accent/20 px-3 py-2 rounded-2xl hover:bg-accent hover:text-white transition-all shadow-2xs"
                 >
                   <Store size={14} />
-                  <span>Sell Products</span>
+                  <span>{t('nav.sell_products')}</span>
                 </Link>
               )}
 
@@ -290,7 +290,7 @@ export const Header: React.FC = () => {
                   {userMenuOpen && (
                     <div className="absolute right-0 mt-2 w-52 bg-card border border-border-custom rounded-2xl shadow-xl z-50 overflow-hidden divide-y divide-border-custom/80">
                       <div className="px-4 py-3 bg-background-secondary">
-                        <p className="text-[10px] text-muted-custom font-semibold uppercase tracking-wider">Signed in as</p>
+                        <p className="text-[10px] text-muted-custom font-semibold uppercase tracking-wider">{t('nav.signed_in_as')}</p>
                         <p className="text-xs font-bold text-foreground truncate mt-0.5">{user.name}</p>
                         <span className="text-[9px] font-extrabold text-primary bg-primary/10 px-2 py-0.5 rounded-md capitalize mt-1 inline-block">
                           {user.role || 'customer'}
@@ -301,27 +301,27 @@ export const Header: React.FC = () => {
                           <>
                             <Link href="/vendor" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
                               <LayoutDashboard size={15} className="text-primary" />
-                              <span>Vendor Dashboard</span>
+                              <span>{t('nav.vendor_dashboard')}</span>
                             </Link>
                             <Link href="/vendor/products" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
                               <Package size={15} className="text-primary" />
-                              <span>My Products</span>
+                              <span>{t('nav.my_products')}</span>
                             </Link>
                             <Link href="/vendor/orders" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
                               <ShoppingBag size={15} className="text-primary" />
-                              <span>Orders</span>
+                              <span>{t('nav.my_orders_menu')}</span>
                             </Link>
                             <Link href="/vendor/inventory" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
                               <Boxes size={15} className="text-primary" />
-                              <span>Inventory</span>
+                              <span>{t('nav.inventory')}</span>
                             </Link>
                             <Link href="/vendor/wallet" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
                               <Wallet size={15} className="text-primary" />
-                              <span>Earnings</span>
+                              <span>{t('nav.earnings')}</span>
                             </Link>
                             <Link href="/vendor/settings" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
                               <Settings size={15} className="text-primary" />
-                              <span>Store Settings</span>
+                              <span>{t('nav.store_settings')}</span>
                             </Link>
                           </>
                         ) : (
@@ -333,7 +333,7 @@ export const Header: React.FC = () => {
                             {isAdmin && (
                               <Link href="/admin" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-rose-500 hover:bg-background-secondary transition-colors font-bold">
                                 <ShieldCheck size={15} />
-                                Admin Dashboard
+                                {t('nav.admin_dashboard')}
                               </Link>
                             )}
                           </>
@@ -348,7 +348,7 @@ export const Header: React.FC = () => {
                           {isLoggingOut ? (
                             <>
                               <Sparkles className="w-4 h-4 animate-spin text-rose-500" />
-                              <span>Signing Out...</span>
+                              <span>{t('nav.signing_out')}</span>
                             </>
                           ) : (
                             <span>{t('nav.logout')}</span>
@@ -366,14 +366,14 @@ export const Header: React.FC = () => {
                     className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-card hover:bg-background-secondary text-foreground border border-border-custom/90 text-xs font-bold transition-all hover:border-primary shadow-2xs"
                   >
                     <User size={15} className="text-primary" />
-                    <span>Login</span>
+                    <span>{t('nav.login_btn')}</span>
                   </Link>
                   <Link
                     href="/account?tab=register"
                     className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary hover:bg-primary-hover text-white text-xs font-bold transition-all shadow-md hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <UserPlus size={14} />
-                    <span>Sign Up</span>
+                    <span>{t('nav.sign_up')}</span>
                   </Link>
                 </div>
               )}
@@ -415,7 +415,7 @@ export const Header: React.FC = () => {
                     className="flex items-center gap-2.5 p-3.5 bg-primary/10 text-primary border border-primary/20 rounded-2xl font-bold"
                   >
                     <LayoutDashboard size={18} />
-                    <span>Vendor Dashboard</span>
+                    <span>{t('nav.vendor_dashboard')}</span>
                   </Link>
                   <Link
                     href="/vendor/products"
@@ -423,7 +423,7 @@ export const Header: React.FC = () => {
                     className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-2xl font-semibold"
                   >
                     <Package size={16} />
-                    <span>My Products</span>
+                    <span>{t('nav.my_products')}</span>
                   </Link>
                   <Link
                     href="/vendor/orders"
@@ -431,7 +431,7 @@ export const Header: React.FC = () => {
                     className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-2xl font-semibold"
                   >
                     <ShoppingBag size={16} />
-                    <span>Orders</span>
+                    <span>{t('nav.my_orders_menu')}</span>
                   </Link>
                   <Link
                     href="/vendor/inventory"
@@ -439,7 +439,7 @@ export const Header: React.FC = () => {
                     className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-2xl font-semibold"
                   >
                     <Boxes size={16} />
-                    <span>Inventory</span>
+                    <span>{t('nav.inventory')}</span>
                   </Link>
                   <Link
                     href="/vendor/wallet"
@@ -447,7 +447,7 @@ export const Header: React.FC = () => {
                     className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-2xl font-semibold"
                   >
                     <Wallet size={16} />
-                    <span>Earnings</span>
+                    <span>{t('nav.earnings')}</span>
                   </Link>
                   <Link
                     href="/vendor/settings"
@@ -455,7 +455,7 @@ export const Header: React.FC = () => {
                     className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-2xl font-semibold"
                   >
                     <Settings size={16} />
-                    <span>Store Settings</span>
+                    <span>{t('nav.store_settings')}</span>
                   </Link>
                 </div>
               ) : (
@@ -465,7 +465,7 @@ export const Header: React.FC = () => {
                   className="flex items-center gap-2.5 p-3.5 bg-accent/10 border border-accent/20 text-accent rounded-2xl shadow-2xs"
                 >
                   <Store size={18} />
-                  <span>Become Vendor / Sell Products</span>
+                  <span>{t('nav.become_seller')} / {t('nav.sell_products')}</span>
                 </Link>
               )}
 
@@ -476,14 +476,14 @@ export const Header: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className="p-3 text-center bg-background-secondary border border-border-custom/80 text-foreground rounded-2xl"
                   >
-                    Login
+                    {t('nav.login_btn')}
                   </Link>
                   <Link
                     href="/account?tab=register"
                     onClick={() => setMobileMenuOpen(false)}
                     className="p-3 text-center bg-primary text-white rounded-2xl shadow-xs"
                   >
-                    Sign Up
+                    {t('nav.sign_up')}
                   </Link>
                 </div>
               ) : (
@@ -494,7 +494,7 @@ export const Header: React.FC = () => {
                     className="flex items-center gap-2.5 p-3.5 bg-primary/10 text-primary border border-primary/20 rounded-2xl"
                   >
                     <User size={18} />
-                    <span>My Account Dashboard</span>
+                    <span>{t('nav.profile')}</span>
                   </Link>
 
                   <button
@@ -505,10 +505,10 @@ export const Header: React.FC = () => {
                     {isLoggingOut ? (
                       <>
                         <Sparkles className="w-4 h-4 animate-spin text-rose-500" />
-                        <span>Signing Out...</span>
+                        <span>{t('nav.signing_out')}</span>
                       </>
                     ) : (
-                      <span>Sign Out</span>
+                      <span>{t('nav.logout')}</span>
                     )}
                   </button>
                 </div>
@@ -518,7 +518,7 @@ export const Header: React.FC = () => {
               {categories.length > 0 && (
                 <div className="pt-4 border-t border-border-custom/80 space-y-2">
                   <div className="pb-1 text-[10px] font-black text-muted-custom uppercase tracking-wider">
-                    Categories & Subcategories
+                    {t('nav.categories')}
                   </div>
                   <div className="space-y-1.5 max-h-72 overflow-y-auto pr-1">
                     {categories.map((cat) => {
@@ -551,7 +551,7 @@ export const Header: React.FC = () => {
                                   </Link>
                                 ))
                               ) : (
-                                <span className="text-[11px] text-muted-custom p-1 block">No subcategories</span>
+                                <span className="text-[11px] text-muted-custom p-1 block">{t('nav.categories')}</span>
                               )}
                             </div>
                           )}
@@ -636,7 +636,7 @@ export const Header: React.FC = () => {
             {cart.length > 0 && (
               <div className="mt-4 pt-4 border-t border-border-custom/80 space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-muted-custom uppercase">Total Amount</span>
+                  <span className="text-xs font-bold text-muted-custom uppercase">{t('cart.summary')}</span>
                   <span className="text-lg font-black text-foreground">₹{cartTotal.toLocaleString()}</span>
                 </div>
                 <Link
@@ -698,7 +698,7 @@ export const Header: React.FC = () => {
                           }}
                           className="text-[10px] font-bold text-white bg-primary hover:bg-primary-hover px-3 py-1.5 rounded-xl transition-colors shadow-2xs"
                         >
-                          Move to Cart
+                          {t('prod.add_to_cart')}
                         </button>
                       </div>
                     </div>
