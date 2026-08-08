@@ -49,13 +49,10 @@ export const HomeFaqSection: React.FC = () => {
   const toggle = (id: string) => setOpenId(prev => prev === id ? '' : id);
 
   return (
-    <section
-      className="relative rounded-3xl overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #f0f4ff 0%, #faf0ff 50%, #fff5f0 100%)' }}
-    >
+    <section className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-blue-50/70 via-purple-50/50 to-orange-50/50 dark:from-[#0b1329] dark:via-[#131f37] dark:to-[#0b1329] border border-border-custom/40 dark:border-border-custom/80 shadow-xs">
       {/* Decorative blobs */}
-      <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-30 pointer-events-none" style={{ background: 'radial-gradient(circle, #c7d2fe, transparent)' }} />
-      <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-30 pointer-events-none" style={{ background: 'radial-gradient(circle, #e9d5ff, transparent)' }} />
+      <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-30 dark:opacity-10 pointer-events-none" style={{ background: 'radial-gradient(circle, #c7d2fe, transparent)' }} />
+      <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-30 dark:opacity-10 pointer-events-none" style={{ background: 'radial-gradient(circle, #e9d5ff, transparent)' }} />
 
       <div className="relative z-10 p-6 sm:p-10 lg:p-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
@@ -63,7 +60,7 @@ export const HomeFaqSection: React.FC = () => {
           {/* Left Panel */}
           <div className="space-y-5">
             {/* Label */}
-            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 border border-blue-200 px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest">
+            <div className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/30 px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest">
               <HelpCircle size={12} />
               FAQ Center
             </div>
@@ -72,12 +69,12 @@ export const HomeFaqSection: React.FC = () => {
             <div>
               <h2 className="text-3xl sm:text-4xl font-black text-foreground leading-tight">
                 Frequently<br />Asked<br />
-                <span className="text-orange-500">Questions</span>
+                <span className="text-orange-500 dark:text-orange-400">Questions</span>
               </h2>
               {/* Decorative lines */}
               <div className="flex items-center gap-1.5 mt-3">
-                <span className="h-1 w-8 bg-blue-500 rounded-full" />
-                <span className="h-1 w-4 bg-orange-400 rounded-full" />
+                <span className="h-1 w-8 bg-blue-500 dark:bg-blue-400 rounded-full" />
+                <span className="h-1 w-4 bg-orange-400 dark:bg-orange-400 rounded-full" />
               </div>
             </div>
 
@@ -87,9 +84,9 @@ export const HomeFaqSection: React.FC = () => {
             </p>
 
             {/* B2B Support Card */}
-            <div className="bg-white dark:bg-card border border-border-custom/60 rounded-2xl p-5 space-y-3 shadow-sm">
+            <div className="bg-white dark:bg-card border border-border-custom/60 dark:border-border-custom/80 rounded-2xl p-5 space-y-3 shadow-xs">
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                   <Headphones size={18} />
                 </div>
                 <div>
@@ -97,7 +94,7 @@ export const HomeFaqSection: React.FC = () => {
                   <p className="text-[11px] text-muted-custom mt-0.5">Reach out to our helpline at</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-black">
+              <div className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-black transition-colors shadow-2xs">
                 <Phone size={13} />
                 1800-JSS-MARKET
               </div>
@@ -115,7 +112,7 @@ export const HomeFaqSection: React.FC = () => {
               return (
                 <div
                   key={faq.id}
-                  className="bg-white dark:bg-card border border-border-custom/60 rounded-2xl overflow-hidden shadow-sm transition-all duration-200"
+                  className="bg-white dark:bg-card border border-border-custom/60 dark:border-border-custom/80 rounded-2xl overflow-hidden shadow-xs transition-all duration-200"
                 >
                   {/* Question Row */}
                   <button
@@ -123,14 +120,14 @@ export const HomeFaqSection: React.FC = () => {
                     className={`w-full flex items-center justify-between gap-3 px-5 py-4 text-left transition-all ${
                       isOpen
                         ? 'bg-gradient-to-r from-blue-600 to-orange-500 text-white'
-                        : 'hover:bg-gray-50 dark:hover:bg-background-secondary text-foreground'
+                        : 'hover:bg-gray-50 dark:hover:bg-background-secondary/80 text-foreground'
                     }`}
                     aria-expanded={isOpen}
                   >
                     <div className="flex items-center gap-3">
                       <span
                         className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-sm font-black ${
-                          isOpen ? 'bg-white/20 text-white' : 'bg-blue-100 text-blue-600'
+                          isOpen ? 'bg-white/20 text-white' : 'bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400'
                         }`}
                       >
                         {isOpen ? <Minus size={14} /> : <Plus size={14} />}
@@ -152,20 +149,20 @@ export const HomeFaqSection: React.FC = () => {
                       <div className="flex items-start gap-4">
                         {/* Optional illustration */}
                         {faq.image && (
-                          <div className="w-20 h-20 rounded-xl bg-blue-50 flex items-center justify-center text-4xl shrink-0">
+                          <div className="w-20 h-20 rounded-xl bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 flex items-center justify-center text-4xl shrink-0">
                             {faq.image}
                           </div>
                         )}
-                        <p className="text-sm text-muted-custom leading-relaxed flex-1">
+                        <p className="text-sm text-muted-custom leading-relaxed flex-1 font-normal">
                           {faq.answer}
                         </p>
                       </div>
 
                       {/* Tip box */}
                       {faq.tip && (
-                        <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-                          <Lightbulb size={15} className="text-amber-500 shrink-0 mt-0.5" />
-                          <p className="text-xs text-amber-800 font-medium leading-relaxed">
+                        <div className="flex items-start gap-2.5 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl px-4 py-3">
+                          <Lightbulb size={15} className="text-amber-500 dark:text-amber-400 shrink-0 mt-0.5" />
+                          <p className="text-xs text-amber-800 dark:text-amber-300 font-medium leading-relaxed">
                             <span className="font-bold">Tip:</span> {faq.tip}
                           </p>
                         </div>
@@ -177,7 +174,7 @@ export const HomeFaqSection: React.FC = () => {
             })}
 
             {/* Trust badges strip */}
-            <div className="bg-white dark:bg-card border border-border-custom/60 rounded-2xl p-4 mt-4">
+            <div className="bg-white dark:bg-card border border-border-custom/60 dark:border-border-custom/80 rounded-2xl p-4 mt-4">
               <div className="flex flex-wrap items-center justify-around gap-4">
                 {trustBadges.map((badge, i) => {
                   const Icon = badge.icon;
@@ -185,7 +182,7 @@ export const HomeFaqSection: React.FC = () => {
                     <div key={i} className="flex flex-col items-center gap-1.5 min-w-[80px]">
                       <div
                         className="w-10 h-10 rounded-full flex items-center justify-center"
-                        style={{ background: `${badge.color}15`, color: badge.color }}
+                        style={{ background: `${badge.color}20`, color: badge.color }}
                       >
                         <Icon size={18} />
                       </div>
