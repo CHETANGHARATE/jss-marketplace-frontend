@@ -219,49 +219,34 @@ export default function AdminBulkImportPage() {
   }, [validationResult, filterTab]);
 
   return (
-    <div className="min-h-screen bg-background pb-16 pt-6">
-      <div className="container mx-auto px-4 sm:px-6 max-w-7xl space-y-6">
-        {/* Breadcrumbs */}
-        <Breadcrumbs
-          items={[
-            { label: 'Admin', href: '/admin' },
-            { label: 'Products', href: '/admin/products' },
-            { label: 'Bulk Product Import' },
-          ]}
-        />
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Marketplace Bulk Product Import Engine"
+        subtitle="Upload Excel catalog spreadsheet (products.xlsx) and zip archive of images to perform batch validation, error detection, preview, and auto-mapping."
+        badge="Bulk Operations"
+        breadcrumbs={[
+          { label: 'Admin', href: '/admin' },
+          { label: 'Products', href: '/admin/products' },
+          { label: 'Bulk Import' },
+        ]}
+        actions={
+          step !== 'upload' ? (
+            <button
+              onClick={() => {
+                setStep('upload');
+                setValidationResult(null);
+                setFile(null);
+                setRawParsedRows([]);
+              }}
+              className="px-4 py-2.5 bg-background-secondary border border-border-custom/80 text-foreground font-bold text-xs rounded-xl hover:bg-card transition-all flex items-center gap-1.5"
+            >
+              <RefreshCw className="w-4 h-4 text-muted-custom" />
+              <span>Start New Batch</span>
+            </button>
+          ) : undefined
+        }
+      />
 
-        <div className="flex flex-col lg:flex-row gap-8 items-start">
-          {/* Admin Sidebar */}
-          <AdminSidebar />
-
-          {/* Main Module Content */}
-          <div className="flex-1 bg-card border border-border/40 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6 min-w-0 w-full">
-            {/* Module Title Header */}
-            <div className="pb-4 border-b border-border/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <h1 className="text-2xl font-extrabold text-foreground flex items-center gap-2">
-                  <FileSpreadsheet className="w-6 h-6 text-emerald-500" />
-                  <span>Marketplace Bulk Product Import</span>
-                </h1>
-                <p className="text-xs text-foreground/60 font-medium mt-1">
-                  Upload Excel catalog (`products.xlsx`) & product images to perform batch validation, preview, and database import.
-                </p>
-              </div>
-
-              {step !== 'upload' && (
-                <button
-                  onClick={() => {
-                    setStep('upload');
-                    setValidationResult(null);
-                    setFinalReport(null);
-                  }}
-                  className="px-4 py-2 bg-muted text-foreground/70 hover:text-foreground font-bold text-xs rounded-2xl transition-all inline-flex items-center gap-1.5 self-start sm:self-auto"
-                >
-                  <RefreshCw className="w-3.5 h-3.5" />
-                  <span>Start New Import</span>
-                </button>
-              )}
-            </div>
 
             {/* Step Indicator Tracker */}
             <div className="grid grid-cols-4 gap-2 text-center text-xs font-bold">
@@ -750,9 +735,6 @@ export default function AdminBulkImportPage() {
                 </div>
               </div>
             )}
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

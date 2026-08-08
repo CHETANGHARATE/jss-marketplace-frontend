@@ -43,22 +43,23 @@ export default function AdminSettingsPage() {
   };
 
   return (
-    <div className="space-y-8">
-      <Breadcrumbs items={[{ label: 'Admin Dashboard', href: '/admin' }, { label: 'Platform Settings' }]} />
-
-      <div className="flex flex-col lg:flex-row gap-8 items-start">
-        <AdminSidebar />
-
-        <div className="flex-1 bg-card border border-border/40 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6 min-w-0 w-full">
-          <div className="pb-4 border-b border-border/40">
-            <h1 className="text-2xl font-extrabold text-foreground flex items-center gap-2">
-              <Sliders className="w-6 h-6 text-rose-500" />
-              <span>Global Marketplace Settings</span>
-            </h1>
-            <p className="text-xs text-foreground/60 font-medium mt-1">
-              Configure platform commission fees, global tax rates, and maintenance mode status.
-            </p>
-          </div>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Global Marketplace Settings & Configuration"
+        subtitle="Configure marketplace brand identity, default seller commission percentage, tax rules, currency symbols, and maintenance mode status."
+        badge="System Configuration"
+        breadcrumbs={[{ label: 'Admin', href: '/admin' }, { label: 'Settings' }]}
+        actions={
+          <button
+            onClick={handleSubmit}
+            disabled={updateMutation.isPending}
+            className="px-5 py-2.5 bg-rose-500 text-white font-bold text-xs rounded-xl hover:bg-rose-600 transition-colors flex items-center gap-2 shadow-2xs disabled:opacity-50"
+          >
+            <Save size={16} />
+            <span>{updateMutation.isPending ? 'Saving Settings...' : 'Save Settings'}</span>
+          </button>
+        }
+      />
 
           {successNotice && (
             <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-center gap-3 text-emerald-600 text-xs font-bold">
@@ -153,8 +154,6 @@ export default function AdminSettingsPage() {
               </button>
             </form>
           )}
-        </div>
-      </div>
     </div>
   );
 }

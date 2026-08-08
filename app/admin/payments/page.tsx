@@ -2,86 +2,83 @@
 
 import React from 'react';
 import { useAdminPaymentsQuery } from '../../../hooks/useAdmin';
-import { Breadcrumbs } from '../../../components/Breadcrumbs';
-import { AdminSidebar } from '../../../components/AdminSidebar';
-import { CreditCard } from 'lucide-react';
+import { AdminPageHeader } from '../../../components/admin/AdminPageHeader';
+import { CreditCard, DollarSign, RefreshCw, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 export default function AdminPaymentsPage() {
-  const { data, isLoading } = useAdminPaymentsQuery();
+  const { data, isLoading, refetch } = useAdminPaymentsQuery();
   const payments = data?.data || [];
 
   return (
-    <div className="space-y-8">
-      <Breadcrumbs items={[{ label: 'Admin Dashboard', href: '/admin' }, { label: 'Payment Audit' }]} />
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Payment Gateways & Transaction Log"
+        subtitle="Track digital payment captures (UPI, Cards, Net Banking), COD collection reconciliation, gateway transactions, and refund statuses."
+        badge="Payment Operations"
+        breadcrumbs={[{ label: 'Admin', href: '/admin' }, { label: 'Payments' }]}
+        actions={
+          <button
+            onClick={() => refetch()}
+            className="px-4 py-2 bg-background-secondary border border-border-custom/80 text-foreground font-bold text-xs rounded-xl hover:bg-card flex items-center gap-1.5"
+          >
+            <RefreshCw size={15} />
+            <span>Refresh Transactions</span>
+          </button>
+        }
+      />
 
-      <div className="flex flex-col lg:flex-row gap-8 items-start">
-        <AdminSidebar />
-
-        <div className="flex-1 bg-card border border-border/40 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6 min-w-0 w-full">
-          <div className="pb-4 border-b border-border/40">
-            <h1 className="text-2xl font-extrabold text-foreground flex items-center gap-2">
-              <CreditCard className="w-6 h-6 text-rose-500" />
-              <span>Payment Gateway Audit Log</span>
-            </h1>
-            <p className="text-xs text-foreground/60 font-medium mt-1">
-              Track real-time digital payment captures, COD authorizations, and gateway settlement logs.
-            </p>
-          </div>
-
-          {isLoading ? (
-            <div className="py-12 text-center text-xs text-foreground/50 animate-pulse">
-              Loading payment transactions...
-            </div>
-          ) : payments.length === 0 ? (
-            <div className="py-12 text-center text-xs text-foreground/50 bg-muted/20 rounded-2xl">
-              No payment transactions captured yet.
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs font-semibold">
-                <thead>
-                  <tr className="border-b border-border/40 text-foreground/50 uppercase text-[10px]">
-                    <th className="pb-3 px-2">Payment ID</th>
-                    <th className="pb-3 px-2">Order Ref</th>
-                    <th className="pb-3 px-2">Amount</th>
-                    <th className="pb-3 px-2">Gateway</th>
-                    <th className="pb-3 px-2">Status</th>
-                    <th className="pb-3 px-2 text-right">Date</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border/40">
-                  {payments.map((pay) => (
-                    <tr key={pay.id} className="hover:bg-muted/20">
-                      <td className="py-3.5 px-2 font-mono font-bold text-rose-500">{pay.payment_id}</td>
-                      <td className="py-3.5 px-2 font-mono text-foreground/70">#{pay.order_number}</td>
-                      <td className="py-3.5 px-2 font-black text-foreground">₹{pay.amount?.toLocaleString()}</td>
-                      <td className="py-3.5 px-2 font-bold uppercase text-[10px] text-foreground/60">
-                        {pay.provider}
-                      </td>
-                      <td className="py-3.5 px-2">
-                        <span
-                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                            pay.status === 'captured'
-                              ? 'bg-emerald-500/10 text-emerald-600'
-                              : pay.status === 'failed'
-                              ? 'bg-rose-500/10 text-rose-500'
-                              : 'bg-amber-500/10 text-amber-600'
-                          }`}
-                        >
-                          {pay.status}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-2 text-right text-foreground/50 font-medium">
-                        {new Date(pay.created_at).toLocaleDateString('en-IN')}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+      {isLoading ? (
+        <div className="py-16 text-center text-xs font-bold text-muted-custom animate-pulse">
+          Loading payment gateway transactions...
         </div>
-      </div>
+      ) : payments.length === 0 ? (
+        <div className="py-16 text-center space-y-3 bg-card border border-border-custom/80 rounded-3xl">
+          <CreditCard className="w-12 h-12 text-muted-custom/40 mx-auto" />
+          <h3 className="text-base font-black text-foreground">No Transactions Captured</h3>
+          <p className="text-xs text-muted-custom font-medium max-w-sm mx-auto">
+            Payment transactions captured via UPI, Razorpay/PhonePe, and COD will be listed here.
+          </p>
+        </div>
+      ) : (
+        <div className="bg-card border border-border-custom/80 rounded-3xl overflow-hidden shadow-2xs">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs font-semibold">
+              <thead>
+                <tr className="border-b border-border-custom/60 bg-background-secondary text-muted-custom uppercase text-[10px] tracking-wider font-black">
+                  <th className="py-3.5 px-4">Transaction Reference</th>
+                  <th className="py-3.5 px-4">Order Ref</th>
+                  <th className="py-3.5 px-4">Payment Gateway</th>
+                  <th className="py-3.5 px-4">Amount</th>
+                  <th className="py-3.5 px-4">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border-custom/60">
+                {payments.map((p: any) => (
+                  <tr key={p.id} className="hover:bg-background-secondary/50 transition-colors">
+                    <td className="py-3.5 px-4 font-mono font-black text-primary">
+                      {p.transaction_id || `TXN-${p.id}`}
+                    </td>
+                    <td className="py-3.5 px-4 font-mono font-bold text-foreground">
+                      #{p.order?.order_number || p.order_id}
+                    </td>
+                    <td className="py-3.5 px-4 uppercase text-foreground font-bold">
+                      {p.payment_method || 'Online Gateway'}
+                    </td>
+                    <td className="py-3.5 px-4 font-black text-foreground">
+                      ₹{p.amount?.toLocaleString()}
+                    </td>
+                    <td className="py-3.5 px-4">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-500/10 text-emerald-500">
+                        {p.status || 'Success'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

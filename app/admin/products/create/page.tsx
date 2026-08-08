@@ -190,61 +190,46 @@ export default function CreateAdminProductPage() {
   const subcategories = selectedCategoryObj?.children || selectedCategoryObj?.subcategories || [];
 
   return (
-    <div className="space-y-8">
-      <Breadcrumbs items={[{ label: 'Admin Dashboard', href: '/admin' }, { label: 'Products', href: '/admin/products' }, { label: 'Create Product' }]} />
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Create New Catalog Product"
+        subtitle="Add a new marketplace product with multi-lingual details, dynamic category attributes, gallery images, variants, SEO, and tax rates. Admin products are auto-approved."
+        badge="Catalog Creation"
+        breadcrumbs={[
+          { label: 'Admin', href: '/admin' },
+          { label: 'Products', href: '/admin/products' },
+          { label: 'Add Product' },
+        ]}
+        actions={
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => handleSaveProduct('draft')}
+              disabled={createProductMutation.isPending}
+              className="px-4 py-2.5 bg-background-secondary border border-border-custom/80 text-foreground font-bold text-xs rounded-xl hover:bg-card transition-all inline-flex items-center gap-1.5"
+            >
+              <Save className="w-4 h-4 text-muted-custom" />
+              <span>Save Draft</span>
+            </button>
 
-      <div className="flex flex-col lg:flex-row gap-8 items-start">
-        <AdminSidebar />
-
-        <div className="flex-1 bg-card border border-border/40 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6 min-w-0 w-full">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border/40">
-            <div className="flex items-center gap-3">
-              <Link
-                href="/admin/products"
-                className="p-2 bg-muted/40 rounded-2xl text-foreground/70 hover:text-foreground hover:bg-muted transition-all"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </Link>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-extrabold text-foreground flex items-center gap-2">
-                  <span>Create Admin Product</span>
-                  <span className="text-[10px] bg-rose-500/10 text-rose-500 font-bold px-2 py-0.5 rounded-full uppercase">
-                    Admin Auto-Approve
-                  </span>
-                </h1>
-                <p className="text-xs text-foreground/60">
-                  Products created by Admin become live automatically without requiring moderation.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 self-end sm:self-auto">
-              <button
-                type="button"
-                onClick={() => handleSaveProduct('draft')}
-                disabled={createProductMutation.isPending}
-                className="px-4 py-2.5 bg-muted text-foreground text-xs font-bold rounded-2xl hover:bg-muted/80 transition-all inline-flex items-center gap-1.5"
-              >
-                <Save className="w-4 h-4 text-foreground/70" />
-                <span>Save Draft</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleSaveProduct('approved')}
-                disabled={createProductMutation.isPending}
-                className="px-5 py-2.5 bg-rose-500 text-white text-xs font-bold rounded-2xl hover:bg-rose-600 transition-all inline-flex items-center gap-1.5 shadow-md"
-              >
-                {createProductMutation.isPending ? (
-                  <Sparkles className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Send className="w-4 h-4" />
-                )}
-                <span>Publish Product</span>
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => handleSaveProduct('approved')}
+              disabled={createProductMutation.isPending}
+              className="px-5 py-2.5 bg-rose-500 text-white font-bold text-xs rounded-xl hover:bg-rose-600 transition-all inline-flex items-center gap-1.5 shadow-2xs"
+            >
+              {createProductMutation.isPending ? (
+                <Sparkles className="w-4 h-4 animate-spin" />
+              ) : (
+                <Send className="w-4 h-4" />
+              )}
+              <span>Publish Product</span>
+            </button>
           </div>
+        }
+      />
+
+
 
           {/* Wizard Tabs Header */}
           <div className="flex items-center gap-2 border-b border-border/40 overflow-x-auto pb-2 scrollbar-none">
@@ -738,8 +723,6 @@ export default function CreateAdminProductPage() {
               </div>
             </div>
           )}
-        </div>
-      </div>
     </div>
   );
 }

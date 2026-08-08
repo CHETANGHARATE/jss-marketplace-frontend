@@ -43,28 +43,30 @@ export default function AdminReviewsPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <AdminSidebar />
-      <div className="flex-1 p-6 md:p-8 lg:p-12 md:ml-64 transition-all duration-300">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <Breadcrumbs 
-            items={[
-              { label: 'Admin', href: '/admin' },
-              { label: 'Reviews', href: '/admin/reviews' }
-            ]} 
-          />
-
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
-                <MessageSquare className="w-8 h-8 text-rose-500" />
-                Customer Reviews
-              </h1>
-              <p className="text-muted-foreground mt-1 text-sm">
-                Manage and moderate product reviews across the marketplace.
-              </p>
-            </div>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Customer Ratings & Review Moderation"
+        subtitle="Approve verified customer product reviews, filter spam/abusive content, and monitor seller rating scores."
+        badge="Review Moderation"
+        breadcrumbs={[{ label: 'Admin', href: '/admin' }, { label: 'Reviews' }]}
+        actions={
+          <div className="flex items-center gap-1.5 bg-background-secondary border border-border-custom/80 p-1 rounded-xl">
+            {(['All', 'Pending', 'Approved', 'Rejected'] as FilterType[]).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setFilter(tab)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  filter === tab
+                    ? 'bg-primary text-white shadow-2xs'
+                    : 'text-muted-custom hover:text-foreground'
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
           </div>
+        }
+      />
 
           <div className="bg-card border border-border/40 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
             <div className="flex items-center gap-2 overflow-x-auto pb-2">
@@ -171,8 +173,6 @@ export default function AdminReviewsPage() {
               </div>
             )}
           </div>
-        </div>
-      </div>
     </div>
   );
 }

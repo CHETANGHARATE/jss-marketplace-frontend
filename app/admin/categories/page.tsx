@@ -236,47 +236,32 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
-      <AdminSidebar />
-      <div className="flex-1 overflow-y-auto p-6 sm:p-8">
-        <div className="space-y-8 max-w-6xl mx-auto">
-          <Breadcrumbs
-            items={[
-              { label: 'Admin', href: '/admin' },
-              { label: 'Marketplace Taxonomy', href: '/admin/categories' },
-            ]}
-          />
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Marketplace Categories & Subcategories"
+        subtitle="Manage top-level categories, subcategories, sort ordering, icons, and duplicate category protection."
+        badge="Taxonomy Management"
+        breadcrumbs={[{ label: 'Admin', href: '/admin' }, { label: 'Categories' }]}
+        actions={
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => openSubcategoryModal()}
+              className="px-4 py-2.5 bg-background-secondary border border-border-custom/80 text-foreground font-bold text-xs rounded-xl hover:bg-card transition-all flex items-center gap-2 shadow-2xs"
+            >
+              <Plus className="w-4 h-4 text-primary" />
+              <span>Add Subcategory</span>
+            </button>
 
-          {/* Header Row */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-            <div>
-              <h1 className="text-2xl font-bold flex items-center gap-2">
-                <Layers className="w-6 h-6 text-rose-500" />
-                <span>Marketplace Categories & Subcategories</span>
-              </h1>
-              <p className="text-xs text-muted-custom font-medium mt-1">
-                Manage top-level categories and subcategory taxonomy hierarchy.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => openSubcategoryModal()}
-                className="px-4 py-2 bg-rose-500 text-white font-bold text-xs rounded-xl hover:bg-rose-600 transition-colors flex items-center gap-2 shadow-xs"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Add Subcategory</span>
-              </button>
-
-              <button
-                onClick={() => openCategoryModal()}
-                className="px-4 py-2 bg-background-secondary border border-border/60 text-foreground font-bold text-xs rounded-xl hover:border-primary transition-colors flex items-center gap-2"
-              >
-                <FolderOpen className="w-4 h-4 text-rose-500" />
-                <span>Add Category</span>
-              </button>
-            </div>
+            <button
+              onClick={() => openCategoryModal()}
+              className="px-4 py-2.5 bg-rose-500 text-white font-bold text-xs rounded-xl hover:bg-rose-600 transition-colors flex items-center gap-2 shadow-2xs"
+            >
+              <FolderOpen className="w-4 h-4" />
+              <span>Add Category</span>
+            </button>
           </div>
+        }
+      />
 
           {/* View Tab Switcher */}
           <div className="flex items-center justify-between gap-4 border-b border-border/40 pb-4">
@@ -547,8 +532,6 @@ export default function CategoriesPage() {
               </div>
             )}
           </div>
-        </div>
-      </div>
 
       {/* MODAL: CREATE / EDIT SUBCATEGORY */}
       {isSubcategoryModalOpen && (

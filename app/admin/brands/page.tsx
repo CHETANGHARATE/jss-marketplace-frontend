@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { useAdminBrandsQuery, useCreateBrandMutation, useUpdateBrandMutation, useDeleteBrandMutation } from '../../../hooks/useAdmin';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { AdminSidebar } from '../../../components/AdminSidebar';
@@ -95,28 +96,22 @@ export default function BrandsPage() {
   };
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
-      <AdminSidebar />
-      <div className="flex-1 overflow-y-auto p-6 sm:p-8">
-        <div className="space-y-8 max-w-6xl mx-auto">
-          <Breadcrumbs items={[
-            { label: 'Admin', href: '/admin' },
-            { label: 'Brands', href: '/admin/brands' }
-          ]} />
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Award className="w-6 h-6 text-rose-500" />
-              Brands
-            </h1>
-            <button 
-              onClick={() => openModal()}
-              className="px-4 py-2 bg-rose-500 text-white font-bold text-xs rounded-xl hover:bg-rose-600 transition-colors flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4" />
-              Add Brand
-            </button>
-          </div>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Marketplace Brand Directory"
+        subtitle="Manage brand profiles, logos, manufacturer descriptions, and official store affiliations."
+        badge="Brand Management"
+        breadcrumbs={[{ label: 'Admin', href: '/admin' }, { label: 'Brands' }]}
+        actions={
+          <button
+            onClick={() => openModal()}
+            className="px-4 py-2.5 bg-rose-500 text-white font-bold text-xs rounded-xl hover:bg-rose-600 transition-colors flex items-center gap-2 shadow-2xs"
+          >
+            <Plus size={16} />
+            <span>Add Brand</span>
+          </button>
+        }
+      />
 
           <div className="bg-card border border-border/40 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
             <div className="relative max-w-sm">
@@ -192,8 +187,6 @@ export default function BrandsPage() {
               </table>
             </div>
           </div>
-        </div>
-      </div>
 
       {isOpen && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">

@@ -330,42 +330,31 @@ export default function AdminProductsPage() {
   }, [allProducts, selectedIds]);
 
   return (
-    <div className="space-y-8" onClick={() => setOpenMenuId(null)}>
-      <Breadcrumbs items={[{ label: 'Admin Dashboard', href: '/admin' }, { label: 'Category-Wise Product Catalog' }]} />
-
-      <div className="flex flex-col lg:flex-row gap-8 items-start">
-        <AdminSidebar />
-
-        <div className="flex-1 bg-card border border-border/40 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6 min-w-0 w-full">
-          {/* Header */}
-          <div className="pb-4 border-b border-border/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-extrabold text-foreground flex items-center gap-2">
-                <Package className="w-6 h-6 text-rose-500" />
-                <span>Admin Category-Wise Product Management</span>
-              </h1>
-              <p className="text-xs text-foreground/60 font-medium mt-1">
-                Organized category-wise product catalog with accordion grouping, search, sorting, and lifecycle moderation.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-3 self-start sm:self-auto">
-              <Link
-                href="/admin/products/import"
-                className="px-4 py-2.5 bg-emerald-600 text-white font-bold text-xs rounded-2xl hover:bg-emerald-700 transition-all inline-flex items-center gap-1.5 shadow-sm"
-              >
-                <FileSpreadsheet className="w-4 h-4" />
-                <span>Bulk Import</span>
-              </Link>
-              <Link
-                href="/admin/products/create"
-                className="px-4 py-2.5 bg-rose-500 text-white font-bold text-xs rounded-2xl hover:bg-rose-600 transition-all inline-flex items-center gap-1.5 shadow-sm"
-              >
-                <Plus className="w-4 h-4" />
-                <span>+ Add Product</span>
-              </Link>
-            </div>
-          </div>
+    <div className="space-y-6" onClick={() => setOpenMenuId(null)}>
+      <AdminPageHeader
+        title="Admin Category-Wise Product Management"
+        subtitle="Organized category-wise product catalog with accordion grouping, search, sorting, multi-select bulk actions, and lifecycle moderation."
+        badge="Catalog Management"
+        breadcrumbs={[{ label: 'Admin', href: '/admin' }, { label: 'Products' }]}
+        actions={
+          <>
+            <Link
+              href="/admin/products/import"
+              className="px-4 py-2.5 bg-emerald-600 text-white font-bold text-xs rounded-xl hover:bg-emerald-700 transition-all inline-flex items-center gap-1.5 shadow-2xs"
+            >
+              <FileSpreadsheet className="w-4 h-4" />
+              <span>Bulk Import</span>
+            </Link>
+            <Link
+              href="/admin/products/create"
+              className="px-4 py-2.5 bg-rose-500 text-white font-bold text-xs rounded-xl hover:bg-rose-600 transition-all inline-flex items-center gap-1.5 shadow-2xs"
+            >
+              <Plus className="w-4 h-4" />
+              <span>+ Add Product</span>
+            </Link>
+          </>
+        }
+      />
 
           {/* 7. Quick Statistics Cards Header */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -907,8 +896,6 @@ export default function AdminProductsPage() {
               })}
             </div>
           )}
-        </div>
-      </div>
 
       {/* Delete Confirmation Modal */}
       {deletingProduct && (

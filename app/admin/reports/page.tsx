@@ -3,55 +3,44 @@
 import React, { useState } from 'react';
 import { useAdminReportsQuery } from '../../../hooks/useAdmin';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
-import { AdminSidebar } from '../../../components/AdminSidebar';
-import { BarChart3, Download, IndianRupee, ShoppingBag, TrendingUp, PieChart } from 'lucide-react';
+import { AdminPageHeader } from '../../../components/admin/AdminPageHeader';
 
 export default function AdminReportsPage() {
   const [range, setRange] = useState<string>('30d');
   const { data: reports, isLoading } = useAdminReportsQuery(range);
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
-      <AdminSidebar />
-
-      <main className="flex-1 flex flex-col p-6 sm:p-10 lg:p-12 overflow-auto">
-        <div className="max-w-7xl w-full mx-auto space-y-8">
-          <Breadcrumbs items={[{ label: 'Admin Dashboard', href: '/admin' }, { label: 'Executive Reports' }]} />
-
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border/40">
-            <div>
-              <h1 className="text-3xl font-extrabold text-foreground flex items-center gap-3">
-                <BarChart3 className="w-8 h-8 text-rose-500" />
-                <span>Executive Analytics</span>
-              </h1>
-              <p className="text-sm text-foreground/60 font-medium mt-1">
-                Analyze marketplace sales volume, gross revenue, and order statistics.
-              </p>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Business Intelligence & Executive Analytics"
+        subtitle="Analyze marketplace revenue, sales volume, category performance, GST tax reports, vendor payouts, and export Excel reports."
+        badge="Analytics & BI"
+        breadcrumbs={[{ label: 'Admin', href: '/admin' }, { label: 'Reports' }]}
+        actions={
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 bg-background-secondary border border-border-custom/80 p-1 rounded-xl">
+              {['7d', '30d', '90d', '1y'].map((r) => (
+                <button
+                  key={r}
+                  onClick={() => setRange(r)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition-all ${
+                    range === r
+                      ? 'bg-primary text-white shadow-2xs'
+                      : 'text-muted-custom hover:text-foreground'
+                  }`}
+                >
+                  {r}
+                </button>
+              ))}
             </div>
 
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1 bg-muted/40 p-1.5 rounded-xl border border-border/40 text-sm font-semibold">
-                {['7d', '30d', '90d', '1y'].map((r) => (
-                  <button
-                    key={r}
-                    onClick={() => setRange(r)}
-                    className={`px-4 py-2 rounded-lg uppercase transition-all ${
-                      range === r
-                        ? 'bg-rose-500 text-white shadow-sm'
-                        : 'text-foreground/70 hover:text-foreground'
-                    }`}
-                  >
-                    {r}
-                  </button>
-                ))}
-              </div>
-
-              <button className="inline-flex items-center gap-2 px-4 py-2 bg-rose-500 text-white text-sm font-semibold rounded-xl hover:bg-rose-600 transition-colors shadow-sm shadow-rose-500/20">
-                <Download className="w-4 h-4" />
-                <span>Export CSV</span>
-              </button>
-            </div>
+            <button className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-emerald-600 text-white text-xs font-bold rounded-xl hover:bg-emerald-700 transition-colors shadow-2xs">
+              <Download className="w-4 h-4" />
+              <span>Export CSV / Excel</span>
+            </button>
           </div>
+        }
+      />
 
           {isLoading ? (
             <div className="py-20 flex flex-col items-center justify-center gap-4 text-foreground/50 animate-pulse">
@@ -152,8 +141,6 @@ export default function AdminReportsPage() {
               </div>
             </div>
           )}
-        </div>
-      </main>
     </div>
   );
 }

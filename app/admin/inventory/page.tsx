@@ -58,28 +58,22 @@ export default function InventoryPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-      <AdminSidebar />
-      
-      <main className="flex-1 flex flex-col p-6 sm:p-10 lg:p-12 overflow-auto">
-        <div className="max-w-7xl w-full mx-auto space-y-8">
-          <Breadcrumbs items={[
-            { label: 'Admin', href: '/admin' },
-            { label: 'Inventory', href: '/admin/inventory' }
-          ]} />
-
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h1 className="text-3xl font-bold tracking-tight">Inventory Management</h1>
-            <button 
-              onClick={() => setIsAddModalOpen(true)}
-              className="flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white px-5 py-2.5 rounded-full font-medium transition-colors"
-            >
-              <Plus className="w-5 h-5" />
-              Add Stock
-            </button>
-          </div>
-
-          <div className="bg-card border border-border/40 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Inventory & Warehouse Management"
+        subtitle="Monitor product stock levels, reserved stock, low-stock alerts, reorder thresholds, and execute manual stock adjustments."
+        badge="Stock Control"
+        breadcrumbs={[{ label: 'Admin', href: '/admin' }, { label: 'Inventory' }]}
+        actions={
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="px-4 py-2.5 bg-rose-500 text-white font-bold text-xs rounded-xl hover:bg-rose-600 transition-colors flex items-center gap-2 shadow-2xs"
+          >
+            <Plus size={16} />
+            <span>Add Stock Entry</span>
+          </button>
+        }
+      />
             <div className="flex flex-col sm:flex-row justify-between gap-4">
               <div className="flex gap-2 p-1 bg-border/20 rounded-lg w-fit">
                 <button
@@ -153,10 +147,7 @@ export default function InventoryPage() {
                   )}
                 </tbody>
               </table>
-            </div>
           </div>
-        </div>
-      </main>
 
       {/* Add Stock Modal */}
       {isAddModalOpen && (

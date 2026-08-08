@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { AdminGuard } from '../../components/AdminGuard';
+import { AdminShell } from '../../components/admin/AdminShell';
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard — JSS Marketplace',
@@ -11,7 +12,9 @@ export const metadata: Metadata = {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <AdminGuard>
-      {children}
+      <AdminShell>
+        {children}
+      </AdminShell>
     </AdminGuard>
   );
 }

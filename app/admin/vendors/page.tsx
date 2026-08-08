@@ -130,25 +130,25 @@ export default function AdminVendorsPage() {
   };
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
-      <AdminSidebar />
-
-      <div className="flex-1 overflow-y-auto p-6 sm:p-8">
-        <div className="space-y-8 max-w-7xl mx-auto">
-          <Breadcrumbs items={[{ label: 'Admin Dashboard', href: '/admin' }, { label: 'Vendor Management' }]} />
-
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border/40">
-            <div>
-              <h1 className="text-2xl font-extrabold text-foreground flex items-center gap-2 tracking-tight">
-                <Store className="w-6 h-6 text-rose-500" />
-                <span>Multi-Vendor Merchant Control</span>
-              </h1>
-              <p className="text-xs text-foreground/60 font-medium mt-1">
-                Approve pending seller applications, manage vendor store status, and monitor marketplace merchants.
-              </p>
-            </div>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Multi-Vendor Merchant Control & KYC"
+        subtitle="Approve pending seller store applications, perform KYC verification, configure vendor commission rates, and manage store status."
+        badge="Vendor Operations"
+        breadcrumbs={[{ label: 'Admin', href: '/admin' }, { label: 'Vendors' }]}
+        actions={
+          <div className="relative">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-custom" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search vendor store or email..."
+              className="pl-10 pr-4 py-2 bg-background-secondary border border-border-custom/80 text-foreground text-xs font-semibold rounded-xl focus:outline-none"
+            />
           </div>
+        }
+      />
 
           {/* STEP 11: Top Statistics Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -370,8 +370,6 @@ export default function AdminVendorsPage() {
               </div>
             )}
           </div>
-        </div>
-      </div>
     </div>
   );
 }

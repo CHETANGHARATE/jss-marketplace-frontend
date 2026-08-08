@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { AdminSidebar } from '../../../components/AdminSidebar';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import {
@@ -109,30 +110,22 @@ export default function AdminAttributeTemplatesPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <AdminSidebar />
-
-      <main className="flex-1 p-6 sm:p-10 space-y-8 overflow-x-hidden">
-        <Breadcrumbs items={[{ label: 'Admin', href: '/admin' }, { label: 'Attribute Templates' }]} />
-
-        {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-black text-foreground tracking-tight flex items-center gap-2.5">
-              <Sliders className="w-7 h-7 text-rose-500" /> Attribute Templates (Module 5)
-            </h1>
-            <p className="text-xs text-foreground/60">
-              Configure dynamic category attribute presets (Electronics, Fashion, Grocery, Agriculture, etc.)
-            </p>
-          </div>
-
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Category Attribute Templates & EAV Schema"
+        subtitle="Define custom product attribute specifications (Size, Color, Fabric, RAM, Storage, HSN, Expiry) assigned per category."
+        badge="Product Attributes"
+        breadcrumbs={[{ label: 'Admin', href: '/admin' }, { label: 'Attributes' }]}
+        actions={
           <button
             onClick={() => handleOpenModal()}
-            className="px-5 py-2.5 bg-rose-500 text-white font-bold text-xs rounded-xl hover:bg-rose-600 transition-colors shadow-md flex items-center gap-1.5 self-start sm:self-auto"
+            className="px-4 py-2.5 bg-rose-500 text-white font-bold text-xs rounded-xl hover:bg-rose-600 transition-colors flex items-center gap-2 shadow-2xs"
           >
-            <Plus className="w-4 h-4" /> Create Template
+            <Plus size={16} />
+            <span>Create Template</span>
           </button>
-        </div>
+        }
+      />
 
         {/* Filters */}
         <div className="flex flex-col sm:flex-row items-center gap-4 bg-card border border-border/40 rounded-3xl p-4 shadow-sm">
@@ -323,7 +316,6 @@ export default function AdminAttributeTemplatesPage() {
             </div>
           </div>
         )}
-      </main>
     </div>
   );
 }

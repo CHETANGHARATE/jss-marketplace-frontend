@@ -52,26 +52,22 @@ export default function CouponsPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-      <AdminSidebar />
-      
-      <main className="flex-1 flex flex-col p-6 sm:p-10 lg:p-12 overflow-auto">
-        <div className="max-w-7xl w-full mx-auto space-y-8">
-          <Breadcrumbs items={[
-            { label: 'Admin', href: '/admin' },
-            { label: 'Coupons', href: '/admin/coupons' }
-          ]} />
-
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h1 className="text-3xl font-bold tracking-tight">Coupons & Discounts</h1>
-            <button 
-              onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white px-5 py-2.5 rounded-full font-medium transition-colors"
-            >
-              <Plus className="w-5 h-5" />
-              Create Coupon
-            </button>
-          </div>
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Coupon Codes & Automatic Discounts"
+        subtitle="Manage promotional coupon codes, percentage/flat discounts, minimum order value thresholds, and usage limits."
+        badge="Promotions & Offers"
+        breadcrumbs={[{ label: 'Admin', href: '/admin' }, { label: 'Coupons' }]}
+        actions={
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="px-4 py-2.5 bg-rose-500 text-white font-bold text-xs rounded-xl hover:bg-rose-600 transition-colors flex items-center gap-2 shadow-2xs"
+          >
+            <Plus size={16} />
+            <span>Create Coupon Code</span>
+          </button>
+        }
+      />
 
           {isLoading ? (
             <div className="text-center py-20 text-foreground/50">Loading coupons...</div>
@@ -150,8 +146,6 @@ export default function CouponsPage() {
               ))}
             </div>
           )}
-        </div>
-      </main>
 
       {/* Create Coupon Modal */}
       {isModalOpen && (
