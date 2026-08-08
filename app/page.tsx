@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Clock, CheckCircle2, Store, ArrowRight, TrendingUp, ShieldCheck, Mail, Send, Star } from 'lucide-react';
+import { Clock, ArrowRight, TrendingUp, ShieldCheck, Mail, Send } from 'lucide-react';
 
 // New homepage components (reference redesign)
 import { HeroBannerSlider } from '../components/HeroBannerSlider';
@@ -20,44 +20,8 @@ import { FeaturedCategories } from '../components/FeaturedCategories';
 // Services
 import { categoryService } from '../services/categoryService';
 import { productService, mapApiProductToProduct } from '../services/productService';
-import { vendorService, mapApiVendorStoreToSeller } from '../services/vendorService';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Product, Seller } from '../types';
-
-const mockSellersList: Seller[] = [
-  {
-    id: '1',
-    name: 'Organic Farms India',
-    rating: 4.9,
-    location: 'Mahabaleshwar, Maharashtra',
-    joinedDate: '2022',
-    description: 'Certified organic farm producers delivering fresh juices, jams, and fruit syrups direct from farm to home.'
-  },
-  {
-    id: '2',
-    name: 'Swadeshi Spices & Faral',
-    rating: 4.8,
-    location: 'Kolhapur, Maharashtra',
-    joinedDate: '2021',
-    description: 'Authentic Maharashtrian masale, pickles, and traditional festival faral made with authentic family recipes.'
-  },
-  {
-    id: '3',
-    name: 'Royal Heritage Jewellery',
-    rating: 4.9,
-    location: 'Jaipur, Rajasthan',
-    joinedDate: '2020',
-    description: 'Handcrafted traditional jewellery, astro stones, and silver ornaments made by master artisans.'
-  },
-  {
-    id: '4',
-    name: 'TechPulse Electronics',
-    rating: 4.7,
-    location: 'Bengaluru, Karnataka',
-    joinedDate: '2023',
-    description: 'Official distributor of smart gadgets, auto electronics accessories, and high-efficiency solar appliances.'
-  }
-];
+import { Product } from '../types';
 
 export default function HomePage() {
   const langContext = useLanguage();
@@ -67,7 +31,6 @@ export default function HomePage() {
   const [trendingProducts, setTrendingProducts] = useState<Product[]>([]);
   const [newArrivals, setNewArrivals] = useState<Product[]>([]);
   const [bestSellers, setBestSellers] = useState<Product[]>([]);
-  const [featuredSellers, setFeaturedSellers] = useState<Seller[]>([]);
   const [quickViewProductId, setQuickViewProductId] = useState<string | null>(null);
 
   const [email, setEmail] = useState('');
@@ -129,17 +92,6 @@ export default function HomePage() {
         setTrendingProducts(trending.slice(0, 4));
         setNewArrivals(trending.slice(4, 8));
         setBestSellers(featured.length > 0 ? featured : trending);
-
-        try {
-          const stores = await vendorService.getVendorStores();
-          if (stores && stores.length > 0) {
-            setFeaturedSellers(stores.map(mapApiVendorStoreToSeller).slice(0, 4));
-          } else {
-            setFeaturedSellers(mockSellersList);
-          }
-        } catch {
-          setFeaturedSellers(mockSellersList);
-        }
       } catch (err) {
         console.error('Failed to load homepage data from backend services', err);
       }
@@ -260,77 +212,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── 8. Featured Marketplace Vendors ─── */}
-      <section className="space-y-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border-custom/80 pb-6">
-          <div>
-            <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-emerald-600 uppercase tracking-widest bg-emerald-500/10 px-2.5 py-0.5 rounded-full mb-1">
-              <ShieldCheck size={12} />
-              <span>GSTIN Verified Merchant Partners</span>
-            </div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tight mt-1">
-              Featured Verified Vendors
-            </h2>
-            <p className="text-xs sm:text-sm text-muted-custom mt-1 font-medium max-w-2xl">
-              Buy directly from compliance-verified manufacturers, farmers, and official distributors with escrow protection.
-            </p>
-          </div>
-
-          <Link
-            href="/seller/register"
-            className="inline-flex items-center gap-2 text-xs font-black text-accent bg-accent/10 hover:bg-accent hover:text-white border border-accent/20 px-5 py-3 rounded-2xl transition-all shadow-2xs w-max"
-          >
-            <Store size={15} />
-            <span>Join as Vendor Partner</span>
-            <ArrowRight size={14} />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredSellers.map((seller) => (
-            <div key={seller.id} className="group bg-card border border-border-custom/80 hover:border-emerald-500/50 rounded-3xl p-6 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between space-y-5">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3.5">
-                  <div className="h-14 w-14 bg-gradient-to-br from-primary/10 to-emerald-500/10 text-primary border border-primary/20 flex items-center justify-center rounded-2xl font-black text-base shrink-0 group-hover:bg-primary group-hover:text-white transition-all shadow-2xs">
-                    {seller.name.substring(0, 2).toUpperCase()}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-1">
-                      <h4 className="font-extrabold text-sm text-foreground truncate group-hover:text-primary transition-colors">{seller.name}</h4>
-                      <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
-                    </div>
-                    <span className="text-xs text-muted-custom block truncate mt-0.5">{seller.location}</span>
-                  </div>
-                </div>
-                <p className="text-xs text-muted-custom line-clamp-3 leading-relaxed font-normal">
-                  {seller.description}
-                </p>
-              </div>
-
-              <div className="pt-4 border-t border-border-custom/60 space-y-3">
-                <div className="flex justify-between items-center text-xs font-bold">
-                  <span className="text-amber-500 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-xl">
-                    ★ {seller.rating} Rating
-                  </span>
-                  <span className="text-emerald-600 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-xl">
-                    Verified Merchant
-                  </span>
-                </div>
-                <Link
-                  href={`/search?seller=${encodeURIComponent(seller.name)}`}
-                  className="w-full bg-background-secondary hover:bg-primary hover:text-white text-foreground border border-border-custom/80 py-2.5 rounded-2xl text-xs font-black transition-all flex items-center justify-center gap-1.5 shadow-2xs"
-                >
-                  <Store size={14} />
-                  <span>Visit Vendor Store</span>
-                  <ArrowRight size={13} />
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ─── 9. Why Choose JSS Marketplace ─── */}
+      {/* ─── 8. Why Choose JSS Marketplace ─── */}
       <WhyChooseUs />
 
       {/* ─── 10. Newsletter Subscription ─── */}
