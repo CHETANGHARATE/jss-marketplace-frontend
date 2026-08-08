@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Clock, ArrowRight, TrendingUp, ShieldCheck, Mail, Send } from 'lucide-react';
+import { Clock, ArrowRight, TrendingUp } from 'lucide-react';
 
 // New homepage components (reference redesign)
 import { HeroBannerSlider } from '../components/HeroBannerSlider';
@@ -32,9 +32,6 @@ export default function HomePage() {
   const [newArrivals, setNewArrivals] = useState<Product[]>([]);
   const [bestSellers, setBestSellers] = useState<Product[]>([]);
   const [quickViewProductId, setQuickViewProductId] = useState<string | null>(null);
-
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
 
   const [timeLeft, setTimeLeft] = useState({ hours: 14, minutes: 32, seconds: 45 });
 
@@ -98,15 +95,6 @@ export default function HomePage() {
     };
     loadData();
   }, []);
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email.trim()) {
-      setSubscribed(true);
-      setEmail('');
-      setTimeout(() => setSubscribed(false), 5000);
-    }
-  };
 
   return (
     <div className="space-y-6 lg:space-y-8">
@@ -215,45 +203,7 @@ export default function HomePage() {
       {/* ─── 8. Why Choose JSS Marketplace ─── */}
       <WhyChooseUs />
 
-      {/* ─── 10. Newsletter Subscription ─── */}
-      <section className="bg-card border border-border-custom/80 rounded-3xl p-8 sm:p-12 space-y-6 shadow-xs">
-        <div className="max-w-2xl mx-auto text-center space-y-3">
-          <div className="inline-flex items-center justify-center gap-2 text-primary font-bold text-xs uppercase tracking-widest bg-primary/10 px-3 py-1 rounded-full">
-            <Mail size={14} />
-            <span>Marketplace Newsletter</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
-            Subscribe For Weekly Flash Sales & Insider Deals
-          </h2>
-          <p className="text-xs sm:text-sm text-muted-custom font-medium leading-relaxed">
-            Get exclusive multi-vendor coupons, new category alerts, and festival discount notifications directly in your inbox.
-          </p>
-          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto pt-2">
-            <input
-              type="email"
-              required
-              placeholder="Enter your email address..."
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 bg-background-secondary text-foreground text-xs sm:text-sm px-4 py-3.5 rounded-2xl border border-border-custom focus:border-primary focus:outline-none transition-colors"
-            />
-            <button
-              type="submit"
-              className="bg-primary text-white font-bold text-xs sm:text-sm uppercase px-6 py-3.5 rounded-2xl hover:bg-primary-hover transition-all flex items-center justify-center gap-2 shrink-0 shadow-sm"
-            >
-              <span>Subscribe</span>
-              <Send size={14} />
-            </button>
-          </form>
-          {subscribed && (
-            <p className="text-xs text-emerald-600 font-bold pt-1">
-              ✓ Thank you! You have successfully subscribed to weekly deal alerts.
-            </p>
-          )}
-        </div>
-      </section>
-
-      {/* ─── 11. FAQ Section ─── */}
+      {/* ─── 9. FAQ Section ─── */}
       <HomeFaqSection />
 
       {quickViewProductId && (
