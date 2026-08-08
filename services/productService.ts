@@ -70,8 +70,47 @@ export const productService = {
   },
 
   async getProductBySlug(slug: string): Promise<ApiProduct> {
-    const response = await apiClient.get<ApiResponse<ApiProduct>>(`/products/${slug}`);
-    return response.data.data;
+    try {
+      const response = await apiClient.get<ApiResponse<ApiProduct>>(`/products/${slug}`);
+      if (response.data?.data) {
+        return response.data.data;
+      }
+    } catch (err) {
+      console.warn(`Direct product endpoint for '${slug}' returned error, using fallback catalog query...`, err);
+    }
+
+    // Fallback search by slug, ID, or SKU across product catalog
+    try {
+      const searchRes = await apiClient.get<PaginatedApiResponse<ApiProduct>>('/products', {
+        params: { search: slug, per_page: 50 }
+      });
+      const list = searchRes.data?.data || [];
+      let matched = list.find(
+        (p) => p.slug === slug || String(p.id) === String(slug) || p.sku === slug
+      );
+
+      if (!matched) {
+        const generalRes = await apiClient.get<PaginatedApiResponse<ApiProduct>>('/products', {
+          params: { per_page: 50 }
+        });
+        const genList = generalRes.data?.data || [];
+        matched = genList.find(
+          (p) =>
+            p.slug === slug ||
+            String(p.id) === String(slug) ||
+            p.sku === slug ||
+            p.slug?.toLowerCase() === slug.toLowerCase()
+        );
+      }
+
+      if (matched) {
+        return matched;
+      }
+    } catch (fallbackErr) {
+      console.error(`Fallback product query failed for '${slug}':`, fallbackErr);
+    }
+
+    throw new Error(`Product not found for identifier: ${slug}`);
   },
 
   async getFeaturedProducts(): Promise<ApiProduct[]> {

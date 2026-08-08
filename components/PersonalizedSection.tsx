@@ -11,6 +11,7 @@ import { useCartWishlist } from '../contexts/CartWishlistContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ApiProduct } from '../types/api';
 import { Product } from '../types';
+import { mapApiProductToProduct } from '../services/productService';
 
 export function PersonalizedSection() {
   const { data: recs = [] } = usePersonalizedRecommendationsQuery();
@@ -22,32 +23,7 @@ export function PersonalizedSection() {
 
   if (displayProducts.length === 0) return null;
 
-  const mapToProduct = (p: ApiProduct): Product => {
-    const origPrice = p.originalPrice ?? p.original_price ?? 0;
-    const offerPrice = p.offerPrice ?? p.sale_price ?? origPrice;
-    const stockQty = p.stockQuantity ?? p.stock_quantity ?? 0;
-    const imgUrl = p.image || p.images?.[0] || '/placeholder-product.png';
-
-    return {
-      id: String(p.id),
-      name: p.name,
-      description: p.description || p.name,
-      category: typeof p.category?.name === 'string' ? p.category.name : 'Electronics',
-      subcategory: 'General',
-      brand: p.brand?.name || 'Generic',
-      originalPrice: origPrice,
-      offerPrice: offerPrice,
-      discountPercent: p.discountPercent ?? (origPrice > offerPrice ? Math.round(((origPrice - offerPrice) / origPrice) * 100) : 0),
-      rating: p.rating ? Number(p.rating) : 5.0,
-      reviewsCount: p.reviewsCount || p.reviews_count || 10,
-      image: imgUrl,
-      seller: { id: 's1', name: 'JSS Merchant', location: 'Mumbai', rating: 4.8, joinedDate: '2025', description: 'Verified JSS Merchant' },
-      stockStatus: stockQty > 0 ? 'in_stock' : 'out_of_stock',
-      features: [],
-      reviews: [],
-      tags: [],
-    };
-  };
+  const mapToProduct = (p: ApiProduct): Product => mapApiProductToProduct(p);
 
   return (
     <div className="space-y-6">
