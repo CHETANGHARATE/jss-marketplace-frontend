@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Clock, ArrowRight, TrendingUp } from 'lucide-react';
+import { Clock, ArrowRight } from 'lucide-react';
 
 // New homepage components (reference redesign)
 import { HeroBannerSlider } from '../components/HeroBannerSlider';
@@ -30,8 +30,6 @@ export default function HomePage() {
 
   const [categories, setCategories] = useState<any[]>([]);
   const [trendingProducts, setTrendingProducts] = useState<Product[]>([]);
-  const [newArrivals, setNewArrivals] = useState<Product[]>([]);
-  const [bestSellers, setBestSellers] = useState<Product[]>([]);
   const [quickViewProductId, setQuickViewProductId] = useState<string | null>(null);
 
   const [timeLeft, setTimeLeft] = useState({ hours: 14, minutes: 32, seconds: 45 });
@@ -69,9 +67,8 @@ export default function HomePage() {
         });
         setCategories(uniqueCats);
 
-        const [trendingRes, featuredRes, allProdsRes] = await Promise.allSettled([
+        const [trendingRes, allProdsRes] = await Promise.allSettled([
           productService.getTrendingProducts(),
-          productService.getFeaturedProducts(),
           productService.getProducts({ per_page: 50, in_stock_first: 1 })
         ]);
 
@@ -82,14 +79,7 @@ export default function HomePage() {
           trending = (allProdsRes.value.data || []).map(mapApiProductToProduct);
         }
 
-        let featured: Product[] = [];
-        if (featuredRes.status === 'fulfilled' && featuredRes.value.length > 0) {
-          featured = featuredRes.value.map(mapApiProductToProduct);
-        }
-
         setTrendingProducts(trending);
-        setNewArrivals(trending.slice(4, 12));
-        setBestSellers(featured.length > 0 ? featured : trending);
       } catch (err) {
         console.error('Failed to load homepage data from backend services', err);
       }
@@ -127,38 +117,10 @@ export default function HomePage() {
         />
       )}
 
-      {/* ─── 7. Trending Products Grid ─── */}
-      <section className="space-y-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-primary uppercase tracking-widest bg-primary/10 px-2.5 py-0.5 rounded-full mb-1">
-              <TrendingUp size={12} />
-              <span>Buyer Favorites</span>
-            </div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tight mt-1">
-              Trending Products Across India
-            </h2>
-            <p className="text-xs sm:text-sm text-muted-custom mt-1 font-medium max-w-2xl">
-              Most purchased authentic items across fashion, electronics, regional faral, and certified agricultural inputs.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {trendingProducts.concat(newArrivals).slice(0, 4).map((prod) => (
-            <ProductCard
-              key={`trend_grid_${prod.id}`}
-              product={prod}
-              onQuickView={setQuickViewProductId}
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* ─── 8. Why Choose JSS Marketplace ─── */}
+      {/* ─── 7. Why Choose JSS Marketplace ─── */}
       <WhyChooseUs />
 
-      {/* ─── 9. FAQ Section ─── */}
+      {/* ─── 8. FAQ Section ─── */}
       <HomeFaqSection />
 
       {quickViewProductId && (
