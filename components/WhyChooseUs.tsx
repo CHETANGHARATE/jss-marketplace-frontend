@@ -2,11 +2,13 @@
 
 import React from 'react';
 import { Lock, Truck, BadgeCheck, CheckCircle2, Star } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const features = [
   {
     number: '01',
     icon: Lock,
+    titleKey: 'footer.shipping_title',
     title: 'Secure Payments',
     description: 'Your payments are safely held in escrow until your order is delivered & verified.',
     iconColor: '#3b82f6',
@@ -19,6 +21,7 @@ const features = [
   {
     number: '02',
     icon: Truck,
+    titleKey: 'footer.returns_title',
     title: 'Fast Delivery',
     description: 'Real-time shipment tracking with express dispatch across 25,000+ PIN codes in India.',
     iconColor: '#f97316',
@@ -31,6 +34,7 @@ const features = [
   {
     number: '03',
     icon: BadgeCheck,
+    titleKey: 'footer.guarantee_title',
     title: 'Trusted Sellers',
     description: 'Buy directly from GSTIN & compliance-verified manufacturers, farmers, and distributors.',
     iconColor: '#8b5cf6',
@@ -43,6 +47,7 @@ const features = [
   {
     number: '04',
     icon: CheckCircle2,
+    titleKey: 'footer.support_title',
     title: 'Quality Products',
     description: 'Every item is inspected and dispatched directly from source with 100% authenticity.',
     iconColor: '#22c55e',
@@ -55,6 +60,8 @@ const features = [
 ];
 
 export const WhyChooseUs: React.FC = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="relative rounded-3xl overflow-hidden py-12 px-6 sm:px-10 bg-gradient-to-br from-blue-50/70 via-purple-50/50 to-orange-50/50 dark:from-[#0b1329] dark:via-[#131f37] dark:to-[#0b1329] border border-border-custom/40 dark:border-border-custom/80 shadow-xs">
       {/* Floating decorative blobs */}
@@ -65,15 +72,13 @@ export const WhyChooseUs: React.FC = () => {
       <div className="text-center mb-10 space-y-3 relative z-10">
         <div className="inline-flex items-center gap-2 bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest">
           <Star size={12} fill="currentColor" />
-          Marketplace Excellence
+          {t('home.excellence')}
         </div>
         <h2 className="text-3xl sm:text-4xl font-black text-foreground leading-tight">
-          Why Choose{' '}
-          <span className="text-blue-600 dark:text-blue-400">JSS </span>
-          <span className="text-orange-500 dark:text-orange-400">Marketplace?</span>
+          {t('home.why_choose_title')}
         </h2>
         <p className="text-sm text-muted-custom max-w-lg mx-auto font-medium">
-          India's most trusted direct-from-source multi-vendor platform for retail & wholesale buyers.
+          {t('home.why_choose_sub')}
         </p>
         {/* Decorative divider */}
         <div className="flex items-center justify-center gap-2 pt-1">
@@ -116,7 +121,7 @@ export const WhyChooseUs: React.FC = () => {
               </div>
 
               {/* Title */}
-              <h3 className="font-black text-sm text-foreground mb-1">{feat.title}</h3>
+              <h3 className="font-black text-sm text-foreground mb-1">{t(feat.titleKey) || feat.title}</h3>
 
               {/* Accent line */}
               <div className="w-8 h-0.5 rounded-full mb-3" style={{ background: feat.accentColor }} />

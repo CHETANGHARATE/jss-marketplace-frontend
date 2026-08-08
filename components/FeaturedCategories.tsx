@@ -138,44 +138,43 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
   }
 
   return (
-    <div className="space-y-20 lg:space-y-24">
+    <div className="space-y-10 lg:space-y-12">
       {uniqueCategories.map((cat) => {
         const products = (featuredData[String(cat.id)] || []).slice(0, 5);
         if (products.length === 0) return null;
 
         return (
-          <section key={cat.id} className="space-y-8 scroll-mt-24 border-b border-border-custom/80 last:border-0 pb-16 last:pb-0">
+          <section key={cat.id} className="space-y-6 scroll-mt-24 border-b border-border-custom/60 last:border-0 pb-8 last:pb-0">
             {/* Header section */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
               <div>
                 <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-accent uppercase tracking-widest bg-accent/10 px-2.5 py-0.5 rounded-full mb-1">
                   <Sparkles size={12} className="fill-accent" />
-                  <span>Curated Collection</span>
+                  <span>{t('home.curated_collection')}</span>
                 </div>
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tight mt-1">
                   {t(cat.name)}
                 </h2>
                 <p className="text-xs sm:text-sm text-muted-custom mt-1 max-w-2xl font-medium">
-                  {cat.description || `Browse our verified selection of ${getName(cat.name)}.`}
+                  {cat.description || `${t('home.popular_categories_desc')} - ${t(cat.name)}.`}
                 </p>
               </div>
 
               <Link
-                href={`/category/${(cat as any).slug || cat.id}`}
-                className="inline-flex items-center gap-2 text-xs font-black text-primary hover:text-primary-hover transition-all w-max bg-primary/10 hover:bg-primary hover:text-white border border-primary/20 px-5 py-3 rounded-2xl shadow-2xs"
+                href={`/category/${cat.id}`}
+                className="inline-flex items-center gap-2 text-xs font-black text-primary hover:text-primary-hover bg-primary/10 hover:bg-primary/20 border border-primary/20 px-4 py-2.5 rounded-2xl transition-all self-start md:self-auto shrink-0 shadow-2xs group"
               >
-                <Package size={14} />
-                <span>View All {t(cat.name)}</span>
-                <ArrowRight size={14} />
+                <span>{t('home.view_all')} {t(cat.name)}</span>
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
 
-            {/* Products grid - Strictly 5-column single row on desktop */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 pt-2">
-              {products.map((prod) => (
+            {/* Product Cards Grid - Exactly 5 items visible per row on desktop */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5">
+              {products.map((product) => (
                 <ProductCard
-                  key={prod.id}
-                  product={prod}
+                  key={product.id}
+                  product={product}
                   onQuickView={onQuickView}
                 />
               ))}

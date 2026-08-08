@@ -55,40 +55,40 @@ export const Footer: React.FC = () => {
     <footer className="bg-[#F4F8FC] text-card-foreground border-t border-[#E1EAF4] mt-auto transition-colors">
       
       {/* 1. 4 Trust Badges Bar */}
-      <div className="border-b border-[#E1EAF4] bg-[#EBF2F9] py-10">
+      <div className="border-b border-[#E1EAF4] dark:border-border-custom/80 bg-[#EBF2F9] dark:bg-background-secondary/80 py-10">
         <div className="max-w-[1536px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center">
             
-            <div className="flex flex-col items-center p-4 bg-white border border-[#E1EAF4] rounded-3xl shadow-2xs hover:shadow-xs transition-all">
+            <div className="flex flex-col items-center p-4 bg-white dark:bg-card border border-[#E1EAF4] dark:border-border-custom/80 rounded-3xl shadow-2xs hover:shadow-xs transition-all">
               <div className="h-14 w-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-3 border border-primary/20 shadow-2xs">
                 <Truck size={24} />
               </div>
-              <h4 className="font-extrabold text-xs text-foreground uppercase tracking-wider">Free Express Shipping</h4>
-              <p className="text-xs text-muted-custom mt-1 font-medium">On all orders above ₹499 across India</p>
+              <h4 className="font-extrabold text-xs text-foreground uppercase tracking-wider">{t('footer.shipping_title')}</h4>
+              <p className="text-xs text-muted-custom mt-1 font-medium">{t('footer.shipping_sub')}</p>
             </div>
 
-            <div className="flex flex-col items-center p-4 bg-white border border-[#E1EAF4] rounded-3xl shadow-2xs hover:shadow-xs transition-all">
+            <div className="flex flex-col items-center p-4 bg-white dark:bg-card border border-[#E1EAF4] dark:border-border-custom/80 rounded-3xl shadow-2xs hover:shadow-xs transition-all">
               <div className="h-14 w-14 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center mb-3 border border-emerald-500/20 shadow-2xs">
                 <RefreshCw size={24} />
               </div>
-              <h4 className="font-extrabold text-xs text-foreground uppercase tracking-wider">Hassle-Free Returns</h4>
-              <p className="text-xs text-muted-custom mt-1 font-medium">Easy 10-day replacement policy</p>
+              <h4 className="font-extrabold text-xs text-foreground uppercase tracking-wider">{t('footer.returns_title')}</h4>
+              <p className="text-xs text-muted-custom mt-1 font-medium">{t('footer.returns_sub')}</p>
             </div>
 
-            <div className="flex flex-col items-center p-4 bg-white border border-[#E1EAF4] rounded-3xl shadow-2xs hover:shadow-xs transition-all">
+            <div className="flex flex-col items-center p-4 bg-white dark:bg-card border border-[#E1EAF4] dark:border-border-custom/80 rounded-3xl shadow-2xs hover:shadow-xs transition-all">
               <div className="h-14 w-14 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center mb-3 border border-amber-500/20 shadow-2xs">
                 <ShieldCheck size={24} />
               </div>
-              <h4 className="font-extrabold text-xs text-foreground uppercase tracking-wider">100% Genuine Guarantee</h4>
-              <p className="text-xs text-muted-custom mt-1 font-medium">Directly from certified sellers</p>
+              <h4 className="font-extrabold text-xs text-foreground uppercase tracking-wider">{t('footer.guarantee_title')}</h4>
+              <p className="text-xs text-muted-custom mt-1 font-medium">{t('footer.guarantee_sub')}</p>
             </div>
 
-            <div className="flex flex-col items-center p-4 bg-white border border-[#E1EAF4] rounded-3xl shadow-2xs hover:shadow-xs transition-all">
+            <div className="flex flex-col items-center p-4 bg-white dark:bg-card border border-[#E1EAF4] dark:border-border-custom/80 rounded-3xl shadow-2xs hover:shadow-xs transition-all">
               <div className="h-14 w-14 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center mb-3 border border-indigo-500/20 shadow-2xs">
                 <Headphones size={24} />
               </div>
-              <h4 className="font-extrabold text-xs text-foreground uppercase tracking-wider">24/7 Dedicated Support</h4>
-              <p className="text-xs text-muted-custom mt-1 font-medium">Instant chat & helpline: 1800-JSS</p>
+              <h4 className="font-extrabold text-xs text-foreground uppercase tracking-wider">{t('footer.support_title')}</h4>
+              <p className="text-xs text-muted-custom mt-1 font-medium">{t('footer.support_sub')}</p>
             </div>
 
           </div>
@@ -113,19 +113,19 @@ export const Footer: React.FC = () => {
               JSS Solutions Marketplace connects verified manufacturers, farmers, and brands directly with retail & wholesale buyers across India. Enjoy fast express shipping, secure escrow payments, and authentic quality products.
             </p>
             <div className="pt-1 flex items-center gap-2">
-              <span className="text-xs font-bold text-foreground inline-flex items-center gap-1.5 bg-white border border-[#DDE7F2] px-3.5 py-1.5 rounded-2xl shadow-2xs">
-                🇮🇳 Proudly Made in India
+              <span className="text-xs font-bold text-foreground inline-flex items-center gap-1.5 bg-white dark:bg-card border border-[#DDE7F2] dark:border-border-custom/80 px-3.5 py-1.5 rounded-2xl shadow-2xs">
+                🇮🇳 {t('footer.made_in_india')}
               </span>
-              <span className="text-xs font-bold text-emerald-600 inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-2xl">
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-2xl">
                 <Lock size={12} />
-                Escrow Protected
+                {t('footer.escrow_protected')}
               </span>
             </div>
           </div>
 
           {/* Links Columns */}
           <div className="space-y-3.5">
-            <h4 className="font-extrabold text-xs text-foreground tracking-wider uppercase">Shop Categories</h4>
+            <h4 className="font-extrabold text-xs text-foreground tracking-wider uppercase">{t('footer.shop_categories')}</h4>
             <ul className="space-y-2 text-xs font-medium">
               {footerLinks.shop.map((link) => (
                 <li key={link.href}>
@@ -138,7 +138,7 @@ export const Footer: React.FC = () => {
           </div>
 
           <div className="space-y-3.5">
-            <h4 className="font-extrabold text-xs text-foreground tracking-wider uppercase">Become Vendor</h4>
+            <h4 className="font-extrabold text-xs text-foreground tracking-wider uppercase">{t('footer.become_vendor')}</h4>
             <ul className="space-y-2 text-xs font-medium">
               {footerLinks.seller.map((link) => (
                 <li key={link.name}>
@@ -151,7 +151,7 @@ export const Footer: React.FC = () => {
           </div>
 
           <div className="space-y-3.5">
-            <h4 className="font-extrabold text-xs text-foreground tracking-wider uppercase">Help & Support</h4>
+            <h4 className="font-extrabold text-xs text-foreground tracking-wider uppercase">{t('footer.help_support')}</h4>
             <ul className="space-y-2 text-xs font-medium">
               {footerLinks.support.map((link) => (
                 <li key={link.name}>
@@ -164,7 +164,7 @@ export const Footer: React.FC = () => {
           </div>
 
           <div className="space-y-3.5">
-            <h4 className="font-extrabold text-xs text-foreground tracking-wider uppercase">Legal Info</h4>
+            <h4 className="font-extrabold text-xs text-foreground tracking-wider uppercase">{t('footer.legal_info')}</h4>
             <ul className="space-y-2 text-xs font-medium">
               {footerLinks.legal.map((link) => (
                 <li key={link.name}>

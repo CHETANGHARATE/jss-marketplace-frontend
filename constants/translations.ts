@@ -2,7 +2,7 @@ export type Language = 'en' | 'hi' | 'mr';
 
 export const translations: Record<Language, Record<string, string>> = {
   en: {
-    // Header
+    // Header & Announcement Bar
     'nav.search_placeholder': 'Search for products, brands, categories...',
     'nav.all_categories': 'All Categories',
     'nav.wishlist': 'Wishlist',
@@ -12,6 +12,19 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.notifications': 'Notifications',
     'nav.profile': 'My Profile',
     'nav.logout': 'Logout',
+    'nav.home': 'Home',
+    'nav.products': 'Products',
+    'nav.vendors': 'Vendors',
+    'nav.categories': 'Categories',
+    'nav.support': 'Support',
+    'nav.deals': 'Flash Deals',
+    'nav.account': 'Account',
+    'nav.orders': 'My Orders',
+    'nav.seller_dashboard': 'Seller Dashboard',
+    'nav.india_platform': 'Direct-from-source Multi-Vendor Platform',
+    'nav.festive_deals': 'Festive Deals',
+    'nav.free_shipping_notice': 'Free Express Shipping on all orders above ₹499!',
+    'nav.helpline': 'Helpline: 1800-JSS-MARKET',
     
     // UI Theme
     'theme.light': 'Light Mode',
@@ -62,9 +75,30 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.newsletter_placeholder': 'Enter your email address',
     'home.subscribe': 'Subscribe',
     
-    // Product details
+    // Flash Sale & Timer
+    'home.flash_sales': "Today's Flash Sales",
+    'home.limited_offer': 'Limited Time Offer',
+    'home.ends_in': 'Verified marketplace discounts directly from source. Deal ends in:',
+    'home.hours': 'Hours',
+    'home.mins': 'Mins',
+    'home.secs': 'Secs',
+
+    // Why Choose & FAQ
+    'home.why_choose_title': 'Why Choose JSS Marketplace?',
+    'home.why_choose_sub': "India's most trusted direct-from-source multi-vendor platform for retail & wholesale buyers.",
+    'home.excellence': 'Marketplace Excellence',
+    'home.faq_center': 'FAQ Center',
+    'home.faq_title': 'Frequently Asked Questions',
+    'home.faq_sub': "Got questions about orders, payments, delivery, vendor onboarding, or anything else? We're here to help!",
+    'home.need_b2b': 'Need custom B2B wholesale pricing?',
+    'home.reach_helpline': 'Reach out to our helpline at',
+    'home.support_247': 'Our support team is here to help you 24/7',
+    'home.tip': 'Tip',
+    
+    // Product details & cards
     'prod.brand': 'Brand',
     'prod.seller': 'Seller',
+    'prod.seller_label': 'Seller:',
     'prod.in_stock': 'In Stock',
     'prod.low_stock': 'Only few left!',
     'prod.out_of_stock': 'Out of Stock',
@@ -75,6 +109,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'prod.buy_now': 'Buy Now',
     'prod.wishlist_added': 'Added to wishlist',
     'prod.cart_added': 'Added to cart',
+    'prod.save': 'Save',
+    'prod.off': 'OFF',
     
     // Category Page & Filters
     'cat.filter_by': 'Filters',
@@ -97,6 +133,34 @@ export const translations: Record<Language, Record<string, string>> = {
     'cat.faqs': 'Frequently Asked Questions',
     'cat.reviews_heading': 'Customer Reviews & Feedback',
     'cat.related_categories': 'Related Categories',
+
+    // Footer
+    'footer.shipping_title': 'Free Express Shipping',
+    'footer.shipping_sub': 'On all orders above ₹499 across India',
+    'footer.returns_title': 'Hassle-Free Returns',
+    'footer.returns_sub': 'Easy 10-day replacement policy',
+    'footer.guarantee_title': '100% Genuine Guarantee',
+    'footer.guarantee_sub': 'Directly from certified sellers',
+    'footer.support_title': '24/7 Dedicated Support',
+    'footer.support_sub': 'Instant chat & helpline: 1800-JSS',
+    'footer.shop_categories': 'Shop Categories',
+    'footer.become_vendor': 'Become Vendor',
+    'footer.help_support': 'Help & Support',
+    'footer.legal_info': 'Legal Info',
+    'footer.contact_support': 'Contact Support',
+    'footer.return_policy': 'Return Policy & Center',
+    'footer.track_order': 'Track Order Status',
+    'footer.faqs': 'FAQs',
+    'footer.terms': 'Terms of Service',
+    'footer.privacy': 'Privacy Policy',
+    'footer.gst': 'Tax Compliance (GSTIN)',
+    'footer.quality': 'Anti-Counterfeiting Policy',
+    'footer.seller_guidelines': 'Seller Guidelines',
+    'footer.seller_dashboard': 'Seller Dashboard',
+    'footer.wholesale': 'B2B Wholesale Inquiry',
+    'footer.made_in_india': 'Proudly Made in India',
+    'footer.escrow_protected': 'Escrow Protected',
+    'footer.copyright': 'All rights reserved. Enterprise Multi-Vendor Platform.',
     
     // Common
     'faq.title': 'Frequently Asked Questions',
@@ -115,7 +179,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'banner.cta': 'Shop Now',
   },
   hi: {
-    // Header
+    // Header & Announcement Bar
     'nav.search_placeholder': 'उत्पाद, ब्रांड, श्रेणियां खोजें...',
     'nav.all_categories': 'सभी श्रेणियां',
     'nav.wishlist': 'इच्छा-सूची',
@@ -125,6 +189,19 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.notifications': 'सूचनाएं',
     'nav.profile': 'मेरी प्रोफाइल',
     'nav.logout': 'लॉगआउट',
+    'nav.home': 'होम',
+    'nav.products': 'उत्पाद',
+    'nav.vendors': 'विक्रेता',
+    'nav.categories': 'श्रेणियां',
+    'nav.support': 'सहायता',
+    'nav.deals': 'फ्लैश डील्स',
+    'nav.account': 'खाता',
+    'nav.orders': 'मेरे ऑर्डर',
+    'nav.seller_dashboard': 'विक्रेता डैशबोर्ड',
+    'nav.india_platform': 'स्रोत से सीधे मल्टी-वेंडर प्लेटफॉर्म',
+    'nav.festive_deals': 'त्योहार डील्स',
+    'nav.free_shipping_notice': '₹499 से अधिक के सभी ऑर्डरों पर मुफ्त एक्सप्रेस शिपिंग!',
+    'nav.helpline': 'हेल्पलाइन: 1800-JSS-MARKET',
     
     // UI Theme
     'theme.light': 'लाइट मोड',
@@ -175,9 +252,30 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.newsletter_placeholder': 'अपना ईमेल पता दर्ज करें',
     'home.subscribe': 'सदस्य बनें',
     
-    // Product details
+    // Flash Sale & Timer
+    'home.flash_sales': 'आज की फ्लैश सेल',
+    'home.limited_offer': 'सीमित समय की छूट',
+    'home.ends_in': 'स्रोत से सीधे सत्यापित मार्केटप्लेस छूट। डील समाप्त होने में समय:',
+    'home.hours': 'घंटे',
+    'home.mins': 'मिनट',
+    'home.secs': 'सेकंड',
+
+    // Why Choose & FAQ
+    'home.why_choose_title': 'जेएसएस मार्केटप्लेस क्यों चुनें?',
+    'home.why_choose_sub': 'खुदरा और थोक खरीदारों के लिए भारत का सबसे विश्वसनीय डायरेक्ट-फ्रॉम-सोर्स मल्टी-वेंडर प्लेटफॉर्म।',
+    'home.excellence': 'मार्केटप्लेस उत्कृष्टता',
+    'home.faq_center': 'प्रश्न उत्तर केंद्र',
+    'home.faq_title': 'अक्सर पूछे जाने वाले प्रश्न',
+    'home.faq_sub': 'ऑर्डर, भुगतान, डिलीवरी, विक्रेता पंजीकरण या किसी अन्य चीज़ के बारे में प्रश्न हैं? हम आपकी सहायता के लिए यहाँ हैं!',
+    'home.need_b2b': 'क्या कस्टम बी2बी थोक मूल्य निर्धारण की आवश्यकता है?',
+    'home.reach_helpline': 'हमारी हेल्पलाइन पर संपर्क करें',
+    'home.support_247': 'हमारी सहायता टीम 24/7 आपकी मदद के लिए यहाँ है',
+    'home.tip': 'सुझाव',
+    
+    // Product details & cards
     'prod.brand': 'ब्रांड',
     'prod.seller': 'विक्रेता',
+    'prod.seller_label': 'विक्रेता:',
     'prod.in_stock': 'स्टॉक में है',
     'prod.low_stock': 'केवल कुछ ही बचे हैं!',
     'prod.out_of_stock': 'आउट ऑफ स्टॉक',
@@ -188,6 +286,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'prod.buy_now': 'अभी खरीदें',
     'prod.wishlist_added': 'इच्छा-सूची में जोड़ा गया',
     'prod.cart_added': 'कार्ट में जोड़ा गया',
+    'prod.save': 'बचत',
+    'prod.off': 'छूट',
     
     // Category Page & Filters
     'cat.filter_by': 'फ़िल्टर',
@@ -210,6 +310,34 @@ export const translations: Record<Language, Record<string, string>> = {
     'cat.faqs': 'अक्सर पूछे जाने वाले प्रश्न',
     'cat.reviews_heading': 'ग्राहक समीक्षाएं और प्रतिक्रिया',
     'cat.related_categories': 'संबंधित श्रेणियां',
+
+    // Footer
+    'footer.shipping_title': 'मुफ्त एक्सप्रेस शिपिंग',
+    'footer.shipping_sub': 'पूरे भारत में ₹499 से अधिक के सभी ऑर्डरों पर',
+    'footer.returns_title': 'आसान रिटर्न नीति',
+    'footer.returns_sub': 'आसान 10-दिवसीय प्रतिस्थापन नीति',
+    'footer.guarantee_title': '100% प्रामाणिक गारंटी',
+    'footer.guarantee_sub': 'सीधे प्रमाणित विक्रेताओं से',
+    'footer.support_title': '24/7 समर्पित सहायता',
+    'footer.support_sub': 'त्वरित चैट और हेल्पलाइन: 1800-JSS',
+    'footer.shop_categories': 'श्रेणियां खरीदें',
+    'footer.become_vendor': 'विक्रेता बनें',
+    'footer.help_support': 'सहायता और समर्थन',
+    'footer.legal_info': 'कानूनी जानकारी',
+    'footer.contact_support': 'सहायता से संपर्क करें',
+    'footer.return_policy': 'रिटर्न नीति और केंद्र',
+    'footer.track_order': 'ऑर्डर स्थिति ट्रैक करें',
+    'footer.faqs': 'सामान्य प्रश्न',
+    'footer.terms': 'सेवा की शर्तें',
+    'footer.privacy': 'गोपनीयता नीति',
+    'footer.gst': 'कर अनुपालन (GSTIN)',
+    'footer.quality': 'नकली विरोधी नीति',
+    'footer.seller_guidelines': 'विक्रेता दिशानिर्देश',
+    'footer.seller_dashboard': 'विक्रेता डैशबोर्ड',
+    'footer.wholesale': 'बी2बी थोक पूछताछ',
+    'footer.made_in_india': 'गर्व से भारत में निर्मित',
+    'footer.escrow_protected': 'एस्क्रौ सुरक्षित',
+    'footer.copyright': 'सर्वाधिकार सुरक्षित। एंटरप्राइज मल्टी-वेंडर प्लेटफॉर्म।',
     
     // Common
     'faq.title': 'अक्सर पूछे जाने वाले प्रश्न',
@@ -228,7 +356,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'banner.cta': 'अभी खरीदें',
   },
   mr: {
-    // Header
+    // Header & Announcement Bar
     'nav.search_placeholder': 'उत्पाद, ब्रँड, श्रेणी शोधा...',
     'nav.all_categories': 'सर्व श्रेण्या',
     'nav.wishlist': 'इच्छा-सूची',
@@ -238,6 +366,19 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.notifications': 'सूचना',
     'nav.profile': 'माझी प्रोफाईल',
     'nav.logout': 'लॉगआउट',
+    'nav.home': 'होम',
+    'nav.products': 'उत्पादने',
+    'nav.vendors': 'विक्रेते',
+    'nav.categories': 'श्रेण्या',
+    'nav.support': 'मदत',
+    'nav.deals': 'फ्लॅश डील्स',
+    'nav.account': 'खाते',
+    'nav.orders': 'माझे ऑर्डर्स',
+    'nav.seller_dashboard': 'विक्रेता डॅशबोर्ड',
+    'nav.india_platform': 'थेट स्त्रोताकडून मल्टी-व्हेंडर प्लॅटफॉर्म',
+    'nav.festive_deals': 'सण डील्स',
+    'nav.free_shipping_notice': '₹४९९ पेक्षा जास्त सर्व ऑर्डर्सवर मोफत एक्सप्रेस शिपिंग!',
+    'nav.helpline': 'हेल्पलाइन: १८००-JSS-MARKET',
     
     // UI Theme
     'theme.light': 'लाइट मोड',
@@ -288,9 +429,30 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.newsletter_placeholder': 'तुमचा ईमेल पत्ता प्रविष्ट करा',
     'home.subscribe': 'सदस्य व्हा',
     
-    // Product details
+    // Flash Sale & Timer
+    'home.flash_sales': 'आजचा फ्लॅश सेल',
+    'home.limited_offer': 'मर्यादित वेळेची ऑफर',
+    'home.ends_in': 'स्त्रोताकडून थेट सत्यापित मार्केटप्लेस सवलत. डील संपण्यास वेळ:',
+    'home.hours': 'तास',
+    'home.mins': 'मिने',
+    'home.secs': 'सेकंद',
+
+    // Why Choose & FAQ
+    'home.why_choose_title': 'जेएसएस मार्केटप्लेस का निवडावे?',
+    'home.why_choose_sub': 'किरकोळ आणि घाऊक ग्राहकांसाठी भारतातील सर्वात विश्वासू थेट स्त्रोताकडून मल्टी-व्हेंडर प्लॅटफॉर्म.',
+    'home.excellence': 'मार्केटप्लेस उत्कृष्टता',
+    'home.faq_center': 'प्रश्न उत्तर केंद्र',
+    'home.faq_title': 'नेहमी विचारले जाणारे प्रश्न',
+    'home.faq_sub': 'ऑर्डर, पेमेंट, डिलिव्हरी, विक्रेता नोंदणी किंवा इतर कोणत्याही गोष्टीबद्दल प्रश्न आहेत? आम्ही मदतीसाठी येथे आहोत!',
+    'home.need_b2b': 'कस्टम बी२बी घाऊक किमती हव्या आहेत का?',
+    'home.reach_helpline': 'आमच्या हेल्पलाइनवर संपर्क साधा',
+    'home.support_247': 'आमची सपोर्ट टीम २४/७ तुमच्या मदतीसाठी येथे आहे',
+    'home.tip': 'टीप',
+    
+    // Product details & cards
     'prod.brand': 'ब्रँड',
     'prod.seller': 'विक्रेता',
+    'prod.seller_label': 'विक्रेता:',
     'prod.in_stock': 'स्टॉकमध्ये आहे',
     'prod.low_stock': 'फक्त काही शिल्लक आहेत!',
     'prod.out_of_stock': 'स्टॉकमध्ये नाही',
@@ -301,6 +463,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'prod.buy_now': 'आता खरेदी करा',
     'prod.wishlist_added': 'इच्छा-सूचीमध्ये जोडले',
     'prod.cart_added': 'कार्टमध्ये जोडले',
+    'prod.save': 'बचत',
+    'prod.off': 'सूट',
     
     // Category Page & Filters
     'cat.filter_by': 'फिल्टर्स',
@@ -323,6 +487,34 @@ export const translations: Record<Language, Record<string, string>> = {
     'cat.faqs': 'नेहमी विचारले जाणारे प्रश्न',
     'cat.reviews_heading': 'ग्राहक पुनरावलोकने आणि अभिप्राय',
     'cat.related_categories': 'संबंधित श्रेण्या',
+
+    // Footer
+    'footer.shipping_title': 'मोफत एक्सप्रेस शिपिंग',
+    'footer.shipping_sub': 'संपूर्ण भारतात ₹४९९ पेक्षा जास्त सर्व ऑर्डर्सवर',
+    'footer.returns_title': 'हॅसल-फ्री रिटर्न्स',
+    'footer.returns_sub': 'सोपे १० दिवसांचे रिप्लेसमेंट धोरण',
+    'footer.guarantee_title': '१००% अस्सल हमी',
+    'footer.guarantee_sub': 'थेट प्रमाणित विक्रेत्यांकडून',
+    'footer.support_title': '२४/७ समर्पित मदत',
+    'footer.support_sub': 'त्वरित चॅट आणि हेल्पलाइन: १८००-JSS',
+    'footer.shop_categories': 'खरेदी श्रेण्या',
+    'footer.become_vendor': 'विक्रेता व्हा',
+    'footer.help_support': 'मदत आणि आधार',
+    'footer.legal_info': 'कायदेशीर माहिती',
+    'footer.contact_support': 'सपोर्टशी संपर्क साधा',
+    'footer.return_policy': 'रिटर्न धोरण आणि केंद्र',
+    'footer.track_order': 'ऑर्डर स्थिती ट्रॅक करा',
+    'footer.faqs': 'सामान्य प्रश्न',
+    'footer.terms': 'सेवा अटी',
+    'footer.privacy': 'गोपनीयता धोरण',
+    'footer.gst': 'कर अनुपालन (GSTIN)',
+    'footer.quality': 'बनावट विरोधी धोरण',
+    'footer.seller_guidelines': 'विक्रेता मार्गदर्शक तत्त्वे',
+    'footer.seller_dashboard': 'विक्रेता डॅशबोर्ड',
+    'footer.wholesale': 'बी२बी घाऊक चौकशी',
+    'footer.made_in_india': 'सभिमानाने भारतात बनवलेले',
+    'footer.escrow_protected': 'एस्क्रौ सुरक्षित',
+    'footer.copyright': 'सर्व हक्क राखीव. एंटरप्राइज मल्टी-व्हेंडर प्लॅटफॉर्म.',
     
     // Common
     'faq.title': 'नेहमी विचारले जाणारे प्रश्न',

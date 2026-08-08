@@ -111,26 +111,26 @@ export const Header: React.FC = () => {
             <span className="inline-flex items-center gap-1 bg-slate-800 text-slate-200 px-2 py-0.5 rounded-md text-[10px] font-bold">
               🇮🇳 India
             </span>
-            <span>Direct-from-source Multi-Vendor Platform</span>
+            <span>{t('nav.india_platform')}</span>
           </div>
 
           <div className="mx-auto sm:mx-0 flex items-center gap-2">
             <span className="bg-rose-500 text-white text-[9px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider animate-pulse flex items-center gap-1">
               <Sparkles size={10} />
-              <span>Festive Deals</span>
+              <span>{t('nav.festive_deals')}</span>
             </span>
-            <span className="font-semibold text-slate-100">Free Express Shipping on all orders above ₹499!</span>
+            <span className="font-semibold text-slate-100">{t('nav.free_shipping_notice')}</span>
           </div>
 
           <div className="hidden md:flex items-center gap-4 text-slate-300 font-medium text-[11px]">
             <Link href="#deals" className="hover:text-primary transition-colors flex items-center gap-1">
               <Tag size={12} className="text-rose-400" />
-              <span>Flash Deals</span>
+              <span>{t('nav.deals')}</span>
             </Link>
             <span className="text-slate-700">|</span>
             <span className="flex items-center gap-1 text-slate-300">
               <PhoneCall size={12} className="text-emerald-400" />
-              <span>Helpline: 1800-JSS-MARKET</span>
+              <span>{t('nav.helpline')}</span>
             </span>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { HelpCircle, Phone, ShieldCheck, Truck, Award, Headphones, ChevronUp, ChevronDown, Plus, Minus, Lightbulb } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface FaqItem {
   id: string;
@@ -37,13 +38,14 @@ const faqs: FaqItem[] = [
 ];
 
 const trustBadges = [
-  { icon: ShieldCheck, label: 'Secure Transactions', color: '#3b82f6' },
-  { icon: Truck, label: 'Fast & Reliable Delivery', color: '#f97316' },
-  { icon: Award, label: 'Trusted by Thousands', color: '#8b5cf6' },
-  { icon: Headphones, label: '24/7 Customer Support', color: '#22c55e' },
+  { icon: ShieldCheck, labelKey: 'footer.shipping_title', label: 'Secure Transactions', color: '#3b82f6' },
+  { icon: Truck, labelKey: 'footer.returns_title', label: 'Fast & Reliable Delivery', color: '#f97316' },
+  { icon: Award, labelKey: 'footer.guarantee_title', label: 'Trusted by Thousands', color: '#8b5cf6' },
+  { icon: Headphones, labelKey: 'footer.support_title', label: '24/7 Customer Support', color: '#22c55e' },
 ];
 
 export const HomeFaqSection: React.FC = () => {
+  const { t } = useLanguage();
   const [openId, setOpenId] = useState<string>('track');
 
   const toggle = (id: string) => setOpenId(prev => prev === id ? '' : id);
@@ -62,14 +64,13 @@ export const HomeFaqSection: React.FC = () => {
             {/* Label */}
             <div className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/30 px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest">
               <HelpCircle size={12} />
-              FAQ Center
+              {t('home.faq_center')}
             </div>
 
             {/* Title */}
             <div>
               <h2 className="text-3xl sm:text-4xl font-black text-foreground leading-tight">
-                Frequently<br />Asked<br />
-                <span className="text-orange-500 dark:text-orange-400">Questions</span>
+                {t('home.faq_title')}
               </h2>
               {/* Decorative lines */}
               <div className="flex items-center gap-1.5 mt-3">
@@ -80,7 +81,7 @@ export const HomeFaqSection: React.FC = () => {
 
             {/* Subtitle */}
             <p className="text-sm text-muted-custom font-medium leading-relaxed">
-              Got questions about orders, payments, delivery, vendor onboarding, or anything else? We're here to help!
+              {t('home.faq_sub')}
             </p>
 
             {/* B2B Support Card */}
@@ -90,8 +91,8 @@ export const HomeFaqSection: React.FC = () => {
                   <Headphones size={18} />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-foreground">Need custom B2B wholesale pricing?</p>
-                  <p className="text-[11px] text-muted-custom mt-0.5">Reach out to our helpline at</p>
+                  <p className="text-xs font-bold text-foreground">{t('home.need_b2b')}</p>
+                  <p className="text-[11px] text-muted-custom mt-0.5">{t('home.reach_helpline')}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-black transition-colors shadow-2xs">
@@ -100,7 +101,7 @@ export const HomeFaqSection: React.FC = () => {
               </div>
               <div className="flex items-center gap-2 text-[11px] text-muted-custom">
                 <ShieldCheck size={13} className="text-emerald-500 shrink-0" />
-                Our support team is here to help you 24/7
+                {t('home.support_247')}
               </div>
             </div>
           </div>
@@ -163,7 +164,7 @@ export const HomeFaqSection: React.FC = () => {
                         <div className="flex items-start gap-2.5 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl px-4 py-3">
                           <Lightbulb size={15} className="text-amber-500 dark:text-amber-400 shrink-0 mt-0.5" />
                           <p className="text-xs text-amber-800 dark:text-amber-300 font-medium leading-relaxed">
-                            <span className="font-bold">Tip:</span> {faq.tip}
+                            <span className="font-bold">{t('home.tip')}:</span> {faq.tip}
                           </p>
                         </div>
                       )}
@@ -187,7 +188,7 @@ export const HomeFaqSection: React.FC = () => {
                         <Icon size={18} />
                       </div>
                       <span className="text-[10px] font-semibold text-center text-foreground leading-tight">
-                        {badge.label}
+                        {t(badge.labelKey) || badge.label}
                       </span>
                     </div>
                   );

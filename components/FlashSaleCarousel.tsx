@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Product } from '../types';
 import { ProductCard } from './ProductCard';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface FlashSaleCarouselProps {
   products: Product[];
@@ -16,6 +17,7 @@ export const FlashSaleCarousel: React.FC<FlashSaleCarouselProps> = ({
   onQuickView,
   timeLeft
 }) => {
+  const { t } = useLanguage();
   const [visibleCount, setVisibleCount] = useState(5);
   const [isPaused, setIsPaused] = useState(false);
   const [withTransition, setWithTransition] = useState(true);
@@ -156,13 +158,13 @@ export const FlashSaleCarousel: React.FC<FlashSaleCarouselProps> = ({
           </div>
           <div>
             <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-rose-500 uppercase tracking-widest bg-rose-500/10 px-2.5 py-0.5 rounded-full mb-1">
-              <span>Limited Time Offer</span>
+              <span>{t('home.limited_offer')}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight flex items-center gap-2">
-              Today's Flash Sales
+              {t('home.flash_sales')}
             </h2>
             <p className="text-xs text-muted-custom mt-0.5 font-medium">
-              Verified marketplace discounts directly from source. Deal ends in:
+              {t('home.ends_in')}
             </p>
           </div>
         </div>
@@ -174,21 +176,21 @@ export const FlashSaleCarousel: React.FC<FlashSaleCarouselProps> = ({
               <span className="bg-background-secondary border border-border-custom px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-mono shadow-xs">
                 {String(timeLeft.hours).padStart(2, '0')}
               </span>
-              <span className="text-[9px] text-muted-custom font-semibold uppercase mt-1">Hours</span>
+              <span className="text-[9px] text-muted-custom font-semibold uppercase mt-1">{t('home.hours')}</span>
             </div>
             <span className="text-rose-500 font-black text-lg mb-4">:</span>
             <div className="flex flex-col items-center">
               <span className="bg-background-secondary border border-border-custom px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-mono shadow-xs">
                 {String(timeLeft.minutes).padStart(2, '0')}
               </span>
-              <span className="text-[9px] text-muted-custom font-semibold uppercase mt-1">Mins</span>
+              <span className="text-[9px] text-muted-custom font-semibold uppercase mt-1">{t('home.mins')}</span>
             </div>
             <span className="text-rose-500 font-black text-lg mb-4">:</span>
             <div className="flex flex-col items-center">
               <span className="bg-background-secondary border border-border-custom px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-mono shadow-xs">
                 {String(timeLeft.seconds).padStart(2, '0')}
               </span>
-              <span className="text-[9px] text-muted-custom font-semibold uppercase mt-1">Secs</span>
+              <span className="text-[9px] text-muted-custom font-semibold uppercase mt-1">{t('home.secs')}</span>
             </div>
           </div>
 

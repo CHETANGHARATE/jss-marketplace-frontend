@@ -20,7 +20,7 @@ export const ProductImageFrame: React.FC<ProductImageFrameProps> = ({
   return (
     <div
       onClick={onClick}
-      className={`w-full h-[180px] sm:h-[220px] md:h-[250px] bg-[#ECEFF3] dark:bg-slate-900/40 rounded-t-[16px] overflow-hidden relative shrink-0 cursor-pointer border-b border-border-custom/60 ${className}`}
+      className={`w-full h-[150px] sm:h-[175px] md:h-[185px] bg-[#ECEFF3] dark:bg-slate-900/40 rounded-t-[16px] overflow-hidden relative shrink-0 cursor-pointer border-b border-border-custom/60 ${className}`}
     >
       <img
         src={src}
