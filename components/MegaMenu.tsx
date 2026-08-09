@@ -17,7 +17,7 @@ import { useCategories } from '../hooks/useCategories';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getLocalizedText } from '../utils/translation';
 import { getCategoryUrl } from '../utils/categoryUtils';
-import { getCategoryVisualConfig } from '../utils/categoryVisuals';
+import { getCategoryVisualConfig, getSubcategoryImage } from '../utils/categoryVisuals';
 import { ApiCategory } from '../types/api';
 
 export function MegaMenu() {
@@ -200,12 +200,11 @@ export function MegaMenu() {
                           {(() => {
                             const apiSubcats = activeCategory.children || activeCategory.subcategories || [];
                             
-                            // If API provides subcategories, map them with images
+                            // If API provides subcategories, map them with exact matching dedicated images
                             if (apiSubcats.length > 0) {
                               return apiSubcats.map((sub: any, idx: number) => {
                                 const subName = getLocalizedText(sub.name, language);
-                                const defaultImg = activeVisualConfig.defaultSubcategories[idx % activeVisualConfig.defaultSubcategories.length]?.image || '/categories/groceries.webp';
-                                const subImg = sub.image || sub.primary_image || defaultImg;
+                                const subImg = sub.image || sub.primary_image || getSubcategoryImage(subName || sub.slug, activeCategory);
 
                                 return (
                                   <div
@@ -236,32 +235,36 @@ export function MegaMenu() {
                               });
                             }
 
-                            // Fallback to default presets for this category
-                            return activeVisualConfig.defaultSubcategories.map((preset, idx) => (
-                              <div
-                                key={preset.slug || idx}
-                                onClick={() => handleSubcategoryClick(activeCategory, preset.slug)}
-                                className="group cursor-pointer bg-background-secondary/60 hover:bg-background-secondary border border-border-custom/70 hover:border-primary/30 rounded-2xl p-3 transition-all duration-200 hover:shadow-md flex flex-col justify-between"
-                              >
-                                <div className="relative aspect-16/10 rounded-xl overflow-hidden bg-card mb-3 border border-border-custom/40">
-                                  <img
-                                    src={preset.image}
-                                    alt={preset.name}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                  />
-                                </div>
+                            // Fallback to default presets for this category with exact matching image lookup
+                            return activeVisualConfig.defaultSubcategories.map((preset, idx) => {
+                              const subImg = getSubcategoryImage(preset.name || preset.slug, activeCategory) || preset.image;
 
-                                <div>
-                                  <h5 className="font-extrabold text-xs text-foreground group-hover:text-primary transition-colors line-clamp-1">
-                                    {preset.name}
-                                  </h5>
-                                  <span className="text-[10px] font-bold text-primary group-hover:underline flex items-center gap-1 mt-1">
-                                    <span>{preset.description}</span>
-                                    <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                                  </span>
+                              return (
+                                <div
+                                  key={preset.slug || idx}
+                                  onClick={() => handleSubcategoryClick(activeCategory, preset.slug)}
+                                  className="group cursor-pointer bg-background-secondary/60 hover:bg-background-secondary border border-border-custom/70 hover:border-primary/30 rounded-2xl p-3 transition-all duration-200 hover:shadow-md flex flex-col justify-between"
+                                >
+                                  <div className="relative aspect-16/10 rounded-xl overflow-hidden bg-card mb-3 border border-border-custom/40">
+                                    <img
+                                      src={subImg}
+                                      alt={preset.name}
+                                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    />
+                                  </div>
+
+                                  <div>
+                                    <h5 className="font-extrabold text-xs text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                                      {preset.name}
+                                    </h5>
+                                    <span className="text-[10px] font-bold text-primary group-hover:underline flex items-center gap-1 mt-1">
+                                      <span>{preset.description}</span>
+                                      <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                                    </span>
+                                  </div>
                                 </div>
-                              </div>
-                            ));
+                              );
+                            });
                           })()}
                         </div>
                       </div>

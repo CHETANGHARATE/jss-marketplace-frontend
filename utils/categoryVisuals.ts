@@ -15,7 +15,6 @@ import {
   BookOpen,
   Baby,
   Gift,
-  CircleDot,
   ShoppingBag,
   LucideIcon
 } from 'lucide-react';
@@ -25,6 +24,7 @@ export interface SubcategoryVisual {
   slug: string;
   image: string;
   description: string;
+  visualPrompt?: string;
 }
 
 export interface CategoryVisualConfig {
@@ -44,10 +44,34 @@ export const CATEGORY_VISUALS_MAP: Record<string, CategoryVisualConfig> = {
     iconBgLight: 'bg-amber-500/10 text-amber-600 border-amber-500/20',
     iconBgDark: 'dark:bg-amber-500/20 dark:text-amber-400 dark:border-amber-500/30',
     defaultSubcategories: [
-      { name: 'Fresh Fruit Juices', slug: 'fruit-juices', image: '/categories/juices.webp', description: 'Explore collection' },
-      { name: 'Ayurvedic & Herbal Syrups', slug: 'herbal-syrups', image: '/categories/health.webp', description: 'Explore collection' },
-      { name: 'Concentrates & Sharbat', slug: 'concentrates', image: '/categories/homemade.webp', description: 'Explore collection' },
-      { name: 'Organic Cold-Pressed', slug: 'cold-pressed', image: '/categories/groceries.webp', description: 'Explore collection' },
+      {
+        name: 'Fresh Fruit Juices',
+        slug: 'fruit-juices',
+        image: '/categories/juices.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Fresh organic fruit juices in glass bottles with fresh oranges, mangoes and pomegranates on clean surface'
+      },
+      {
+        name: 'Ayurvedic & Herbal Syrups',
+        slug: 'herbal-syrups',
+        image: '/categories/health.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Ayurvedic herbal health syrups in amber glass bottles with natural herbs and ingredients'
+      },
+      {
+        name: 'Concentrates & Sharbat',
+        slug: 'concentrates',
+        image: '/categories/homemade.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Traditional fruit concentrates and sharbat bottles, artisanal e-commerce product photography'
+      },
+      {
+        name: 'Organic Cold-Pressed',
+        slug: 'cold-pressed',
+        image: '/categories/groceries.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Cold-pressed organic wellness juices in clear bottles with green vegetables and fruits'
+      },
     ]
   },
 
@@ -58,14 +82,62 @@ export const CATEGORY_VISUALS_MAP: Record<string, CategoryVisualConfig> = {
     iconBgLight: 'bg-sky-500/10 text-sky-600 border-sky-500/20',
     iconBgDark: 'dark:bg-sky-500/20 dark:text-sky-400 dark:border-sky-500/30',
     defaultSubcategories: [
-      { name: 'Furniture & Living', slug: 'furniture', image: '/categories/furniture.webp', description: 'Explore collection' },
-      { name: 'Kitchen Appliances', slug: 'kitchen-appliances', image: '/categories/kitchen.webp', description: 'Explore collection' },
-      { name: 'Home Decor & Vases', slug: 'home-decor', image: '/categories/diwali.webp', description: 'Explore collection' },
-      { name: 'Lighting & Lamps', slug: 'lighting', image: '/categories/kitchen.webp', description: 'Explore collection' },
-      { name: 'Cookware & Pots', slug: 'cookware', image: '/categories/kitchen.webp', description: 'Explore collection' },
-      { name: 'Storage & Containers', slug: 'storage-containers', image: '/categories/homemade.webp', description: 'Explore collection' },
-      { name: 'Dining & Serveware', slug: 'dining-serveware', image: '/categories/kitchen.webp', description: 'Explore collection' },
-      { name: 'Cleaning Essentials', slug: 'cleaning-essentials', image: '/categories/groceries.webp', description: 'Explore collection' },
+      {
+        name: 'Furniture',
+        slug: 'furniture',
+        image: '/categories/furniture.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Premium modern furniture collection featuring a stylish sofa, accent chair, coffee table and minimal side table'
+      },
+      {
+        name: 'Kitchen Appliances',
+        slug: 'kitchen-appliances',
+        image: '/categories/kitchen.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Modern kitchen appliances including blender, air fryer, microwave oven and mixer'
+      },
+      {
+        name: 'Home Decor',
+        slug: 'home-decor',
+        image: '/categories/diwali.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Elegant home decor collection featuring ceramic vases, indoor plants, decorative objects and framed wall art'
+      },
+      {
+        name: 'Lighting & Lamps',
+        slug: 'lighting',
+        image: '/categories/lighting.jpg',
+        description: 'Explore collection',
+        visualPrompt: 'Modern lighting collection featuring pendant lights, floor lamp and stylish table lamp in an elegant interior'
+      },
+      {
+        name: 'Cookware',
+        slug: 'cookware',
+        image: '/categories/cookware.jpg',
+        description: 'Explore collection',
+        visualPrompt: 'Premium cookware collection featuring frying pans, sauce pans, cooking pots and kitchen utensils'
+      },
+      {
+        name: 'Storage & Containers',
+        slug: 'storage-containers',
+        image: '/categories/storage.jpg',
+        description: 'Explore collection',
+        visualPrompt: 'Modern household storage collection featuring transparent food storage containers and kitchen organizers'
+      },
+      {
+        name: 'Dining & Serveware',
+        slug: 'dining-serveware',
+        image: '/categories/kitchen.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Elegant ceramic plates, bowls and serving dishes arranged neatly on a dining setup'
+      },
+      {
+        name: 'Cleaning Essentials',
+        slug: 'cleaning-essentials',
+        image: '/categories/cleaning.jpg',
+        description: 'Explore collection',
+        visualPrompt: 'Household cleaning essentials including mop, bucket, cleaning brushes, spray bottles and tools'
+      },
     ]
   },
 
@@ -76,10 +148,34 @@ export const CATEGORY_VISUALS_MAP: Record<string, CategoryVisualConfig> = {
     iconBgLight: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
     iconBgDark: 'dark:bg-yellow-500/20 dark:text-yellow-400 dark:border-yellow-500/30',
     defaultSubcategories: [
-      { name: 'Brass & Copper Idols', slug: 'brass-idols', image: '/categories/pooja.webp', description: 'Explore collection' },
-      { name: 'Incense & Dhoop Sticks', slug: 'incense-sticks', image: '/categories/pooja.webp', description: 'Explore collection' },
-      { name: 'Pooja Samagri Kits', slug: 'samagri-kits', image: '/categories/diwali.webp', description: 'Explore collection' },
-      { name: 'Diyas & Temple Lamps', slug: 'diyas-lamps', image: '/categories/pooja.webp', description: 'Explore collection' },
+      {
+        name: 'Brass & Copper Idols',
+        slug: 'brass-idols',
+        image: '/categories/pooja.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Traditional brass and copper religious idols and temple items'
+      },
+      {
+        name: 'Incense & Dhoop Sticks',
+        slug: 'incense-sticks',
+        image: '/categories/pooja.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Aromatic incense sticks, dhoop cones and aromatic holders'
+      },
+      {
+        name: 'Pooja Samagri Kits',
+        slug: 'samagri-kits',
+        image: '/categories/diwali.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Complete devotional pooja samagri kits with brass thali and accessories'
+      },
+      {
+        name: 'Diyas & Temple Lamps',
+        slug: 'diyas-lamps',
+        image: '/categories/pooja.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Brass oil diyas, hanging temple lamps and festive lights'
+      },
     ]
   },
 
@@ -90,10 +186,34 @@ export const CATEGORY_VISUALS_MAP: Record<string, CategoryVisualConfig> = {
     iconBgLight: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
     iconBgDark: 'dark:bg-emerald-500/20 dark:text-emerald-400 dark:border-emerald-500/30',
     defaultSubcategories: [
-      { name: 'Organic Seeds & Saplings', slug: 'organic-seeds', image: '/categories/agriculture-seeds.webp', description: 'Explore collection' },
-      { name: 'Bio Fertilizers & Soil', slug: 'bio-fertilizers', image: '/categories/agriculture-seeds.webp', description: 'Explore collection' },
-      { name: 'Garden Tools & Sprayers', slug: 'garden-tools', image: '/categories/agriculture-seeds.webp', description: 'Explore collection' },
-      { name: 'Crop Protection & Care', slug: 'crop-protection', image: '/categories/agriculture-seeds.webp', description: 'Explore collection' },
+      {
+        name: 'Organic Seeds & Saplings',
+        slug: 'organic-seeds',
+        image: '/categories/agriculture-seeds.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Packaged organic vegetable and crop seeds with young green saplings'
+      },
+      {
+        name: 'Bio Fertilizers & Soil',
+        slug: 'bio-fertilizers',
+        image: '/categories/agriculture-seeds.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Bio fertilizers, organic soil nutrients and plant compost'
+      },
+      {
+        name: 'Garden Tools & Sprayers',
+        slug: 'garden-tools',
+        image: '/categories/agriculture-seeds.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Agricultural garden tools, pruning shears and pressure sprayers'
+      },
+      {
+        name: 'Crop Protection & Care',
+        slug: 'crop-protection',
+        image: '/categories/agriculture-seeds.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Agricultural crop protection and plant health products'
+      },
     ]
   },
 
@@ -104,10 +224,34 @@ export const CATEGORY_VISUALS_MAP: Record<string, CategoryVisualConfig> = {
     iconBgLight: 'bg-rose-500/10 text-rose-600 border-rose-500/20',
     iconBgDark: 'dark:bg-rose-500/20 dark:text-rose-400 dark:border-rose-500/30',
     defaultSubcategories: [
-      { name: 'Skincare & Serums', slug: 'skincare', image: '/categories/cosmetics.webp', description: 'Explore collection' },
-      { name: 'Haircare & Herbal Oils', slug: 'haircare', image: '/categories/beauty.webp', description: 'Explore collection' },
-      { name: 'Makeup Essentials', slug: 'makeup', image: '/categories/cosmetics.webp', description: 'Explore collection' },
-      { name: 'Personal Care & Hygiene', slug: 'personal-care', image: '/categories/health.webp', description: 'Explore collection' },
+      {
+        name: 'Skincare',
+        slug: 'skincare',
+        image: '/categories/skincare.jpg',
+        description: 'Explore collection',
+        visualPrompt: 'Premium skincare product collection featuring glass dropper bottles with serums, moisturizing creams and face lotions'
+      },
+      {
+        name: 'Hair Care',
+        slug: 'haircare',
+        image: '/categories/beauty.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Herbal hair care shampoos, conditioners and nourishing hair oils'
+      },
+      {
+        name: 'Makeup',
+        slug: 'makeup',
+        image: '/categories/cosmetics.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Cosmetics makeup palette, lipsticks, foundations and brushes'
+      },
+      {
+        name: 'Personal Care',
+        slug: 'personal-care',
+        image: '/categories/health.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Personal care grooming items and hygiene essentials'
+      },
     ]
   },
 
@@ -118,10 +262,34 @@ export const CATEGORY_VISUALS_MAP: Record<string, CategoryVisualConfig> = {
     iconBgLight: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
     iconBgDark: 'dark:bg-blue-500/20 dark:text-blue-400 dark:border-blue-500/30',
     defaultSubcategories: [
-      { name: "Men's Formal & Casual", slug: 'mens-footwear', image: '/categories/footwear.webp', description: 'Explore collection' },
-      { name: "Women's Heels & Flats", slug: 'womens-footwear', image: '/categories/footwear.webp', description: 'Explore collection' },
-      { name: 'Sports & Running Shoes', slug: 'sports-shoes', image: '/categories/sports.webp', description: 'Explore collection' },
-      { name: 'Traditional Mojaris', slug: 'traditional-mojaris', image: '/categories/footwear.webp', description: 'Explore collection' },
+      {
+        name: "Men's Footwear",
+        slug: 'mens-footwear',
+        image: '/categories/footwear.webp',
+        description: 'Explore collection',
+        visualPrompt: "Men's leather formal shoes and stylish casual sneakers"
+      },
+      {
+        name: "Women's Heels & Flats",
+        slug: 'womens-footwear',
+        image: '/categories/footwear.webp',
+        description: 'Explore collection',
+        visualPrompt: "Women's fashion heels, ethnic sandals and comfortable flats"
+      },
+      {
+        name: 'Sports Shoes',
+        slug: 'sports-shoes',
+        image: '/categories/sports.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Athletic running shoes and sports sneakers'
+      },
+      {
+        name: 'Traditional Mojaris',
+        slug: 'traditional-mojaris',
+        image: '/categories/footwear.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Handcrafted traditional Indian mojaris and ethnic footwear'
+      },
     ]
   },
 
@@ -132,10 +300,34 @@ export const CATEGORY_VISUALS_MAP: Record<string, CategoryVisualConfig> = {
     iconBgLight: 'bg-orange-500/10 text-orange-600 border-orange-500/20',
     iconBgDark: 'dark:bg-orange-500/20 dark:text-orange-400 dark:border-orange-500/30',
     defaultSubcategories: [
-      { name: 'Homemade Mango Pickles', slug: 'mango-pickles', image: '/categories/pickles.webp', description: 'Explore collection' },
-      { name: 'Authentic Whole Spices', slug: 'whole-spices', image: '/categories/spices.webp', description: 'Explore collection' },
-      { name: 'Blended Masala Powders', slug: 'blended-masalas', image: '/categories/spices.webp', description: 'Explore collection' },
-      { name: 'Crispy Papads & Kurdai', slug: 'papads-kurdai', image: '/categories/papad.webp', description: 'Explore collection' },
+      {
+        name: 'Homemade Pickles',
+        slug: 'mango-pickles',
+        image: '/categories/pickles.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Traditional glass jars of homemade Indian mango, chili and lemon pickles'
+      },
+      {
+        name: 'Whole Spices',
+        slug: 'whole-spices',
+        image: '/categories/spices.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Authentic Indian whole spices including cardamom, cinnamon, star anise and cloves'
+      },
+      {
+        name: 'Blended Masalas',
+        slug: 'blended-masalas',
+        image: '/categories/spices.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Aromatic ground masala powders in bowls and glass containers'
+      },
+      {
+        name: 'Papads & Kurdai',
+        slug: 'papads-kurdai',
+        image: '/categories/papad.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Crispy sun-dried papads, kurdai and traditional accompaniments'
+      },
     ]
   },
 
@@ -146,10 +338,34 @@ export const CATEGORY_VISUALS_MAP: Record<string, CategoryVisualConfig> = {
     iconBgLight: 'bg-purple-500/10 text-purple-600 border-purple-500/20',
     iconBgDark: 'dark:bg-purple-500/20 dark:text-purple-400 dark:border-purple-500/30',
     defaultSubcategories: [
-      { name: "Men's Wear & Shirts", slug: 'mens-fashion', image: '/categories/fashion.webp', description: 'Explore collection' },
-      { name: 'Ethnic Sarees & Kurtis', slug: 'womens-fashion', image: '/categories/fashion.webp', description: 'Explore collection' },
-      { name: 'Kidswear & Accessories', slug: 'kids-fashion', image: '/categories/baby.webp', description: 'Explore collection' },
-      { name: 'Jackets & Winterwear', slug: 'winterwear', image: '/categories/fashion.webp', description: 'Explore collection' },
+      {
+        name: "Men's Clothing",
+        slug: 'mens-fashion',
+        image: '/categories/fashion.webp',
+        description: 'Explore collection',
+        visualPrompt: "Men's formal cotton shirts, trousers and casual t-shirts"
+      },
+      {
+        name: "Women's Sarees & Kurtis",
+        slug: 'womens-fashion',
+        image: '/categories/fashion.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Elegant silk sarees and designer ethnic kurtis'
+      },
+      {
+        name: 'Kids Wear',
+        slug: 'kids-fashion',
+        image: '/categories/baby.webp',
+        description: 'Explore collection',
+        visualPrompt: "Children's colorful apparel and comfortable kids wear"
+      },
+      {
+        name: 'Winterwear & Jackets',
+        slug: 'winterwear',
+        image: '/categories/fashion.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Stylish winter jackets, coats and cozy sweaters'
+      },
     ]
   },
 
@@ -160,10 +376,34 @@ export const CATEGORY_VISUALS_MAP: Record<string, CategoryVisualConfig> = {
     iconBgLight: 'bg-amber-600/10 text-amber-700 border-amber-600/20',
     iconBgDark: 'dark:bg-amber-600/20 dark:text-amber-400 dark:border-amber-600/30',
     defaultSubcategories: [
-      { name: 'Traditional Necklaces', slug: 'necklaces', image: '/categories/jewellery.webp', description: 'Explore collection' },
-      { name: 'Silver Earrings & Rings', slug: 'silver-earrings', image: '/categories/jewellery.webp', description: 'Explore collection' },
-      { name: 'Fashion Costume Accessories', slug: 'fashion-accessories', image: '/categories/jewellery.webp', description: 'Explore collection' },
-      { name: 'Bangles & Bracelets', slug: 'bangles-bracelets', image: '/categories/jewellery.webp', description: 'Explore collection' },
+      {
+        name: 'Necklaces',
+        slug: 'necklaces',
+        image: '/categories/jewellery.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Gold plated traditional Indian necklace and pendant set'
+      },
+      {
+        name: 'Earrings & Rings',
+        slug: 'silver-earrings',
+        image: '/categories/jewellery.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Sterling silver jhumka earrings and gemstone rings'
+      },
+      {
+        name: 'Fashion Accessories',
+        slug: 'fashion-accessories',
+        image: '/categories/jewellery.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Trendy costume jewellery and designer accessories'
+      },
+      {
+        name: 'Bangles & Bracelets',
+        slug: 'bangles-bracelets',
+        image: '/categories/jewellery.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Traditional bangles and elegant wrist bracelets'
+      },
     ]
   },
 
@@ -174,10 +414,34 @@ export const CATEGORY_VISUALS_MAP: Record<string, CategoryVisualConfig> = {
     iconBgLight: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/20',
     iconBgDark: 'dark:bg-cyan-500/20 dark:text-cyan-400 dark:border-cyan-500/30',
     defaultSubcategories: [
-      { name: 'Headphones & Earbuds', slug: 'audio-headphones', image: '/categories/electronics.webp', description: 'Explore collection' },
-      { name: 'Smartwatches & Fitness Bands', slug: 'smartwatches', image: '/categories/electronics.webp', description: 'Explore collection' },
-      { name: 'Mobile Accessories & Cables', slug: 'mobile-accessories', image: '/categories/electronics.webp', description: 'Explore collection' },
-      { name: 'Speakers & Home Audio', slug: 'home-audio', image: '/categories/electronics.webp', description: 'Explore collection' },
+      {
+        name: 'Headphones & Earbuds',
+        slug: 'audio-headphones',
+        image: '/categories/electronics.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Wireless noise-canceling headphones and bluetooth earbuds'
+      },
+      {
+        name: 'Smartwatches',
+        slug: 'smartwatches',
+        image: '/categories/electronics.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Modern smartwatch with fitness tracking display'
+      },
+      {
+        name: 'Mobile Accessories',
+        slug: 'mobile-accessories',
+        image: '/categories/electronics.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Smartphones, fast chargers and protective mobile cases'
+      },
+      {
+        name: 'Speakers & Audio',
+        slug: 'home-audio',
+        image: '/categories/electronics.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Portable bluetooth speakers and home audio soundbars'
+      },
     ]
   },
 
@@ -188,10 +452,34 @@ export const CATEGORY_VISUALS_MAP: Record<string, CategoryVisualConfig> = {
     iconBgLight: 'bg-indigo-500/10 text-indigo-600 border-indigo-500/20',
     iconBgDark: 'dark:bg-indigo-500/20 dark:text-indigo-400 dark:border-indigo-500/30',
     defaultSubcategories: [
-      { name: 'Car Care & Polish', slug: 'car-care', image: '/categories/auto.webp', description: 'Explore collection' },
-      { name: 'Riding Helmets & Gear', slug: 'helmets-gear', image: '/categories/auto.webp', description: 'Explore collection' },
-      { name: 'Seat Covers & Cushions', slug: 'seat-covers', image: '/categories/auto.webp', description: 'Explore collection' },
-      { name: 'LED Lights & Gadgets', slug: 'auto-gadgets', image: '/categories/auto.webp', description: 'Explore collection' },
+      {
+        name: 'Car Care & Polish',
+        slug: 'car-care',
+        image: '/categories/auto.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Car wash shampoo, microfiber cloths and detailing wax'
+      },
+      {
+        name: 'Helmets & Riding Gear',
+        slug: 'helmets-gear',
+        image: '/categories/auto.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Full-face motorcycle helmet and protective riding gloves'
+      },
+      {
+        name: 'Seat Covers & Mats',
+        slug: 'seat-covers',
+        image: '/categories/auto.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Leatherette car seat covers and 7D floor mats'
+      },
+      {
+        name: 'LED Lights & Gadgets',
+        slug: 'auto-gadgets',
+        image: '/categories/auto.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Car LED headlights and dashboard accessories'
+      },
     ]
   },
 
@@ -202,10 +490,34 @@ export const CATEGORY_VISUALS_MAP: Record<string, CategoryVisualConfig> = {
     iconBgLight: 'bg-teal-500/10 text-teal-600 border-teal-500/20',
     iconBgDark: 'dark:bg-teal-500/20 dark:text-teal-400 dark:border-teal-500/30',
     defaultSubcategories: [
-      { name: 'Artisanal Handicrafts', slug: 'handicrafts', image: '/categories/gifts.webp', description: 'Explore collection' },
-      { name: 'Traditional Sweets & Snacks', slug: 'sweets-snacks', image: '/categories/diwali.webp', description: 'Explore collection' },
-      { name: 'Handmade Soaps & Candles', slug: 'soaps-candles', image: '/categories/cosmetics.webp', description: 'Explore collection' },
-      { name: 'Pure Homemade Ghee', slug: 'homemade-ghee', image: '/categories/oil.webp', description: 'Explore collection' },
+      {
+        name: 'Artisanal Handicrafts',
+        slug: 'handicrafts',
+        image: '/categories/gifts.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Handcrafted wooden art, pottery and traditional Indian gifts'
+      },
+      {
+        name: 'Homemade Sweets',
+        slug: 'sweets-snacks',
+        image: '/categories/diwali.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Authentic Indian festive sweets and homemade faral'
+      },
+      {
+        name: 'Handmade Soaps',
+        slug: 'soaps-candles',
+        image: '/categories/cosmetics.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Natural organic soaps and scented essential oil candles'
+      },
+      {
+        name: 'Pure Desi Ghee',
+        slug: 'homemade-ghee',
+        image: '/categories/oil.webp',
+        description: 'Explore collection',
+        visualPrompt: 'Traditional glass jar of pure A2 cow desi ghee'
+      },
     ]
   }
 };
@@ -251,4 +563,113 @@ export function getCategoryVisualConfig(category: any): CategoryVisualConfig {
   if (combined.includes('homemade') || combined.includes('gift') || combined.includes('handicraft')) return CATEGORY_VISUALS_MAP.local_homemade;
 
   return DEFAULT_FALLBACK_CONFIG;
+}
+
+/**
+ * EXACT SUBCATEGORY VISUAL MATCHING ENGINE
+ * Maps subcategory name or slug to exact relevant asset.
+ */
+export function getSubcategoryImage(subcatNameOrSlug: string, parentCatObj?: any): string {
+  const str = String(subcatNameOrSlug || '').toLowerCase().trim();
+
+  if (str.includes('cookware') || str.includes('pan') || str.includes('pot') || str.includes('bakeware')) {
+    return '/categories/cookware.jpg';
+  }
+  if (str.includes('light') || str.includes('lamp') || str.includes('pendant')) {
+    return '/categories/lighting.jpg';
+  }
+  if (str.includes('storage') || str.includes('container') || str.includes('organizer')) {
+    return '/categories/storage.jpg';
+  }
+  if (str.includes('clean') || str.includes('mop') || str.includes('bucket')) {
+    return '/categories/cleaning.jpg';
+  }
+  if (str.includes('skincare') || str.includes('serum') || str.includes('cream') || str.includes('lotion')) {
+    return '/categories/skincare.jpg';
+  }
+  if (str.includes('furniture') || str.includes('sofa') || str.includes('chair') || str.includes('table') || str.includes('bed')) {
+    return '/categories/furniture.webp';
+  }
+  if (str.includes('appliance') || str.includes('blender') || str.includes('microwave') || str.includes('air fryer') || str.includes('mixer')) {
+    return '/categories/kitchen.webp';
+  }
+  if (str.includes('decor') || str.includes('vase') || str.includes('wall art')) {
+    return '/categories/diwali.webp';
+  }
+  if (str.includes('dining') || str.includes('serveware') || str.includes('plate') || str.includes('bowl')) {
+    return '/categories/kitchen.webp';
+  }
+  if (str.includes('makeup') || str.includes('lipstick') || str.includes('foundation')) {
+    return '/categories/cosmetics.webp';
+  }
+  if (str.includes('hair') || str.includes('shampoo') || str.includes('conditioner')) {
+    return '/categories/beauty.webp';
+  }
+  if (str.includes('personal') || str.includes('hygiene') || str.includes('health')) {
+    return '/categories/health.webp';
+  }
+  if (str.includes('footwear') || str.includes('shoe') || str.includes('sandal') || str.includes('heel') || str.includes('mojari')) {
+    return '/categories/footwear.webp';
+  }
+  if (str.includes('jewel') || str.includes('necklace') || str.includes('ring') || str.includes('earring') || str.includes('bangle') || str.includes('silver')) {
+    return '/categories/jewellery.webp';
+  }
+  if (str.includes('seed') || str.includes('sapling') || str.includes('fertilizer') || str.includes('soil') || str.includes('crop') || str.includes('garden')) {
+    return '/categories/agriculture-seeds.webp';
+  }
+  if (str.includes('headphone') || str.includes('earbud') || str.includes('smartwatch') || str.includes('audio') || str.includes('speaker') || str.includes('mobile') || str.includes('electronic')) {
+    return '/categories/electronics.webp';
+  }
+  if (str.includes('fashion') || str.includes('cloth') || str.includes('saree') || str.includes('kurti') || str.includes('shirt') || str.includes('jacket') || str.includes('winterwear')) {
+    return '/categories/fashion.webp';
+  }
+  if (str.includes('pickle') || str.includes('chutney')) {
+    return '/categories/pickles.webp';
+  }
+  if (str.includes('spice') || str.includes('masala')) {
+    return '/categories/spices.webp';
+  }
+  if (str.includes('papad') || str.includes('kurdai')) {
+    return '/categories/papad.webp';
+  }
+  if (str.includes('juice') || str.includes('sharbat') || str.includes('beverage')) {
+    return '/categories/juices.webp';
+  }
+  if (str.includes('syrup') || str.includes('ayurved')) {
+    return '/categories/health.webp';
+  }
+  if (str.includes('pooja') || str.includes('idol') || str.includes('incense') || str.includes('dhoop') || str.includes('diya') || str.includes('samagri') || str.includes('temple')) {
+    return '/categories/pooja.webp';
+  }
+  if (str.includes('auto') || str.includes('car') || str.includes('helmet') || str.includes('riding') || str.includes('seat')) {
+    return '/categories/auto.webp';
+  }
+  if (str.includes('handicraft') || str.includes('gift') || str.includes('artisan')) {
+    return '/categories/gifts.webp';
+  }
+  if (str.includes('baby') || str.includes('kid')) {
+    return '/categories/baby.webp';
+  }
+  if (str.includes('book') || str.includes('stationery')) {
+    return '/categories/books.webp';
+  }
+  if (str.includes('sport') || str.includes('fitness')) {
+    return '/categories/sports.webp';
+  }
+  if (str.includes('pet') || str.includes('dog') || str.includes('cat')) {
+    return '/categories/pet.webp';
+  }
+  if (str.includes('sweet') || str.includes('snack') || str.includes('diwali')) {
+    return '/categories/diwali.webp';
+  }
+
+  // Parent fallback
+  if (parentCatObj) {
+    const parentConfig = getCategoryVisualConfig(parentCatObj);
+    if (parentConfig.defaultSubcategories[0]?.image) {
+      return parentConfig.defaultSubcategories[0].image;
+    }
+  }
+
+  return '/categories/groceries.webp';
 }
