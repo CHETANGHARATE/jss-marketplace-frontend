@@ -22,7 +22,8 @@ import {
   CreditCard,
   MapPin,
   Check,
-  Store
+  Store,
+  Lock
 } from 'lucide-react';
 
 interface ProductDetailsInfoProps {
@@ -148,6 +149,7 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
   const reviewCount = product.reviews_count || product.reviewsCount || 165;
   const sellerName = product.seller?.name || 'Maharashtra Fasal Express';
   const sellerId = product.seller_id || product.seller?.id;
+  const skuCode = product.sku || `JSS-PROD-${String(product.id).padStart(3, '0')}`;
 
   return (
     <>
@@ -158,7 +160,7 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
         {/* 1. Header Line: Title + Share/Wishlist Actions */}
         <div className="space-y-3">
           <div className="flex items-start justify-between gap-4">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-foreground leading-tight tracking-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-black text-slate-900 dark:text-white leading-tight tracking-tight">
               {product.name}
             </h1>
 
@@ -166,7 +168,7 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
             <div className="flex items-center gap-2 shrink-0 pt-1">
               <button
                 onClick={handleShare}
-                className="p-2.5 rounded-full border border-border-custom hover:border-primary text-muted-custom hover:text-primary transition-all bg-card shadow-xs"
+                className="p-2.5 rounded-full border border-border-custom hover:border-primary text-muted-custom hover:text-primary transition-all bg-card shadow-2xs"
                 title="Share Product"
                 aria-label="Share Product"
               >
@@ -174,7 +176,7 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
               </button>
               <button
                 onClick={handleToggleWishlist}
-                className={`p-2.5 rounded-full border transition-all shadow-xs ${
+                className={`p-2.5 rounded-full border transition-all shadow-2xs ${
                   isWishlisted
                     ? 'border-rose-500/30 bg-rose-500/10 text-rose-500'
                     : 'border-border-custom hover:border-rose-500 text-muted-custom hover:text-rose-500 bg-card'
@@ -187,7 +189,7 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
             </div>
           </div>
 
-          {/* Rating, Reviews & SKU Line */}
+          {/* Rating, Reviews, Verified & SKU Line */}
           <div className="flex items-center gap-3 flex-wrap text-xs">
             <div className="flex items-center gap-1 text-amber-500 font-extrabold bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 rounded-lg">
               <Star size={13} className="fill-current" />
@@ -203,6 +205,12 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
             <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
               <CheckCircle2 size={13} />
               Verified Purchase Item
+            </span>
+
+            <span className="text-muted-custom/40">•</span>
+
+            <span className="font-mono text-muted-custom font-semibold">
+              SKU: {skuCode}
             </span>
           </div>
         </div>
@@ -242,16 +250,16 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
         </div>
 
         {/* 3. Price Block Showcase */}
-        <div className="p-5 bg-card border border-border-custom rounded-3xl space-y-3 shadow-xs">
+        <div className="p-5 bg-card border border-border-custom/80 rounded-2xl space-y-3 shadow-2xs">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <div className="flex items-baseline flex-wrap gap-3">
-                <span className="text-3xl sm:text-4xl font-black text-primary">
+                <span className="text-3xl sm:text-[36px] font-black text-primary">
                   ₹{offerPrice.toLocaleString()}
                 </span>
                 {origPrice > offerPrice && (
                   <span className="text-base text-muted-custom line-through font-semibold">
-                    ₹{origPrice.toLocaleString()}
+                    MRP ₹{origPrice.toLocaleString()}
                   </span>
                 )}
                 {discountPercent > 0 && (
@@ -276,7 +284,7 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
         </div>
 
         {/* 4. Stock Status & Express Delivery Indicator */}
-        <div className="flex items-center justify-between flex-wrap gap-3 pt-1 text-xs font-bold">
+        <div className="flex items-center justify-between flex-wrap gap-3 text-xs font-bold">
           <div className="flex items-center gap-2">
             <span
               className={`h-2.5 w-2.5 rounded-full ${
@@ -303,7 +311,7 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
         </div>
 
         {/* 5. Offers & Discounts Block */}
-        <div className="border border-border-custom rounded-2xl p-4 bg-card space-y-3">
+        <div className="border border-border-custom/80 rounded-2xl p-4 bg-card space-y-3">
           <h4 className="text-xs font-black uppercase tracking-wider text-foreground flex items-center gap-2">
             <Tag size={14} className="text-primary" />
             OFFERS & DISCOUNTS
@@ -323,7 +331,7 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
         </div>
 
         {/* 6. Check Delivery & Availability */}
-        <div className="border border-border-custom rounded-2xl p-4 bg-card space-y-3">
+        <div className="border border-border-custom/80 rounded-2xl p-4 bg-card space-y-3">
           <h4 className="text-xs font-black uppercase tracking-wider text-foreground flex items-center gap-2">
             <MapPin size={14} className="text-primary" />
             CHECK DELIVERY & AVAILABILITY
@@ -336,7 +344,7 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
               onChange={(e) => setPincode(e.target.value)}
               placeholder="Enter 6-Digit PIN Code (e.g. 400001)"
               maxLength={6}
-              className="flex-1 bg-background border border-border-custom px-3.5 py-2.5 rounded-xl text-xs font-semibold text-foreground focus:outline-none focus:border-primary"
+              className="flex-1 bg-background border border-border-custom/80 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-foreground focus:outline-none focus:border-primary"
             />
             <button
               type="submit"
@@ -359,14 +367,14 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
           )}
         </div>
 
-        {/* 7. Quantity Selector & Main Purchase Actions */}
-        <div className="space-y-4 pt-2 border-t border-border-custom">
+        {/* 7. Quantity Selector & Main Purchase Actions (52-56px Desktop Height) */}
+        <div className="space-y-4 pt-2 border-t border-border-custom/80">
           <div className="flex items-center gap-4">
             <span className="text-xs font-black uppercase text-muted-custom">QUANTITY:</span>
-            <div className="flex items-center border border-border-custom rounded-2xl bg-card">
+            <div className="flex items-center border border-border-custom/80 rounded-2xl bg-card">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="p-2.5 hover:bg-muted text-foreground/70 hover:text-foreground rounded-l-2xl transition-colors"
+                className="p-3 hover:bg-muted text-foreground/70 hover:text-foreground rounded-l-2xl transition-colors"
                 aria-label="Decrease quantity"
               >
                 <Minus className="w-4 h-4" />
@@ -374,7 +382,7 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
               <span className="px-5 text-sm font-black text-foreground">{quantity}</span>
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className="p-2.5 hover:bg-muted text-foreground/70 hover:text-foreground rounded-r-2xl transition-colors"
+                className="p-3 hover:bg-muted text-foreground/70 hover:text-foreground rounded-r-2xl transition-colors"
                 aria-label="Increase quantity"
               >
                 <Plus className="w-4 h-4" />
@@ -382,44 +390,57 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <button
               onClick={handleAddToCart}
               disabled={product.stock_status === 'out_of_stock'}
-              className="flex items-center justify-center gap-2 bg-card hover:bg-primary/10 text-primary border-2 border-primary py-3.5 px-6 rounded-2xl font-black text-xs sm:text-sm transition-all shadow-2xs active:scale-95 disabled:opacity-50 uppercase"
+              className="h-13 sm:h-14 flex items-center justify-center gap-2 bg-card hover:bg-primary/10 text-primary border-2 border-primary px-6 rounded-2xl font-black text-sm transition-all shadow-2xs active:scale-95 disabled:opacity-50 uppercase tracking-wider"
             >
-              <ShoppingBag className="w-4.5 h-4.5" />
+              <ShoppingBag className="w-5 h-5" />
               <span>Add to Cart</span>
             </button>
 
             <button
               onClick={handleBuyNow}
               disabled={product.stock_status === 'out_of_stock'}
-              className="flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white py-3.5 px-6 rounded-2xl font-black text-xs sm:text-sm transition-all shadow-md active:scale-95 disabled:opacity-50 uppercase"
+              className="h-13 sm:h-14 flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white px-6 rounded-2xl font-black text-sm transition-all shadow-md active:scale-95 disabled:opacity-50 uppercase tracking-wider"
             >
-              <Zap className="w-4.5 h-4.5 fill-current" />
+              <Zap className="w-5 h-5 fill-current" />
               <span>Buy Now</span>
             </button>
           </div>
         </div>
 
-        {/* 8. Trust Badges Strip */}
-        <div className="grid grid-cols-3 gap-3 pt-4 border-t border-border-custom text-center">
-          <div className="p-3 bg-card rounded-2xl space-y-1.5 border border-border-custom">
+        {/* 8. Sleek 4-Item Trust Row */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-border-custom/80 text-center">
+          <div className="p-3 bg-card rounded-2xl space-y-1 border border-border-custom/60">
             <ShieldCheck className="w-5 h-5 text-emerald-500 mx-auto" />
-            <span className="text-[10px] font-black text-foreground block uppercase">100% Genuine</span>
-            <span className="text-[9px] text-muted-custom block font-medium">Product Guarantee</span>
+            <span className="text-[10px] font-black text-foreground block uppercase">Genuine Product</span>
           </div>
-          <div className="p-3 bg-card rounded-2xl space-y-1.5 border border-border-custom">
+          <div className="p-3 bg-card rounded-2xl space-y-1 border border-border-custom/60">
             <Truck className="w-5 h-5 text-primary mx-auto" />
             <span className="text-[10px] font-black text-foreground block uppercase">Free Shipping</span>
-            <span className="text-[9px] text-muted-custom block font-medium">On All Orders</span>
           </div>
-          <div className="p-3 bg-card rounded-2xl space-y-1.5 border border-border-custom">
+          <div className="p-3 bg-card rounded-2xl space-y-1 border border-border-custom/60">
             <RotateCcw className="w-5 h-5 text-indigo-500 mx-auto" />
-            <span className="text-[10px] font-black text-foreground block uppercase">10-Day Return</span>
-            <span className="text-[9px] text-muted-custom block font-medium">Easy Return Policy</span>
+            <span className="text-[10px] font-black text-foreground block uppercase">Easy Returns</span>
           </div>
+          <div className="p-3 bg-card rounded-2xl space-y-1 border border-border-custom/60">
+            <Lock className="w-5 h-5 text-sky-500 mx-auto" />
+            <span className="text-[10px] font-black text-foreground block uppercase">Secure Checkout</span>
+          </div>
+        </div>
+
+        {/* 9. Social Proof Banner */}
+        <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center gap-3">
+          <div className="flex -space-x-2 shrink-0">
+            <div className="w-7 h-7 rounded-full bg-primary text-white text-[10px] font-black flex items-center justify-center ring-2 ring-background">AS</div>
+            <div className="w-7 h-7 rounded-full bg-emerald-600 text-white text-[10px] font-black flex items-center justify-center ring-2 ring-background">RK</div>
+            <div className="w-7 h-7 rounded-full bg-indigo-600 text-white text-[10px] font-black flex items-center justify-center ring-2 ring-background">VJ</div>
+          </div>
+          <p className="text-xs font-black text-emerald-700 dark:text-emerald-400">
+            165+ people bought this product recently
+          </p>
         </div>
 
       </div>

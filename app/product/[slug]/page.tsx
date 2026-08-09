@@ -9,8 +9,9 @@ import { ProductGallery } from '../../../components/ProductGallery';
 import { ProductDetailsInfo } from '../../../components/ProductDetailsInfo';
 import { ProductTabsSection } from '../../../components/ProductTabsSection';
 import { RecentlyViewedSection } from '../../../components/RecentlyViewedSection';
+import { StickyPurchaseBar } from '../../../components/StickyPurchaseBar';
 import { seoService } from '../../../services/seoService';
-import { AlertCircle, ShoppingBag, ArrowRight } from 'lucide-react';
+import { AlertCircle, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
 import { ProductCard } from '../../../components/ProductCard';
 import { mapApiProductToProduct } from '../../../services/productService';
@@ -75,16 +76,21 @@ export default function ProductDetailPage() {
 
   const skuCode = product.sku || `JSS-PROD-${String(product.id).padStart(3, '0')}`;
 
+  // Fix: Do NOT include 'Home' in items because Breadcrumbs component prepends Home with icon automatically
   const breadcrumbItems = [
-    { label: 'Home', href: '/' },
     { label: categoryName, href: `/category/${product.category?.slug || 'general'}` },
     ...(product.brand ? [{ label: product.brand.name, href: `/brand/${product.brand.slug}` }] : []),
     { label: product.name }
   ];
-  const breadcrumbJsonLd = seoService.generateBreadcrumbJsonLd(breadcrumbItems);
+
+  const fullBreadcrumbLd = [
+    { label: 'Home', href: '/' },
+    ...breadcrumbItems
+  ];
+  const breadcrumbJsonLd = seoService.generateBreadcrumbJsonLd(fullBreadcrumbLd);
 
   return (
-    <div className="space-y-8 sm:space-y-12 pb-12">
+    <div className="max-w-[1440px] mx-auto space-y-8 sm:space-y-10 pb-16 px-4 sm:px-6">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
@@ -95,43 +101,44 @@ export default function ProductDetailPage() {
       />
 
       {/* Top Breadcrumb Navigation + SKU Code */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="flex items-center justify-between flex-wrap gap-3 pt-2">
         <Breadcrumbs items={breadcrumbItems} />
-        <span className="text-xs text-muted-custom font-mono font-bold bg-card border border-border-custom px-3 py-1 rounded-xl shadow-2xs">
+        <span className="text-xs text-muted-custom font-mono font-bold bg-card border border-border-custom/80 px-3 py-1 rounded-xl shadow-2xs">
           SKU: {skuCode}
         </span>
       </div>
 
-      {/* Main Details Grid (Left 45% / Right 55%) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-start bg-card border border-border-custom p-6 sm:p-10 rounded-3xl shadow-xs">
-        {/* Left Column: Product Media Gallery + 4 Trust Cards + Popularity Badge */}
-        <div className="lg:col-span-5">
+      {/* Main Premium Product Layout Grid (Left 48% / Right 52%) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        {/* Left Column (Hero Gallery): 48% Width (~6 Cols in 12-col Grid) */}
+        <div className="lg:col-span-6">
           <ProductGallery
             images={product.images || [product.image || '/placeholder-product.png']}
             name={product.name}
             discountPercent={discountPercent}
+            productId={String(product.id)}
           />
         </div>
 
-        {/* Right Column: Product Title, Rating, Seller, Pricing, Offers, Delivery, Quantity, CTAs, Trust Badges */}
-        <div className="lg:col-span-7">
+        {/* Right Column (Product Information & Purchase Area): 52% Width (~6 Cols) */}
+        <div className="lg:col-span-6">
           <ProductDetailsInfo product={product} />
         </div>
       </div>
 
-      {/* Product Information Tabs (Description, Specs, Additional Info, Shipping, Reviews) */}
+      {/* Product Information Tabs (Overview, Specifications, Vendor Info, Shipping, Reviews) */}
       <ProductTabsSection product={product} />
 
       {/* Related Products Showcase */}
       {relatedProducts.length > 0 && (
-        <section className="space-y-6 pt-6 border-t border-border-custom">
+        <section className="space-y-6 pt-8 border-t border-border-custom/80">
           <div className="flex justify-between items-end">
             <div>
-              <span className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2.5 py-0.5 rounded-full mb-1 inline-block">
+              <span className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2.5 py-0.5 rounded-full mb-1.5 inline-block">
                 Category Showcase
               </span>
               <h3 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
-                Related Marketplace Products
+                You May Also Like
               </h3>
             </div>
           </div>
@@ -153,6 +160,9 @@ export default function ProductDetailPage() {
 
       {/* Recently Viewed Products */}
       <RecentlyViewedSection />
+
+      {/* Desktop & Mobile Scroll Sticky Purchase Bar */}
+      <StickyPurchaseBar product={product} />
     </div>
   );
 }
