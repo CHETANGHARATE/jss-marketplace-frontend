@@ -22,9 +22,7 @@ import {
   CreditCard,
   MapPin,
   Check,
-  Building2,
-  Clock,
-  Sparkles
+  Store
 } from 'lucide-react';
 
 interface ProductDetailsInfoProps {
@@ -147,9 +145,9 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
     });
   };
 
-  const skuCode = product.sku || `JSS-PROD-${String(product.id).padStart(3, '0')}`;
   const reviewCount = product.reviews_count || product.reviewsCount || 165;
   const sellerName = product.seller?.name || 'Maharashtra Fasal Express';
+  const sellerId = product.seller_id || product.seller?.id;
 
   return (
     <>
@@ -209,11 +207,11 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
           </div>
         </div>
 
-        {/* 2. Seller Card (Exact match to Reference Screenshot) */}
-        <div className="p-4 bg-emerald-500/5 dark:bg-slate-900/60 border border-emerald-500/20 rounded-2xl flex items-center justify-between gap-4">
+        {/* 2. Redesigned Premium Seller Card (High Contrast & Clean Typography) */}
+        <div className="p-4 bg-emerald-50/70 dark:bg-slate-900/60 border border-emerald-500/20 rounded-2xl flex items-center justify-between gap-4 transition-all">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center border border-emerald-500/20 shrink-0">
-              <Building2 size={20} />
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center border border-emerald-500/20 shrink-0">
+              <Store size={20} />
             </div>
             <div>
               <span className="text-[9px] uppercase font-black text-muted-custom tracking-wider block">SOLD BY</span>
@@ -221,10 +219,21 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
             </div>
           </div>
 
-          <span className="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full flex items-center gap-1 shrink-0">
-            <CheckCircle2 size={12} />
-            Authorized Seller
-          </span>
+          <div className="flex items-center gap-2.5 shrink-0">
+            <span className="text-[10px] font-extrabold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full flex items-center gap-1">
+              <CheckCircle2 size={12} />
+              Authorized Seller
+            </span>
+
+            {sellerId && (
+              <Link
+                href={`/vendor?id=${sellerId}`}
+                className="text-[11px] font-extrabold text-primary hover:underline hidden sm:inline-block"
+              >
+                View Store &rarr;
+              </Link>
+            )}
+          </div>
         </div>
 
         {/* 3. Price Block Showcase */}
@@ -389,7 +398,7 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
           </div>
         </div>
 
-        {/* 8. Trust Badges Strip (Exact matching Reference Screenshot) */}
+        {/* 8. Trust Badges Strip */}
         <div className="grid grid-cols-3 gap-3 pt-4 border-t border-border-custom text-center">
           <div className="p-3 bg-card rounded-2xl space-y-1.5 border border-border-custom">
             <ShieldCheck className="w-5 h-5 text-emerald-500 mx-auto" />

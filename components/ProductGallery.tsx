@@ -11,9 +11,7 @@ import {
   Lock,
   CheckCircle2,
   PlayCircle,
-  Gem,
-  Sparkles,
-  Users
+  Gem
 } from 'lucide-react';
 
 interface ProductGalleryProps {
@@ -60,12 +58,12 @@ export function ProductGallery({
   return (
     <div className="space-y-6">
 
-      {/* Main Image Showcase Container */}
-      <div className="relative aspect-square w-full rounded-3xl bg-white dark:bg-slate-900/60 border border-border-custom/80 p-6 sm:p-8 overflow-hidden shadow-sm group flex items-center justify-center">
+      {/* Main Image Showcase Container - Full Frame Presentation */}
+      <div className="relative aspect-square w-full rounded-3xl bg-white dark:bg-slate-900/80 border border-border-custom/80 p-2 sm:p-3 overflow-hidden shadow-sm group flex items-center justify-center">
         
         {/* Top-Left Discount Ribbon Badge */}
         {discountPercent > 0 && (
-          <div className="absolute top-4 left-4 z-10 bg-gradient-to-r from-red-600 to-rose-500 text-white font-black text-xs px-3.5 py-1.5 rounded-br-2xl rounded-tl-2xl shadow-md uppercase tracking-wider flex items-center gap-1">
+          <div className="absolute top-4 left-4 z-20 bg-gradient-to-r from-red-600 to-rose-500 text-white font-black text-xs px-3.5 py-1.5 rounded-br-2xl rounded-tl-2xl shadow-md uppercase tracking-wider flex items-center gap-1">
             <span>{discountPercent}% OFF</span>
           </div>
         )}
@@ -73,14 +71,14 @@ export function ProductGallery({
         {/* Top-Right Fullscreen Trigger */}
         <button
           onClick={() => setIsLightboxOpen(true)}
-          className="absolute top-4 right-4 z-10 p-2.5 bg-card/90 backdrop-blur-md rounded-2xl text-foreground/80 hover:text-primary border border-border-custom/80 transition-all shadow-xs hover:scale-105"
+          className="absolute top-4 right-4 z-20 p-2.5 bg-card/90 backdrop-blur-md rounded-2xl text-foreground/80 hover:text-primary border border-border-custom/80 transition-all shadow-xs hover:scale-105"
           title="Fullscreen View"
         >
           <Maximize2 className="w-4.5 h-4.5" />
         </button>
 
         {/* Bottom-Left Authenticity Feature Badge */}
-        <div className="absolute bottom-4 left-4 z-10 bg-emerald-500/10 backdrop-blur-md border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-extrabold text-[11px] px-3 py-1 rounded-xl flex items-center gap-1.5 shadow-xs">
+        <div className="absolute bottom-4 left-4 z-20 bg-emerald-500/10 backdrop-blur-md border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-extrabold text-[11px] px-3 py-1 rounded-xl flex items-center gap-1.5 shadow-xs">
           <CheckCircle2 size={13} />
           <span>100% Authentic</span>
         </div>
@@ -91,12 +89,12 @@ export function ProductGallery({
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           onClick={() => setIsLightboxOpen(true)}
-          className="w-full h-full flex items-center justify-center cursor-zoom-in relative overflow-hidden"
+          className="w-full h-full flex items-center justify-center cursor-zoom-in relative overflow-hidden rounded-2xl bg-white dark:bg-slate-950"
         >
           <img
             src={imageList[selectedIndex]}
             alt={`${name} image ${selectedIndex + 1}`}
-            className={`max-w-full max-h-full object-contain transition-transform duration-200 ${
+            className={`w-full h-full object-cover rounded-2xl transition-transform duration-200 ${
               zoomPos.show ? 'scale-150' : 'group-hover:scale-105'
             }`}
             style={
@@ -114,14 +112,14 @@ export function ProductGallery({
           <>
             <button
               onClick={prevImage}
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2.5 rounded-full bg-card/80 backdrop-blur-md text-foreground/80 hover:text-primary hover:bg-card border border-border-custom shadow-md transition-all opacity-0 group-hover:opacity-100 active:scale-95"
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-card/80 backdrop-blur-md text-foreground/80 hover:text-primary hover:bg-card border border-border-custom shadow-md transition-all opacity-0 group-hover:opacity-100 active:scale-95"
               aria-label="Previous image"
             >
               <ChevronLeft size={18} />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2.5 rounded-full bg-card/80 backdrop-blur-md text-foreground/80 hover:text-primary hover:bg-card border border-border-custom shadow-md transition-all opacity-0 group-hover:opacity-100 active:scale-95"
+              className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-card/80 backdrop-blur-md text-foreground/80 hover:text-primary hover:bg-card border border-border-custom shadow-md transition-all opacity-0 group-hover:opacity-100 active:scale-95"
               aria-label="Next image"
             >
               <ChevronRight size={18} />
@@ -137,13 +135,13 @@ export function ProductGallery({
             <button
               key={idx}
               onClick={() => setSelectedIndex(idx)}
-              className={`relative h-20 w-20 shrink-0 rounded-2xl bg-white dark:bg-slate-900/60 border-2 p-2 overflow-hidden transition-all shadow-2xs ${
+              className={`relative h-20 w-20 shrink-0 rounded-2xl bg-white dark:bg-slate-900/60 border-2 p-1.5 overflow-hidden transition-all shadow-2xs ${
                 selectedIndex === idx
                   ? 'border-primary shadow-md scale-95 ring-2 ring-primary/20'
                   : 'border-border-custom/60 opacity-70 hover:opacity-100 hover:border-primary/50'
               }`}
             >
-              <img src={imgUrl} alt={`${name} thumbnail ${idx + 1}`} className="w-full h-full object-contain" />
+              <img src={imgUrl} alt={`${name} thumbnail ${idx + 1}`} className="w-full h-full object-cover rounded-xl" />
             </button>
           ))}
           {videoUrl && (
@@ -158,7 +156,7 @@ export function ProductGallery({
         </div>
       )}
 
-      {/* 4-Grid Key Highlights / Trust Cards (Exact matching Reference Screenshot) */}
+      {/* 4-Grid Key Highlights / Trust Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="bg-card border border-border-custom/80 p-3.5 rounded-2xl text-center space-y-1.5 flex flex-col items-center justify-center">
           <div className="w-9 h-9 rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20 flex items-center justify-center">
