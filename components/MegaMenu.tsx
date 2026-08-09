@@ -17,7 +17,7 @@ import { useCategories } from '../hooks/useCategories';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getLocalizedText } from '../utils/translation';
 import { getCategoryUrl } from '../utils/categoryUtils';
-import { getCategoryVisualConfig, getSubcategoryImage } from '../utils/categoryVisuals';
+import { getCategoryVisualConfig, getSubcategoryIconConfig } from '../utils/categoryVisuals';
 import { ApiCategory } from '../types/api';
 
 export function MegaMenu() {
@@ -196,36 +196,32 @@ export function MegaMenu() {
                           Subcategories & Featured Collections
                         </h4>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5">
                           {(() => {
                             const apiSubcats = activeCategory.children || activeCategory.subcategories || [];
                             
-                            // If API provides subcategories, map them with exact matching dedicated images
+                            // If API provides subcategories, map them with exact matching vector icons
                             if (apiSubcats.length > 0) {
                               return apiSubcats.map((sub: any, idx: number) => {
                                 const subName = getLocalizedText(sub.name, language);
-                                const subImg = sub.image || sub.primary_image || getSubcategoryImage(subName || sub.slug, activeCategory);
+                                const iconConfig = getSubcategoryIconConfig(subName || sub.slug, activeCategory);
+                                const SubIcon = iconConfig.icon;
 
                                 return (
                                   <div
                                     key={sub.id || sub.slug || idx}
                                     onClick={() => handleSubcategoryClick(activeCategory, sub.slug || String(sub.id))}
-                                    className="group cursor-pointer bg-background-secondary/60 hover:bg-background-secondary border border-border-custom/70 hover:border-primary/30 rounded-2xl p-3 transition-all duration-200 hover:shadow-md flex flex-col justify-between"
+                                    className="group cursor-pointer bg-background-secondary/60 hover:bg-background-secondary border border-border-custom/70 hover:border-primary/30 rounded-2xl p-3.5 transition-all duration-200 hover:shadow-md flex items-center gap-3.5"
                                   >
-                                    <div className="relative aspect-16/10 rounded-xl overflow-hidden bg-card mb-3 border border-border-custom/40">
-                                      <img
-                                        src={subImg}
-                                        alt={subName}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                      />
-                                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border transition-transform duration-200 group-hover:scale-110 ${iconConfig.iconBgLight} ${iconConfig.iconBgDark}`}>
+                                      <SubIcon className="w-5 h-5" aria-hidden="true" />
                                     </div>
 
-                                    <div>
-                                      <h5 className="font-extrabold text-xs text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                                    <div className="min-w-0 flex-1">
+                                      <h5 className="font-extrabold text-xs text-foreground group-hover:text-primary transition-colors truncate">
                                         {subName}
                                       </h5>
-                                      <span className="text-[10px] font-bold text-primary group-hover:underline flex items-center gap-1 mt-1">
+                                      <span className="text-[10px] font-bold text-primary group-hover:underline flex items-center gap-1 mt-0.5">
                                         <span>Explore collection</span>
                                         <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                                       </span>
@@ -235,29 +231,26 @@ export function MegaMenu() {
                               });
                             }
 
-                            // Fallback to default presets for this category with exact matching image lookup
+                            // Fallback to default presets for this category with exact matching vector icon lookup
                             return activeVisualConfig.defaultSubcategories.map((preset, idx) => {
-                              const subImg = getSubcategoryImage(preset.name || preset.slug, activeCategory) || preset.image;
+                              const iconConfig = getSubcategoryIconConfig(preset.name || preset.slug, activeCategory);
+                              const SubIcon = preset.icon || iconConfig.icon;
 
                               return (
                                 <div
                                   key={preset.slug || idx}
                                   onClick={() => handleSubcategoryClick(activeCategory, preset.slug)}
-                                  className="group cursor-pointer bg-background-secondary/60 hover:bg-background-secondary border border-border-custom/70 hover:border-primary/30 rounded-2xl p-3 transition-all duration-200 hover:shadow-md flex flex-col justify-between"
+                                  className="group cursor-pointer bg-background-secondary/60 hover:bg-background-secondary border border-border-custom/70 hover:border-primary/30 rounded-2xl p-3.5 transition-all duration-200 hover:shadow-md flex items-center gap-3.5"
                                 >
-                                  <div className="relative aspect-16/10 rounded-xl overflow-hidden bg-card mb-3 border border-border-custom/40">
-                                    <img
-                                      src={subImg}
-                                      alt={preset.name}
-                                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                    />
+                                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border transition-transform duration-200 group-hover:scale-110 ${iconConfig.iconBgLight} ${iconConfig.iconBgDark}`}>
+                                    <SubIcon className="w-5 h-5" aria-hidden="true" />
                                   </div>
 
-                                  <div>
-                                    <h5 className="font-extrabold text-xs text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                                  <div className="min-w-0 flex-1">
+                                    <h5 className="font-extrabold text-xs text-foreground group-hover:text-primary transition-colors truncate">
                                       {preset.name}
                                     </h5>
-                                    <span className="text-[10px] font-bold text-primary group-hover:underline flex items-center gap-1 mt-1">
+                                    <span className="text-[10px] font-bold text-primary group-hover:underline flex items-center gap-1 mt-0.5">
                                       <span>{preset.description}</span>
                                       <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                                     </span>
