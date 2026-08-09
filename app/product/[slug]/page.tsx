@@ -10,7 +10,7 @@ import { ProductDetailsInfo } from '../../../components/ProductDetailsInfo';
 import { ProductTabsSection } from '../../../components/ProductTabsSection';
 import { RecentlyViewedSection } from '../../../components/RecentlyViewedSection';
 import { seoService } from '../../../services/seoService';
-import { Sparkles, AlertCircle, ShoppingBag, ArrowRight } from 'lucide-react';
+import { AlertCircle, ShoppingBag, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { ProductCard } from '../../../components/ProductCard';
 import { mapApiProductToProduct } from '../../../services/productService';
@@ -62,26 +62,29 @@ export default function ProductDetailPage() {
     );
   }
 
+  const origPrice = product.originalPrice ?? product.original_price ?? 0;
+  const offerPrice = product.offerPrice ?? product.sale_price ?? origPrice;
+  const discountPercent = product.discountPercent ?? (origPrice > offerPrice
+    ? Math.round(((origPrice - offerPrice) / origPrice) * 100)
+    : 0);
+
   const productJsonLd = seoService.generateProductJsonLd(product);
+  const categoryName = typeof product.category?.name === 'string'
+    ? product.category.name
+    : (product.category?.slug || 'General');
+
+  const skuCode = product.sku || `JSS-PROD-${String(product.id).padStart(3, '0')}`;
+
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    ...(product.category
-      ? [
-          {
-            label: typeof product.category.name === 'string' ? product.category.name : 'Category',
-            href: `/category/${product.category.slug}`,
-          },
-        ]
-      : []),
-    ...(product.brand
-      ? [{ label: product.brand.name, href: `/brand/${product.brand.slug}` }]
-      : []),
-    { label: product.name },
+    { label: categoryName, href: `/category/${product.category?.slug || 'general'}` },
+    ...(product.brand ? [{ label: product.brand.name, href: `/brand/${product.brand.slug}` }] : []),
+    { label: product.name }
   ];
   const breadcrumbJsonLd = seoService.generateBreadcrumbJsonLd(breadcrumbItems);
 
   return (
-    <div className="space-y-10 sm:space-y-14 pb-12">
+    <div className="space-y-8 sm:space-y-12 pb-12">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
@@ -91,30 +94,42 @@ export default function ProductDetailPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      {/* Section 11: Breadcrumb Navigation */}
-      <Breadcrumbs items={breadcrumbItems} />
+      {/* Top Breadcrumb Navigation + SKU Code */}
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <Breadcrumbs items={breadcrumbItems} />
+        <span className="text-xs text-muted-custom font-mono font-bold bg-card border border-border-custom px-3 py-1 rounded-xl shadow-2xs">
+          SKU: {skuCode}
+        </span>
+      </div>
 
-      {/* Main Details Card Grid (Section 1 - Gallery & Section 2-6 - Info/Pricing/Actions/Offers/Delivery) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-start bg-card border border-border-custom/80 p-6 sm:p-10 rounded-3xl shadow-xs">
-        <div className="lg:col-span-6">
-          <ProductGallery images={product.images} name={product.name} />
+      {/* Main Details Grid (Left 45% / Right 55%) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-start bg-card border border-border-custom p-6 sm:p-10 rounded-3xl shadow-xs">
+        {/* Left Column: Product Media Gallery + 4 Trust Cards + Popularity Badge */}
+        <div className="lg:col-span-5">
+          <ProductGallery
+            images={product.images || [product.image || '/placeholder-product.png']}
+            name={product.name}
+            discountPercent={discountPercent}
+          />
         </div>
-        <div className="lg:col-span-6">
+
+        {/* Right Column: Product Title, Rating, Seller, Pricing, Offers, Delivery, Quantity, CTAs, Trust Badges */}
+        <div className="lg:col-span-7">
           <ProductDetailsInfo product={product} />
         </div>
       </div>
 
-      {/* Section 7 & 8: Tabs & Reviews */}
+      {/* Product Information Tabs (Description, Specs, Additional Info, Shipping, Reviews) */}
       <ProductTabsSection product={product} />
 
-      {/* Section 9: Related Products Showcase */}
+      {/* Related Products Showcase */}
       {relatedProducts.length > 0 && (
-        <section className="space-y-6 pt-6 border-t border-border-custom/80">
+        <section className="space-y-6 pt-6 border-t border-border-custom">
           <div className="flex justify-between items-end">
             <div>
-              <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-primary uppercase tracking-widest bg-primary/10 px-2.5 py-0.5 rounded-full mb-1">
-                <span>Category Showcase</span>
-              </div>
+              <span className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2.5 py-0.5 rounded-full mb-1 inline-block">
+                Category Showcase
+              </span>
               <h3 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
                 Related Marketplace Products
               </h3>
@@ -136,7 +151,7 @@ export default function ProductDetailPage() {
         </section>
       )}
 
-      {/* Section 10: Recently Viewed Products */}
+      {/* Recently Viewed Products */}
       <RecentlyViewedSection />
     </div>
   );
