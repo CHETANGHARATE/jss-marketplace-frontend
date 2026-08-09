@@ -6,7 +6,7 @@ import { Truck, MapPin, Package, RefreshCw } from 'lucide-react';
 
 export default function AdminShippingPage() {
   const { data: shipmentRes, isLoading, refetch } = useAdminShipmentsQuery();
-  const { data: couriers = [] } = useAdminCouriersQuery();
+  const couriers = ['Delhivery', 'Shiprocket', 'Xpressbees', 'BlueDart'];
   const { data: zones = [] } = useAdminShippingZonesQuery();
 
   const shipments = shipmentRes?.data || [];

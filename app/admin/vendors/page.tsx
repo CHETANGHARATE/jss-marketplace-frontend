@@ -12,6 +12,7 @@ import {
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { AdminSidebar } from '../../../components/AdminSidebar';
 import { useToast } from '../../../components/Toast';
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import {
   Store,
   Search,

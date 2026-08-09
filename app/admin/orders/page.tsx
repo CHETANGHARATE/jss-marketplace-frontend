@@ -196,9 +196,8 @@ export default function AdminOrdersPage() {
               </div>
 
               <div className="p-4 bg-background-secondary rounded-2xl border border-border-custom/80 space-y-1">
-                <span className="text-[10px] font-black uppercase text-muted-custom">Delivery Address</span>
-                <p className="font-bold text-foreground truncate">{selectedOrder.shipping_address_snapshot?.address_line1}</p>
-                <p className="text-muted-custom">{selectedOrder.shipping_address_snapshot?.city}, {selectedOrder.shipping_address_snapshot?.state} - {selectedOrder.shipping_address_snapshot?.postal_code}</p>
+                <p className="font-bold text-foreground truncate">{selectedOrder.shipping_address_snapshot?.address_line_1 || (selectedOrder.shipping_address_snapshot as any)?.address_line1}</p>
+                <p className="text-muted-custom">{selectedOrder.shipping_address_snapshot?.city}, {selectedOrder.shipping_address_snapshot?.state} - {selectedOrder.shipping_address_snapshot?.pincode || (selectedOrder.shipping_address_snapshot as any)?.postal_code}</p>
               </div>
             </div>
 

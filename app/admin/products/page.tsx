@@ -18,6 +18,7 @@ import {
 } from '@/hooks/useAdmin';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { AdminSidebar } from '@/components/AdminSidebar';
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import {
   Package,
   Search,

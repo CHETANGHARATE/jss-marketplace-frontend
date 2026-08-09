@@ -5,6 +5,7 @@ import { useAdminReviewsQuery, useModerateReviewMutation } from '../../../hooks/
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { AdminSidebar } from '../../../components/AdminSidebar';
 import { ApiReview } from '../../../types/api';
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { MessageSquare, Star, Check, X, Filter } from 'lucide-react';
 
 type FilterType = 'All' | 'Pending' | 'Approved' | 'Rejected';

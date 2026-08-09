@@ -12,6 +12,7 @@ import { ImageGalleryUploader } from '@/components/vendor/ImageGalleryUploader';
 import { ApiProductVariant } from '@/types/api';
 import { AdminSidebar } from '@/components/AdminSidebar';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 
 import {
   ArrowLeft,

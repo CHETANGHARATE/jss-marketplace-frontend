@@ -16,6 +16,7 @@ import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { AdminSidebar } from '../../../components/AdminSidebar';
 import { ApiCategory } from '../../../types/api';
 import { useToast } from '../../../components/Toast';
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import {
   Layers,
   Plus,

@@ -39,6 +39,7 @@ export interface ApiUser {
   email: string;
   phone?: string;
   role: 'admin' | 'seller' | 'customer';
+  is_active?: boolean;
   email_verified_at?: string;
   created_at: string;
   updated_at?: string;

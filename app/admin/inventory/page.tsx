@@ -5,6 +5,7 @@ import { useAdminInventoriesQuery, useAdminLowStockQuery, useAddStockMutation, u
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { AdminSidebar } from '../../../components/AdminSidebar';
 import { InventoryRecord } from '../../../services/adminService';
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { Warehouse, AlertTriangle, Plus, ArrowUpDown, Search, X } from 'lucide-react';
 
 export default function InventoryPage() {

@@ -18,11 +18,12 @@ export default function AdminFlashSalesPage() {
     if (!title || !startTime || !endTime) return;
     try {
       await createFlashSale.mutateAsync({
-        title,
-        start_time: startTime,
-        end_time: endTime,
-        product_ids: [],
-      });
+        name: title,
+        starts_at: startTime,
+        ends_at: endTime,
+        discount_percentage: 20,
+        is_active: true,
+      } as any);
       setIsModalOpen(false);
       setTitle('');
     } catch (err: any) {
@@ -72,10 +73,10 @@ export default function AdminFlashSalesPage() {
                   {fs.products?.length || 0} Products
                 </span>
               </div>
-              <h4 className="font-black text-base text-foreground">{fs.title}</h4>
+              <h4 className="font-black text-base text-foreground">{fs.name || fs.title}</h4>
               <div className="flex items-center justify-between text-xs text-muted-custom font-medium">
-                <span>Starts: {new Date(fs.start_time).toLocaleString('en-IN')}</span>
-                <span>Ends: {new Date(fs.end_time).toLocaleString('en-IN')}</span>
+                <span>Starts: {new Date(fs.starts_at || fs.start_time || Date.now()).toLocaleString('en-IN')}</span>
+                <span>Ends: {new Date(fs.ends_at || fs.end_time || Date.now()).toLocaleString('en-IN')}</span>
               </div>
             </div>
           ))}

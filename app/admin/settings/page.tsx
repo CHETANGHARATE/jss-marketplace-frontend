@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAdminSettingsQuery, useUpdateAdminSettingsMutation } from '../../../hooks/useAdmin';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { AdminSidebar } from '../../../components/AdminSidebar';
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { Sliders, Save, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export default function AdminSettingsPage() {

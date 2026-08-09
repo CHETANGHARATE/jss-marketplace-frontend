@@ -5,6 +5,7 @@ import { useAdminCouponsQuery, useCreateCouponMutation, useDeleteCouponMutation 
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { AdminSidebar } from '../../../components/AdminSidebar';
 import { AdminCoupon } from '../../../services/adminService';
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { Ticket, Plus, Trash2, Tag, Percent, DollarSign, Calendar, X } from 'lucide-react';
 
 export default function CouponsPage() {

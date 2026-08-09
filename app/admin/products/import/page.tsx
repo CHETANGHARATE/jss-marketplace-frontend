@@ -10,6 +10,7 @@ import {
   useValidateBulkImportMutation,
   useExecuteBulkImportMutation,
 } from '@/hooks/useAdmin';
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import {
   FileSpreadsheet,
   UploadCloud,
@@ -235,7 +236,7 @@ export default function AdminBulkImportPage() {
               onClick={() => {
                 setStep('upload');
                 setValidationResult(null);
-                setFile(null);
+                setExcelFile(null);
                 setRawParsedRows([]);
               }}
               className="px-4 py-2.5 bg-background-secondary border border-border-custom/80 text-foreground font-bold text-xs rounded-xl hover:bg-card transition-all flex items-center gap-1.5"

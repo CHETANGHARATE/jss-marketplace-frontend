@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useAdminReportsQuery } from '../../../hooks/useAdmin';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { AdminPageHeader } from '../../../components/admin/AdminPageHeader';
+import { BarChart3, Download, IndianRupee, ShoppingBag, TrendingUp, PieChart } from 'lucide-react';
 
 export default function AdminReportsPage() {
   const [range, setRange] = useState<string>('30d');

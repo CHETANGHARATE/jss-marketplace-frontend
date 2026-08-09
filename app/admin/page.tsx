@@ -23,6 +23,7 @@ import {
   RefreshCw,
   BarChart3,
   Layers,
+  Sliders,
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -193,7 +194,7 @@ export default function AdminDashboardPage() {
               <span>Low / Out of Stock</span>
             </span>
             <span className="text-2xl font-black text-rose-500 block">
-              {dashboard?.low_stock_alerts || 0} Alerts
+              {dashboard?.low_stock_count || (dashboard as any)?.low_stock_alerts || 0} Alerts
             </span>
           </div>
           <Link
