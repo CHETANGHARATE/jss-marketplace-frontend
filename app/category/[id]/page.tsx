@@ -35,7 +35,13 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   const initialSearch = searchParams.get('search') || '';
 
   const { language, t } = useLanguage();
-  const { data: category, isLoading: isCategoryLoading, isError } = useCategoryBySlug(categorySlug);
+  const {
+    data: category,
+    isLoading: isCategoryLoading,
+    isError,
+    error: categoryError,
+    refetch: refetchCategory,
+  } = useCategoryBySlug(categorySlug);
   const { data: allCategories = [] } = useCategories();
 
   const [products, setProducts] = useState<Product[]>([]);
@@ -76,22 +82,44 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     );
   }
 
+  const is404 = isError && (categoryError as any)?.response?.status === 404;
+
   if (isError || !category) {
+    if (is404) {
+      return (
+        <div className="py-20 text-center space-y-4 max-w-md mx-auto">
+          <div className="h-16 w-16 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 flex items-center justify-center mx-auto">
+            <AlertCircle className="w-8 h-8" />
+          </div>
+          <h2 className="text-2xl font-black text-foreground">Category Not Found</h2>
+          <p className="text-xs text-muted-custom leading-relaxed font-medium">
+            The requested category catalog could not be found or has been moved to another marketplace section.
+          </p>
+          <Link 
+            href="/"
+            className="inline-flex items-center gap-2 text-xs font-black text-white bg-primary hover:bg-primary-hover px-5 py-2.5 rounded-2xl transition-all shadow-xs"
+          >
+            Return to Marketplace Home
+          </Link>
+        </div>
+      );
+    }
+
     return (
       <div className="py-20 text-center space-y-4 max-w-md mx-auto">
         <div className="h-16 w-16 rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20 flex items-center justify-center mx-auto">
           <AlertCircle className="w-8 h-8" />
         </div>
-        <h2 className="text-2xl font-black text-foreground">Category Not Found</h2>
+        <h2 className="text-2xl font-black text-foreground">Unable to Load Category</h2>
         <p className="text-xs text-muted-custom leading-relaxed font-medium">
-          The requested category catalog could not be found or has been moved to another marketplace section.
+          {(categoryError as Error)?.message || 'A network or server error occurred while retrieving this category.'}
         </p>
-        <Link 
-          href="/"
-          className="inline-flex items-center gap-2 text-xs font-black text-white bg-primary hover:bg-primary-hover px-5 py-2.5 rounded-2xl transition-all shadow-xs"
+        <button 
+          onClick={() => refetchCategory()}
+          className="inline-flex items-center gap-2 text-xs font-black text-white bg-rose-500 hover:bg-rose-600 px-5 py-2.5 rounded-2xl transition-all shadow-xs"
         >
-          Return to Marketplace Home
-        </Link>
+          Try Again
+        </button>
       </div>
     );
   }

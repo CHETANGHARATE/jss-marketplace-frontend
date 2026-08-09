@@ -4,6 +4,7 @@ import React, { useRef } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Category } from '../types';
+import { getCategoryUrl } from '../utils/categoryUtils';
 
 // Pastel background tint per category matching reference e-commerce UI
 const categoryBgMap: Record<string, string> = {
@@ -246,7 +247,7 @@ export const HomeCategoryStrip: React.FC<Props> = ({ categories }) => {
             return (
               <Link
                 key={`cat_strip_${cat.id}_${slug}`}
-                href={`/category/${id}`}
+                href={getCategoryUrl(cat)}
                 className="flex flex-col items-center group shrink-0"
                 style={{ scrollSnapAlign: 'start' }}
               >

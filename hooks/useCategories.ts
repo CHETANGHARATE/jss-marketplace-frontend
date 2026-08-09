@@ -93,5 +93,10 @@ export function useCategoryBySlug(slug: string) {
     queryKey: ['category', slug],
     queryFn: () => categoryService.getCategoryBySlug(slug),
     enabled: !!slug,
+    retry: (failureCount, error: any) => {
+      if (error?.response?.status === 404) return false;
+      return failureCount < 2;
+    },
+    staleTime: 1000 * 60 * 5,
   });
 }

@@ -8,6 +8,7 @@ import { getLocalizedText } from '../utils/translation';
 import { Category, Product } from '../types';
 import { productService, mapApiProductToProduct } from '../services/productService';
 import { ProductCard } from './ProductCard';
+import { getCategoryUrl } from '../utils/categoryUtils';
 
 interface FeaturedCategoriesProps {
   categories: Category[];
@@ -162,7 +163,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
               </div>
 
               <Link
-                href={`/category/${cat.id}`}
+                href={getCategoryUrl(cat)}
                 className="inline-flex items-center gap-2 text-xs font-black text-primary hover:text-primary-hover bg-primary/10 hover:bg-primary/20 border border-primary/20 px-4 py-2.5 rounded-2xl transition-all self-start md:self-auto shrink-0 shadow-2xs group"
               >
                 <span>{t('home.view_all')} {getLocalizedText(cat.name, language)}</span>
