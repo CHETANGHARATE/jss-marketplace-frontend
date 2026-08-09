@@ -1,67 +1,167 @@
-import React from 'react';
-import { Metadata } from 'next';
-import { FooterPageLayout } from '../../components/FooterPageLayout';
-import { Search, HelpCircle, Package, Truck, RefreshCw, ShieldCheck, MessageSquare, PhoneCall } from 'lucide-react';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Help Center | JSS Marketplace',
-  description: 'Find answers, track your orders, and learn how to buy or sell on JSS Marketplace.',
-};
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { FooterPageLayout } from '../../components/FooterPageLayout';
+import {
+  Search,
+  ShoppingBag,
+  Truck,
+  CreditCard,
+  RefreshCw,
+  UserCheck,
+  Store,
+  ArrowRight,
+  HelpCircle
+} from 'lucide-react';
 
 export default function HelpCenterPage() {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const categories = [
+    {
+      title: 'Buying Help',
+      icon: ShoppingBag,
+      desc: 'Browsing products, checking seller details, and adding to cart.',
+      link: '/how-to-buy'
+    },
+    {
+      title: 'Orders & Tracking',
+      icon: Truck,
+      desc: 'Track active shipments, modify order details, or check delivery timelines.',
+      link: '/track-order'
+    },
+    {
+      title: 'Payments & Offers',
+      icon: CreditCard,
+      desc: 'Accepted payment methods (UPI, Cards, Paytm, Net Banking) & promo codes.',
+      link: '/faqs'
+    },
+    {
+      title: 'Returns & Refunds',
+      icon: RefreshCw,
+      desc: '7-day return policy, eligibility rules, and refund processing timelines.',
+      link: '/returns-refunds'
+    },
+    {
+      title: 'Account Settings',
+      icon: UserCheck,
+      desc: 'Managing your profile, delivery addresses, and saved wishlists.',
+      link: '/account/profile'
+    },
+    {
+      title: 'Seller Portal Support',
+      icon: Store,
+      desc: 'Vendor onboarding, product listing policies, and GST compliance.',
+      link: '/seller/support'
+    }
+  ];
+
+  const quickFaqs = [
+    {
+      q: 'How do I track my active order?',
+      a: 'Go to the "Track Order" link in the footer or navigation header, enter your Order ID or tracking number, and click Track.'
+    },
+    {
+      q: 'What is the return window for products on JSS Marketplace?',
+      a: 'Most physical items have a 7-day return policy from the date of delivery provided they are unused and in original packaging.'
+    },
+    {
+      q: 'Which payment options are accepted?',
+      a: 'We accept BHIM UPI, Visa, Mastercard, RuPay, Paytm Wallet, and Net Banking across major Indian banks.'
+    },
+    {
+      q: 'How can I become a verified seller on JSS Marketplace?',
+      a: 'Click "Become a Seller" in the header or footer, complete the registration form with your GSTIN and bank details, and submit for verification.'
+    }
+  ];
+
+  const filteredFaqs = searchTerm
+    ? quickFaqs.filter(f => f.q.toLowerCase().includes(searchTerm.toLowerCase()) || f.a.toLowerCase().includes(searchTerm.toLowerCase()))
+    : quickFaqs;
+
   return (
     <FooterPageLayout
-      title="Help Center & Support Portal"
-      subtitle="How can we help you today? Search our knowledge base or select a topic below."
-      categoryName="Customer Service"
+      title="Help Center & Support Desk"
+      subtitle="Find answers to common questions, order guides, and buyer assistance."
+      categoryName="Help Center"
     >
-      <div className="space-y-10">
-        {/* Quick Topics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-card border border-border-custom p-6 rounded-2xl shadow-2xs space-y-3">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-              <Package size={24} />
-            </div>
-            <h3 className="font-extrabold text-base text-foreground">Order & Tracking</h3>
-            <p className="text-xs text-muted-custom leading-relaxed">
-              Track real-time shipment status, manage delivery addresses, or request order cancellation.
-            </p>
-          </div>
+      <div className="space-y-12">
 
-          <div className="bg-card border border-border-custom p-6 rounded-2xl shadow-2xs space-y-3">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
-              <RefreshCw size={24} />
+        {/* 1. Search Bar */}
+        <div className="bg-card border border-border-custom p-6 sm:p-8 rounded-3xl space-y-4">
+          <div className="max-w-xl mx-auto space-y-2 text-center">
+            <h2 className="text-lg sm:text-xl font-black text-foreground">How can we help you today?</h2>
+            <div className="relative">
+              <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-custom" />
+              <input
+                type="text"
+                placeholder="Search for help topics (e.g. tracking, returns, UPI)..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-background text-foreground text-xs sm:text-sm pl-11 pr-4 py-3.5 rounded-2xl border border-border-custom focus:border-primary focus:outline-none transition-colors"
+              />
             </div>
-            <h3 className="font-extrabold text-base text-foreground">Returns & Refunds</h3>
-            <p className="text-xs text-muted-custom leading-relaxed">
-              Learn about our 7-day easy return policy, escrow protection, and instant refund options.
-            </p>
-          </div>
-
-          <div className="bg-card border border-border-custom p-6 rounded-2xl shadow-2xs space-y-3">
-            <div className="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center">
-              <ShieldCheck size={24} />
-            </div>
-            <h3 className="font-extrabold text-base text-foreground">Payments & Safety</h3>
-            <p className="text-xs text-muted-custom leading-relaxed">
-              Information on supported payment modes, UPI transactions, invoice downloading, and security.
-            </p>
           </div>
         </div>
 
-        {/* Contact Support CTA */}
-        <div className="bg-primary/10 border border-primary/20 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <h3 className="text-lg font-black text-foreground">Still need help?</h3>
-            <p className="text-xs text-muted-custom mt-1">Our customer helpline is available 24/7 to assist you with your queries.</p>
+        {/* 2. Category Cards */}
+        <section className="space-y-4">
+          <h2 className="text-lg font-black text-foreground">Browse Help Categories</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {categories.map((cat, idx) => {
+              const IconComp = cat.icon;
+              return (
+                <Link
+                  key={idx}
+                  href={cat.link}
+                  className="bg-card border border-border-custom p-6 rounded-3xl space-y-3 hover:border-primary/40 transition-all group block"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary border border-primary/20 flex items-center justify-center">
+                    <IconComp size={20} />
+                  </div>
+                  <h3 className="font-extrabold text-base text-foreground group-hover:text-primary transition-colors flex items-center justify-between">
+                    <span>{cat.title}</span>
+                    <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </h3>
+                  <p className="text-xs text-muted-custom leading-relaxed">{cat.desc}</p>
+                </Link>
+              );
+            })}
           </div>
-          <div className="flex gap-3 shrink-0">
-            <a href="tel:1800577627" className="bg-primary text-white text-xs font-bold px-5 py-3 rounded-xl hover:bg-primary-hover transition-colors flex items-center gap-2">
-              <PhoneCall size={16} />
-              <span>Call 1800-JSS-MARKET</span>
-            </a>
+        </section>
+
+        {/* 3. Quick FAQ Section */}
+        <section className="bg-card border border-border-custom p-6 sm:p-8 rounded-3xl space-y-6">
+          <h2 className="text-lg font-black text-foreground">Top Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            {filteredFaqs.map((faq, idx) => (
+              <div key={idx} className="p-4 bg-muted/30 border border-border-custom rounded-2xl space-y-1.5">
+                <h4 className="font-extrabold text-sm text-foreground flex items-start gap-2">
+                  <HelpCircle size={16} className="text-primary shrink-0 mt-0.5" />
+                  <span>{faq.q}</span>
+                </h4>
+                <p className="text-xs text-muted-custom leading-relaxed pl-6">{faq.a}</p>
+              </div>
+            ))}
           </div>
-        </div>
+        </section>
+
+        {/* 4. Still Need Help CTA */}
+        <section className="bg-gradient-to-r from-primary/10 via-primary/5 to-emerald-500/10 border border-primary/20 p-8 sm:p-10 rounded-3xl text-center space-y-4">
+          <h2 className="text-xl sm:text-2xl font-black text-foreground">Still need assistance?</h2>
+          <p className="text-xs sm:text-sm text-muted-custom max-w-md mx-auto">
+            Our customer support desk is available to assist you with active orders, refunds, or general queries.
+          </p>
+          <Link
+            href="/contact-us"
+            className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-extrabold text-xs uppercase px-8 py-3.5 rounded-2xl transition-all shadow-md"
+          >
+            <span>Contact Customer Support</span>
+            <ArrowRight size={14} />
+          </Link>
+        </section>
+
       </div>
     </FooterPageLayout>
   );

@@ -1,52 +1,71 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { FooterPageLayout } from '../../../components/FooterPageLayout';
-import { TrendingUp, ShieldCheck, Truck, Users, Percent, Zap } from 'lucide-react';
 import Link from 'next/link';
+import { FooterPageLayout } from '../../../components/FooterPageLayout';
+import {
+  TrendingUp,
+  Eye,
+  LayoutDashboard,
+  Package,
+  Headphones,
+  ShieldCheck,
+  ArrowRight
+} from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Seller Benefits | JSS Marketplace',
-  description: 'Why top Indian manufacturers, farmers, and brands grow with JSS Marketplace.',
+  description: 'Discover the advantages of selling on JSS Marketplace including marketplace visibility, seller tools, and low commission fees.',
 };
 
 export default function SellerBenefitsPage() {
   const benefits = [
     {
-      title: '0% Commission Initial Period',
-      desc: 'Keep 100% of your sale value with zero listing fees for the first 90 days.',
-      icon: Percent
+      title: 'Wider Customer Reach',
+      desc: 'Showcase your items to millions of shoppers across India without investing in independent e-commerce infrastructure.',
+      icon: TrendingUp
     },
     {
-      title: 'Direct Pan-India Reach',
-      desc: 'Reach over 100,000+ retail and wholesale buyers across 25,000+ PIN codes.',
-      icon: Users
+      title: 'Enhanced Visibility',
+      desc: 'Benefit from category promotion, search indexing, and promotional campaigns on our homepage.',
+      icon: Eye
     },
     {
-      title: 'Escrow Payment Security',
-      desc: 'Guaranteed 24-hour payouts directly into your registered bank account after delivery.',
+      title: 'Powerful Seller Dashboard',
+      desc: 'Track sales performance, manage product stock, process pending orders, and download financial reports in one place.',
+      icon: LayoutDashboard
+    },
+    {
+      title: 'Bulk Product Management',
+      desc: 'Seamlessly upload and manage catalog items using structured Excel templates or intuitive web forms.',
+      icon: Package
+    },
+    {
+      title: 'Fair Commission & Settlements',
+      desc: 'Transparent category commission rates with predictable bank payouts according to agreed schedules.',
       icon: ShieldCheck
     },
     {
-      title: 'Automated Logistics Support',
-      desc: 'Discounted shipping rates with doorstep pick-up from your factory or warehouse.',
-      icon: Truck
+      title: 'Dedicated Seller Helpdesk',
+      desc: 'Get technical and operational assistance from our seller support team whenever you need help.',
+      icon: Headphones
     }
   ];
 
   return (
     <FooterPageLayout
       title="Why Sell on JSS Marketplace?"
-      subtitle="Empowering Indian businesses with direct buyer connectivity and zero hassle."
-      categoryName="For Sellers"
+      subtitle="Comprehensive benefits designed to help manufacturers, artisans, and vendors grow online."
+      categoryName="Seller Portal"
     >
-      <div className="space-y-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {benefits.map((b, i) => {
-            const Icon = b.icon;
+      <div className="space-y-12">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {benefits.map((b, idx) => {
+            const IconComp = b.icon;
             return (
-              <div key={i} className="bg-card border border-border-custom p-6 rounded-2xl space-y-3">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                  <Icon size={24} />
+              <div key={idx} className="bg-card border border-border-custom p-6 rounded-3xl space-y-3 hover:border-primary/40 transition-all">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary border border-primary/20 flex items-center justify-center">
+                  <IconComp size={20} />
                 </div>
                 <h3 className="font-extrabold text-base text-foreground">{b.title}</h3>
                 <p className="text-xs text-muted-custom leading-relaxed">{b.desc}</p>
@@ -55,13 +74,16 @@ export default function SellerBenefitsPage() {
           })}
         </div>
 
-        <div className="bg-slate-900 text-white p-8 rounded-3xl text-center space-y-4">
-          <h3 className="text-xl font-black">Ready to expand your market reach?</h3>
-          <p className="text-xs text-slate-300 max-w-xl mx-auto">Register your GSTIN and start listing products within minutes.</p>
-          <Link href="/seller/register" className="inline-block bg-primary text-white text-xs font-black px-6 py-3.5 rounded-xl hover:bg-primary-hover transition-colors uppercase">
-            Become a Seller Today &rarr;
+        <div className="text-center pt-4">
+          <Link
+            href="/seller/register"
+            className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-extrabold text-xs uppercase px-8 py-3.5 rounded-2xl transition-all shadow-md"
+          >
+            <span>Register as a Seller</span>
+            <ArrowRight size={14} />
           </Link>
         </div>
+
       </div>
     </FooterPageLayout>
   );

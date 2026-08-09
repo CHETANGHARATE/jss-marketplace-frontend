@@ -6,8 +6,7 @@ import { AuthProvider } from '../contexts/AuthContext';
 import { CartWishlistProvider } from '../contexts/CartWishlistContext';
 import { ThemeProvider } from '../contexts/ThemeContext';
 import { LanguageProvider } from '../contexts/LanguageContext';
-import { Header } from '../components/Header';
-import { Footer } from '../components/Footer';
+import { LayoutShell } from '../components/LayoutShell';
 import { SkipLink } from '../components/SkipLink';
 import { ToastProvider } from '../components/Toast';
 import { seoService } from '../services/seoService';
@@ -88,11 +87,9 @@ export default function RootLayout({
               <AuthProvider>
                 <CartWishlistProvider>
                   <ToastProvider>
-                    <Header />
-                    <main id="main-content" tabIndex={-1} className="flex-1 max-w-[1536px] w-full mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-6 focus:outline-none">
+                    <LayoutShell>
                       {children}
-                    </main>
-                    <Footer />
+                    </LayoutShell>
                   </ToastProvider>
                 </CartWishlistProvider>
               </AuthProvider>

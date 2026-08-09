@@ -4,22 +4,40 @@ import { FooterPageLayout } from '../../components/FooterPageLayout';
 
 export const metadata: Metadata = {
   title: 'Refund Policy | JSS Marketplace',
-  description: 'Detailed conditions, timelines, and payment modes for customer refunds.',
+  description: 'Detailed policy on refund modes, calculation, processing timelines, and resolution of disputed transactions.',
 };
 
 export default function RefundPolicyPage() {
   return (
     <FooterPageLayout
-      title="Refund Policy & Guidelines"
-      subtitle="Transparent refund rules for cancellations, returned goods, and lost shipments."
+      title="Refund Policy"
+      subtitle="Transparent guidelines on how and when refunds are processed to your payment method."
       categoryName="Legal"
     >
-      <div className="space-y-6 bg-card border border-border-custom p-8 rounded-3xl text-xs text-muted-custom leading-relaxed">
-        <h2 className="text-sm font-black text-foreground">1. Refund Eligibility</h2>
-        <p>Refunds are granted for orders cancelled prior to shipping, or returned within the 7-day return window due to damage or defect.</p>
+      <div className="bg-card border border-border-custom p-6 sm:p-10 rounded-3xl space-y-6">
+        <div className="text-xs text-muted-custom border-b border-border-custom pb-4 font-semibold">
+          Last Updated: August 01, 2026
+        </div>
 
-        <h2 className="text-sm font-black text-foreground">2. Refund Timelines</h2>
-        <p>UPI and Card refunds take 24–48 hours to reflect in your source account after inspection approval.</p>
+        <section className="space-y-3">
+          <h2 className="text-base font-black text-foreground">1. Refund Eligibility</h2>
+          <p className="text-xs text-muted-custom leading-relaxed">
+            Refunds are issued for pre-canceled orders prior to seller shipment, returned products that pass seller inspection, or undelivered packages due to logistics failures.
+          </p>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-base font-black text-foreground">2. Refund Modes & Timelines</h2>
+          <p className="text-xs text-muted-custom leading-relaxed">
+            Prepaid orders (UPI, Paytm, Credit/Debit Cards, Net Banking) are refunded directly back to the original source account. Returns usually take 3 to 5 business days after pickup inspection.
+          </p>
+        </section>
+
+        <section className="space-y-3 border-t border-border-custom pt-4 text-xs text-muted-custom">
+          <p>
+            Track your active refund status on your <a href="/account/returns" className="text-primary font-bold hover:underline">Returns Dashboard</a> or contact <strong className="text-foreground">refunds@jssmarketplace.com</strong>.
+          </p>
+        </section>
       </div>
     </FooterPageLayout>
   );

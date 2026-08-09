@@ -2,9 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Header } from './Header';
-import { Footer } from './Footer';
-import { ChevronRight, Home, HelpCircle } from 'lucide-react';
+import { ChevronRight, Home } from 'lucide-react';
 
 interface FooterPageLayoutProps {
   title: string;
@@ -16,18 +14,16 @@ interface FooterPageLayoutProps {
 export const FooterPageLayout: React.FC<FooterPageLayoutProps> = ({
   title,
   subtitle,
-  categoryName = 'Public Portal',
+  categoryName = 'Marketplace',
   children
 }) => {
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors">
-      <Header />
-
+    <div className="space-y-8 pb-12 transition-colors">
       {/* Hero / Header Banner */}
-      <div className="bg-slate-900 text-white py-12 px-4 sm:px-6 md:px-8 border-b border-slate-800">
-        <div className="max-w-6xl mx-auto space-y-3">
+      <div className="bg-[#0B132B] text-white py-10 px-6 sm:px-8 rounded-3xl border border-slate-800 shadow-xl">
+        <div className="max-w-4xl space-y-3">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-xs text-slate-400 font-medium">
+          <nav className="flex items-center gap-2 text-xs text-slate-400 font-medium flex-wrap">
             <Link href="/" className="hover:text-primary transition-colors flex items-center gap-1">
               <Home size={13} />
               <span>Home</span>
@@ -41,18 +37,16 @@ export const FooterPageLayout: React.FC<FooterPageLayoutProps> = ({
           <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
             {title}
           </h1>
-          <p className="text-sm text-slate-300 max-w-2xl font-medium">
+          <p className="text-xs sm:text-sm text-slate-300 max-w-2xl font-medium leading-relaxed">
             {subtitle}
           </p>
         </div>
       </div>
 
       {/* Main Content Container */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 md:px-8 py-10">
+      <div className="max-w-6xl mx-auto">
         {children}
-      </main>
-
-      <Footer />
+      </div>
     </div>
   );
 };

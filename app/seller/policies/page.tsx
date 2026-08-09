@@ -1,34 +1,43 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { FooterPageLayout } from '../../../components/FooterPageLayout';
-import { ShieldCheck, AlertCircle } from 'lucide-react';
+import { ShieldCheck, FileCheck, AlertTriangle } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Seller Policies & Code of Conduct | JSS Marketplace',
-  description: 'Standards, compliance, and policies governing seller conduct on JSS Marketplace.',
+  description: 'Operating guidelines, product listing rules, customer service commitments, and compliance standards for vendors.',
 };
 
 export default function SellerPoliciesPage() {
   return (
     <FooterPageLayout
       title="Policies for Sellers"
-      subtitle="Ensuring fairness, product authenticity, and customer trust across the platform."
-      categoryName="For Sellers"
+      subtitle="Operational rules, quality standards, and code of conduct governing vendor listings."
+      categoryName="Seller Portal"
     >
-      <div className="space-y-6 bg-card border border-border-custom p-8 rounded-3xl">
-        <section className="space-y-2">
-          <h2 className="text-base font-black text-foreground">1. Product Authenticity & Quality</h2>
+      <div className="space-y-8">
+        
+        <section className="bg-card border border-border-custom p-6 sm:p-8 rounded-3xl space-y-3">
+          <h2 className="text-lg font-black text-foreground">1. Product Listing Accuracy</h2>
           <p className="text-xs text-muted-custom leading-relaxed">
-            All listed items must be 100% genuine and compliant with Indian regulatory standards. Counterfeit or duplicate goods will result in immediate seller suspension.
+            Sellers must ensure all listed product titles, descriptions, pricing, specifications, and images accurately represent the physical product shipped. Counterfeit, expired, or misleading products are strictly prohibited.
           </p>
         </section>
 
-        <section className="space-y-2">
-          <h2 className="text-base font-black text-foreground">2. Dispatch Timelines</h2>
+        <section className="bg-card border border-border-custom p-6 sm:p-8 rounded-3xl space-y-3">
+          <h2 className="text-lg font-black text-foreground">2. Order Fulfillment Standards</h2>
           <p className="text-xs text-muted-custom leading-relaxed">
-            Sellers are required to pack and dispatch orders within 24 to 48 hours of order confirmation to maintain high seller ratings.
+            Orders must be packed securely in accordance with packaging guidelines and handed over to designated courier partners within 24 to 48 hours of order receipt to ensure timely delivery.
           </p>
         </section>
+
+        <section className="bg-card border border-border-custom p-6 sm:p-8 rounded-3xl space-y-3">
+          <h2 className="text-lg font-black text-foreground">3. Customer Service & Returns</h2>
+          <p className="text-xs text-muted-custom leading-relaxed">
+            Vendors must honor marketplace return decisions for defective, damaged, or incorrect products shipped and maintain professional communication standards.
+          </p>
+        </section>
+
       </div>
     </FooterPageLayout>
   );
