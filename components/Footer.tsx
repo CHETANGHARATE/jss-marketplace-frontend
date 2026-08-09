@@ -11,16 +11,14 @@ import {
   Send,
   Lock,
   Award,
-  Sparkles,
   ChevronRight,
-  Globe,
-  Smartphone,
   CheckCircle2,
   Users
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useToast } from './Toast';
 
+// ── Social Media SVG Icons ─────────────────────────────────────────
 const FacebookIcon = ({ size = 16 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
 );
@@ -35,6 +33,84 @@ const TwitterIcon = ({ size = 16 }: { size?: number }) => (
 );
 const LinkedinIcon = ({ size = 16 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+);
+
+// ── Official Brand Vector SVG Logos ─────────────────────────────────
+
+// 1. Google Play Official Badge Logo
+const GooglePlayLogo = () => (
+  <svg className="w-5 h-5 shrink-0" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M99.617 11.229C91.802 15.539 86 23.639 86 33.363V478.637C86 488.361 91.802 496.461 99.617 500.771L301.764 256L99.617 11.229Z" fill="#00D2FF"/>
+    <path d="M301.764 256L99.617 500.771C104.977 503.729 111.464 504.667 117.892 503.013L363.361 361.341L301.764 256Z" fill="#00F076"/>
+    <path d="M363.361 361.341L420.732 328.216C436.425 319.155 446 302.721 446 284.58C446 266.439 436.425 250.005 420.732 240.944L363.361 207.819L301.764 256L363.361 361.341Z" fill="#FFC107"/>
+    <path d="M301.764 256L363.361 150.659L117.892 8.987C111.464 7.333 104.977 8.271 99.617 11.229L301.764 256Z" fill="#FF3D00"/>
+  </svg>
+);
+
+// 2. Apple App Store Official Logo
+const AppleLogo = () => (
+  <svg className="w-5 h-5 shrink-0 fill-current text-white" viewBox="0 0 170 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.34.13-9.04-1.89-14.12-6.05-3.19-2.62-7.14-7.3-11.86-14.04-5.87-8.39-10.45-17.57-13.75-27.53-3.3-9.97-4.95-19.67-4.95-29.11 0-14.48 3.73-26.4 11.19-35.75 7.46-9.35 16.73-14.1 27.81-14.24 4.58 0 9.77 1.25 15.57 3.75 5.8 2.5 9.77 3.75 11.9 3.75 1.79 0 5.92-1.31 12.39-3.93 6.47-2.62 11.75-3.8 15.84-3.55 12.19.98 21.84 5.76 28.94 14.34-10.86 6.56-16.14 15.71-15.84 27.46.29 9.17 3.99 16.8 11.1 22.88 4.14 3.56 8.86 6 14.15 7.33-2.62 7.74-6.17 15.35-10.66 22.83zm-27.18-106.8c0 7.05-2.58 13.84-7.75 20.37-5.17 6.53-11.75 10.45-19.74 11.75-.41-1.37-.62-2.74-.62-4.11 0-7.33 2.76-14.39 8.28-21.18 5.52-6.79 12.17-10.87 19.95-12.24.1 1.83.15 3.63.15 5.41z"/>
+  </svg>
+);
+
+// 3. Official Visa SVG Logo
+const VisaLogo = () => (
+  <svg className="h-3.5 w-auto" viewBox="0 0 100 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M38.86 3.12L25.42 30.88H16.89L10.3 7.03C9.9 5.48 9.53 4.96 8.28 4.29C6.27 3.2 2.92 2.22 0 1.58L0.16 0.88H14.16C15.95 0.88 17.51 2.07 17.89 4.16L21.36 21.6L29.74 0.88H38.86M73.18 21.25C73.22 13.11 61.85 12.66 61.94 9.04C61.97 7.94 63.02 6.74 65.37 6.43C66.54 6.28 69.75 6.16 73.34 7.82L74.77 1.14C72.8 0.43 70.28 0 67.09 0C58.91 0 53.13 4.35 53.07 10.53C52.98 15.13 57.1 17.7 60.23 19.23C63.45 20.81 64.53 21.82 64.51 23.23C64.48 25.38 61.93 26.33 59.58 26.37C55.43 26.44 53.03 25.26 51.13 24.38L49.65 31.28C51.58 32.17 55.15 32.93 58.87 32.97C67.62 32.97 73.14 28.64 73.18 21.25M94.61 30.88H102L95.55 0.88H88.88C87.35 0.88 86.07 1.76 85.51 3.12L73.08 30.88H81.71L83.43 26.15H93.88L94.61 30.88ZM85.8 19.64L90.06 7.94L92.51 19.64H85.8ZM50.6 0.88L43.83 30.88H35.49L42.26 0.88H50.6Z" fill="#1A1F71"/>
+  </svg>
+);
+
+// 4. Official Mastercard Overlapping Circles SVG Logo
+const MastercardLogo = () => (
+  <svg className="h-5.5 w-auto" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="10" fill="#EB001B"/>
+    <circle cx="24" cy="12" r="10" fill="#F79E1B"/>
+    <path d="M18 4.7a9.96 9.96 0 0 0-3.8 7.3A9.96 9.96 0 0 0 18 19.3a9.96 9.96 0 0 0 3.8-7.3A9.96 9.96 0 0 0 18 4.7Z" fill="#FF5F00"/>
+  </svg>
+);
+
+// 5. Official RuPay Vector SVG Logo
+const RuPayLogo = () => (
+  <svg className="h-4 w-auto" viewBox="0 0 135 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13.8 3.5H2.5V28.5H8.8V18.8H13.8C18.5 18.8 21.8 15.5 21.8 11.1C21.8 6.7 18.5 3.5 13.8 3.5ZM13.5 13.8H8.8V8.5H13.5C15.8 8.5 16.8 9.6 16.8 11.1C16.8 12.6 15.8 13.8 13.5 13.8Z" fill="#0F75BD"/>
+    <path d="M24.2 28.5V11.2H30.2V13.8C31.3 12.1 33.5 11 36 11C40.8 11 43.3 14 43.3 19.2V28.5H37.1V19.9C37.1 17.2 35.7 15.9 33.5 15.9C31.3 15.9 30.2 17.4 30.2 20.3V28.5H24.2Z" fill="#0F75BD"/>
+    <path d="M56.5 3.5V19.1C56.5 26.3 51 30.3 43.7 30.3V24.8C47.8 24.8 50.3 22.3 50.3 18.6V3.5H56.5Z" fill="#0F75BD"/>
+    <path d="M70.2 3.5C75.2 3.5 78.5 6.5 78.5 11.1C78.5 15.7 75.2 18.8 70.2 18.8H65.3V28.5H59.1V3.5H70.2ZM69.6 13.6C71.5 13.6 72.6 12.5 72.6 11.1C72.6 9.7 71.5 8.6 69.6 8.6H65.3V13.6H69.6Z" fill="#0F75BD"/>
+    <polygon points="83.5,3.5 90.1,18.8 96.7,3.5 103.3,3.5 93.4,28.5 86.8,28.5 76.9,3.5" fill="#F7941E"/>
+    <polygon points="101.1,3.5 107.7,18.8 114.3,3.5 120.9,3.5 111,28.5 104.4,28.5 94.5,3.5" fill="#109E49"/>
+  </svg>
+);
+
+// 6. Official BHIM UPI Vector SVG Logo
+const UpiLogo = () => (
+  <svg className="h-4.5 w-auto" viewBox="0 0 100 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14.2 3.5H4.8V28.5H14.2C20.3 28.5 24.8 24.2 24.8 16C24.8 7.8 20.3 3.5 14.2 3.5ZM13.5 22.5H10.5V9.5H13.5C16.9 9.5 19.1 12 19.1 16C19.1 20 16.9 22.5 13.5 22.5Z" fill="#7B2CBF"/>
+    <path d="M28 3.5H33.6V28.5H28V3.5Z" fill="#7B2CBF"/>
+    <polygon points="38,3.5 47,16 38,28.5 44.2,28.5 53.2,16 44.2,3.5" fill="#0077B6"/>
+    <polygon points="51.5,3.5 60.5,16 51.5,28.5 57.7,28.5 66.7,16 57.7,3.5" fill="#0096C7"/>
+    <polygon points="66,3.5 75,16 66,28.5 72.2,28.5 81.2,16 72.2,3.5" fill="#03045E"/>
+    <polygon points="81.5,3.5 87.1,3.5 95,16 87.1,28.5 81.5,28.5 89.4,16" fill="#F77F00"/>
+  </svg>
+);
+
+// 7. Official Paytm Vector SVG Logo
+const PaytmLogo = () => (
+  <svg className="h-4.5 w-auto" viewBox="0 0 110 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13.2 3.5H4.8V28.5H10.4V18.9H13.2C17.4 18.9 20.4 16.1 20.4 11.2C20.4 6.3 17.4 3.5 13.2 3.5ZM12.7 13.9H10.4V8.5H12.7C14.6 8.5 15.5 9.6 15.5 11.2C15.5 12.8 14.6 13.9 12.7 13.9Z" fill="#002E6E"/>
+    <path d="M23.1 11.2V28.5H28.1V19.1C28.1 16.3 29.5 14.6 32 14.6C34.5 14.6 35.9 16.3 35.9 19.1V28.5H40.9V18C40.9 13 37.8 11.2 33.1 11.2C30.3 11.2 28.4 12.3 27.3 14V11.2H23.1Z" fill="#002E6E"/>
+    <path d="M46.4 3.5L41.4 28.5H46.4L49.2 13.5L53.7 28.5H58.7L63.2 13.5L66 28.5H71L66 3.5H60.4L55.9 18.5L51.4 3.5H46.4Z" fill="#00BAF2"/>
+    <path d="M80 3.5H72.2V8.5H76.1V28.5H81.7V8.5H85.6V3.5H80Z" fill="#00BAF2"/>
+    <path d="M87.8 11.2L92.8 28.5H98.4L103.4 11.2H98.4L95.6 22.3L92.8 11.2H87.8Z" fill="#00BAF2"/>
+  </svg>
+);
+
+// 8. Official Net Banking SVG Logo
+const NetBankingLogo = () => (
+  <svg className="h-4.5 w-auto" viewBox="0 0 100 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 3.5L2 10.5V12.5H22V10.5L12 3.5ZM4 25.5H7V14.5H4V25.5ZM9.5 25.5H12.5V14.5H9.5V25.5ZM15 25.5H18V14.5H15V25.5ZM2 27.5V29.5H22V27.5H2Z" fill="#3B82F6"/>
+    <text x="26" y="21" fontFamily="system-ui, -apple-system, sans-serif" fontSize="11" fontWeight="900" fill="#E2E8F0" letterSpacing="0.5">NETBANKING</text>
+  </svg>
 );
 
 export const Footer: React.FC = () => {
@@ -140,29 +216,29 @@ export const Footer: React.FC = () => {
               </div>
             </div>
 
-            {/* App Store Buttons */}
+            {/* Official App Store Badges */}
             <div className="pt-2">
               <h5 className="text-[11px] font-black uppercase text-slate-300 tracking-wider mb-2.5">Download Our App</h5>
               <div className="flex flex-wrap gap-2.5">
                 <button
                   onClick={() => info('App Store link will open once published on Google Play Store', 'Google Play')}
-                  className="bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-2 rounded-xl text-left border border-slate-800 transition-colors flex items-center gap-2.5"
+                  className="bg-black hover:bg-slate-950 text-white px-4 py-2.5 rounded-xl border border-slate-700/80 transition-all shadow-md flex items-center gap-3 group"
                 >
-                  <Smartphone size={18} className="text-emerald-400" />
-                  <div>
-                    <span className="text-[8px] uppercase font-bold text-slate-400 block leading-none">GET IT ON</span>
-                    <span className="text-xs font-black text-white block mt-0.5">Google Play</span>
+                  <GooglePlayLogo />
+                  <div className="text-left">
+                    <span className="text-[8px] uppercase font-bold text-slate-400 block leading-none tracking-wider">GET IT ON</span>
+                    <span className="text-xs font-extrabold text-white block mt-0.5 tracking-tight group-hover:text-emerald-400 transition-colors">Google Play</span>
                   </div>
                 </button>
 
                 <button
                   onClick={() => info('App Store link will open once published on Apple App Store', 'App Store')}
-                  className="bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-2 rounded-xl text-left border border-slate-800 transition-colors flex items-center gap-2.5"
+                  className="bg-black hover:bg-slate-950 text-white px-4 py-2.5 rounded-xl border border-slate-700/80 transition-all shadow-md flex items-center gap-3 group"
                 >
-                  <Smartphone size={18} className="text-sky-400" />
-                  <div>
-                    <span className="text-[8px] uppercase font-bold text-slate-400 block leading-none">DOWNLOAD ON THE</span>
-                    <span className="text-xs font-black text-white block mt-0.5">App Store</span>
+                  <AppleLogo />
+                  <div className="text-left">
+                    <span className="text-[8px] uppercase font-bold text-slate-400 block leading-none tracking-wider">Download on the</span>
+                    <span className="text-xs font-extrabold text-white block mt-0.5 tracking-tight group-hover:text-sky-400 transition-colors">App Store</span>
                   </div>
                 </button>
               </div>
@@ -266,36 +342,48 @@ export const Footer: React.FC = () => {
 
         <hr className="border-slate-800/80 my-10" />
 
-        {/* ─── 3. PAYMENT & SECURITY SECTION ─── */}
+        {/* ─── 3. OFFICIAL PAYMENT & SECURITY LOGOS SECTION ─── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
           
           {/* Payment Methods */}
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <h5 className="text-[11px] font-black uppercase text-slate-300 tracking-wider">We Accept</h5>
-            <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-slate-300">
-              <span className="px-3 py-1 bg-slate-900 border border-slate-800 rounded-lg">Visa</span>
-              <span className="px-3 py-1 bg-slate-900 border border-slate-800 rounded-lg">Mastercard</span>
-              <span className="px-3 py-1 bg-slate-900 border border-slate-800 rounded-lg">RuPay</span>
-              <span className="px-3 py-1 bg-slate-900 border border-slate-800 rounded-lg text-emerald-400">UPI</span>
-              <span className="px-3 py-1 bg-slate-900 border border-slate-800 rounded-lg text-sky-400">Paytm</span>
-              <span className="px-3 py-1 bg-slate-900 border border-slate-800 rounded-lg">Net Banking</span>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <div className="px-3 py-2 bg-white/95 border border-slate-700/80 rounded-xl flex items-center justify-center shadow-xs transition-transform hover:scale-105" title="Visa">
+                <VisaLogo />
+              </div>
+              <div className="px-3 py-2 bg-white/95 border border-slate-700/80 rounded-xl flex items-center justify-center shadow-xs transition-transform hover:scale-105" title="Mastercard">
+                <MastercardLogo />
+              </div>
+              <div className="px-3 py-2 bg-white/95 border border-slate-700/80 rounded-xl flex items-center justify-center shadow-xs transition-transform hover:scale-105" title="RuPay">
+                <RuPayLogo />
+              </div>
+              <div className="px-3 py-2 bg-white/95 border border-slate-700/80 rounded-xl flex items-center justify-center shadow-xs transition-transform hover:scale-105" title="BHIM UPI">
+                <UpiLogo />
+              </div>
+              <div className="px-3 py-2 bg-white/95 border border-slate-700/80 rounded-xl flex items-center justify-center shadow-xs transition-transform hover:scale-105" title="Paytm">
+                <PaytmLogo />
+              </div>
+              <div className="px-3 py-2 bg-slate-900 border border-slate-700/80 rounded-xl flex items-center justify-center shadow-xs transition-transform hover:scale-105" title="Net Banking">
+                <NetBankingLogo />
+              </div>
             </div>
           </div>
 
           {/* Security & Verified */}
-          <div className="md:text-right space-y-2">
+          <div className="md:text-right space-y-2.5">
             <h5 className="text-[11px] font-black uppercase text-slate-300 tracking-wider">Secure & Verified</h5>
             <div className="flex flex-wrap md:justify-end items-center gap-3 text-xs font-semibold text-emerald-400">
-              <span className="inline-flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg">
-                <Lock size={13} />
+              <span className="inline-flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-xl">
+                <Lock size={14} />
                 SSL Secured
               </span>
-              <span className="inline-flex items-center gap-1.5 bg-sky-500/10 border border-sky-500/20 text-sky-400 px-3 py-1 rounded-lg">
-                <ShieldCheck size={13} />
+              <span className="inline-flex items-center gap-1.5 bg-sky-500/10 border border-sky-500/20 text-sky-400 px-3 py-1.5 rounded-xl">
+                <ShieldCheck size={14} />
                 Secure Payments
               </span>
-              <span className="inline-flex items-center gap-1.5 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 px-3 py-1 rounded-lg">
-                <CheckCircle2 size={13} />
+              <span className="inline-flex items-center gap-1.5 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 px-3 py-1.5 rounded-xl">
+                <CheckCircle2 size={14} />
                 Protected Checkout
               </span>
             </div>
