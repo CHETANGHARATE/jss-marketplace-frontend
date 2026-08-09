@@ -207,30 +207,35 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
           </div>
         </div>
 
-        {/* 2. Redesigned Premium Seller Card (High Contrast & Clean Typography) */}
-        <div className="p-4 bg-emerald-50/70 dark:bg-slate-900/60 border border-emerald-500/20 rounded-2xl flex items-center justify-between gap-4 transition-all">
+        {/* 2. Redesigned Premium Seller Card (Clean White & Emerald High Contrast Theme) */}
+        <div className="p-3.5 sm:p-4 bg-white dark:bg-slate-900 border border-emerald-500/30 dark:border-emerald-500/30 rounded-2xl flex items-center justify-between gap-4 shadow-2xs hover:shadow-xs transition-all">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center border border-emerald-500/20 shrink-0">
               <Store size={20} />
             </div>
             <div>
-              <span className="text-[9px] uppercase font-black text-muted-custom tracking-wider block">SOLD BY</span>
-              <span className="text-xs font-black text-foreground block mt-0.5">{sellerName}</span>
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 block leading-none">
+                SOLD BY
+              </span>
+              <span className="text-sm font-black text-slate-900 dark:text-white block mt-1">
+                {sellerName}
+              </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 shrink-0">
-            <span className="text-[10px] font-extrabold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full flex items-center gap-1">
-              <CheckCircle2 size={12} />
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="text-[11px] font-black text-emerald-700 dark:text-emerald-300 bg-emerald-100/80 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700/60 px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-2xs">
+              <CheckCircle2 size={13} className="text-emerald-600 dark:text-emerald-400" />
               Authorized Seller
             </span>
 
             {sellerId && (
               <Link
                 href={`/vendor?id=${sellerId}`}
-                className="text-[11px] font-extrabold text-primary hover:underline hidden sm:inline-block"
+                className="text-xs font-black text-primary hover:text-primary-hover hover:underline hidden sm:inline-flex items-center gap-1"
               >
-                View Store &rarr;
+                <span>View Store</span>
+                <span>&rarr;</span>
               </Link>
             )}
           </div>
