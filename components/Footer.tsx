@@ -18,21 +18,33 @@ import {
 import { useLanguage } from '../contexts/LanguageContext';
 import { useToast } from './Toast';
 
-// ── Social Media SVG Icons ─────────────────────────────────────────
-const FacebookIcon = ({ size = 16 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+// ── Social Media SVG Icons (Official Brand Vectors) ─────────────────
+const FacebookIcon = ({ size = 18 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+  </svg>
 );
-const InstagramIcon = ({ size = 16 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+const InstagramIcon = ({ size = 18 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+  </svg>
 );
-const YoutubeIcon = ({ size = 16 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/><path d="m10 15 5-3-5-3v6z"/></svg>
+const YoutubeIcon = ({ size = 18 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+  </svg>
 );
-const TwitterIcon = ({ size = 16 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+const TwitterIcon = ({ size = 18 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+  </svg>
 );
-const LinkedinIcon = ({ size = 16 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+const LinkedinIcon = ({ size = 18 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+  </svg>
 );
 
 // ── App Store Badges SVGs ──────────────────────────────────────────
@@ -188,24 +200,63 @@ export const Footer: React.FC = () => {
               India's trusted multi-vendor marketplace connecting verified sellers, manufacturers, and farmers directly with customers across India.
             </p>
 
-            {/* Social Media Links */}
+            {/* Social Media Links with Official Brand Colors & Smooth Black Hover State */}
             <div className="pt-2">
               <h5 className="text-[11px] font-black uppercase text-slate-300 tracking-wider mb-2.5">Follow Us</h5>
-              <div className="flex items-center gap-2 text-slate-400">
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="p-2 bg-slate-900 hover:bg-primary hover:text-white rounded-xl border border-slate-800 transition-colors">
-                  <FacebookIcon size={16} />
+              <div className="flex items-center gap-2.5">
+                {/* Facebook - Official Blue (#1877F2) */}
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Follow us on Facebook"
+                  className="p-2.5 bg-slate-900/90 border border-slate-800 rounded-xl text-[#1877F2] hover:bg-white hover:border-white hover:text-black focus:bg-white focus:border-white focus:text-black focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 shadow-2xs"
+                >
+                  <FacebookIcon size={18} />
                 </a>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="p-2 bg-slate-900 hover:bg-rose-500 hover:text-white rounded-xl border border-slate-800 transition-colors">
-                  <InstagramIcon size={16} />
+
+                {/* Instagram - Official Rose/Pink (#E4405F) */}
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Follow us on Instagram"
+                  className="p-2.5 bg-slate-900/90 border border-slate-800 rounded-xl text-[#E4405F] hover:bg-white hover:border-white hover:text-black focus:bg-white focus:border-white focus:text-black focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 shadow-2xs"
+                >
+                  <InstagramIcon size={18} />
                 </a>
-                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="p-2 bg-slate-900 hover:bg-red-600 hover:text-white rounded-xl border border-slate-800 transition-colors">
-                  <YoutubeIcon size={16} />
+
+                {/* YouTube - Official Red (#FF0000) */}
+                <a
+                  href="https://youtube.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Follow us on YouTube"
+                  className="p-2.5 bg-slate-900/90 border border-slate-800 rounded-xl text-[#FF0000] hover:bg-white hover:border-white hover:text-black focus:bg-white focus:border-white focus:text-black focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 shadow-2xs"
+                >
+                  <YoutubeIcon size={18} />
                 </a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="p-2 bg-slate-900 hover:bg-sky-500 hover:text-white rounded-xl border border-slate-800 transition-colors">
-                  <TwitterIcon size={16} />
+
+                {/* X / Twitter - Official Cyan/Blue (#1DA1F2) */}
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Follow us on X (Twitter)"
+                  className="p-2.5 bg-slate-900/90 border border-slate-800 rounded-xl text-[#1DA1F2] hover:bg-white hover:border-white hover:text-black focus:bg-white focus:border-white focus:text-black focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 shadow-2xs"
+                >
+                  <TwitterIcon size={18} />
                 </a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="p-2 bg-slate-900 hover:bg-blue-600 hover:text-white rounded-xl border border-slate-800 transition-colors">
-                  <LinkedinIcon size={16} />
+
+                {/* LinkedIn - Official Blue (#0A66C2) */}
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Follow us on LinkedIn"
+                  className="p-2.5 bg-slate-900/90 border border-slate-800 rounded-xl text-[#0A66C2] hover:bg-white hover:border-white hover:text-black focus:bg-white focus:border-white focus:text-black focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none transition-all duration-300 ease-in-out hover:scale-105 active:scale-95 shadow-2xs"
+                >
+                  <LinkedinIcon size={18} />
                 </a>
               </div>
             </div>
