@@ -29,7 +29,13 @@ export default function EditAdminProductPage() {
   const params = useParams();
   const productId = Number(params?.id);
 
-  const { data: product, isLoading: isLoadingProduct } = useAdminProductDetailsQuery(productId);
+  const {
+    data: product,
+    isLoading: isLoadingProduct,
+    isError: isProductError,
+    error: productError
+  } = useAdminProductDetailsQuery(productId);
+
   const { data: categories = [] } = useCategories();
   const { data: brandsData } = useBrands();
 
@@ -86,131 +92,164 @@ export default function EditAdminProductPage() {
   const [metaDescription, setMetaDescription] = useState('');
   const [metaKeywords, setMetaKeywords] = useState('');
 
-  // Unwrap potential API response nesting
-  const realProduct = useMemo(() => {
+  // Diagnostic logging
+  useEffect(() => {
+    console.log('[EDIT PRODUCT DEBUG] productId:', productId);
+    console.log('[EDIT PRODUCT DEBUG] query loading:', isLoadingProduct);
+    console.log('[EDIT PRODUCT DEBUG] query error:', productError);
+    console.log('[EDIT PRODUCT DEBUG] raw product response:', product);
+  }, [productId, isLoadingProduct, productError, product]);
+
+  // Extract raw product object safely
+  const targetProduct = useMemo(() => {
     if (!product) return null;
     return (product as any)?.data || (product as any)?.product || product;
   }, [product]);
 
   // Prepopulate form data when product details load
   useEffect(() => {
-    if (realProduct) {
-      // 1. Basic Information
-      const pName = realProduct.name;
-      const nameVal = typeof pName === 'string'
-        ? pName
-        : (pName?.en || pName?.hi || pName?.mr || realProduct.name_translations?.en || '');
-      setName(nameVal);
+    if (!targetProduct) return;
 
-      const catId = realProduct.category_id || realProduct.category?.id || null;
-      const subCatId = realProduct.subcategory_id || realProduct.subcategory?.id || null;
-      const bId = realProduct.brand_id || realProduct.brand?.id || null;
+    console.log('[EDIT PRODUCT DEBUG] Target Product Object:', targetProduct);
 
-      setCategoryId(catId ? Number(catId) : null);
-      setSubcategoryId(subCatId ? Number(subCatId) : null);
-      setBrandId(bId ? Number(bId) : null);
-      setSku(realProduct.sku || '');
+    // 1. Basic Information
+    const rawName = targetProduct.name;
+    const nameVal = typeof rawName === 'string'
+      ? rawName
+      : (rawName?.en || rawName?.hi || rawName?.mr || targetProduct.name_translations?.en || '');
+    setName(nameVal || '');
 
-      const pShort = realProduct.short_description;
-      const shortDescVal = typeof pShort === 'string'
-        ? pShort
-        : (pShort?.en || pShort?.hi || pShort?.mr || '');
-      setShortDescription(shortDescVal);
+    const catId = targetProduct.category_id ?? targetProduct.category?.id ?? null;
+    const subCatId = targetProduct.subcategory_id ?? targetProduct.subcategory?.id ?? null;
+    const bId = targetProduct.brand_id ?? targetProduct.brand?.id ?? null;
 
-      const pDesc = realProduct.description;
-      const descVal = typeof pDesc === 'string'
-        ? pDesc
-        : (pDesc?.en || pDesc?.hi || pDesc?.mr || '');
-      setDescription(descVal);
+    if (catId !== null) setCategoryId(Number(catId));
+    if (subCatId !== null) setSubcategoryId(Number(subCatId));
+    if (bId !== null) setBrandId(Number(bId));
+    setSku(targetProduct.sku || '');
 
-      if (Array.isArray(realProduct.highlights)) {
-        setHighlightsText(realProduct.highlights.join('\n'));
-      } else if (typeof realProduct.highlights === 'string') {
-        setHighlightsText(realProduct.highlights);
-      } else {
-        setHighlightsText('');
-      }
+    const rawShort = targetProduct.short_description;
+    const shortDescVal = typeof rawShort === 'string'
+      ? rawShort
+      : (rawShort?.en || rawShort?.hi || rawShort?.mr || '');
+    setShortDescription(shortDescVal || '');
 
-      setSearchKeywords(realProduct.search_keywords || '');
+    const rawDesc = targetProduct.description;
+    const descVal = typeof rawDesc === 'string'
+      ? rawDesc
+      : (rawDesc?.en || rawDesc?.hi || rawDesc?.mr || '');
+    setDescription(descVal || '');
 
-      // 2. Pricing & Inventory
-      setOriginalPrice(Number(realProduct.originalPrice ?? realProduct.original_price ?? realProduct.mrp ?? 0));
-      setOfferPrice(Number(realProduct.offerPrice ?? realProduct.offer_price ?? realProduct.price ?? 0));
-      setCostPrice(Number(realProduct.cost_price ?? 0));
-      setGstPercent(Number(realProduct.gst_percent ?? 18));
-      setTaxInclusive(Boolean(realProduct.tax_inclusive ?? true));
-      setStockQuantity(Number(realProduct.stockQuantity ?? realProduct.stock_quantity ?? realProduct.quantity ?? 0));
-      setStatus(realProduct.status || 'approved');
+    if (Array.isArray(targetProduct.highlights)) {
+      setHighlightsText(targetProduct.highlights.join('\n'));
+    } else if (typeof targetProduct.highlights === 'string') {
+      setHighlightsText(targetProduct.highlights);
+    } else {
+      setHighlightsText('');
+    }
 
-      // 3. Gallery Images & Cover Selection
-      let existingImages: string[] = [];
-      if (Array.isArray(realProduct.images) && realProduct.images.length > 0) {
-        existingImages = realProduct.images.map((img: any) => {
-          if (typeof img === 'string') return img;
-          return img.image_url || img.image_path || img.image || img.url || '';
-        }).filter(Boolean);
-      }
-      if (existingImages.length === 0 && (realProduct.image || realProduct.primary_image || realProduct.thumbnail)) {
-        const single = realProduct.image || realProduct.primary_image || realProduct.thumbnail;
-        if (typeof single === 'string' && single) existingImages = [single];
-        else if (single?.image_url) existingImages = [single.image_url];
-      }
-      setImages(existingImages);
+    setSearchKeywords(targetProduct.search_keywords || '');
 
-      // 4. Variants
-      if (Array.isArray(realProduct.variants) && realProduct.variants.length > 0) {
-        setVariants(realProduct.variants);
-      } else {
-        setVariants([]);
-      }
+    // 2. Pricing & Inventory
+    const origP = targetProduct.originalPrice ?? targetProduct.original_price ?? targetProduct.mrp ?? 0;
+    const offP = targetProduct.offerPrice ?? targetProduct.offer_price ?? targetProduct.price ?? 0;
+    const costP = targetProduct.cost_price ?? 0;
+    const stockQ = targetProduct.stockQuantity ?? targetProduct.stock_quantity ?? targetProduct.quantity ?? 0;
 
-      // 5. Dynamic Attributes & Custom Specifications
-      const attrVals = realProduct.attribute_values || realProduct.attributeValues;
-      if (Array.isArray(attrVals)) {
-        setSelectedAttributeValues(attrVals.map((v: any) => typeof v === 'number' ? v : (v.id || v.attribute_value_id)));
-      } else {
-        setSelectedAttributeValues([]);
-      }
+    setOriginalPrice(Number(origP));
+    setOfferPrice(Number(offP));
+    setCostPrice(Number(costP));
+    setGstPercent(Number(targetProduct.gst_percent ?? 18));
+    setTaxInclusive(Boolean(targetProduct.tax_inclusive ?? true));
+    setStockQuantity(Number(stockQ));
+    setStatus(targetProduct.status || 'approved');
 
-      const specs = realProduct.specifications || realProduct.custom_specifications;
-      if (Array.isArray(specs) && specs.length > 0) {
-        setCustomSpecifications(specs.map((s: any) => ({
+    // 3. Gallery Images (Support string URLs and image objects)
+    let imgList: string[] = [];
+    if (Array.isArray(targetProduct.images) && targetProduct.images.length > 0) {
+      imgList = targetProduct.images.map((img: any) => {
+        if (typeof img === 'string') return img;
+        return img.image_url || img.image_path || img.image || img.url || '';
+      }).filter(Boolean);
+    }
+    if (imgList.length === 0 && (targetProduct.image || targetProduct.primary_image || targetProduct.thumbnail)) {
+      const single = targetProduct.image || targetProduct.primary_image || targetProduct.thumbnail;
+      if (typeof single === 'string' && single) imgList = [single];
+      else if (single?.image_url) imgList = [single.image_url];
+    }
+    setImages(imgList);
+
+    // 4. Variants
+    if (Array.isArray(targetProduct.variants) && targetProduct.variants.length > 0) {
+      setVariants(targetProduct.variants);
+    } else {
+      setVariants([]);
+    }
+
+    // 5. Dynamic Attributes & Custom Specifications
+    const attrVals = targetProduct.attribute_values || targetProduct.attributeValues;
+    if (Array.isArray(attrVals)) {
+      setSelectedAttributeValues(
+        attrVals.map((v: any) => typeof v === 'number' ? v : (v.id || v.attribute_value_id)).filter(Boolean)
+      );
+    } else {
+      setSelectedAttributeValues([]);
+    }
+
+    const specs = targetProduct.specifications || targetProduct.custom_specifications;
+    if (Array.isArray(specs) && specs.length > 0) {
+      setCustomSpecifications(
+        specs.map((s: any) => ({
           key: s.spec_key || s.name || s.key || '',
           value: s.spec_value || s.value || ''
-        })).filter(s => s.key || s.value));
-      } else {
-        setCustomSpecifications([]);
-      }
-
-      // 6. Shipping & Logistics
-      setWeight(Number(realProduct.weight ?? 0.5));
-      setLength(Number(realProduct.length ?? 10));
-      setWidth(Number(realProduct.width ?? 10));
-      setHeight(Number(realProduct.height ?? 10));
-      setDispatchDays(Number(realProduct.dispatch_days ?? 1));
-      setShippingCharge(Number(realProduct.shipping_charge ?? 0));
-      setIsFreeShipping(Boolean(realProduct.is_free_shipping ?? true));
-      setIsCodAvailable(Boolean(realProduct.is_cod_available ?? true));
-
-      // 7. Store Policies
-      setReturnPolicy(realProduct.return_policy || '7 Days Return & Replacement');
-      setReplacementPolicy(realProduct.replacement_policy || '');
-      setWarrantySummary(realProduct.warranty_summary || '');
-      setGuaranteeSummary(realProduct.guarantee_summary || '');
-      setCancellationPolicy(realProduct.cancellation_policy || '');
-
-      // 8. SEO Metadata
-      setMetaTitle(realProduct.meta_title || realProduct.seo_title || '');
-      setMetaDescription(realProduct.meta_description || realProduct.seo_description || '');
-      setMetaKeywords(realProduct.meta_keywords || realProduct.search_keywords || '');
+        })).filter((s: { key: string; value: string }) => s.key || s.value)
+      );
+    } else {
+      setCustomSpecifications([]);
     }
-  }, [realProduct]);
+
+    // 6. Shipping & Logistics
+    setWeight(Number(targetProduct.weight ?? 0.5));
+    setLength(Number(targetProduct.length ?? 10));
+    setWidth(Number(targetProduct.width ?? 10));
+    setHeight(Number(targetProduct.height ?? 10));
+    setDispatchDays(Number(targetProduct.dispatch_days ?? 1));
+    setShippingCharge(Number(targetProduct.shipping_charge ?? 0));
+    setIsFreeShipping(Boolean(targetProduct.is_free_shipping ?? true));
+    setIsCodAvailable(Boolean(targetProduct.is_cod_available ?? true));
+
+    // 7. Store Policies
+    setReturnPolicy(targetProduct.return_policy || '7 Days Return & Replacement');
+    setReplacementPolicy(targetProduct.replacement_policy || '');
+    setWarrantySummary(targetProduct.warranty_summary || '');
+    setGuaranteeSummary(targetProduct.guarantee_summary || '');
+    setCancellationPolicy(targetProduct.cancellation_policy || '');
+
+    // 8. SEO Metadata
+    setMetaTitle(targetProduct.meta_title || targetProduct.seo_title || '');
+    setMetaDescription(targetProduct.meta_description || targetProduct.seo_description || '');
+    setMetaKeywords(targetProduct.meta_keywords || targetProduct.search_keywords || '');
+
+    console.log('[EDIT PRODUCT DEBUG] FINAL FORM DATA POPULATED:', {
+      name: nameVal,
+      categoryId: catId,
+      subcategoryId: subCatId,
+      brandId: bId,
+      sku: targetProduct.sku,
+      originalPrice: origP,
+      offerPrice: offP,
+      stockQuantity: stockQ,
+      imagesCount: imgList.length,
+      variantsCount: targetProduct.variants?.length || 0,
+      specsCount: specs?.length || 0
+    });
+  }, [targetProduct]);
 
   // Guaranteed Category Options list
   const categoryOptions = useMemo(() => {
     const list = [...categories];
     if (categoryId && !list.some((c: any) => Number(c.id) === Number(categoryId))) {
-      const catObj = realProduct?.category;
+      const catObj = targetProduct?.category;
       if (catObj) {
         list.unshift({
           id: categoryId,
@@ -219,13 +258,13 @@ export default function EditAdminProductPage() {
       }
     }
     return list;
-  }, [categories, categoryId, realProduct?.category]);
+  }, [categories, categoryId, targetProduct?.category]);
 
   // Guaranteed Selected Category Object
   const selectedCategoryObj = useMemo(() => {
     return categories.find((c: any) => Number(c.id) === Number(categoryId))
-      || (realProduct?.category?.id === categoryId ? realProduct.category : null);
-  }, [categories, categoryId, realProduct?.category]);
+      || (targetProduct?.category?.id === categoryId ? targetProduct.category : null);
+  }, [categories, categoryId, targetProduct?.category]);
 
   // Guaranteed Subcategories Options list
   const subcategoriesOptions = useMemo(() => {
@@ -234,7 +273,7 @@ export default function EditAdminProductPage() {
       list = selectedCategoryObj.children || selectedCategoryObj.subcategories || [];
     }
     if (subcategoryId && !list.some((s: any) => Number(s.id) === Number(subcategoryId))) {
-      const subObj = realProduct?.subcategory;
+      const subObj = targetProduct?.subcategory;
       if (subObj) {
         list = [{
           id: subcategoryId,
@@ -243,13 +282,13 @@ export default function EditAdminProductPage() {
       }
     }
     return list;
-  }, [selectedCategoryObj, subcategoryId, realProduct?.subcategory]);
+  }, [selectedCategoryObj, subcategoryId, targetProduct?.subcategory]);
 
   // Guaranteed Brands Options list
   const brandOptions = useMemo(() => {
     const list = [...brands];
     if (brandId && !list.some((b: any) => Number(b.id) === Number(brandId))) {
-      const bObj = realProduct?.brand;
+      const bObj = targetProduct?.brand;
       if (bObj) {
         list.unshift({
           id: brandId,
@@ -259,7 +298,7 @@ export default function EditAdminProductPage() {
       }
     }
     return list;
-  }, [brands, brandId, realProduct?.brand]);
+  }, [brands, brandId, targetProduct?.brand]);
 
   const handleUpdateProduct = async () => {
     if (!name.trim()) {
@@ -326,6 +365,26 @@ export default function EditAdminProductPage() {
     return (
       <div className="py-20 text-center text-xs font-bold text-foreground/50 animate-pulse">
         Loading product details for editing...
+      </div>
+    );
+  }
+
+  if (isProductError) {
+    return (
+      <div className="py-20 text-center space-y-4 max-w-lg mx-auto">
+        <div className="p-5 bg-rose-500/10 border border-rose-500/30 rounded-3xl text-rose-500 space-y-2">
+          <h3 className="font-black text-base">Unable to load product details</h3>
+          <p className="text-xs font-mono text-rose-400">
+            {productError instanceof Error ? productError.message : String(productError || 'Failed to fetch product data from server.')}
+          </p>
+        </div>
+        <Link
+          href="/admin/products"
+          className="px-4 py-2.5 bg-background-secondary border border-border-custom/80 text-foreground font-bold text-xs rounded-xl hover:bg-card transition-all inline-flex items-center gap-1.5 shadow-2xs"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Products</span>
+        </Link>
       </div>
     );
   }
@@ -431,7 +490,7 @@ export default function EditAdminProductPage() {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none"
+              className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none font-bold"
             />
           </div>
 
@@ -439,7 +498,7 @@ export default function EditAdminProductPage() {
             <div>
               <label className="text-xs font-bold text-foreground mb-1 block">Category</label>
               <select
-                value={categoryId || ''}
+                value={categoryId ?? ''}
                 onChange={(e) => {
                   const val = e.target.value ? Number(e.target.value) : null;
                   setCategoryId(val);
@@ -459,7 +518,7 @@ export default function EditAdminProductPage() {
             <div>
               <label className="text-xs font-bold text-foreground mb-1 block">Subcategory</label>
               <select
-                value={subcategoryId || ''}
+                value={subcategoryId ?? ''}
                 onChange={(e) => setSubcategoryId(e.target.value ? Number(e.target.value) : null)}
                 disabled={!categoryId || subcategoriesOptions.length === 0}
                 className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none font-bold disabled:opacity-50"
@@ -476,7 +535,7 @@ export default function EditAdminProductPage() {
             <div>
               <label className="text-xs font-bold text-foreground mb-1 block">Brand</label>
               <select
-                value={brandId || ''}
+                value={brandId ?? ''}
                 onChange={(e) => setBrandId(e.target.value ? Number(e.target.value) : null)}
                 className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none font-bold"
               >
@@ -506,7 +565,7 @@ export default function EditAdminProductPage() {
               rows={2}
               value={shortDescription}
               onChange={(e) => setShortDescription(e.target.value)}
-              className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none resize-none"
+              className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none resize-none font-medium"
             />
           </div>
 
@@ -516,7 +575,7 @@ export default function EditAdminProductPage() {
               rows={5}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none resize-none"
+              className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none resize-none font-medium"
             />
           </div>
 
@@ -527,7 +586,7 @@ export default function EditAdminProductPage() {
               placeholder="• Active Noise Cancellation&#10;• 30 Hours Battery Life&#10;• Bluetooth 5.3 Quick Connect"
               value={highlightsText}
               onChange={(e) => setHighlightsText(e.target.value)}
-              className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none resize-none"
+              className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none resize-none font-medium"
             />
           </div>
 
@@ -538,7 +597,7 @@ export default function EditAdminProductPage() {
               placeholder="wireless, headphones, bluetooth, audio"
               value={searchKeywords}
               onChange={(e) => setSearchKeywords(e.target.value)}
-              className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none"
+              className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-rose-500 outline-none font-medium"
             />
           </div>
 
