@@ -357,7 +357,12 @@ export default function EditAdminProductPage() {
       alert('Product updated successfully!');
       router.push('/admin/products');
     } catch (err: any) {
-      alert(err?.response?.data?.message || err.message || 'Error updating product.');
+      console.error('[EDIT PRODUCT SAVE ERROR]', err);
+      const serverMsg = err?.response?.data?.message
+        || (typeof err?.response?.data?.errors === 'object' ? JSON.stringify(err.response.data.errors) : '')
+        || err.message
+        || 'Error updating product.';
+      alert(`Save Failed: ${serverMsg}`);
     }
   };
 
