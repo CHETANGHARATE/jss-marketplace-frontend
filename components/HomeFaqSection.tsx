@@ -52,11 +52,11 @@ export const HomeFaqSection: React.FC = () => {
   const toggle = (id: string) => setOpenId(prev => (prev === id ? '' : id));
 
   return (
-    <section className="relative rounded-3xl overflow-hidden bg-slate-50/80 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-xs transition-colors">
+    <section className="relative rounded-3xl overflow-hidden bg-white dark:bg-[#0B132B] border border-slate-200/90 dark:border-slate-800 shadow-xs transition-colors">
 
       {/* Decorative background accents */}
-      <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full opacity-30 dark:opacity-5 pointer-events-none bg-indigo-200" />
-      <div className="absolute -bottom-8 -left-8 w-40 h-40 rounded-full opacity-30 dark:opacity-5 pointer-events-none bg-purple-200" />
+      <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full opacity-20 dark:opacity-5 pointer-events-none bg-indigo-200" />
+      <div className="absolute -bottom-8 -left-8 w-40 h-40 rounded-full opacity-20 dark:opacity-5 pointer-events-none bg-purple-200" />
 
       <div className="relative z-10 p-6 sm:p-10 lg:p-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
@@ -65,7 +65,7 @@ export const HomeFaqSection: React.FC = () => {
           <div className="space-y-5">
 
             {/* Label pill */}
-            <div className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-500/15 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-500/30 px-3.5 py-1.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest shadow-2xs">
+            <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-500/15 text-blue-800 dark:text-blue-300 border border-blue-200/90 dark:border-blue-500/30 px-3.5 py-1.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest shadow-2xs">
               <HelpCircle size={13} />
               <span>{t('home.faq_center')}</span>
             </div>
@@ -86,8 +86,8 @@ export const HomeFaqSection: React.FC = () => {
               {t('home.faq_sub')}
             </p>
 
-            {/* B2B Support Card (44px Icon Container, 22px Icon) */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-xs">
+            {/* B2B Support Card */}
+            <div className="bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-2xs">
               <div className="flex items-start gap-3.5">
                 <div className="w-11 sm:w-12 h-11 sm:h-12 rounded-2xl bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-200/80 dark:border-blue-500/30 flex items-center justify-center shrink-0 shadow-2xs">
                   <Headphones size={22} />
@@ -117,7 +117,7 @@ export const HomeFaqSection: React.FC = () => {
               return (
                 <div
                   key={faq.id}
-                  className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl overflow-hidden shadow-2xs transition-all duration-200"
+                  className="bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl overflow-hidden shadow-2xs transition-all duration-200"
                 >
                   {/* Question Row */}
                   <button
@@ -151,7 +151,7 @@ export const HomeFaqSection: React.FC = () => {
 
                   {/* Answer */}
                   {isOpen && (
-                    <div className="px-5 pb-5 pt-4 space-y-4 bg-white dark:bg-slate-900">
+                    <div className="px-5 pb-5 pt-4 space-y-4 bg-white dark:bg-slate-900/90">
                       <div className="flex items-start gap-4">
                         {faq.image && (
                           <div className="w-20 h-20 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-4xl shrink-0">
@@ -178,8 +178,8 @@ export const HomeFaqSection: React.FC = () => {
               );
             })}
 
-            {/* Bottom Trust/Benefit Cards Section (42px–50px Container, 24px Icon) */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-5 mt-4 shadow-2xs">
+            {/* Bottom Trust/Benefit Badges Bar */}
+            <div className="bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-5 mt-4 shadow-2xs">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {trustBadges.map((badge, i) => {
                   const Icon = badge.icon;

@@ -9,9 +9,9 @@ interface Feature {
   icon: React.ElementType;
   titleKey: string;
   descKey: string;
-  iconClass: string;    // Tailwind: bg + text + border, light & dark
-  accentColor: string;  // hex for the accent line
-  decorClass: string;   // Tailwind for decorative blob
+  iconClass: string;
+  accentColor: string;
+  decorClass: string;
 }
 
 const features: Feature[] = [
@@ -57,15 +57,15 @@ export const WhyChooseUs: React.FC = () => {
   const { t } = useLanguage();
 
   return (
-    <section className="relative rounded-3xl overflow-hidden py-12 px-6 sm:px-10 bg-slate-50/80 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-xs transition-colors">
+    <section className="relative rounded-3xl overflow-hidden py-12 px-6 sm:px-10 bg-white dark:bg-[#0B132B] border border-slate-200/90 dark:border-slate-800 shadow-xs transition-colors">
 
       {/* Decorative background accents */}
-      <div className="absolute -top-10 -left-10 w-48 h-48 rounded-full opacity-30 dark:opacity-5 pointer-events-none bg-blue-200" />
-      <div className="absolute -bottom-10 -right-10 w-48 h-48 rounded-full opacity-30 dark:opacity-5 pointer-events-none bg-purple-200" />
+      <div className="absolute -top-10 -left-10 w-48 h-48 rounded-full opacity-20 dark:opacity-5 pointer-events-none bg-blue-200" />
+      <div className="absolute -bottom-10 -right-10 w-48 h-48 rounded-full opacity-20 dark:opacity-5 pointer-events-none bg-purple-200" />
 
       {/* ── Header ───────────────────────────────────────────── */}
       <div className="text-center mb-10 space-y-3 relative z-10">
-        <div className="inline-flex items-center gap-2 bg-amber-100 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30 px-4 py-1.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest shadow-2xs">
+        <div className="inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-200/90 dark:border-amber-500/30 px-4 py-1.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest shadow-2xs">
           <Star size={13} className="fill-current" />
           <span>{t('home.excellence')}</span>
         </div>
@@ -86,21 +86,21 @@ export const WhyChooseUs: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Cards Grid ───────────────────────────────────────── */}
+      {/* ── Cards Grid (4 in a row desktop, 2x2 tablet, 1 mobile) ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
         {features.map((feat) => {
           const Icon = feat.icon;
           return (
             <div
               key={feat.number}
-              className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-6 flex flex-col items-center text-center shadow-xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group"
+              className="bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 flex flex-col items-center text-center shadow-2xs hover:shadow-md transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group"
             >
               {/* Top-right decorative corner blob */}
               <div
                 className={`absolute top-0 right-0 w-16 h-16 rounded-bl-full opacity-40 dark:opacity-20 pointer-events-none ${feat.decorClass}`}
               />
 
-              {/* Larger Desktop Icon Container (56px–64px) & Icon (26px–32px) */}
+              {/* Desktop Icon Container (56px–64px) & Icon (28px–32px) */}
               <div
                 className={`w-14 sm:w-16 h-14 sm:h-16 rounded-2xl flex items-center justify-center mb-5 border shadow-2xs ${feat.iconClass}`}
               >
