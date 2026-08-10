@@ -7,10 +7,11 @@ export const getProducts = async (filters?: FilterParams): Promise<Product[]> =>
     if (filters?.searchQuery) apiParams.search = filters.searchQuery;
     if (filters?.category) apiParams.category = filters.category;
 
-    if (filters?.subcategories && filters.subcategories.length > 0) {
-      apiParams.subcategory = filters.subcategories.join(',');
-    } else if (filters?.subcategory) {
-      apiParams.subcategory = filters.subcategory;
+    const selectedSubs = filters?.subcategories || (filters?.subcategory ? [filters.subcategory] : []);
+
+    if (selectedSubs.length > 0) {
+      apiParams.subcategory_id = selectedSubs.join(',');
+      apiParams.subcategory = selectedSubs.join(',');
     }
 
     if (filters?.brand && filters.brand.length > 0) apiParams.brand = filters.brand.join(',');
@@ -27,13 +28,26 @@ export const getProducts = async (filters?: FilterParams): Promise<Product[]> =>
     let mapped = apiProducts.map(mapApiProductToProduct);
 
     // Client-side fallback OR-logic filtering for selected subcategories
-    const selectedSubs = filters?.subcategories || (filters?.subcategory ? [filters.subcategory] : []);
     if (selectedSubs.length > 0) {
-      const selectedSubsLower = selectedSubs.map((s) => s.toLowerCase().trim());
+      const selectedTokens = selectedSubs.map((s) => String(s).toLowerCase().trim());
+
       mapped = mapped.filter((p) => {
-        if (!p.subcategory) return true;
-        const pSub = p.subcategory.toLowerCase().trim();
-        return selectedSubsLower.some((s) => pSub.includes(s) || s.includes(pSub));
+        // If product has no subcategory info attached at all, keep it so it isn't hidden by mistake
+        if (!p.subcategoryId && !p.subcategorySlug && !p.subcategory) {
+          return true;
+        }
+
+        const pId = p.subcategoryId !== undefined && p.subcategoryId !== null ? String(p.subcategoryId).toLowerCase().trim() : '';
+        const pSlug = p.subcategorySlug ? String(p.subcategorySlug).toLowerCase().trim() : '';
+        const pName = p.subcategory ? String(p.subcategory).toLowerCase().trim() : '';
+
+        // Match if ANY selected token matches subcategory ID, slug, or name
+        return selectedTokens.some((token) => {
+          if (pId && (pId === token || token === pId)) return true;
+          if (pSlug && (pSlug === token || pSlug.includes(token) || token.includes(pSlug))) return true;
+          if (pName && (pName === token || pName.includes(token) || token.includes(pName))) return true;
+          return false;
+        });
       });
     }
 

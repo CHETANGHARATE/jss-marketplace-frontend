@@ -22,7 +22,10 @@ export interface Product {
   brand: string;
   seller: Seller;
   category: string;
+  categoryId?: string | number;
   subcategory: string;
+  subcategoryId?: string | number;
+  subcategorySlug?: string;
   originalPrice: number;
   offerPrice: number;
   discountPercent: number;

@@ -8,7 +8,7 @@ import { FilterParams } from '../types';
 
 export interface SubcategoryItem {
   id?: number | string;
-  slug: string;
+  slug?: string;
   name: any;
 }
 
@@ -28,18 +28,20 @@ export const Filters: React.FC<FiltersProps> = ({
   const { language, t } = useLanguage();
   const [isSubcatsExpanded, setIsSubcatsExpanded] = useState<boolean>(false);
 
-  // Normalize subcategory items
-  const normalizedSubcats: { slug: string; displayName: string }[] = (subcategories || []).map((item) => {
+  // Normalize subcategory items with id, slug, and displayName
+  const normalizedSubcats = (subcategories || []).map((item) => {
     if (typeof item === 'string') {
-      return { slug: item, displayName: item };
+      return { id: item, slug: item, displayName: item };
     }
     const displayName = getLocalizedText(item.name, language) || item.slug || String(item.id || '');
-    return { slug: item.slug || displayName, displayName };
+    const idKey = item.id !== undefined && item.id !== null ? String(item.id) : (item.slug || displayName);
+    const slugKey = item.slug || idKey;
+    return { id: idKey, slug: slugKey, displayName };
   });
 
-  // Selected subcategories array
-  const selectedSubcatSlugs = activeFilters.subcategories || (activeFilters.subcategory ? [activeFilters.subcategory] : []);
-  const isAllSubcategoriesSelected = selectedSubcatSlugs.length === 0;
+  // Selected subcategory tokens (can be IDs, slugs, or names)
+  const selectedSubcatTokens = (activeFilters.subcategories || (activeFilters.subcategory ? [activeFilters.subcategory] : [])).map(s => String(s).toLowerCase().trim());
+  const isAllSubcategoriesSelected = selectedSubcatTokens.length === 0;
 
   const handlePriceChange = (field: 'minPrice' | 'maxPrice', val: string) => {
     const numVal = val === '' ? undefined : Number(val);
@@ -57,18 +59,28 @@ export const Filters: React.FC<FiltersProps> = ({
     });
   };
 
-  const handleSubcategoryToggle = (slug: string) => {
-    let updatedSlugs: string[];
-    if (selectedSubcatSlugs.includes(slug)) {
-      updatedSlugs = selectedSubcatSlugs.filter((s) => s !== slug);
+  const handleSubcategoryToggle = (subcat: { id: string; slug: string; displayName: string }) => {
+    const token = subcat.id || subcat.slug;
+    const isCurrentlySelected = selectedSubcatTokens.some(
+      (t) => t === subcat.id.toLowerCase() || t === subcat.slug.toLowerCase() || t === subcat.displayName.toLowerCase()
+    );
+
+    let updatedTokens: string[];
+    if (isCurrentlySelected) {
+      updatedTokens = (activeFilters.subcategories || (activeFilters.subcategory ? [activeFilters.subcategory] : [])).filter(
+        (t) => String(t).toLowerCase() !== subcat.id.toLowerCase() &&
+               String(t).toLowerCase() !== subcat.slug.toLowerCase() &&
+               String(t).toLowerCase() !== subcat.displayName.toLowerCase()
+      );
     } else {
-      updatedSlugs = [...selectedSubcatSlugs, slug];
+      const currentList = activeFilters.subcategories || (activeFilters.subcategory ? [activeFilters.subcategory] : []);
+      updatedTokens = [...currentList, token];
     }
 
     onFilterChange({
       ...activeFilters,
-      subcategory: updatedSlugs.length === 1 ? updatedSlugs[0] : undefined,
-      subcategories: updatedSlugs.length > 0 ? updatedSlugs : undefined,
+      subcategory: updatedTokens.length === 1 ? updatedTokens[0] : undefined,
+      subcategories: updatedTokens.length > 0 ? updatedTokens : undefined,
     });
   };
 
@@ -226,16 +238,18 @@ export const Filters: React.FC<FiltersProps> = ({
 
             {/* Individual Subcategories List */}
             {visibleSubcats.map((subcat) => {
-              const isChecked = selectedSubcatSlugs.includes(subcat.slug);
+              const isChecked = selectedSubcatTokens.some(
+                (t) => t === subcat.id.toLowerCase() || t === subcat.slug.toLowerCase() || t === subcat.displayName.toLowerCase()
+              );
               return (
                 <label
-                  key={subcat.slug}
+                  key={subcat.id || subcat.slug}
                   className="flex items-center gap-2.5 text-xs font-medium text-muted-custom hover:text-foreground cursor-pointer transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={isChecked}
-                    onChange={() => handleSubcategoryToggle(subcat.slug)}
+                    onChange={() => handleSubcategoryToggle(subcat)}
                     className="h-4 w-4 rounded-md border-border-custom text-primary focus:ring-primary/20 accent-primary cursor-pointer"
                   />
                   <span className={isChecked ? 'font-bold text-primary' : ''}>{subcat.displayName}</span>

@@ -33,7 +33,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   const { id: categorySlug } = use(params);
   const searchParams = useSearchParams();
   const initialSearch = searchParams.get('search') || '';
-  const initialSubcatParam = searchParams.get('subcategory') || searchParams.get('subcategories') || '';
+  const initialSubcatParam = searchParams.get('subcategory') || searchParams.get('subcategories') || searchParams.get('subcategory_id') || '';
   
   const initialSubcategories = initialSubcatParam
     ? initialSubcatParam.split(',').map((s) => s.trim()).filter(Boolean)
@@ -73,6 +73,8 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         url.searchParams.set('subcategory', filters.subcategories.join(','));
       } else {
         url.searchParams.delete('subcategory');
+        url.searchParams.delete('subcategories');
+        url.searchParams.delete('subcategory_id');
       }
       window.history.replaceState({}, '', url.toString());
     }
@@ -166,17 +168,25 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     }
   };
 
-  const handleSubcategoryPillClick = (subcatSlug: string) => {
-    const currentSlugs = filters.subcategories || (filters.subcategory ? [filters.subcategory] : []);
-    const isSelected = currentSlugs.includes(subcatSlug);
-    const updatedSlugs = isSelected
-      ? currentSlugs.filter((s) => s !== subcatSlug)
-      : [...currentSlugs, subcatSlug];
+  const handleSubcategoryPillClick = (subcat: any) => {
+    const token = subcat.id !== undefined && subcat.id !== null ? String(subcat.id) : (subcat.slug || getLocalizedText(subcat.name, language));
+    const currentTokens = filters.subcategories || (filters.subcategory ? [filters.subcategory] : []);
+    const isSelected = currentTokens.some(
+      (t) => String(t).toLowerCase() === String(subcat.id || '').toLowerCase() ||
+             String(t).toLowerCase() === String(subcat.slug || '').toLowerCase()
+    );
+    
+    const updatedTokens = isSelected
+      ? currentTokens.filter(
+          (t) => String(t).toLowerCase() !== String(subcat.id || '').toLowerCase() &&
+                 String(t).toLowerCase() !== String(subcat.slug || '').toLowerCase()
+        )
+      : [...currentTokens, token];
 
     setFilters((prev) => ({
       ...prev,
-      subcategory: updatedSlugs.length === 1 ? updatedSlugs[0] : undefined,
-      subcategories: updatedSlugs.length > 0 ? updatedSlugs : undefined,
+      subcategory: updatedTokens.length === 1 ? updatedTokens[0] : undefined,
+      subcategories: updatedTokens.length > 0 ? updatedTokens : undefined,
     }));
     setCurrentPage(1);
   };
@@ -184,7 +194,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   const relatedCats = allCategories.filter((c) => c.slug !== categorySlug).slice(0, 4);
 
   const subcategoryList = category.children || (category as any).subcategories || [];
-  const selectedSubcatSlugs = filters.subcategories || (filters.subcategory ? [filters.subcategory] : []);
+  const selectedSubcatTokens = (filters.subcategories || (filters.subcategory ? [filters.subcategory] : [])).map(s => String(s).toLowerCase().trim());
 
   return (
     <div className="space-y-8 sm:space-y-10">
@@ -205,13 +215,14 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           <h3 className="font-extrabold text-xs uppercase tracking-wider text-muted-custom">Explore Subcategories</h3>
           <div className="flex flex-wrap gap-2.5">
             {subcategoryList.map((subcat: any) => {
-              const subSlug = subcat.slug || String(subcat.id || '');
-              const isSelected = selectedSubcatSlugs.includes(subSlug);
+              const idStr = subcat.id !== undefined && subcat.id !== null ? String(subcat.id).toLowerCase() : '';
+              const slugStr = subcat.slug ? String(subcat.slug).toLowerCase() : '';
+              const isSelected = selectedSubcatTokens.some((t) => (idStr && t === idStr) || (slugStr && t === slugStr));
               const subName = getLocalizedText(subcat.name, language);
               return (
                 <button
-                  key={subcat.id || subSlug}
-                  onClick={() => handleSubcategoryPillClick(subSlug)}
+                  key={subcat.id || subcat.slug || subName}
+                  onClick={() => handleSubcategoryPillClick(subcat)}
                   className={`text-xs font-black px-4 py-2 rounded-2xl border transition-all shadow-2xs ${
                     isSelected
                       ? 'bg-primary border-primary text-white shadow-xs'

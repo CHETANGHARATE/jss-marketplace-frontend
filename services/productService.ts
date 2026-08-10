@@ -1,11 +1,13 @@
 import { apiClient } from './apiClient';
 import { ApiProduct, ApiResponse, PaginatedApiResponse } from '../types/api';
 import { Product } from '../types';
+import { getLocalizedText } from '../utils/translation';
 
 export interface ProductQueryParams {
   category?: string;
   category_id?: number | string;
   subcategory?: string;
+  subcategory_id?: number | string;
   brand?: string;
   min_price?: number;
   max_price?: number;
@@ -31,12 +33,21 @@ export function mapApiProductToProduct(apiProd: ApiProduct): Product {
     ? apiProd.category.name
     : (apiProd.category?.slug || 'general');
 
+  const categoryId = apiProd.category_id || apiProd.category?.id;
+  const subcategoryId = apiProd.subcategory_id || apiProd.subcategory?.id || (apiProd as any).child_category_id || (apiProd as any).child_category?.id;
+  const subcategorySlug = apiProd.subcategory?.slug || (apiProd as any).child_category?.slug || '';
+
+  let subcategoryName = '';
+  if (typeof apiProd.subcategory === 'string') {
+    subcategoryName = apiProd.subcategory;
+  } else if (apiProd.subcategory && typeof apiProd.subcategory === 'object') {
+    subcategoryName = getLocalizedText(apiProd.subcategory.name, 'en') || apiProd.subcategory.slug || '';
+  } else if ((apiProd as any).child_category) {
+    subcategoryName = getLocalizedText((apiProd as any).child_category.name, 'en') || (apiProd as any).child_category.slug || '';
+  }
+
   const imgUrl = apiProd.image || apiProd.images?.[0] || '/placeholder-product.png';
   const stockStat = (apiProd.stockStatus || apiProd.stock_status || 'in_stock') as any;
-
-  const subcategoryName = typeof (apiProd as any).subcategory === 'string'
-    ? (apiProd as any).subcategory
-    : ((apiProd as any).subcategory?.name || (apiProd as any).subcategory?.slug || (apiProd as any).sub_category?.name || '');
 
   return {
     id: String(apiProd.id),
@@ -52,7 +63,10 @@ export function mapApiProductToProduct(apiProd: ApiProduct): Product {
       description: 'Verified marketplace vendor seller'
     },
     category: categorySlug,
+    categoryId: categoryId,
     subcategory: subcategoryName,
+    subcategoryId: subcategoryId,
+    subcategorySlug: subcategorySlug,
     originalPrice,
     offerPrice,
     discountPercent,
@@ -128,7 +142,12 @@ export const productService = {
   },
 
   async getRelatedProducts(productId: number | string): Promise<ApiProduct[]> {
-    const response = await apiClient.get<ApiResponse<ApiProduct[]>>(`/products/${productId}/related`);
-    return response.data.data;
-  },
+    try {
+      const response = await apiClient.get<ApiResponse<ApiProduct[]>>(`/products/${productId}/related`);
+      return response.data.data || [];
+    } catch {
+      const res = await apiClient.get<PaginatedApiResponse<ApiProduct>>('/products', { params: { per_page: 4 } });
+      return res.data?.data || [];
+    }
+  }
 };
