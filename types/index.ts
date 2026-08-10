@@ -60,6 +60,7 @@ export interface CartItem {
 export interface FilterParams {
   category?: string;
   subcategory?: string;
+  subcategories?: string[];
   brand?: string[];
   minPrice?: number;
   maxPrice?: number;

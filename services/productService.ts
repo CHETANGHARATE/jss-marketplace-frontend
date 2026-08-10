@@ -34,6 +34,10 @@ export function mapApiProductToProduct(apiProd: ApiProduct): Product {
   const imgUrl = apiProd.image || apiProd.images?.[0] || '/placeholder-product.png';
   const stockStat = (apiProd.stockStatus || apiProd.stock_status || 'in_stock') as any;
 
+  const subcategoryName = typeof (apiProd as any).subcategory === 'string'
+    ? (apiProd as any).subcategory
+    : ((apiProd as any).subcategory?.name || (apiProd as any).subcategory?.slug || (apiProd as any).sub_category?.name || '');
+
   return {
     id: String(apiProd.id),
     slug: apiProd.slug || String(apiProd.id),
@@ -48,7 +52,7 @@ export function mapApiProductToProduct(apiProd: ApiProduct): Product {
       description: 'Verified marketplace vendor seller'
     },
     category: categorySlug,
-    subcategory: '',
+    subcategory: subcategoryName,
     originalPrice,
     offerPrice,
     discountPercent,

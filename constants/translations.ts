@@ -191,6 +191,10 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // ── Category Page & Filters ─────────────────────────────────────────────
     'cat.filter_by': 'Filters',
+    'cat.filter_subcategory': 'Subcategory',
+    'cat.all_subcategories': 'All Subcategories',
+    'cat.show_more': 'Show More',
+    'cat.show_less': 'Show Less',
     'cat.price_range': 'Price Range',
     'cat.min': 'Min',
     'cat.max': 'Max',
@@ -450,6 +454,10 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // ── Category Page & Filters ─────────────────────────────────────────────
     'cat.filter_by': 'फ़िल्टर',
+    'cat.filter_subcategory': 'उप-श्रेणी',
+    'cat.all_subcategories': 'सभी उप-श्रेणियाँ',
+    'cat.show_more': 'और देखें',
+    'cat.show_less': 'कम देखें',
     'cat.price_range': 'मूल्य सीमा',
     'cat.min': 'न्यूनतम',
     'cat.max': 'अधिकतम',
@@ -709,6 +717,10 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // ── Category Page & Filters ─────────────────────────────────────────────
     'cat.filter_by': 'फिल्टर्स',
+    'cat.filter_subcategory': 'उप-श्रेणी',
+    'cat.all_subcategories': 'सर्व उप-श्रेणी',
+    'cat.show_more': 'अधिक पहा',
+    'cat.show_less': 'कमी पहा',
     'cat.price_range': 'किंमत श्रेणी',
     'cat.min': 'किमान',
     'cat.max': 'कमाल',

@@ -1,12 +1,19 @@
 'use client';
 
-import React from 'react';
-import { Star, RotateCcw, ShieldCheck, Tag, Sparkles, Filter } from 'lucide-react';
+import React, { useState } from 'react';
+import { Star, RotateCcw, ShieldCheck, Tag, Filter, ChevronDown, ChevronUp } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { getLocalizedText } from '../utils/translation';
 import { FilterParams } from '../types';
 
+export interface SubcategoryItem {
+  id?: number | string;
+  slug: string;
+  name: any;
+}
+
 interface FiltersProps {
-  subcategories: string[];
+  subcategories: (string | SubcategoryItem)[];
   popularBrands: string[];
   activeFilters: FilterParams;
   onFilterChange: (newFilters: FilterParams) => void;
@@ -18,7 +25,21 @@ export const Filters: React.FC<FiltersProps> = ({
   activeFilters,
   onFilterChange,
 }) => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const [isSubcatsExpanded, setIsSubcatsExpanded] = useState<boolean>(false);
+
+  // Normalize subcategory items
+  const normalizedSubcats: { slug: string; displayName: string }[] = (subcategories || []).map((item) => {
+    if (typeof item === 'string') {
+      return { slug: item, displayName: item };
+    }
+    const displayName = getLocalizedText(item.name, language) || item.slug || String(item.id || '');
+    return { slug: item.slug || displayName, displayName };
+  });
+
+  // Selected subcategories array
+  const selectedSubcatSlugs = activeFilters.subcategories || (activeFilters.subcategory ? [activeFilters.subcategory] : []);
+  const isAllSubcategoriesSelected = selectedSubcatSlugs.length === 0;
 
   const handlePriceChange = (field: 'minPrice' | 'maxPrice', val: string) => {
     const numVal = val === '' ? undefined : Number(val);
@@ -28,11 +49,26 @@ export const Filters: React.FC<FiltersProps> = ({
     });
   };
 
-  const handleSubcatToggle = (subcat: string) => {
-    const isSelected = activeFilters.subcategory === subcat;
+  const handleAllSubcategoriesToggle = () => {
     onFilterChange({
       ...activeFilters,
-      subcategory: isSelected ? undefined : subcat,
+      subcategory: undefined,
+      subcategories: undefined,
+    });
+  };
+
+  const handleSubcategoryToggle = (slug: string) => {
+    let updatedSlugs: string[];
+    if (selectedSubcatSlugs.includes(slug)) {
+      updatedSlugs = selectedSubcatSlugs.filter((s) => s !== slug);
+    } else {
+      updatedSlugs = [...selectedSubcatSlugs, slug];
+    }
+
+    onFilterChange({
+      ...activeFilters,
+      subcategory: updatedSlugs.length === 1 ? updatedSlugs[0] : undefined,
+      subcategories: updatedSlugs.length > 0 ? updatedSlugs : undefined,
     });
   };
 
@@ -76,6 +112,9 @@ export const Filters: React.FC<FiltersProps> = ({
     });
   };
 
+  const visibleSubcats = isSubcatsExpanded ? normalizedSubcats : normalizedSubcats.slice(0, 5);
+  const hasMoreSubcats = normalizedSubcats.length > 5;
+
   return (
     <div className="space-y-7 bg-card text-card-foreground border border-border-custom/80 p-6 rounded-3xl shadow-xs">
       
@@ -94,31 +133,8 @@ export const Filters: React.FC<FiltersProps> = ({
         </button>
       </div>
 
-      {/* Subcategories */}
-      {subcategories.length > 0 && (
-        <div className="space-y-3">
-          <h4 className="font-extrabold text-xs uppercase tracking-wider text-muted-custom">Subcategories</h4>
-          <div className="space-y-2">
-            {subcategories.map((subcat) => (
-              <label
-                key={subcat}
-                className="flex items-center gap-2.5 text-xs font-medium text-muted-custom hover:text-foreground cursor-pointer transition-colors"
-              >
-                <input
-                  type="checkbox"
-                  checked={activeFilters.subcategory === subcat}
-                  onChange={() => handleSubcatToggle(subcat)}
-                  className="h-4 w-4 rounded-md border-border-custom text-primary focus:ring-primary/20 accent-primary cursor-pointer"
-                />
-                <span>{subcat}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Price Filter */}
-      <div className="space-y-3 pt-4 border-t border-border-custom/80">
+      <div className="space-y-3">
         <h4 className="font-extrabold text-xs uppercase tracking-wider text-muted-custom">{t('cat.price_range')}</h4>
         <div className="flex items-center gap-2">
           <div className="flex-1">
@@ -150,29 +166,6 @@ export const Filters: React.FC<FiltersProps> = ({
           </div>
         </div>
       </div>
-
-      {/* Brand Filters */}
-      {popularBrands.length > 0 && (
-        <div className="space-y-3 pt-4 border-t border-border-custom/80">
-          <h4 className="font-extrabold text-xs uppercase tracking-wider text-muted-custom">{t('cat.brand_filter')}</h4>
-          <div className="space-y-2">
-            {popularBrands.map((brand) => (
-              <label
-                key={brand}
-                className="flex items-center gap-2.5 text-xs font-medium text-muted-custom hover:text-foreground cursor-pointer transition-colors"
-              >
-                <input
-                  type="checkbox"
-                  checked={(activeFilters.brand || []).includes(brand)}
-                  onChange={() => handleBrandToggle(brand)}
-                  className="h-4 w-4 rounded-md border-border-custom text-primary focus:ring-primary/20 accent-primary cursor-pointer"
-                />
-                <span>{brand}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Customer Rating */}
       <div className="space-y-3 pt-4 border-t border-border-custom/80">
@@ -209,6 +202,71 @@ export const Filters: React.FC<FiltersProps> = ({
         </div>
       </div>
 
+      {/* Dynamic Subcategory Filter (Placed between Customer Rating and Discount Percentage) */}
+      {normalizedSubcats.length > 0 && (
+        <div className="space-y-3 pt-4 border-t border-border-custom/80">
+          <h4 className="font-extrabold text-xs uppercase tracking-wider text-muted-custom flex items-center justify-between">
+            <span>{t('cat.filter_subcategory')}</span>
+            <span className="text-[10px] bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-full font-black">
+              {normalizedSubcats.length}
+            </span>
+          </h4>
+
+          <div className="space-y-2">
+            {/* All Subcategories Option */}
+            <label className="flex items-center gap-2.5 text-xs font-semibold text-foreground hover:text-primary cursor-pointer transition-colors">
+              <input
+                type="checkbox"
+                checked={isAllSubcategoriesSelected}
+                onChange={handleAllSubcategoriesToggle}
+                className="h-4 w-4 rounded-md border-border-custom text-primary focus:ring-primary/20 accent-primary cursor-pointer"
+              />
+              <span>{t('cat.all_subcategories')}</span>
+            </label>
+
+            {/* Individual Subcategories List */}
+            {visibleSubcats.map((subcat) => {
+              const isChecked = selectedSubcatSlugs.includes(subcat.slug);
+              return (
+                <label
+                  key={subcat.slug}
+                  className="flex items-center gap-2.5 text-xs font-medium text-muted-custom hover:text-foreground cursor-pointer transition-colors"
+                >
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={() => handleSubcategoryToggle(subcat.slug)}
+                    className="h-4 w-4 rounded-md border-border-custom text-primary focus:ring-primary/20 accent-primary cursor-pointer"
+                  />
+                  <span className={isChecked ? 'font-bold text-primary' : ''}>{subcat.displayName}</span>
+                </label>
+              );
+            })}
+
+            {/* Show More / Show Less Collapsible Toggle */}
+            {hasMoreSubcats && (
+              <button
+                type="button"
+                onClick={() => setIsSubcatsExpanded(!isSubcatsExpanded)}
+                className="text-xs font-black text-primary hover:text-primary-hover flex items-center gap-1 pt-1 transition-colors"
+              >
+                {isSubcatsExpanded ? (
+                  <>
+                    <span>{t('cat.show_less')}</span>
+                    <ChevronUp size={13} />
+                  </>
+                ) : (
+                  <>
+                    <span>{t('cat.show_more')} (+{normalizedSubcats.length - 5})</span>
+                    <ChevronDown size={13} />
+                  </>
+                )}
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Discount Percentage */}
       <div className="space-y-3 pt-4 border-t border-border-custom/80">
         <h4 className="font-extrabold text-xs uppercase tracking-wider text-muted-custom">{t('cat.discount_filter')}</h4>
@@ -234,6 +292,29 @@ export const Filters: React.FC<FiltersProps> = ({
           ))}
         </div>
       </div>
+
+      {/* Brand Filters */}
+      {popularBrands.length > 0 && (
+        <div className="space-y-3 pt-4 border-t border-border-custom/80">
+          <h4 className="font-extrabold text-xs uppercase tracking-wider text-muted-custom">{t('cat.brand_filter')}</h4>
+          <div className="space-y-2">
+            {popularBrands.map((brand) => (
+              <label
+                key={brand}
+                className="flex items-center gap-2.5 text-xs font-medium text-muted-custom hover:text-foreground cursor-pointer transition-colors"
+              >
+                <input
+                  type="checkbox"
+                  checked={(activeFilters.brand || []).includes(brand)}
+                  onChange={() => handleBrandToggle(brand)}
+                  className="h-4 w-4 rounded-md border-border-custom text-primary focus:ring-primary/20 accent-primary cursor-pointer"
+                />
+                <span>{brand}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Availability (Stock Status) */}
       <div className="space-y-3 pt-4 border-t border-border-custom/80">

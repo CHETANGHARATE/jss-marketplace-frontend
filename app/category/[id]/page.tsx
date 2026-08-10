@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, use } from 'react';
+import React, { useState, use, useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import {
@@ -33,6 +33,11 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   const { id: categorySlug } = use(params);
   const searchParams = useSearchParams();
   const initialSearch = searchParams.get('search') || '';
+  const initialSubcatParam = searchParams.get('subcategory') || searchParams.get('subcategories') || '';
+  
+  const initialSubcategories = initialSubcatParam
+    ? initialSubcatParam.split(',').map((s) => s.trim()).filter(Boolean)
+    : [];
 
   const { language, t } = useLanguage();
   const {
@@ -56,9 +61,24 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     category: categorySlug,
     sortBy: 'popularity',
     searchQuery: initialSearch,
+    subcategories: initialSubcategories,
+    subcategory: initialSubcategories.length === 1 ? initialSubcategories[0] : undefined,
   });
 
-  React.useEffect(() => {
+  // Sync selected subcategories to URL query state so page refreshes preserve state
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      if (filters.subcategories && filters.subcategories.length > 0) {
+        url.searchParams.set('subcategory', filters.subcategories.join(','));
+      } else {
+        url.searchParams.delete('subcategory');
+      }
+      window.history.replaceState({}, '', url.toString());
+    }
+  }, [filters.subcategories]);
+
+  useEffect(() => {
     const loadProducts = async () => {
       setLoading(true);
       try {
@@ -147,14 +167,24 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   };
 
   const handleSubcategoryPillClick = (subcatSlug: string) => {
+    const currentSlugs = filters.subcategories || (filters.subcategory ? [filters.subcategory] : []);
+    const isSelected = currentSlugs.includes(subcatSlug);
+    const updatedSlugs = isSelected
+      ? currentSlugs.filter((s) => s !== subcatSlug)
+      : [...currentSlugs, subcatSlug];
+
     setFilters((prev) => ({
       ...prev,
-      subcategory: prev.subcategory === subcatSlug ? undefined : subcatSlug,
+      subcategory: updatedSlugs.length === 1 ? updatedSlugs[0] : undefined,
+      subcategories: updatedSlugs.length > 0 ? updatedSlugs : undefined,
     }));
     setCurrentPage(1);
   };
 
   const relatedCats = allCategories.filter((c) => c.slug !== categorySlug).slice(0, 4);
+
+  const subcategoryList = category.children || (category as any).subcategories || [];
+  const selectedSubcatSlugs = filters.subcategories || (filters.subcategory ? [filters.subcategory] : []);
 
   return (
     <div className="space-y-8 sm:space-y-10">
@@ -170,17 +200,18 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       <CategoryHeader category={category} />
 
       {/* Subcategory Pills Carousel */}
-      {category.children && category.children.length > 0 && (
+      {subcategoryList.length > 0 && (
         <div className="space-y-3">
           <h3 className="font-extrabold text-xs uppercase tracking-wider text-muted-custom">Explore Subcategories</h3>
           <div className="flex flex-wrap gap-2.5">
-            {category.children.map((subcat) => {
-              const isSelected = filters.subcategory === subcat.slug;
+            {subcategoryList.map((subcat: any) => {
+              const subSlug = subcat.slug || String(subcat.id || '');
+              const isSelected = selectedSubcatSlugs.includes(subSlug);
               const subName = getLocalizedText(subcat.name, language);
               return (
                 <button
-                  key={subcat.id}
-                  onClick={() => handleSubcategoryPillClick(subcat.slug)}
+                  key={subcat.id || subSlug}
+                  onClick={() => handleSubcategoryPillClick(subSlug)}
                   className={`text-xs font-black px-4 py-2 rounded-2xl border transition-all shadow-2xs ${
                     isSelected
                       ? 'bg-primary border-primary text-white shadow-xs'
@@ -201,7 +232,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         {/* Sidebar Filters */}
         <div className="lg:col-span-1">
           <Filters
-            subcategories={category.children?.map(c => getLocalizedText(c.name, language)) || []}
+            subcategories={subcategoryList}
             popularBrands={[]}
             activeFilters={filters}
             onFilterChange={(newFilters) => {

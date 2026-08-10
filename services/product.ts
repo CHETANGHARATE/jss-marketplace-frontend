@@ -6,7 +6,13 @@ export const getProducts = async (filters?: FilterParams): Promise<Product[]> =>
     const apiParams: any = {};
     if (filters?.searchQuery) apiParams.search = filters.searchQuery;
     if (filters?.category) apiParams.category = filters.category;
-    if (filters?.subcategory) apiParams.subcategory = filters.subcategory;
+
+    if (filters?.subcategories && filters.subcategories.length > 0) {
+      apiParams.subcategory = filters.subcategories.join(',');
+    } else if (filters?.subcategory) {
+      apiParams.subcategory = filters.subcategory;
+    }
+
     if (filters?.brand && filters.brand.length > 0) apiParams.brand = filters.brand.join(',');
     if (filters?.minPrice !== undefined) apiParams.min_price = filters.minPrice;
     if (filters?.maxPrice !== undefined) apiParams.max_price = filters.maxPrice;
@@ -18,7 +24,20 @@ export const getProducts = async (filters?: FilterParams): Promise<Product[]> =>
 
     const response = await productService.getProducts(apiParams);
     const apiProducts = response.data || [];
-    return apiProducts.map(mapApiProductToProduct);
+    let mapped = apiProducts.map(mapApiProductToProduct);
+
+    // Client-side fallback OR-logic filtering for selected subcategories
+    const selectedSubs = filters?.subcategories || (filters?.subcategory ? [filters.subcategory] : []);
+    if (selectedSubs.length > 0) {
+      const selectedSubsLower = selectedSubs.map((s) => s.toLowerCase().trim());
+      mapped = mapped.filter((p) => {
+        if (!p.subcategory) return true;
+        const pSub = p.subcategory.toLowerCase().trim();
+        return selectedSubsLower.some((s) => pSub.includes(s) || s.includes(pSub));
+      });
+    }
+
+    return mapped;
   } catch (err) {
     console.error('Error fetching live products in getProducts:', err);
     return [];
