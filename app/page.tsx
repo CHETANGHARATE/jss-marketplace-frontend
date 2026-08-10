@@ -8,7 +8,6 @@ import { Clock, ArrowRight } from 'lucide-react';
 import { HeroBannerSlider } from '../components/HeroBannerSlider';
 import { HomeCategoryStrip } from '../components/HomeCategoryStrip';
 import { HomePromoBanners } from '../components/HomePromoBanners';
-import { HomeServiceStrip } from '../components/HomeServiceStrip';
 import { FlashSaleCarousel } from '../components/FlashSaleCarousel';
 import { WhyChooseUs } from '../components/WhyChooseUs';
 import { HomeFaqSection } from '../components/HomeFaqSection';
@@ -119,9 +118,6 @@ export default function HomePage() {
 
       {/* ─── 7. FAQ Section ─── */}
       <HomeFaqSection />
-
-      {/* ─── 8. Trust Benefits Section (Single remaining instance above Footer) ─── */}
-      <HomeServiceStrip />
 
       {quickViewProductId && (
         <ProductQuickView
