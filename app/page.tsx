@@ -99,17 +99,14 @@ export default function HomePage() {
       {/* ─── 3. Promotional Banners (4-grid) ─── */}
       <HomePromoBanners />
 
-      {/* ─── 4. Service Strip (trust signals) ─── */}
-      <HomeServiceStrip />
-
-      {/* ─── 5. Today's Deals & Flash Sales (Auto Carousel) ─── */}
+      {/* ─── 4. Today's Deals & Flash Sales (Auto Carousel) ─── */}
       <FlashSaleCarousel
         products={trendingProducts}
         onQuickView={setQuickViewProductId}
         timeLeft={timeLeft}
       />
 
-      {/* ─── 6. Featured Categories & Products Showcase ─── */}
+      {/* ─── 5. Featured Categories & Products Showcase ─── */}
       {categories.length > 0 && (
         <FeaturedCategories
           categories={categories}
@@ -117,11 +114,14 @@ export default function HomePage() {
         />
       )}
 
-      {/* ─── 7. Why Choose JSS Marketplace ─── */}
+      {/* ─── 6. Why Choose JSS Marketplace ─── */}
       <WhyChooseUs />
 
-      {/* ─── 8. FAQ Section ─── */}
+      {/* ─── 7. FAQ Section ─── */}
       <HomeFaqSection />
+
+      {/* ─── 8. Trust Benefits Section (Single remaining instance above Footer) ─── */}
+      <HomeServiceStrip />
 
       {quickViewProductId && (
         <ProductQuickView

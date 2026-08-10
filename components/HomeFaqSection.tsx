@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import {
-  HelpCircle, Phone, ShieldCheck, Truck, Award, Headphones,
+  HelpCircle, Phone, ShieldCheck, Headphones,
   ChevronUp, ChevronDown, Plus, Minus, Lightbulb
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -20,29 +20,6 @@ const faqs: FaqItem[] = [
   { id: 'payment', questionKey: 'home.faq_q2', answerKey: 'home.faq_a2' },
   { id: 'seller',  questionKey: 'home.faq_q3', answerKey: 'home.faq_a3' },
   { id: 'ship',    questionKey: 'home.faq_q4', answerKey: 'home.faq_a4' },
-];
-
-const trustBadges = [
-  {
-    icon: ShieldCheck,
-    labelKey: 'home.faq_badge_secure',
-    iconClass: 'bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 border-blue-200/80 dark:border-blue-500/30'
-  },
-  {
-    icon: Truck,
-    labelKey: 'home.faq_badge_delivery',
-    iconClass: 'bg-orange-50 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400 border-orange-200/80 dark:border-orange-500/30'
-  },
-  {
-    icon: Award,
-    labelKey: 'home.faq_badge_trusted',
-    iconClass: 'bg-purple-50 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 border-purple-200/80 dark:border-purple-500/30'
-  },
-  {
-    icon: Headphones,
-    labelKey: 'home.faq_badge_support',
-    iconClass: 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-200/80 dark:border-emerald-500/30'
-  },
 ];
 
 export const HomeFaqSection: React.FC = () => {
@@ -177,28 +154,6 @@ export const HomeFaqSection: React.FC = () => {
                 </div>
               );
             })}
-
-            {/* Bottom Trust/Benefit Badges Bar */}
-            <div className="bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-5 mt-4 shadow-2xs">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {trustBadges.map((badge, i) => {
-                  const Icon = badge.icon;
-                  return (
-                    <div key={i} className="flex flex-col items-center text-center gap-2 p-2">
-                      <div
-                        className={`w-11 sm:w-12 h-11 sm:h-12 rounded-2xl flex items-center justify-center border shadow-2xs ${badge.iconClass}`}
-                      >
-                        <Icon size={24} />
-                      </div>
-                      <span className="text-xs font-black text-slate-900 dark:text-white leading-tight">
-                        {t(badge.labelKey)}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
           </div>
 
         </div>
