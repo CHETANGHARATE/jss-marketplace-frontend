@@ -9,9 +9,7 @@ import {
   ChevronDown,
   Sparkles,
   ArrowRight,
-  X,
-  Layers,
-  ShoppingBag
+  Layers
 } from 'lucide-react';
 import { useCategories } from '../hooks/useCategories';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -20,16 +18,6 @@ import { getCategoryUrl } from '../utils/categoryUtils';
 import { getCategoryVisualConfig } from '../utils/categoryVisuals';
 import { getSubcategoryImage } from '../utils/categoryImages';
 import { ApiCategory } from '../types/api';
-
-// Soft pastel background tints for subcategory cards to match reference design
-const CARD_TINT_CLASSES = [
-  'bg-sky-50/50 hover:bg-white dark:bg-slate-900/60 dark:hover:bg-slate-900 border-sky-100/80 dark:border-slate-800',
-  'bg-amber-50/50 hover:bg-white dark:bg-slate-900/60 dark:hover:bg-slate-900 border-amber-100/80 dark:border-slate-800',
-  'bg-emerald-50/50 hover:bg-white dark:bg-slate-900/60 dark:hover:bg-slate-900 border-emerald-100/80 dark:border-slate-800',
-  'bg-purple-50/50 hover:bg-white dark:bg-slate-900/60 dark:hover:bg-slate-900 border-purple-100/80 dark:border-slate-800',
-  'bg-rose-50/50 hover:bg-white dark:bg-slate-900/60 dark:hover:bg-slate-900 border-rose-100/80 dark:border-slate-800',
-  'bg-indigo-50/50 hover:bg-white dark:bg-slate-900/60 dark:hover:bg-slate-900 border-indigo-100/80 dark:border-slate-800',
-];
 
 export function MegaMenu() {
   const router = useRouter();
@@ -41,7 +29,7 @@ export function MegaMenu() {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Default selected category when categories load
+  // Set default selected category when categories load
   useEffect(() => {
     if (categories.length > 0 && selectedCatId === null) {
       setSelectedCatId(categories[0].id);
@@ -114,22 +102,22 @@ export function MegaMenu() {
         <>
           {/* Backdrop Blur Overlay */}
           <div
-            className="fixed inset-0 top-[120px] bg-slate-950/30 backdrop-blur-xs z-40 transition-opacity animate-in fade-in"
+            className="fixed inset-0 top-[120px] bg-slate-900/30 backdrop-blur-xs z-40 transition-opacity animate-in fade-in"
             onClick={() => setIsOpen(false)}
           />
 
           {/* Desktop & Tablet Mega Menu Container */}
-          <div className="absolute top-full left-0 mt-3 w-[92vw] max-w-[1240px] bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-2xl rounded-3xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-200">
+          <div className="absolute top-full left-0 mt-3 w-[92vw] max-w-[1240px] bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xl rounded-3xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-200">
             {isLoading ? (
-              <div className="py-20 text-center text-xs font-bold text-slate-500 flex items-center justify-center gap-3">
+              <div className="py-20 text-center text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center justify-center gap-3">
                 <Sparkles className="w-5 h-5 animate-spin text-blue-600" />
                 <span>{t('nav.loading_categories')}...</span>
               </div>
             ) : (
               <div className="grid grid-cols-12 min-h-[500px] max-h-[76vh]">
                 
-                {/* ─── LEFT COLUMN: CATEGORIES SIDEBAR ─── */}
-                <div className="col-span-4 lg:col-span-3 border-r border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/40 p-3 sm:p-4 space-y-1 overflow-y-auto max-h-[76vh] scrollbar-thin">
+                {/* ─── LEFT COLUMN: CATEGORIES SIDEBAR (LIGHT IN LIGHT MODE, DARK IN DARK MODE) ─── */}
+                <div className="col-span-4 lg:col-span-3 border-r border-slate-200/80 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/60 p-3 sm:p-4 space-y-1 overflow-y-auto max-h-[76vh] scrollbar-thin">
                   <div className="px-3 py-2 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center justify-between">
                     <span>{t('nav.categories')}</span>
                     <span className="text-blue-600 dark:text-blue-400 font-extrabold">{categories.length}</span>
@@ -148,12 +136,12 @@ export function MegaMenu() {
                         onClick={() => setSelectedCatId(cat.id)}
                         className={`w-full flex items-center justify-between px-3 py-2.5 rounded-2xl text-xs font-semibold transition-all text-left cursor-pointer group ${
                           isSelected
-                            ? 'bg-blue-50/90 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200/80 dark:border-blue-800/70 font-bold shadow-2xs'
+                            ? 'bg-blue-50/90 text-blue-600 dark:bg-blue-950/70 dark:text-blue-400 border border-blue-200/90 dark:border-blue-800/80 font-bold shadow-2xs'
                             : 'text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-900 hover:text-slate-900 dark:hover:text-white border border-transparent'
                         }`}
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          {/* Colorful Rounded Square Icon Container */}
+                          {/* Category Icon Container */}
                           <div
                             className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border transition-transform duration-200 group-hover:scale-105 ${
                               isSelected
@@ -181,10 +169,10 @@ export function MegaMenu() {
                   {activeCategory ? (
                     <>
                       {/* Active Category Header Bar */}
-                      <div className="flex items-center justify-between pb-5 border-b border-slate-100 dark:border-slate-800/80 gap-4">
+                      <div className="flex items-center justify-between pb-5 border-b border-slate-200/80 dark:border-slate-800 gap-4">
                         <div className="flex items-center gap-4">
-                          {/* Large Rounded Category Icon Container */}
-                          <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200/60 dark:border-blue-800/60 flex items-center justify-center shrink-0 shadow-2xs">
+                          {/* Large Category Icon Container */}
+                          <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 border border-blue-200/60 dark:border-blue-800/60 flex items-center justify-center shrink-0 shadow-2xs">
                             <ActiveCategoryIcon className="w-7 h-7" />
                           </div>
 
@@ -209,7 +197,7 @@ export function MegaMenu() {
                         </button>
                       </div>
 
-                      {/* Subcategories Visual Grid matching Reference Screenshot 2 */}
+                      {/* Subcategories Grid */}
                       <div className="space-y-4">
                         <h4 className="text-[11px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                           Subcategories & Featured Collections
@@ -220,19 +208,18 @@ export function MegaMenu() {
                             const apiSubcats = activeCategory.children || activeCategory.subcategories || [];
                             const activeCatSlug = String(activeCategory.slug || activeCategory.id || '').toLowerCase();
                             
-                            // 1. If API provides subcategories
+                            // Render API subcategories if present
                             if (apiSubcats.length > 0) {
                               return apiSubcats.map((sub: any, idx: number) => {
                                 const subName = getLocalizedText(sub.name, language);
                                 const subSlug = sub.slug || String(sub.id);
                                 const imageUrl = getSubcategoryImage(subSlug, subName, activeCatSlug);
-                                const tintClass = CARD_TINT_CLASSES[idx % CARD_TINT_CLASSES.length];
 
                                 return (
                                   <div
                                     key={sub.id || sub.slug || idx}
                                     onClick={() => handleSubcategoryClick(activeCategory, subSlug)}
-                                    className={`group relative cursor-pointer rounded-2xl border p-4 transition-all duration-200 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700 flex items-center justify-between overflow-hidden ${tintClass}`}
+                                    className="group relative cursor-pointer rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white hover:bg-blue-50/40 dark:bg-slate-900/90 dark:hover:bg-slate-800/80 p-4 transition-all duration-200 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700 flex items-center justify-between overflow-hidden"
                                   >
                                     {/* Left Text Block */}
                                     <div className="min-w-0 flex-1 pr-3 space-y-1.5 z-10">
@@ -246,12 +233,16 @@ export function MegaMenu() {
                                     </div>
 
                                     {/* Right Cutout Image Container */}
-                                    <div className="w-28 sm:w-36 h-24 shrink-0 flex items-center justify-center relative overflow-hidden rounded-xl bg-white/70 dark:bg-slate-950/50 border border-slate-100 dark:border-slate-800 p-1">
+                                    <div className="w-28 sm:w-36 h-24 shrink-0 flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/80 p-1">
                                       <img
                                         src={imageUrl}
                                         alt={subName}
                                         className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-2xs"
                                         loading="lazy"
+                                        onError={(e) => {
+                                          // Neutral fallback if image fails to load
+                                          (e.target as HTMLImageElement).src = '/categories/kitchen.webp';
+                                        }}
                                       />
                                     </div>
                                   </div>
@@ -259,17 +250,16 @@ export function MegaMenu() {
                               });
                             }
 
-                            // 2. Fallback to default visual presets
+                            // Fallback to default visual presets if no API subcategories exist
                             return activeVisualConfig.defaultSubcategories.map((preset, idx) => {
                               const subSlug = preset.slug;
                               const imageUrl = getSubcategoryImage(subSlug, preset.name, activeCatSlug);
-                              const tintClass = CARD_TINT_CLASSES[idx % CARD_TINT_CLASSES.length];
 
                               return (
                                 <div
                                   key={preset.slug || idx}
                                   onClick={() => handleSubcategoryClick(activeCategory, preset.slug)}
-                                  className={`group relative cursor-pointer rounded-2xl border p-4 transition-all duration-200 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700 flex items-center justify-between overflow-hidden ${tintClass}`}
+                                  className="group relative cursor-pointer rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white hover:bg-blue-50/40 dark:bg-slate-900/90 dark:hover:bg-slate-800/80 p-4 transition-all duration-200 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700 flex items-center justify-between overflow-hidden"
                                 >
                                   {/* Left Text Block */}
                                   <div className="min-w-0 flex-1 pr-3 space-y-1.5 z-10">
@@ -283,12 +273,15 @@ export function MegaMenu() {
                                   </div>
 
                                   {/* Right Cutout Image Container */}
-                                  <div className="w-28 sm:w-36 h-24 shrink-0 flex items-center justify-center relative overflow-hidden rounded-xl bg-white/70 dark:bg-slate-950/50 border border-slate-100 dark:border-slate-800 p-1">
+                                  <div className="w-28 sm:w-36 h-24 shrink-0 flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/80 p-1">
                                     <img
                                       src={imageUrl}
                                       alt={preset.name}
                                       className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-2xs"
                                       loading="lazy"
+                                      onError={(e) => {
+                                        (e.target as HTMLImageElement).src = '/categories/kitchen.webp';
+                                      }}
                                     />
                                   </div>
                                 </div>
@@ -299,7 +292,7 @@ export function MegaMenu() {
                       </div>
                     </>
                   ) : (
-                    <div className="py-20 text-center text-xs font-bold text-slate-400">
+                    <div className="py-20 text-center text-xs font-bold text-slate-400 dark:text-slate-500">
                       Select a category to explore its collections
                     </div>
                   )}
