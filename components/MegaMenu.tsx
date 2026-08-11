@@ -81,23 +81,23 @@ export function MegaMenu() {
 
   return (
     <div ref={containerRef} className="relative">
-      {/* ─── 1. ALL CATEGORIES BUTTON TRIGGER ─── */}
+      {/* ─── 1. ALL CATEGORIES BUTTON TRIGGER (REDESIGNED: STUNNING VIBRANT BLUE PRIMARY) ─── */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-label="Toggle All Categories Mega Menu"
-        className={`flex items-center gap-2.5 px-4 py-2.5 rounded-2xl font-bold text-xs transition-all duration-200 shadow-2xs border cursor-pointer ${
+        className={`flex items-center gap-2.5 px-4.5 py-2.5 rounded-2xl font-extrabold text-xs transition-all duration-200 cursor-pointer text-white shadow-xs ${
           isOpen
-            ? 'bg-blue-600 text-white border-blue-600 shadow-md'
-            : 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border-blue-200/60 dark:border-blue-800/60 hover:bg-blue-100 dark:hover:bg-blue-900/60'
+            ? 'bg-gradient-to-r from-blue-700 to-indigo-700 shadow-md ring-2 ring-blue-400/50'
+            : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 hover:shadow-md'
         }`}
       >
-        <Grid className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-90' : ''}`} />
-        <span className="tracking-wide uppercase text-[11px] font-black">{t('nav.all_categories')}</span>
-        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        <Grid className={`w-4 h-4 text-white transition-transform ${isOpen ? 'rotate-90' : ''}`} />
+        <span className="tracking-tight text-xs font-black text-white">{t('nav.all_categories')}</span>
+        <ChevronDown className={`w-3.5 h-3.5 text-white/90 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
-      {/* ─── 2. MEGA MENU DROPDOWN PANEL ─── */}
+      {/* ─── 2. MEGA MENU DROPDOWN PANEL (PURE WHITE IN LIGHT MODE, DARK NAVY IN DARK MODE) ─── */}
       {isOpen && (
         <>
           {/* Backdrop Blur Overlay */}
@@ -107,7 +107,7 @@ export function MegaMenu() {
           />
 
           {/* Desktop & Tablet Mega Menu Container */}
-          <div className="absolute top-full left-0 mt-3 w-[92vw] max-w-[1240px] bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xl rounded-3xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-200">
+          <div className="absolute top-full left-0 mt-3 w-[92vw] max-w-[1240px] bg-white dark:bg-[#0B1428] text-slate-900 dark:text-slate-100 border border-slate-200/90 dark:border-slate-800 shadow-2xl rounded-3xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-200">
             {isLoading ? (
               <div className="py-20 text-center text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center justify-center gap-3">
                 <Sparkles className="w-5 h-5 animate-spin text-blue-600" />
@@ -117,7 +117,7 @@ export function MegaMenu() {
               <div className="grid grid-cols-12 min-h-[500px] max-h-[76vh]">
                 
                 {/* ─── LEFT COLUMN: CATEGORIES SIDEBAR (LIGHT IN LIGHT MODE, DARK IN DARK MODE) ─── */}
-                <div className="col-span-4 lg:col-span-3 border-r border-slate-200/80 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/60 p-3 sm:p-4 space-y-1 overflow-y-auto max-h-[76vh] scrollbar-thin">
+                <div className="col-span-4 lg:col-span-3 border-r border-slate-200/90 dark:border-slate-800/80 bg-slate-50/90 dark:bg-[#060D1E] p-3 sm:p-4 space-y-1 overflow-y-auto max-h-[76vh] scrollbar-thin">
                   <div className="px-3 py-2 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center justify-between">
                     <span>{t('nav.categories')}</span>
                     <span className="text-blue-600 dark:text-blue-400 font-extrabold">{categories.length}</span>
@@ -136,8 +136,8 @@ export function MegaMenu() {
                         onClick={() => setSelectedCatId(cat.id)}
                         className={`w-full flex items-center justify-between px-3 py-2.5 rounded-2xl text-xs font-semibold transition-all text-left cursor-pointer group ${
                           isSelected
-                            ? 'bg-blue-50/90 text-blue-600 dark:bg-blue-950/70 dark:text-blue-400 border border-blue-200/90 dark:border-blue-800/80 font-bold shadow-2xs'
-                            : 'text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-900 hover:text-slate-900 dark:hover:text-white border border-transparent'
+                            ? 'bg-blue-50/90 text-blue-600 border border-blue-200/90 font-bold shadow-2xs dark:bg-blue-950/70 dark:text-blue-400 dark:border-blue-800/80'
+                            : 'text-slate-700 hover:bg-white hover:text-slate-900 border border-transparent dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white'
                         }`}
                       >
                         <div className="flex items-center gap-3 min-w-0">
@@ -165,14 +165,14 @@ export function MegaMenu() {
                 </div>
 
                 {/* ─── RIGHT COLUMN: CATEGORY EXPLORER & SUBCATEGORIES GRID ─── */}
-                <div className="col-span-8 lg:col-span-9 p-6 sm:p-8 space-y-6 overflow-y-auto max-h-[76vh] scrollbar-thin bg-white dark:bg-slate-900">
+                <div className="col-span-8 lg:col-span-9 p-6 sm:p-8 space-y-6 overflow-y-auto max-h-[76vh] scrollbar-thin bg-white dark:bg-[#0B1428]">
                   {activeCategory ? (
                     <>
                       {/* Active Category Header Bar */}
                       <div className="flex items-center justify-between pb-5 border-b border-slate-200/80 dark:border-slate-800 gap-4">
                         <div className="flex items-center gap-4">
                           {/* Large Category Icon Container */}
-                          <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 border border-blue-200/60 dark:border-blue-800/60 flex items-center justify-center shrink-0 shadow-2xs">
+                          <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 border border-blue-200/60 dark:bg-blue-950/60 dark:text-blue-400 dark:border-blue-800/60 flex items-center justify-center shrink-0 shadow-2xs">
                             <ActiveCategoryIcon className="w-7 h-7" />
                           </div>
 
@@ -183,7 +183,7 @@ export function MegaMenu() {
                             <p className="text-xs text-slate-500 dark:text-slate-400 font-medium max-w-xl line-clamp-1">
                               {activeCategory.description
                                 ? getLocalizedText(activeCategory.description, language)
-                                : `Furniture, decor, apparel, and premium products in ${getLocalizedText(activeCategory.name, language)}`}
+                                : `Explore premium collections and products in ${getLocalizedText(activeCategory.name, language)}`}
                             </p>
                           </div>
                         </div>
@@ -219,7 +219,7 @@ export function MegaMenu() {
                                   <div
                                     key={sub.id || sub.slug || idx}
                                     onClick={() => handleSubcategoryClick(activeCategory, subSlug)}
-                                    className="group relative cursor-pointer rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white hover:bg-blue-50/40 dark:bg-slate-900/90 dark:hover:bg-slate-800/80 p-4 transition-all duration-200 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700 flex items-center justify-between overflow-hidden"
+                                    className="group relative cursor-pointer rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-slate-50/70 hover:bg-white dark:bg-slate-900/90 dark:hover:bg-slate-800/80 p-4 transition-all duration-200 hover:shadow-md hover:border-blue-400 dark:hover:border-blue-700 flex items-center justify-between overflow-hidden"
                                   >
                                     {/* Left Text Block */}
                                     <div className="min-w-0 flex-1 pr-3 space-y-1.5 z-10">
@@ -233,15 +233,14 @@ export function MegaMenu() {
                                     </div>
 
                                     {/* Right Cutout Image Container */}
-                                    <div className="w-28 sm:w-36 h-24 shrink-0 flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/80 p-1">
+                                    <div className="w-28 sm:w-36 h-24 shrink-0 flex items-center justify-center relative overflow-hidden rounded-xl bg-white dark:bg-slate-950/80 border border-slate-200/60 dark:border-slate-800/80 p-2 shadow-2xs">
                                       <img
                                         src={imageUrl}
                                         alt={subName}
-                                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-2xs"
+                                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                                         loading="lazy"
                                         onError={(e) => {
-                                          // Neutral fallback if image fails to load
-                                          (e.target as HTMLImageElement).src = '/categories/kitchen.webp';
+                                          (e.target as HTMLImageElement).src = '/images/subcategories/high-yield-seeds.svg';
                                         }}
                                       />
                                     </div>
@@ -259,7 +258,7 @@ export function MegaMenu() {
                                 <div
                                   key={preset.slug || idx}
                                   onClick={() => handleSubcategoryClick(activeCategory, preset.slug)}
-                                  className="group relative cursor-pointer rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white hover:bg-blue-50/40 dark:bg-slate-900/90 dark:hover:bg-slate-800/80 p-4 transition-all duration-200 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700 flex items-center justify-between overflow-hidden"
+                                  className="group relative cursor-pointer rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-slate-50/70 hover:bg-white dark:bg-slate-900/90 dark:hover:bg-slate-800/80 p-4 transition-all duration-200 hover:shadow-md hover:border-blue-400 dark:hover:border-blue-700 flex items-center justify-between overflow-hidden"
                                 >
                                   {/* Left Text Block */}
                                   <div className="min-w-0 flex-1 pr-3 space-y-1.5 z-10">
@@ -273,14 +272,14 @@ export function MegaMenu() {
                                   </div>
 
                                   {/* Right Cutout Image Container */}
-                                  <div className="w-28 sm:w-36 h-24 shrink-0 flex items-center justify-center relative overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/80 p-1">
+                                  <div className="w-28 sm:w-36 h-24 shrink-0 flex items-center justify-center relative overflow-hidden rounded-xl bg-white dark:bg-slate-950/80 border border-slate-200/60 dark:border-slate-800/80 p-2 shadow-2xs">
                                     <img
                                       src={imageUrl}
                                       alt={preset.name}
-                                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-2xs"
+                                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                                       loading="lazy"
                                       onError={(e) => {
-                                        (e.target as HTMLImageElement).src = '/categories/kitchen.webp';
+                                        (e.target as HTMLImageElement).src = '/images/subcategories/high-yield-seeds.svg';
                                       }}
                                     />
                                   </div>
