@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { AdminHeader } from './AdminHeader';
 import { AdminSidebar } from '../AdminSidebar';
 
@@ -9,8 +10,18 @@ interface AdminShellProps {
 }
 
 export function AdminShell({ children }: AdminShellProps) {
+  const pathname = usePathname();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+  // Standalone Layout for Admin Login Page: NO Header, NO Sidebar, NO Admin Navigation
+  if (pathname === '/admin/login') {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex flex-col justify-center">
+        {children}
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col transition-colors">

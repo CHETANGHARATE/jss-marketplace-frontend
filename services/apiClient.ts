@@ -67,10 +67,23 @@ apiClient.interceptors.response.use(
       sessionStorage.removeItem('auth_token');
     }
 
-    const message =
-      error.response?.data?.message ||
-      error.message ||
-      'An unexpected error occurred. Please try again.';
+    let message = error.response?.data?.message;
+
+    if (!message) {
+      if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+        message = 'Unable to connect to the server. Please check your network connection or try again later.';
+      } else if (error.response?.status === 401) {
+        message = 'Invalid email or password.';
+      } else if (error.response?.status === 403) {
+        message = 'Access denied. You do not have permission to access this resource.';
+      } else if (error.response?.status === 404) {
+        message = 'Requested authentication endpoint not found.';
+      } else if (error.response?.status && error.response.status >= 500) {
+        message = 'Server error. Please try again later.';
+      } else {
+        message = error.message || 'An unexpected error occurred. Please try again.';
+      }
+    }
 
     return Promise.reject(new Error(message));
   }

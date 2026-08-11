@@ -33,13 +33,16 @@ export default function AdminLoginPage() {
       } else {
         await logout();
         setErrorMessage(
-          `Access Denied: Account '${email}' does not have Administrator permissions. (Current Role: ${loggedUser.role || 'customer'})`
+          `Access Denied: Account '${email}' does not have Administrator permissions.`
         );
       }
     } catch (err: any) {
-      setErrorMessage(
-        err?.message || 'Authentication failed. Please check your admin credentials.'
-      );
+      const msg = err?.message || 'Authentication failed. Please check your admin credentials.';
+      if (msg === 'Network Error' || err?.code === 'ERR_NETWORK') {
+        setErrorMessage('Unable to connect to the server. Please check your network connection and try again.');
+      } else {
+        setErrorMessage(msg);
+      }
     } finally {
       setIsSubmitting(false);
     }
