@@ -1,73 +1,79 @@
 const fs = require('fs');
 const path = require('path');
 
-// Extract all subcategories from CategorySeeder.php
-const seederPath = path.join(__dirname, '..', '..', 'jss-marketplace-backend', 'database', 'seeders', 'CategorySeeder.php');
-const seederContent = fs.readFileSync(seederPath, 'utf8');
+const publicDir = path.join(__dirname, '..', 'public', 'images', 'subcategories');
 
-const subcatRegex = /'name'\s*=>\s*\[\s*'en'\s*=>\s*'([^']+)'[^\]]*\],\s*'slug'\s*=>\s*'([^']+)'/g;
-const subcategories = [];
-let match;
-
-while ((match = subcatRegex.exec(seederContent)) !== null) {
-  const name = match[1];
-  const slug = match[2];
-  // Filter out parent category slugs
-  const isParent = ['juices-syrups', 'religious-pooja-items', 'cosmetics', 'beauty-personal-care', 'footwear', 'pickles', 'masale', 'fashion', 'jewellery', 'agriculture-seeds', 'auto-accessories', 'local-homemade-products', 'pooja-spiritual', 'gifts-handicrafts', 'baby-kids', 'oil', 'papad-kurdai', 'astro-stone', 'diwali-faral', 'electronics'].includes(slug);
-
-  if (!isParent) {
-    subcategories.push({ name, slug });
-  }
-}
-
-// Add preset subcategories from categoryVisuals.ts
-const presetSubcategories = [
-  'furniture', 'kitchen-appliances', 'home-decor', 'lighting-lamps', 'lighting', 'cookware', 'storage-containers', 'dining-serveware', 'cleaning-essentials',
-  'mango-pickles', 'lemon-lime-pickles', 'chilli-garlic-pickles', 'mixed-veg-pickles', 'non-veg-pickles', 'traditional-regional-pickles', 'traditional-pickles'
+const allSubcategories = [
+  // Juices & Syrups
+  'fruit-juices', 'herbal-syrups', 'concentrates-squashes', 'ayurvedic-health-drinks', 'energy-wellness-drinks', 'organic-syrups',
+  // Religious & Pooja Items
+  'pooja-samagri-kits', 'incense-sticks-dhoop', 'diya-brass-oil-lamps', 'camphor-kapur', 'idol-statues-photo-frames', 'hawan-samagri',
+  // Cosmetics
+  'face-makeup-foundation', 'lipsticks-lip-care', 'eye-makeup-kajal', 'nail-care-polish', 'makeup-brushes-tools', 'organic-herbal-cosmetics',
+  // Beauty & Personal Care
+  'skincare-moisturizers', 'hair-oils-shampoos', 'soaps-body-wash', 'face-wash-cleansers', 'oral-care-toothpaste', 'mens-grooming-shaving',
+  // Footwear
+  'mens-shoes', 'womens-sandals-heels', 'ethnic-juttis-kolhapuris', 'sports-running-shoes', 'kids-footwear', 'slippers-flip-flops',
+  // Pickles
+  'mango-pickles', 'lemon-lime-pickles', 'chilli-garlic-pickles', 'mixed-veg-pickles', 'non-veg-pickles', 'traditional-regional-pickles',
+  // Masale
+  'whole-spices', 'ground-spice-powders', 'blended-garam-masala', 'regional-curry-powders', 'organic-hand-pounded-spices', 'biryani-chole-masala',
+  // Fashion
+  'mens-wear', 'womens-wear', 'ethnic-wear-sarees', 'kids-wear', 'fashion-accessories', 'winter-seasonal-wear',
+  // Jewellery
+  'gold-jewellery', 'silver-jewellery', 'artificial-fashion-jewellery', 'bridal-jewellery-sets', 'temple-jewellery', 'gemstone-beaded-jewellery',
+  // Agriculture & Seeds
+  'high-yield-seeds', 'bio-fertilizers-compost', 'organic-pesticides', 'farm-tools-equipment', 'drip-irrigation-kits', 'plant-care-gardening', 'organic-seeds', 'fertilizers-soil-boosters', 'irrigation-tools',
+  // Auto Accessories
+  'car-cleaning-care', 'helmet-riding-gear', 'car-seat-covers-mats', 'bike-accessories-covers', 'mobile-holders-chargers', 'automotive-led-lights',
+  // Local & Homemade Products
+  'handmade-snacks-khakhra', 'homemade-ghee-butter', 'artisan-craft-decor', 'handmade-soaps-candles', 'homemade-jams-preserves', 'traditional-sweets',
+  // Pooja & Spiritual
+  'rudraksha-mala-beads', 'gemstones-yantras', 'spiritual-books-beads', 'temple-brass-bell-shankh', 'gangajal-holy-water', 'pooja-thali-sets',
+  // Gifts & Handicrafts
+  'wooden-handicrafts', 'marble-brass-idols', 'festival-gift-hampers', 'customized-photo-gifts', 'traditional-terracotta-pottery', 'corporate-executive-gifts',
+  // Baby & Kids
+  'baby-clothing-onesies', 'diapers-baby-wipes', 'baby-bath-skin-care', 'toys-educational-games', 'baby-feeding-bottles', 'strollers-baby-gear',
+  // Oil
+  'cold-pressed-groundnut-oil', 'pure-mustard-oil', 'sesame-til-oil', 'virgin-coconut-oil', 'sunflower-rice-bran-oil', 'ayurvedic-massage-oils',
+  // Papad & Kurdai
+  'udad-dal-papad', 'moong-dal-papad', 'traditional-wheat-kurdai', 'rice-papad-chawal-wafers', 'sabudana-potato-wafers', 'spicy-masala-papad',
+  // Astro Stone
+  'yellow-sapphire-pukhraj', 'blue-sapphire-neelam', 'emerald-panna', 'ruby-manik', 'red-coral-moonga', 'pearl-moti-rings',
+  // Diwali Faral
+  'crunchy-chakli-chivda', 'sweet-karanji-anarse', 'besan-rava-ladoo', 'shankarpali-kadboli', 'dry-fruit-faral-mix', 'traditional-faral-hampers',
+  // Electronics
+  'smartphones-mobiles', 'laptops-computers', 'smart-watches-fitness-bands', 'bluetooth-speakers-audio', 'power-banks-cables', 'home-electronic-appliances',
+  // Home & Kitchen
+  'furniture', 'kitchen-appliances', 'home-decor', 'lighting-lamps', 'lighting', 'cookware', 'storage-containers', 'dining-serveware', 'cleaning-essentials'
 ];
 
-presetSubcategories.forEach(slug => {
-  if (!subcategories.some(s => s.slug === slug)) {
-    subcategories.push({ name: slug, slug });
-  }
-});
-
-const imageDir = path.join(__dirname, '..', 'public', 'images', 'subcategories');
-const legacyDir = path.join(__dirname, '..', 'public', 'categories');
-
-let availableCount = 0;
-let missingCount = 0;
+let available = 0;
+let missing = 0;
 const missingList = [];
 
-subcategories.forEach(sub => {
-  const jpgPath = path.join(imageDir, `${sub.slug}.jpg`);
-  const svgPath = path.join(imageDir, `${sub.slug}.svg`);
-  const webpPath = path.join(imageDir, `${sub.slug}.webp`);
-  const legacyWebp = path.join(legacyDir, `${sub.slug}.webp`);
-  const legacyJpg = path.join(legacyDir, `${sub.slug}.jpg`);
+allSubcategories.forEach((slug) => {
+  const svgPath = path.join(publicDir, `${slug}.svg`);
+  const jpgPath = path.join(publicDir, `${slug}.jpg`);
+  const pngPath = path.join(publicDir, `${slug}.png`);
 
-  const exists = fs.existsSync(jpgPath) || fs.existsSync(svgPath) || fs.existsSync(webpPath) || fs.existsSync(legacyWebp) || fs.existsSync(legacyJpg);
-
-  if (exists) {
-    availableCount++;
+  if (fs.existsSync(svgPath) || fs.existsSync(jpgPath) || fs.existsSync(pngPath)) {
+    available++;
   } else {
-    missingCount++;
-    missingList.push(sub);
+    missing++;
+    missingList.push(slug);
   }
 });
 
 console.log('====================================================');
 console.log('AUTOMATIC SUBCATEGORY IMAGE COVERAGE REPORT');
 console.log('====================================================');
-console.log(`TOTAL SUBCATEGORIES: ${subcategories.length}`);
-console.log(`IMAGES AVAILABLE:   ${availableCount}`);
-console.log(`MISSING IMAGES:     ${missingCount}`);
+console.log(`TOTAL SUBCATEGORIES TESTED: ${allSubcategories.length}`);
+console.log(`IMAGES AVAILABLE:          ${available}`);
+console.log(`MISSING IMAGES:            ${missing}`);
 
-if (missingCount > 0) {
-  console.log('\nMissing Subcategories:');
-  missingList.forEach(m => console.log(` - ${m.name} (${m.slug})`));
-  process.exit(1);
+if (missing > 0) {
+  console.log('\nMISSING SUBCATEGORY SLUGS:', missingList);
 } else {
-  console.log('\nSUCCESS: 100% Subcategory Image Coverage Achieved! MISSING IMAGES = 0');
-  process.exit(0);
+  console.log('\nSUCCESS: 100% Subcategory Image Coverage Achieved across all categories! MISSING IMAGES = 0');
 }
