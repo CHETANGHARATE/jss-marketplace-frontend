@@ -362,14 +362,14 @@ export const Header: React.FC = () => {
                 /* Unauthenticated Guest Login & Sign Up Buttons */
                 <div className="hidden sm:flex items-center gap-2">
                   <Link
-                    href="/account"
+                    href="/login"
                     className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-card hover:bg-background-secondary text-foreground border border-border-custom/90 text-xs font-bold transition-all hover:border-primary shadow-2xs"
                   >
                     <User size={15} className="text-primary" />
                     <span>{t('nav.login_btn')}</span>
                   </Link>
                   <Link
-                    href="/account?tab=register"
+                    href="/signup"
                     className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary hover:bg-primary-hover text-white text-xs font-bold transition-all shadow-md hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <UserPlus size={14} />
@@ -472,14 +472,14 @@ export const Header: React.FC = () => {
               {!isAuthenticated ? (
                 <div className="grid grid-cols-2 gap-2.5 pt-2">
                   <Link
-                    href="/account"
+                    href="/login"
                     onClick={() => setMobileMenuOpen(false)}
                     className="p-3 text-center bg-background-secondary border border-border-custom/80 text-foreground rounded-2xl"
                   >
                     {t('nav.login_btn')}
                   </Link>
                   <Link
-                    href="/account?tab=register"
+                    href="/signup"
                     onClick={() => setMobileMenuOpen(false)}
                     className="p-3 text-center bg-primary text-white rounded-2xl shadow-xs"
                   >

@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { ApiUser } from '../types/api';
 import { authService, LoginPayload, RegisterPayload } from '../services/authService';
+import { cartService } from '../services/cartService';
 
 interface AuthContextType {
   user: ApiUser | null;
@@ -13,6 +14,7 @@ interface AuthContextType {
   isAdmin: boolean;
   login: (payload: LoginPayload) => Promise<ApiUser>;
   register: (payload: RegisterPayload) => Promise<ApiUser>;
+  setAuthSession: (user: ApiUser, token: string, rememberMe?: boolean) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -71,7 +73,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [fetchLatestProfile]);
 
-  // Sync latest user profile on window focus to immediately capture Admin approval/revocation
   useEffect(() => {
     const onFocus = () => {
       const activeToken = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
@@ -83,40 +84,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener('focus', onFocus);
   }, [fetchLatestProfile]);
 
+  const setAuthSession = async (userData: ApiUser, userToken: string, rememberMe = true) => {
+    setToken(userToken);
+    setUser(userData);
+
+    if (rememberMe) {
+      localStorage.setItem('auth_token', userToken);
+      localStorage.setItem('user_profile', JSON.stringify(userData));
+      sessionStorage.removeItem('auth_token');
+      sessionStorage.removeItem('user_profile');
+    } else {
+      sessionStorage.setItem('auth_token', userToken);
+      sessionStorage.setItem('user_profile', JSON.stringify(userData));
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user_profile');
+    }
+
+    // Merge any guest cart items with authenticated account
+    try {
+      await cartService.mergeCart();
+    } catch (e) {
+      console.warn('Guest cart merge check complete:', e);
+    }
+
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('jss-login', { detail: userData }));
+    }
+  };
+
   const login = async (payload: LoginPayload & { rememberMe?: boolean }): Promise<ApiUser> => {
     setIsLoading(true);
     try {
       const data = await authService.login(payload);
-      setToken(data.token);
-      setUser(data.user);
+      await setAuthSession(data.user, data.token, payload.rememberMe !== false);
 
-      const remember = payload.rememberMe !== false;
-      if (remember) {
-        localStorage.setItem('auth_token', data.token);
-        localStorage.setItem('user_profile', JSON.stringify(data.user));
-        sessionStorage.removeItem('auth_token');
-        sessionStorage.removeItem('user_profile');
-      } else {
-        sessionStorage.setItem('auth_token', data.token);
-        sessionStorage.setItem('user_profile', JSON.stringify(data.user));
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user_profile');
-      }
-
-      // Re-fetch latest profile from /api/v1/auth/me to ensure role synchronization
       try {
         const freshUser = await authService.getProfile();
         setUser(freshUser);
-        if (remember) {
+        if (payload.rememberMe !== false) {
           localStorage.setItem('user_profile', JSON.stringify(freshUser));
         } else {
           sessionStorage.setItem('user_profile', JSON.stringify(freshUser));
         }
       } catch (e) {}
 
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('jss-login', { detail: data.user }));
-      }
       return data.user;
     } finally {
       setIsLoading(false);
@@ -127,16 +138,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     try {
       const data = await authService.register(payload);
-      if (data.token) {
-        setToken(data.token);
-        localStorage.setItem('auth_token', data.token);
-      }
-      if (data.user) {
-        setUser(data.user);
-        localStorage.setItem('user_profile', JSON.stringify(data.user));
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('jss-login', { detail: data.user }));
-        }
+      if (data.token && data.user) {
+        await setAuthSession(data.user, data.token, true);
       }
       return (data.user as ApiUser) || { id: 0, name: payload.name, email: payload.email, role: 'customer' };
     } finally {
@@ -185,6 +188,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isAdmin,
         login,
         register,
+        setAuthSession,
         logout,
         refreshUser,
       }}
