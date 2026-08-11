@@ -80,6 +80,49 @@ export const authService = {
     };
   },
 
+  async sendEmailOtp(payload: { email: string; purpose: 'login' | 'signup' }): Promise<OtpResponseData> {
+    try {
+      const response = await apiClient.post<ApiResponse<{ email?: string; demo_otp?: string }> & { success?: boolean; code?: string; message?: string }>('/auth/send-email-otp', payload);
+      const resData = response.data;
+      return {
+        success: resData.success ?? true,
+        code: resData.code,
+        message: resData.message || 'OTP sent to your email address',
+      };
+    } catch (err: any) {
+      const errRes = err?.response?.data;
+      return {
+        success: false,
+        code: errRes?.code,
+        message: errRes?.message || 'Unable to send email OTP right now. Please try again later.',
+      };
+    }
+  },
+
+  async verifyEmailOtpFull(payload: { email: string; otp: string; purpose: 'login' | 'signup'; name?: string }): Promise<OtpResponseData> {
+    try {
+      const response = await apiClient.post<ApiResponse<AuthResponseData> & { success?: boolean; code?: string; message?: string }>('/auth/verify-email-otp', payload);
+      const resData = response.data;
+      const data = resData.data;
+      const token = data?.access_token || data?.token || '';
+
+      return {
+        success: resData.success ?? true,
+        code: resData.code,
+        message: resData.message || 'Email OTP verified successfully',
+        user: data?.user,
+        token: token,
+      };
+    } catch (err: any) {
+      const errRes = err?.response?.data;
+      return {
+        success: false,
+        code: errRes?.code,
+        message: errRes?.message || 'Incorrect OTP. Please check the code and try again.',
+      };
+    }
+  },
+
   async sendMobileOtp(payload: SendMobileOtpPayload): Promise<OtpResponseData> {
     try {
       const response = await apiClient.post<{ success: boolean; transaction_id?: string; req_id?: string; code?: string; message: string }>('/auth/send-otp', payload);
