@@ -17,8 +17,19 @@ import { useCategories } from '../hooks/useCategories';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getLocalizedText } from '../utils/translation';
 import { getCategoryUrl } from '../utils/categoryUtils';
-import { getCategoryVisualConfig, getSubcategoryIconConfig } from '../utils/categoryVisuals';
+import { getCategoryVisualConfig } from '../utils/categoryVisuals';
+import { getSubcategoryImage } from '../utils/categoryImages';
 import { ApiCategory } from '../types/api';
+
+// Soft pastel background tints for subcategory cards to match reference design
+const CARD_TINT_CLASSES = [
+  'bg-sky-50/50 hover:bg-white dark:bg-slate-900/60 dark:hover:bg-slate-900 border-sky-100/80 dark:border-slate-800',
+  'bg-amber-50/50 hover:bg-white dark:bg-slate-900/60 dark:hover:bg-slate-900 border-amber-100/80 dark:border-slate-800',
+  'bg-emerald-50/50 hover:bg-white dark:bg-slate-900/60 dark:hover:bg-slate-900 border-emerald-100/80 dark:border-slate-800',
+  'bg-purple-50/50 hover:bg-white dark:bg-slate-900/60 dark:hover:bg-slate-900 border-purple-100/80 dark:border-slate-800',
+  'bg-rose-50/50 hover:bg-white dark:bg-slate-900/60 dark:hover:bg-slate-900 border-rose-100/80 dark:border-slate-800',
+  'bg-indigo-50/50 hover:bg-white dark:bg-slate-900/60 dark:hover:bg-slate-900 border-indigo-100/80 dark:border-slate-800',
+];
 
 export function MegaMenu() {
   const router = useRouter();
@@ -30,14 +41,14 @@ export function MegaMenu() {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Set default selected category when categories load
+  // Default selected category when categories load
   useEffect(() => {
     if (categories.length > 0 && selectedCatId === null) {
       setSelectedCatId(categories[0].id);
     }
   }, [categories, selectedCatId]);
 
-  // Click outside to close
+  // Click outside & Escape key listeners to close menu
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -68,6 +79,7 @@ export function MegaMenu() {
     (categories.length > 0 ? categories[0] : null);
 
   const activeVisualConfig = getCategoryVisualConfig(activeCategory);
+  const ActiveCategoryIcon = activeVisualConfig.icon;
 
   const handleSubcategoryClick = (cat: ApiCategory, subSlugOrId?: string) => {
     setIsOpen(false);
@@ -86,10 +98,10 @@ export function MegaMenu() {
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-label="Toggle All Categories Mega Menu"
-        className={`flex items-center gap-2.5 px-4 py-2.5 rounded-2xl font-bold text-xs transition-all duration-200 shadow-2xs border ${
+        className={`flex items-center gap-2.5 px-4 py-2.5 rounded-2xl font-bold text-xs transition-all duration-200 shadow-2xs border cursor-pointer ${
           isOpen
-            ? 'bg-primary text-white border-primary shadow-md'
-            : 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20'
+            ? 'bg-blue-600 text-white border-blue-600 shadow-md'
+            : 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border-blue-200/60 dark:border-blue-800/60 hover:bg-blue-100 dark:hover:bg-blue-900/60'
         }`}
       >
         <Grid className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-90' : ''}`} />
@@ -102,25 +114,25 @@ export function MegaMenu() {
         <>
           {/* Backdrop Blur Overlay */}
           <div
-            className="fixed inset-0 top-[120px] bg-black/40 backdrop-blur-xs z-40 transition-opacity animate-in fade-in"
+            className="fixed inset-0 top-[120px] bg-slate-950/30 backdrop-blur-xs z-40 transition-opacity animate-in fade-in"
             onClick={() => setIsOpen(false)}
           />
 
           {/* Desktop & Tablet Mega Menu Container */}
-          <div className="absolute top-full left-0 mt-3 w-[88vw] max-w-[1240px] bg-card border border-border-custom/80 shadow-2xl rounded-3xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-200">
+          <div className="absolute top-full left-0 mt-3 w-[92vw] max-w-[1240px] bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-2xl rounded-3xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-200">
             {isLoading ? (
-              <div className="py-20 text-center text-xs font-bold text-foreground/60 flex items-center justify-center gap-3">
-                <Sparkles className="w-5 h-5 animate-spin text-primary" />
+              <div className="py-20 text-center text-xs font-bold text-slate-500 flex items-center justify-center gap-3">
+                <Sparkles className="w-5 h-5 animate-spin text-blue-600" />
                 <span>{t('nav.loading_categories')}...</span>
               </div>
             ) : (
-              <div className="grid grid-cols-12 min-h-[480px] max-h-[75vh]">
+              <div className="grid grid-cols-12 min-h-[500px] max-h-[76vh]">
                 
                 {/* ─── LEFT COLUMN: CATEGORIES SIDEBAR ─── */}
-                <div className="col-span-4 lg:col-span-3 border-r border-border-custom/60 bg-background-secondary/50 p-3 sm:p-4 space-y-1.5 overflow-y-auto max-h-[75vh] scrollbar-thin">
-                  <div className="px-3 py-2 text-[10px] font-black text-muted-custom uppercase tracking-wider flex items-center justify-between">
+                <div className="col-span-4 lg:col-span-3 border-r border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/40 p-3 sm:p-4 space-y-1 overflow-y-auto max-h-[76vh] scrollbar-thin">
+                  <div className="px-3 py-2 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center justify-between">
                     <span>{t('nav.categories')}</span>
-                    <span className="text-primary font-bold">{categories.length}</span>
+                    <span className="text-blue-600 dark:text-blue-400 font-extrabold">{categories.length}</span>
                   </div>
 
                   {categories.map((cat) => {
@@ -134,16 +146,20 @@ export function MegaMenu() {
                         key={cat.id}
                         onMouseEnter={() => setSelectedCatId(cat.id)}
                         onClick={() => setSelectedCatId(cat.id)}
-                        className={`w-full flex items-center justify-between px-3 py-3 rounded-2xl text-xs font-bold transition-all text-left group ${
+                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-2xl text-xs font-semibold transition-all text-left cursor-pointer group ${
                           isSelected
-                            ? 'bg-card text-primary shadow-sm border border-primary/20 border-l-4 border-l-primary'
-                            : 'text-foreground/80 hover:bg-card/70 hover:text-foreground border border-transparent'
+                            ? 'bg-blue-50/90 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200/80 dark:border-blue-800/70 font-bold shadow-2xs'
+                            : 'text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-900 hover:text-slate-900 dark:hover:text-white border border-transparent'
                         }`}
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          {/* Icon Pill */}
+                          {/* Colorful Rounded Square Icon Container */}
                           <div
-                            className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border transition-transform duration-200 group-hover:scale-105 ${visualConfig.iconBgLight} ${visualConfig.iconBgDark}`}
+                            className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border transition-transform duration-200 group-hover:scale-105 ${
+                              isSelected
+                                ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
+                                : `${visualConfig.iconBgLight} ${visualConfig.iconBgDark}`
+                            }`}
                           >
                             <IconComponent className="w-4 h-4" />
                           </div>
@@ -152,7 +168,7 @@ export function MegaMenu() {
 
                         <ChevronRight
                           className={`w-4 h-4 shrink-0 transition-all ${
-                            isSelected ? 'text-primary opacity-100 translate-x-0.5' : 'text-muted-custom/40 opacity-40 group-hover:opacity-100'
+                            isSelected ? 'text-blue-600 dark:text-blue-400 opacity-100 translate-x-0.5' : 'text-slate-300 dark:text-slate-600 opacity-50 group-hover:opacity-100'
                           }`}
                         />
                       </button>
@@ -161,99 +177,119 @@ export function MegaMenu() {
                 </div>
 
                 {/* ─── RIGHT COLUMN: CATEGORY EXPLORER & SUBCATEGORIES GRID ─── */}
-                <div className="col-span-8 lg:col-span-9 p-6 sm:p-8 space-y-6 overflow-y-auto max-h-[75vh] scrollbar-thin bg-card">
+                <div className="col-span-8 lg:col-span-9 p-6 sm:p-8 space-y-6 overflow-y-auto max-h-[76vh] scrollbar-thin bg-white dark:bg-slate-900">
                   {activeCategory ? (
                     <>
                       {/* Active Category Header Bar */}
-                      <div className="flex items-center justify-between pb-4 border-b border-border-custom/60 gap-4">
-                        <div className="space-y-1">
-                          <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-primary uppercase tracking-widest bg-primary/10 px-2.5 py-0.5 rounded-full">
-                            <Layers size={11} />
-                            <span>Category Explorer</span>
+                      <div className="flex items-center justify-between pb-5 border-b border-slate-100 dark:border-slate-800/80 gap-4">
+                        <div className="flex items-center gap-4">
+                          {/* Large Rounded Category Icon Container */}
+                          <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200/60 dark:border-blue-800/60 flex items-center justify-center shrink-0 shadow-2xs">
+                            <ActiveCategoryIcon className="w-7 h-7" />
                           </div>
-                          <h3 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
-                            {getLocalizedText(activeCategory.name, language)}
-                          </h3>
-                          <p className="text-xs text-muted-custom font-medium max-w-xl line-clamp-1">
-                            {activeCategory.description
-                              ? getLocalizedText(activeCategory.description, language)
-                              : `Explore popular collections and products in ${getLocalizedText(activeCategory.name, language)}`}
-                          </p>
+
+                          <div className="space-y-0.5">
+                            <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                              {getLocalizedText(activeCategory.name, language)}
+                            </h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium max-w-xl line-clamp-1">
+                              {activeCategory.description
+                                ? getLocalizedText(activeCategory.description, language)
+                                : `Furniture, decor, apparel, and premium products in ${getLocalizedText(activeCategory.name, language)}`}
+                            </p>
+                          </div>
                         </div>
 
                         <button
                           onClick={() => handleSubcategoryClick(activeCategory)}
-                          className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white text-xs font-black rounded-xl hover:bg-primary-hover transition-all shadow-2xs shrink-0 group"
+                          className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-full transition-all shadow-2xs shrink-0 group cursor-pointer"
                         >
                           <span>View All Products</span>
                           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                         </button>
                       </div>
 
-                      {/* Subcategories Visual Grid */}
-                      <div className="space-y-3">
-                        <h4 className="text-xs font-extrabold text-muted-custom uppercase tracking-wider">
+                      {/* Subcategories Visual Grid matching Reference Screenshot 2 */}
+                      <div className="space-y-4">
+                        <h4 className="text-[11px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                           Subcategories & Featured Collections
                         </h4>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {(() => {
                             const apiSubcats = activeCategory.children || activeCategory.subcategories || [];
+                            const activeCatSlug = String(activeCategory.slug || activeCategory.id || '').toLowerCase();
                             
-                            // If API provides subcategories, map them with exact matching vector icons
+                            // 1. If API provides subcategories
                             if (apiSubcats.length > 0) {
                               return apiSubcats.map((sub: any, idx: number) => {
                                 const subName = getLocalizedText(sub.name, language);
-                                const iconConfig = getSubcategoryIconConfig(subName || sub.slug, activeCategory);
-                                const SubIcon = iconConfig.icon;
+                                const subSlug = sub.slug || String(sub.id);
+                                const imageUrl = getSubcategoryImage(subSlug, subName, activeCatSlug);
+                                const tintClass = CARD_TINT_CLASSES[idx % CARD_TINT_CLASSES.length];
 
                                 return (
                                   <div
                                     key={sub.id || sub.slug || idx}
-                                    onClick={() => handleSubcategoryClick(activeCategory, sub.slug || String(sub.id))}
-                                    className="group cursor-pointer bg-background-secondary/60 hover:bg-background-secondary border border-border-custom/70 hover:border-primary/30 rounded-2xl p-3.5 transition-all duration-200 hover:shadow-md flex items-center gap-3.5"
+                                    onClick={() => handleSubcategoryClick(activeCategory, subSlug)}
+                                    className={`group relative cursor-pointer rounded-2xl border p-4 transition-all duration-200 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700 flex items-center justify-between overflow-hidden ${tintClass}`}
                                   >
-                                    <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border transition-transform duration-200 group-hover:scale-110 ${iconConfig.iconBgLight} ${iconConfig.iconBgDark}`}>
-                                      <SubIcon className="w-5 h-5" aria-hidden="true" />
-                                    </div>
-
-                                    <div className="min-w-0 flex-1">
-                                      <h5 className="font-extrabold text-xs text-foreground group-hover:text-primary transition-colors truncate">
+                                    {/* Left Text Block */}
+                                    <div className="min-w-0 flex-1 pr-3 space-y-1.5 z-10">
+                                      <h5 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
                                         {subName}
                                       </h5>
-                                      <span className="text-[10px] font-bold text-primary group-hover:underline flex items-center gap-1 mt-0.5">
+                                      <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors inline-flex items-center gap-1">
                                         <span>Explore collection</span>
-                                        <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                                        <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                                       </span>
+                                    </div>
+
+                                    {/* Right Cutout Image Container */}
+                                    <div className="w-28 sm:w-36 h-24 shrink-0 flex items-center justify-center relative overflow-hidden rounded-xl bg-white/70 dark:bg-slate-950/50 border border-slate-100 dark:border-slate-800 p-1">
+                                      <img
+                                        src={imageUrl}
+                                        alt={subName}
+                                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-2xs"
+                                        loading="lazy"
+                                      />
                                     </div>
                                   </div>
                                 );
                               });
                             }
 
-                            // Fallback to default presets for this category with exact matching vector icon lookup
+                            // 2. Fallback to default visual presets
                             return activeVisualConfig.defaultSubcategories.map((preset, idx) => {
-                              const iconConfig = getSubcategoryIconConfig(preset.name || preset.slug, activeCategory);
-                              const SubIcon = preset.icon || iconConfig.icon;
+                              const subSlug = preset.slug;
+                              const imageUrl = getSubcategoryImage(subSlug, preset.name, activeCatSlug);
+                              const tintClass = CARD_TINT_CLASSES[idx % CARD_TINT_CLASSES.length];
 
                               return (
                                 <div
                                   key={preset.slug || idx}
                                   onClick={() => handleSubcategoryClick(activeCategory, preset.slug)}
-                                  className="group cursor-pointer bg-background-secondary/60 hover:bg-background-secondary border border-border-custom/70 hover:border-primary/30 rounded-2xl p-3.5 transition-all duration-200 hover:shadow-md flex items-center gap-3.5"
+                                  className={`group relative cursor-pointer rounded-2xl border p-4 transition-all duration-200 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700 flex items-center justify-between overflow-hidden ${tintClass}`}
                                 >
-                                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border transition-transform duration-200 group-hover:scale-110 ${iconConfig.iconBgLight} ${iconConfig.iconBgDark}`}>
-                                    <SubIcon className="w-5 h-5" aria-hidden="true" />
-                                  </div>
-
-                                  <div className="min-w-0 flex-1">
-                                    <h5 className="font-extrabold text-xs text-foreground group-hover:text-primary transition-colors truncate">
+                                  {/* Left Text Block */}
+                                  <div className="min-w-0 flex-1 pr-3 space-y-1.5 z-10">
+                                    <h5 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
                                       {preset.name}
                                     </h5>
-                                    <span className="text-[10px] font-bold text-primary group-hover:underline flex items-center gap-1 mt-0.5">
-                                      <span>{preset.description}</span>
-                                      <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                                    <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors inline-flex items-center gap-1">
+                                      <span>Explore collection</span>
+                                      <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                                     </span>
+                                  </div>
+
+                                  {/* Right Cutout Image Container */}
+                                  <div className="w-28 sm:w-36 h-24 shrink-0 flex items-center justify-center relative overflow-hidden rounded-xl bg-white/70 dark:bg-slate-950/50 border border-slate-100 dark:border-slate-800 p-1">
+                                    <img
+                                      src={imageUrl}
+                                      alt={preset.name}
+                                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-2xs"
+                                      loading="lazy"
+                                    />
                                   </div>
                                 </div>
                               );
@@ -263,7 +299,7 @@ export function MegaMenu() {
                       </div>
                     </>
                   ) : (
-                    <div className="py-20 text-center text-xs font-bold text-muted-custom">
+                    <div className="py-20 text-center text-xs font-bold text-slate-400">
                       Select a category to explore its collections
                     </div>
                   )}
