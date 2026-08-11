@@ -95,27 +95,68 @@ export default function AdminBulkImportPage() {
     reader.readAsBinaryString(file);
   };
 
+  // Helper to compress uploaded images on client-side to prevent Vercel POST payload limit issues
+  const compressImageFile = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800;
+          const MAX_HEIGHT = 800;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height = Math.round((height * MAX_WIDTH) / width);
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width = Math.round((width * MAX_HEIGHT) / height);
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', 0.75));
+          } else {
+            resolve(e.target?.result as string);
+          }
+        };
+        img.onerror = () => resolve(e.target?.result as string);
+        img.src = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   // Handle Image Files Selection
-  const handleImagesUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImagesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
 
     const files = Array.from(e.target.files);
     const names: string[] = [];
-    const imageMap: Record<string, string> = {};
+    const newLoadedImages: Record<string, string> = {};
 
-    files.forEach((file) => {
+    for (const file of files) {
       names.push(file.name);
-      const reader = new FileReader();
-      reader.onload = (evt) => {
-        if (evt.target?.result) {
-          imageMap[file.name] = evt.target.result as string;
-          setLoadedImages((prev) => ({ ...prev, [file.name]: evt.target?.result as string }));
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+      try {
+        const compressedDataUrl = await compressImageFile(file);
+        newLoadedImages[file.name] = compressedDataUrl;
+      } catch {
+        // Fallback reading
+      }
+    }
 
     setImageFileNames(names);
+    setLoadedImages((prev) => ({ ...prev, ...newLoadedImages }));
   };
 
   // Trigger Validation API
@@ -169,11 +210,11 @@ export default function AdminBulkImportPage() {
         rowsToImport = rawParsedRows;
       }
 
-      // 2. Sanitize loadedImages map to prevent oversized base64 strings breaking HTTP POST limits
+      // 2. Sanitize loadedImages map to include all uploaded compressed images
       const sanitizedImagesMap: Record<string, string> = {};
       if (loadedImages && typeof loadedImages === 'object') {
         Object.entries(loadedImages).forEach(([filename, val]) => {
-          if (typeof val === 'string' && val.length < 50000) {
+          if (typeof val === 'string' && val.length > 0) {
             sanitizedImagesMap[filename] = val;
           }
         });
