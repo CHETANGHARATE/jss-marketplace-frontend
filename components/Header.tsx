@@ -30,7 +30,11 @@ import {
   Wallet,
   Settings,
   Package,
-  ShoppingBag
+  ShoppingBag,
+  Truck,
+  RefreshCw,
+  BadgeCheck,
+  Smartphone
 } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTheme } from '../contexts/ThemeContext';
@@ -67,8 +71,8 @@ export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [expandedMobileCat, setExpandedMobileCat] = useState<number | string | null>(null);
-
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
 
   const queryClient = useQueryClient();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -91,109 +95,161 @@ export const Header: React.FC = () => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (langMenuRef.current && !langMenuRef.current.contains(target)) {
-        setLangMenuOpen(false);
-      }
-      if (userMenuRef.current && !userMenuRef.current.contains(target)) {
-        setUserMenuOpen(false);
-      }
+      if (langMenuRef.current && !langMenuRef.current.contains(target)) setLangMenuOpen(false);
+      if (userMenuRef.current && !userMenuRef.current.contains(target)) setUserMenuOpen(false);
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
     <>
-      {/* 1. Top Premium Announcement Bar */}
-      <div className="bg-slate-950 text-white text-[11px] font-bold py-2 px-4 border-b border-slate-800/80 transition-colors">
-        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 flex items-center justify-between gap-4">
-          <div className="hidden sm:flex items-center gap-2 text-slate-300 font-medium">
-            <span className="inline-flex items-center gap-1 bg-slate-800 text-slate-200 px-2 py-0.5 rounded-md text-[10px] font-bold">
-              🇮🇳 India
-            </span>
-            <span>{t('nav.india_platform')}</span>
-          </div>
+      {/* ═══════════════════════════════════════════════════════════
+          1. TOP TRUST BAR — Slim premium information strip
+          ═══════════════════════════════════════════════════════════ */}
+      <div className="bg-slate-950 dark:bg-slate-950 text-white border-b border-slate-800/70">
+        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
+          <div className="h-9 flex items-center justify-between gap-4 overflow-hidden">
 
-          <div className="mx-auto sm:mx-0 flex items-center gap-2">
-            <span className="bg-rose-500 text-white text-[9px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider animate-pulse flex items-center gap-1">
-              <Sparkles size={10} />
-              <span>{t('nav.festive_deals')}</span>
-            </span>
-            <span className="font-semibold text-slate-100">{t('nav.free_shipping_notice')}</span>
-          </div>
+            {/* Left — India badge */}
+            <div className="hidden md:flex items-center gap-2 shrink-0">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-white/90">
+                <span className="text-base leading-none">🇮🇳</span>
+                <span className="text-slate-300">{t('nav.india_platform') || "India's #1 Direct-from-Source Marketplace"}</span>
+              </span>
+            </div>
 
-          <div className="hidden md:flex items-center gap-4 text-slate-300 font-medium text-[11px]">
-            <Link href="#deals" className="hover:text-primary transition-colors flex items-center gap-1">
-              <Tag size={12} className="text-rose-400" />
-              <span>{t('nav.deals')}</span>
-            </Link>
-            <span className="text-slate-700">|</span>
-            <span className="flex items-center gap-1 text-slate-300">
-              <PhoneCall size={12} className="text-emerald-400" />
-              <span>{t('nav.helpline')}</span>
-            </span>
+            {/* Center — Scrolling trust pills (desktop: flex, mobile: single) */}
+            <div className="flex-1 flex items-center justify-center gap-4 md:gap-6 overflow-hidden">
+              {/* Mobile: single animated deal notice */}
+              <div className="flex md:hidden items-center gap-2">
+                <span className="bg-rose-500 text-white text-[9px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider animate-pulse flex items-center gap-1">
+                  <Sparkles size={9} />
+                  {t('nav.festive_deals') || 'Hot Deals'}
+                </span>
+                <span className="text-[11px] font-semibold text-slate-200 truncate">
+                  {t('nav.free_shipping_notice') || 'Free delivery on orders above ₹499'}
+                </span>
+              </div>
+
+              {/* Desktop: full trust pill row */}
+              <div className="hidden md:flex items-center gap-5 text-[11px] font-semibold text-slate-300">
+                <span className="flex items-center gap-1.5 hover:text-white transition-colors">
+                  <Truck size={12} className="text-emerald-400 shrink-0" />
+                  Free Delivery above ₹499
+                </span>
+                <span className="text-slate-700">|</span>
+                <span className="flex items-center gap-1.5 hover:text-white transition-colors">
+                  <ShieldCheck size={12} className="text-blue-400 shrink-0" />
+                  100% Secure Payments
+                </span>
+                <span className="text-slate-700">|</span>
+                <span className="flex items-center gap-1.5 hover:text-white transition-colors">
+                  <BadgeCheck size={12} className="text-amber-400 shrink-0" />
+                  GST Verified Sellers
+                </span>
+                <span className="text-slate-700">|</span>
+                <span className="flex items-center gap-1.5 hover:text-white transition-colors">
+                  <RefreshCw size={12} className="text-rose-400 shrink-0" />
+                  Easy Returns & Refunds
+                </span>
+              </div>
+            </div>
+
+            {/* Right — Contact & app */}
+            <div className="hidden lg:flex items-center gap-4 text-slate-300 text-[11px] font-medium shrink-0">
+              <span className="flex items-center gap-1 hover:text-white transition-colors cursor-pointer">
+                <PhoneCall size={11} className="text-emerald-400" />
+                <span>{t('nav.helpline') || '1800-XXX-XXXX'}</span>
+              </span>
+              <span className="text-slate-700">|</span>
+              <span className="flex items-center gap-1 hover:text-white transition-colors cursor-pointer">
+                <Smartphone size={11} className="text-blue-400" />
+                Download App
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* 2. Main Single-Row Sticky Header Bar (Amazon / Flipkart Style) */}
-      <header className="sticky top-0 z-40 w-full bg-card/95 backdrop-blur-md border-b border-border-custom/80 shadow-xs transition-colors duration-200">
+      {/* ═══════════════════════════════════════════════════════════
+          2. MAIN STICKY HEADER — Logo + Search + Actions
+          ═══════════════════════════════════════════════════════════ */}
+      <header className={`sticky top-0 z-40 w-full transition-all duration-200 ${
+        scrolled
+          ? 'bg-card/98 backdrop-blur-lg shadow-md border-b border-border-custom/60'
+          : 'bg-card border-b border-border-custom/80'
+      }`}>
         <div className="max-w-[1536px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
-          <div className="flex h-18 sm:h-20 items-center justify-between gap-3 sm:gap-4 md:gap-6">
-            
-            {/* ─── LEFT: Logo & Marketplace Badge ─── */}
-            <div className="flex items-center gap-3 shrink-0">
-              <button 
+          <div className={`flex items-center justify-between gap-3 sm:gap-4 md:gap-5 transition-all duration-200 ${scrolled ? 'h-16 sm:h-[68px]' : 'h-[70px] sm:h-20'}`}>
+
+            {/* ─── LEFT: Hamburger + Logo ─── */}
+            <div className="flex items-center gap-2.5 shrink-0">
+              <button
                 onClick={() => setMobileMenuOpen(true)}
-                className="lg:hidden p-2 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80 transition-colors"
+                className="lg:hidden p-2 text-foreground hover:bg-background-secondary rounded-xl border border-border-custom/80 transition-colors"
                 aria-label="Toggle Mobile Menu"
               >
                 <Menu size={20} />
               </button>
 
-              <Link href="/" className="flex items-center gap-2 group shrink-0">
-                <span className="text-xl sm:text-2xl font-black tracking-tight text-primary flex items-center">
-                  JSS<span className="text-accent group-hover:text-primary transition-colors">Solutions</span>
-                </span>
-                <span className="hidden sm:inline-block text-[9px] font-extrabold bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-lg uppercase tracking-widest shadow-2xs">
-                  {t('nav.all_categories').includes('All') ? 'Marketplace' : 'मार्केट'}
-                </span>
+              <Link href="/" className="flex items-center gap-2.5 group shrink-0">
+                {/* Logo mark */}
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center shadow-md shrink-0">
+                  <span className="text-white font-black text-sm sm:text-base leading-none">J</span>
+                </div>
+                {/* Logo text */}
+                <div className="flex flex-col leading-tight">
+                  <span className="text-base sm:text-lg font-black tracking-tight text-foreground flex items-baseline gap-0.5">
+                    JSS<span className="text-primary">Solutions</span>
+                  </span>
+                  <span className="hidden sm:block text-[9px] font-bold text-muted-custom uppercase tracking-[0.15em] -mt-0.5">
+                    {t('nav.all_categories').includes('All') ? 'Marketplace' : 'मार्केट'}
+                  </span>
+                </div>
               </Link>
             </div>
 
-            {/* ─── CENTER: All Categories Button + Large Search Bar ─── */}
-            <div className="hidden lg:flex items-center gap-3 flex-1 max-w-3xl mx-2">
-              {/* All Categories Dropdown Trigger */}
+            {/* ─── CENTER: Categories Button + Premium Search ─── */}
+            <div className="hidden lg:flex items-center gap-2.5 flex-1 max-w-[820px] mx-2">
+              {/* All Categories Dropdown */}
               <div className="shrink-0">
                 <MegaMenu />
               </div>
 
-              {/* Large Search Bar */}
-              <div className="flex-1">
+              {/* Premium Search Bar */}
+              <div className="flex-1 relative group">
+                <div className="absolute inset-0 rounded-2xl bg-primary/5 group-focus-within:bg-primary/10 transition-colors duration-200 -z-[1]" />
                 <SearchBar />
               </div>
             </div>
 
-            {/* ─── RIGHT: Language, Wishlist, Cart, Login & Sign Up ─── */}
-            <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 shrink-0">
-              
-              {/* Mobile Search Button */}
+            {/* ─── RIGHT: All Action Icons ─── */}
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+
+              {/* Mobile Search */}
               <button
                 onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-                className="lg:hidden p-2 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80 transition-colors"
+                className="lg:hidden p-2 text-foreground hover:bg-background-secondary rounded-xl border border-border-custom/80 transition-colors"
                 aria-label="Search"
               >
                 <Search size={18} />
               </button>
 
-              {/* Become Vendor Link - Hidden for Sellers */}
+              {/* Become Seller — shown when not already seller */}
               {!isSeller && (
                 <Link
                   href="/seller/register"
-                  className="hidden xl:flex items-center gap-1.5 text-xs font-bold bg-accent/10 text-accent border border-accent/20 px-3 py-2 rounded-2xl hover:bg-accent hover:text-white transition-all shadow-2xs"
+                  className="hidden xl:flex items-center gap-1.5 text-[11px] font-bold bg-accent/10 text-accent border border-accent/20 px-3 py-2 rounded-xl hover:bg-accent hover:text-white transition-all shadow-sm whitespace-nowrap"
                 >
-                  <Store size={14} />
-                  <span>{t('nav.sell_products')}</span>
+                  <Store size={13} />
+                  <span>{t('nav.sell_products') || 'Sell Products'}</span>
                 </Link>
               )}
 
@@ -201,26 +257,21 @@ export const Header: React.FC = () => {
               <div ref={langMenuRef} className="relative">
                 <button
                   onClick={() => setLangMenuOpen(!langMenuOpen)}
-                  className="p-2 sm:px-3 py-2 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80 transition-colors flex items-center gap-1.5 text-xs font-bold"
+                  className="p-2 sm:px-2.5 py-2 text-foreground hover:bg-background-secondary rounded-xl border border-border-custom/80 transition-colors flex items-center gap-1 text-xs font-bold"
                   aria-label="Language Selector"
                 >
-                  <Globe size={17} className="text-primary" />
-                  <span className="uppercase hidden sm:inline">{language}</span>
-                  <ChevronDown size={12} className="text-muted-custom hidden sm:inline" />
+                  <Globe size={16} className="text-primary" />
+                  <span className="uppercase hidden sm:inline text-[11px]">{language}</span>
+                  <ChevronDown size={11} className="text-muted-custom hidden sm:inline" />
                 </button>
                 {langMenuOpen && (
                   <div className="absolute right-0 mt-2 w-36 bg-card border border-border-custom rounded-2xl shadow-xl z-50 overflow-hidden py-1.5">
                     {(['en', 'hi', 'mr'] as const).map((lang) => (
                       <button
                         key={lang}
-                        onClick={() => {
-                          setLanguage(lang);
-                          setLangMenuOpen(false);
-                        }}
+                        onClick={() => { setLanguage(lang); setLangMenuOpen(false); }}
                         className={`w-full text-left px-4 py-2 text-xs font-bold transition-colors ${
-                          language === lang
-                            ? 'bg-primary/10 text-primary'
-                            : 'text-foreground hover:bg-background-secondary'
+                          language === lang ? 'bg-primary/10 text-primary' : 'text-foreground hover:bg-background-secondary'
                         }`}
                       >
                         {lang === 'en' ? 'English (EN)' : lang === 'hi' ? 'हिन्दी (HI)' : 'मराठी (MR)'}
@@ -230,62 +281,63 @@ export const Header: React.FC = () => {
                 )}
               </div>
 
-              {/* Dark / Light Mode Toggle */}
+              {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
-                className="p-2.5 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80 transition-colors hidden sm:flex"
+                className="p-2 text-foreground hover:bg-background-secondary rounded-xl border border-border-custom/80 transition-colors hidden sm:flex items-center justify-center"
                 aria-label="Toggle Theme"
               >
-                {theme === 'light' ? <Moon size={17} /> : <Sun size={17} />}
+                {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
               </button>
 
-              {/* Wishlist Button */}
+              {/* Wishlist */}
               <button
                 onClick={() => setWishlistOpen(true)}
-                className="p-2.5 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80 transition-colors relative"
+                className="p-2 text-foreground hover:bg-background-secondary rounded-xl border border-border-custom/80 transition-colors relative flex items-center justify-center"
                 aria-label="Wishlist"
               >
-                <Heart size={18} />
+                <Heart size={17} />
                 {wishlist.length > 0 && (
-                  <span className="absolute -top-1 -right-1 h-4.5 w-4.5 bg-rose-500 text-[9px] font-black text-white rounded-full flex items-center justify-center shadow-xs">
+                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-rose-500 text-[9px] font-black text-white rounded-full flex items-center justify-center shadow-sm">
                     {wishlist.length}
                   </span>
                 )}
               </button>
 
-              {/* Cart Button */}
+              {/* Cart */}
               <button
                 onClick={() => setCartOpen(true)}
-                className="p-2 sm:px-3 py-2 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80 transition-colors relative flex items-center gap-2"
+                className="relative flex items-center gap-2 px-2.5 sm:px-3 py-2 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all shadow-sm text-xs font-bold"
                 aria-label="Cart"
               >
-                <ShoppingCart size={18} className="text-primary" />
-                {cartItemCount > 0 && (
+                <ShoppingCart size={16} />
+                {cartItemCount > 0 ? (
                   <>
-                    <span className="bg-primary text-white text-[10px] font-black px-1.5 py-0.5 rounded-lg shadow-2xs">
-                      {cartItemCount}
-                    </span>
-                    <span className="text-xs font-black text-foreground hidden xl:inline-block">
-                      ₹{cartTotal.toLocaleString()}
-                    </span>
+                    <span className="font-black">{cartItemCount}</span>
+                    <span className="hidden xl:inline text-[11px] font-bold opacity-90">₹{cartTotal.toLocaleString()}</span>
                   </>
+                ) : (
+                  <span className="hidden sm:inline text-[11px] font-bold opacity-90">Cart</span>
+                )}
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 h-4 w-4 bg-rose-500 text-[9px] font-black text-white rounded-full flex items-center justify-center shadow-sm sm:hidden">
+                    {cartItemCount}
+                  </span>
                 )}
               </button>
 
-              {/* Authentication Actions */}
+              {/* User Account */}
               {isAuthenticated && user ? (
                 <div ref={userMenuRef} className="relative hidden md:block">
                   <button
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center gap-2 p-1.5 pr-3 rounded-2xl border border-border-custom/80 bg-background-secondary hover:bg-card transition-colors text-xs font-bold"
+                    className="flex items-center gap-2 p-1.5 pr-2.5 rounded-xl border border-border-custom/80 bg-background-secondary hover:bg-card transition-colors text-xs font-bold"
                   >
-                    <div className="h-8 w-8 rounded-xl bg-primary text-white flex items-center justify-center font-black text-xs uppercase shadow-2xs">
+                    <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-primary to-primary-hover text-white flex items-center justify-center font-black text-[11px] uppercase shadow-sm">
                       {user.name.substring(0, 2)}
                     </div>
-                    <span className="max-w-[90px] truncate text-foreground">
-                      {user.name}
-                    </span>
-                    <ChevronDown size={14} className="text-muted-custom" />
+                    <span className="max-w-[80px] truncate text-foreground hidden lg:block">{user.name.split(' ')[0]}</span>
+                    <ChevronDown size={13} className="text-muted-custom" />
                   </button>
                   {userMenuOpen && (
                     <div className="absolute right-0 mt-2 w-52 bg-card border border-border-custom rounded-2xl shadow-xl z-50 overflow-hidden divide-y divide-border-custom/80">
@@ -300,39 +352,39 @@ export const Header: React.FC = () => {
                         {isSeller ? (
                           <>
                             <Link href="/vendor" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
-                              <LayoutDashboard size={15} className="text-primary" />
+                              <LayoutDashboard size={14} className="text-primary" />
                               <span>{t('nav.vendor_dashboard')}</span>
                             </Link>
                             <Link href="/vendor/products" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
-                              <Package size={15} className="text-primary" />
+                              <Package size={14} className="text-primary" />
                               <span>{t('nav.my_products')}</span>
                             </Link>
                             <Link href="/vendor/orders" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
-                              <ShoppingBag size={15} className="text-primary" />
+                              <ShoppingBag size={14} className="text-primary" />
                               <span>{t('nav.my_orders_menu')}</span>
                             </Link>
                             <Link href="/vendor/inventory" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
-                              <Boxes size={15} className="text-primary" />
+                              <Boxes size={14} className="text-primary" />
                               <span>{t('nav.inventory')}</span>
                             </Link>
                             <Link href="/vendor/wallet" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
-                              <Wallet size={15} className="text-primary" />
+                              <Wallet size={14} className="text-primary" />
                               <span>{t('nav.earnings')}</span>
                             </Link>
                             <Link href="/vendor/settings" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors font-bold">
-                              <Settings size={15} className="text-primary" />
+                              <Settings size={14} className="text-primary" />
                               <span>{t('nav.store_settings')}</span>
                             </Link>
                           </>
                         ) : (
                           <>
                             <Link href="/account" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-foreground hover:bg-background-secondary transition-colors">
-                              <User size={15} className="text-muted-custom" />
+                              <User size={14} className="text-muted-custom" />
                               {t('nav.profile')}
                             </Link>
                             {isAdmin && (
                               <Link href="/admin" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2.5 text-rose-500 hover:bg-background-secondary transition-colors font-bold">
-                                <ShieldCheck size={15} />
+                                <ShieldCheck size={14} />
                                 {t('nav.admin_dashboard')}
                               </Link>
                             )}
@@ -359,173 +411,116 @@ export const Header: React.FC = () => {
                   )}
                 </div>
               ) : (
-                /* Unauthenticated Guest Login & Sign Up Buttons */
                 <div className="hidden sm:flex items-center gap-2">
                   <Link
                     href="/login"
-                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-card hover:bg-background-secondary text-foreground border border-border-custom/90 text-xs font-bold transition-all hover:border-primary shadow-2xs"
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-card hover:bg-background-secondary text-foreground border border-border-custom/90 text-[11px] font-bold transition-all hover:border-primary shadow-sm"
                   >
-                    <User size={15} className="text-primary" />
+                    <User size={14} className="text-primary" />
                     <span>{t('nav.login_btn')}</span>
                   </Link>
                   <Link
                     href="/signup"
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary hover:bg-primary-hover text-white text-xs font-bold transition-all shadow-md hover:-translate-y-0.5 active:translate-y-0"
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary hover:bg-primary-hover text-white text-[11px] font-bold transition-all shadow-md"
                   >
-                    <UserPlus size={14} />
+                    <UserPlus size={13} />
                     <span>{t('nav.sign_up')}</span>
                   </Link>
                 </div>
               )}
-
             </div>
           </div>
 
-          {/* Mobile Expanded Search Bar */}
+          {/* Mobile Search Bar (expanded) */}
           {mobileSearchOpen && (
-            <div className="lg:hidden pb-4 pt-1">
+            <div className="lg:hidden pb-3 pt-1 animate-in fade-in slide-in-from-top-2 duration-200">
               <SearchBar />
             </div>
           )}
         </div>
       </header>
 
-      {/* Mobile Menu Drawer */}
+      {/* ═══════════════════════════════════════════════════════════
+          MOBILE MENU DRAWER
+          ═══════════════════════════════════════════════════════════ */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 flex bg-slate-950/60 backdrop-blur-xs transition-opacity lg:hidden">
-          <div className="w-4/5 max-w-sm bg-card text-card-foreground p-6 shadow-2xl flex flex-col h-full animate-slide-in relative border-r border-border-custom/80">
-            <div className="flex items-center justify-between border-b border-border-custom/80 pb-4 mb-4">
-              <span className="text-lg font-black text-primary flex items-center gap-1">
-                JSS<span className="text-accent">Solutions</span>
-              </span>
+        <div className="fixed inset-0 z-50 flex bg-slate-950/70 backdrop-blur-sm transition-opacity lg:hidden">
+          <div className="w-4/5 max-w-sm bg-card text-card-foreground shadow-2xl flex flex-col h-full animate-slide-in relative border-r border-border-custom/80">
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between border-b border-border-custom/80 px-5 py-4">
+              <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center">
+                  <span className="text-white font-black text-sm">J</span>
+                </div>
+                <span className="text-base font-black text-foreground">
+                  JSS<span className="text-primary">Solutions</span>
+                </span>
+              </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80"
+                className="p-2 text-foreground hover:bg-background-secondary rounded-xl border border-border-custom/80"
               >
                 <X size={18} />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto space-y-4 text-xs font-bold">
+            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 text-xs font-bold">
+              {/* Auth Actions */}
               {isSeller ? (
-                <div className="space-y-1.5 pt-2">
-                  <Link
-                    href="/vendor"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2.5 p-3.5 bg-primary/10 text-primary border border-primary/20 rounded-2xl font-bold"
-                  >
-                    <LayoutDashboard size={18} />
-                    <span>{t('nav.vendor_dashboard')}</span>
+                <div className="space-y-1.5">
+                  <Link href="/vendor" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2.5 p-3.5 bg-primary/10 text-primary border border-primary/20 rounded-xl font-bold">
+                    <LayoutDashboard size={17} /><span>{t('nav.vendor_dashboard')}</span>
                   </Link>
-                  <Link
-                    href="/vendor/products"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-2xl font-semibold"
-                  >
-                    <Package size={16} />
-                    <span>{t('nav.my_products')}</span>
+                  <Link href="/vendor/products" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-xl font-semibold">
+                    <Package size={15} /><span>{t('nav.my_products')}</span>
                   </Link>
-                  <Link
-                    href="/vendor/orders"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-2xl font-semibold"
-                  >
-                    <ShoppingBag size={16} />
-                    <span>{t('nav.my_orders_menu')}</span>
+                  <Link href="/vendor/orders" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-xl font-semibold">
+                    <ShoppingBag size={15} /><span>{t('nav.my_orders_menu')}</span>
                   </Link>
-                  <Link
-                    href="/vendor/inventory"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-2xl font-semibold"
-                  >
-                    <Boxes size={16} />
-                    <span>{t('nav.inventory')}</span>
-                  </Link>
-                  <Link
-                    href="/vendor/wallet"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-2xl font-semibold"
-                  >
-                    <Wallet size={16} />
-                    <span>{t('nav.earnings')}</span>
-                  </Link>
-                  <Link
-                    href="/vendor/settings"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-2xl font-semibold"
-                  >
-                    <Settings size={16} />
-                    <span>{t('nav.store_settings')}</span>
+                  <Link href="/vendor/wallet" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2.5 p-3 bg-background-secondary text-foreground rounded-xl font-semibold">
+                    <Wallet size={15} /><span>{t('nav.earnings')}</span>
                   </Link>
                 </div>
               ) : (
-                <Link
-                  href="/seller/register"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2.5 p-3.5 bg-accent/10 border border-accent/20 text-accent rounded-2xl shadow-2xs"
-                >
-                  <Store size={18} />
+                <Link href="/seller/register" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2.5 p-3.5 bg-accent/10 border border-accent/20 text-accent rounded-xl">
+                  <Store size={17} />
                   <span>{t('nav.become_seller')} / {t('nav.sell_products')}</span>
                 </Link>
               )}
 
               {!isAuthenticated ? (
-                <div className="grid grid-cols-2 gap-2.5 pt-2">
-                  <Link
-                    href="/login"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-3 text-center bg-background-secondary border border-border-custom/80 text-foreground rounded-2xl"
-                  >
+                <div className="grid grid-cols-2 gap-2.5 pt-1">
+                  <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="p-3 text-center bg-background-secondary border border-border-custom/80 text-foreground rounded-xl">
                     {t('nav.login_btn')}
                   </Link>
-                  <Link
-                    href="/signup"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-3 text-center bg-primary text-white rounded-2xl shadow-xs"
-                  >
+                  <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="p-3 text-center bg-primary text-white rounded-xl shadow-sm">
                     {t('nav.sign_up')}
                   </Link>
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <Link
-                    href="/account"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2.5 p-3.5 bg-primary/10 text-primary border border-primary/20 rounded-2xl"
-                  >
-                    <User size={18} />
-                    <span>{t('nav.profile')}</span>
+                  <Link href="/account" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2.5 p-3.5 bg-primary/10 text-primary border border-primary/20 rounded-xl">
+                    <User size={17} /><span>{t('nav.profile')}</span>
                   </Link>
-
                   <button
                     onClick={() => { setMobileMenuOpen(false); handleLogout(); }}
                     disabled={isLoggingOut}
-                    className="w-full flex items-center justify-center gap-2 p-3 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-2xl text-xs font-bold transition-all disabled:opacity-50"
+                    className="w-full flex items-center justify-center gap-2 p-3 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-xl text-xs font-bold transition-all disabled:opacity-50"
                   >
-                    {isLoggingOut ? (
-                      <>
-                        <Sparkles className="w-4 h-4 animate-spin text-rose-500" />
-                        <span>{t('nav.signing_out')}</span>
-                      </>
-                    ) : (
-                      <span>{t('nav.logout')}</span>
-                    )}
+                    {isLoggingOut ? <><Sparkles className="w-4 h-4 animate-spin" /><span>{t('nav.signing_out')}</span></> : <span>{t('nav.logout')}</span>}
                   </button>
                 </div>
               )}
 
-              {/* Mobile Categories & Subcategories Navigation */}
+              {/* Mobile Category Navigation */}
               {categories.length > 0 && (
-                <div className="pt-4 border-t border-border-custom/80 space-y-2">
-                  <div className="pb-1 text-[10px] font-black text-muted-custom uppercase tracking-wider">
-                    {t('nav.categories')}
-                  </div>
+                <div className="pt-3 border-t border-border-custom/80 space-y-2">
+                  <div className="pb-1 text-[10px] font-black text-muted-custom uppercase tracking-wider">{t('nav.categories')}</div>
                   <div className="space-y-1.5 max-h-72 overflow-y-auto pr-1">
                     {categories.map((cat) => {
                       const subcats = cat.subcategories || cat.children || [];
                       const catName = getLocalizedText(cat.name, language);
                       const isExpanded = expandedMobileCat === cat.id;
-
                       return (
                         <div key={cat.id} className="rounded-xl border border-border-custom/60 overflow-hidden bg-background-secondary/50">
                           <button
@@ -533,9 +528,8 @@ export const Header: React.FC = () => {
                             className="w-full flex items-center justify-between p-3 text-left font-bold text-xs text-foreground hover:bg-card transition-colors"
                           >
                             <span className="truncate">{catName}</span>
-                            <ChevronDown size={14} className={`text-muted-custom transition-transform ${isExpanded ? 'rotate-180 text-primary' : ''}`} />
+                            <ChevronDown size={13} className={`text-muted-custom transition-transform ${isExpanded ? 'rotate-180 text-primary' : ''}`} />
                           </button>
-
                           {isExpanded && (
                             <div className="p-2.5 bg-card border-t border-border-custom/60 space-y-1">
                               {subcats.length > 0 ? (
@@ -561,29 +555,45 @@ export const Header: React.FC = () => {
                   </div>
                 </div>
               )}
+
+              {/* Trust pills in mobile drawer */}
+              <div className="pt-3 border-t border-border-custom/80">
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { icon: <Truck size={13} className="text-emerald-500" />, text: 'Free Delivery ₹499+' },
+                    { icon: <ShieldCheck size={13} className="text-blue-500" />, text: 'Secure Payments' },
+                    { icon: <BadgeCheck size={13} className="text-amber-500" />, text: 'GST Verified Sellers' },
+                    { icon: <RefreshCw size={13} className="text-rose-500" />, text: 'Easy Returns' },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-2 bg-background-secondary rounded-xl px-3 py-2.5 border border-border-custom/60">
+                      {item.icon}
+                      <span className="text-[10px] font-bold text-foreground">{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Cart Drawer */}
+      {/* ═══════════════════════════════════════════════════════════
+          CART DRAWER
+          ═══════════════════════════════════════════════════════════ */}
       {cartOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/60 backdrop-blur-xs transition-opacity">
+        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/60 backdrop-blur-sm transition-opacity">
           <div className="w-full max-w-md bg-card text-card-foreground p-6 shadow-2xl flex flex-col h-full animate-slide-in relative border-l border-border-custom/80">
-            <button
-              onClick={() => setCartOpen(false)}
-              className="absolute top-4 right-4 p-2 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80"
-            >
+            <button onClick={() => setCartOpen(false)} className="absolute top-4 right-4 p-2 text-foreground hover:bg-background-secondary rounded-xl border border-border-custom/80">
               <X size={18} />
             </button>
             <h2 className="text-lg font-black text-foreground mb-6 flex items-center gap-2 border-b border-border-custom/80 pb-4">
-              <ShoppingCart className="text-primary" size={22} />
+              <ShoppingCart className="text-primary" size={20} />
               <span>{t('nav.cart')}</span>
               <span className="text-xs bg-primary/10 text-primary border border-primary/20 px-2.5 py-0.5 rounded-xl font-extrabold">
                 {cartItemCount} Items
               </span>
             </h2>
-            
+
             <div className="flex-1 overflow-y-auto space-y-3 pr-1">
               {cart.length === 0 ? (
                 <div className="h-64 flex flex-col items-center justify-center text-center space-y-2">
@@ -593,11 +603,7 @@ export const Header: React.FC = () => {
               ) : (
                 cart.map((item) => (
                   <div key={item.product.id} className="flex gap-3.5 p-3.5 bg-background-secondary rounded-2xl border border-border-custom/80">
-                    <img
-                      src={item.product.image}
-                      alt={item.product.name}
-                      className="h-16 w-16 rounded-xl object-contain bg-card p-1 border border-border-custom/80 shrink-0"
-                    />
+                    <img src={item.product.image} alt={item.product.name} className="h-16 w-16 rounded-xl object-contain bg-card p-1 border border-border-custom/80 shrink-0" />
                     <div className="flex-1 min-w-0 flex flex-col justify-between">
                       <div>
                         <h4 className="font-bold text-xs text-foreground truncate">{item.product.name}</h4>
@@ -606,26 +612,13 @@ export const Header: React.FC = () => {
                       <div className="flex justify-between items-center mt-2">
                         <span className="font-black text-xs text-primary">₹{item.product.offerPrice.toLocaleString()}</span>
                         <div className="flex items-center border border-border-custom/80 bg-card rounded-xl overflow-hidden">
-                          <button
-                            onClick={() => updateCartQuantity(item.product.id, item.quantity - 1)}
-                            className="p-1 hover:bg-background-secondary text-muted-custom"
-                          >
-                            <Minus size={11} />
-                          </button>
+                          <button onClick={() => updateCartQuantity(item.product.id, item.quantity - 1)} className="p-1 hover:bg-background-secondary text-muted-custom"><Minus size={11} /></button>
                           <span className="px-2 text-xs font-bold text-foreground">{item.quantity}</span>
-                          <button
-                            onClick={() => updateCartQuantity(item.product.id, item.quantity + 1)}
-                            className="p-1 hover:bg-background-secondary text-muted-custom"
-                          >
-                            <Plus size={11} />
-                          </button>
+                          <button onClick={() => updateCartQuantity(item.product.id, item.quantity + 1)} className="p-1 hover:bg-background-secondary text-muted-custom"><Plus size={11} /></button>
                         </div>
                       </div>
                     </div>
-                    <button
-                      onClick={() => removeFromCart(item.product.id)}
-                      className="p-1.5 self-start text-muted-custom hover:text-rose-500 transition-colors"
-                    >
+                    <button onClick={() => removeFromCart(item.product.id)} className="p-1.5 self-start text-muted-custom hover:text-rose-500 transition-colors">
                       <Trash2 size={14} />
                     </button>
                   </div>
@@ -639,11 +632,7 @@ export const Header: React.FC = () => {
                   <span className="text-xs font-bold text-muted-custom uppercase">{t('cart.summary')}</span>
                   <span className="text-lg font-black text-foreground">₹{cartTotal.toLocaleString()}</span>
                 </div>
-                <Link
-                  href="/checkout"
-                  onClick={() => setCartOpen(false)}
-                  className="w-full bg-primary text-white py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider hover:bg-primary-hover transition-all text-center block shadow-xs"
-                >
+                <Link href="/checkout" onClick={() => setCartOpen(false)} className="w-full bg-primary text-white py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider hover:bg-primary-hover transition-all text-center block shadow-sm">
                   {t('cart.checkout')}
                 </Link>
               </div>
@@ -652,24 +641,20 @@ export const Header: React.FC = () => {
         </div>
       )}
 
-      {/* Wishlist Drawer */}
+      {/* ═══════════════════════════════════════════════════════════
+          WISHLIST DRAWER
+          ═══════════════════════════════════════════════════════════ */}
       {wishlistOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/60 backdrop-blur-xs transition-opacity">
+        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/60 backdrop-blur-sm transition-opacity">
           <div className="w-full max-w-md bg-card text-card-foreground p-6 shadow-2xl flex flex-col h-full animate-slide-in relative border-l border-border-custom/80">
-            <button
-              onClick={() => setWishlistOpen(false)}
-              className="absolute top-4 right-4 p-2 text-foreground hover:bg-background-secondary rounded-2xl border border-border-custom/80"
-            >
+            <button onClick={() => setWishlistOpen(false)} className="absolute top-4 right-4 p-2 text-foreground hover:bg-background-secondary rounded-xl border border-border-custom/80">
               <X size={18} />
             </button>
             <h2 className="text-lg font-black text-foreground mb-6 flex items-center gap-2 border-b border-border-custom/80 pb-4">
-              <Heart className="text-rose-500 fill-rose-500" size={22} />
+              <Heart className="text-rose-500 fill-rose-500" size={20} />
               <span>{t('nav.wishlist')}</span>
-              <span className="text-xs bg-rose-500/10 text-rose-500 border border-rose-500/20 px-2.5 py-0.5 rounded-xl font-extrabold">
-                {wishlist.length} Items
-              </span>
+              <span className="text-xs bg-rose-500/10 text-rose-500 border border-rose-500/20 px-2.5 py-0.5 rounded-xl font-extrabold">{wishlist.length} Items</span>
             </h2>
-            
             <div className="flex-1 overflow-y-auto space-y-3 pr-1">
               {wishlist.length === 0 ? (
                 <div className="h-64 flex flex-col items-center justify-center text-center space-y-2">
@@ -679,11 +664,7 @@ export const Header: React.FC = () => {
               ) : (
                 wishlist.map((prod) => (
                   <div key={prod.id} className="flex gap-3.5 p-3.5 bg-background-secondary rounded-2xl border border-border-custom/80">
-                    <img
-                      src={prod.image}
-                      alt={prod.name}
-                      className="h-16 w-16 rounded-xl object-contain bg-card p-1 border border-border-custom/80 shrink-0"
-                    />
+                    <img src={prod.image} alt={prod.name} className="h-16 w-16 rounded-xl object-contain bg-card p-1 border border-border-custom/80 shrink-0" />
                     <div className="flex-1 min-w-0 flex flex-col justify-between">
                       <div>
                         <h4 className="font-bold text-xs text-foreground truncate">{prod.name}</h4>
@@ -691,21 +672,12 @@ export const Header: React.FC = () => {
                       </div>
                       <div className="flex justify-between items-center mt-2">
                         <span className="font-black text-xs text-primary">₹{prod.offerPrice.toLocaleString()}</span>
-                        <button
-                          onClick={() => {
-                            addToCart(prod);
-                            toggleWishlist(prod);
-                          }}
-                          className="text-[10px] font-bold text-white bg-primary hover:bg-primary-hover px-3 py-1.5 rounded-xl transition-colors shadow-2xs"
-                        >
+                        <button onClick={() => { addToCart(prod); toggleWishlist(prod); }} className="text-[10px] font-bold text-white bg-primary hover:bg-primary-hover px-3 py-1.5 rounded-xl transition-colors shadow-sm">
                           {t('prod.add_to_cart')}
                         </button>
                       </div>
                     </div>
-                    <button
-                      onClick={() => toggleWishlist(prod)}
-                      className="p-1.5 self-start text-muted-custom hover:text-rose-500 transition-colors"
-                    >
+                    <button onClick={() => toggleWishlist(prod)} className="p-1.5 self-start text-muted-custom hover:text-rose-500 transition-colors">
                       <Trash2 size={14} />
                     </button>
                   </div>
@@ -717,10 +689,7 @@ export const Header: React.FC = () => {
       )}
 
       {selectedProductId && (
-        <ProductQuickView
-          productId={selectedProductId}
-          onClose={() => setSelectedProductId(null)}
-        />
+        <ProductQuickView productId={selectedProductId} onClose={() => setSelectedProductId(null)} />
       )}
     </>
   );
