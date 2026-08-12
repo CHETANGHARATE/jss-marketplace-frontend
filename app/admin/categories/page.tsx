@@ -16,6 +16,7 @@ import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { AdminSidebar } from '../../../components/AdminSidebar';
 import { ApiCategory } from '../../../types/api';
 import { useToast } from '../../../components/Toast';
+import { deduplicateCategories } from '../../../hooks/useCategories';
 import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import {
   Layers,
@@ -84,7 +85,8 @@ export default function CategoriesPage() {
 
   // Filtered Top-Level Categories
   const topLevelCategories = useMemo(() => {
-    return categories.filter((cat) => !cat.parent_id);
+    const rawParents = categories.filter((cat) => !cat.parent_id);
+    return deduplicateCategories(rawParents);
   }, [categories]);
 
   const filteredCategories = useMemo(() => {
@@ -99,7 +101,7 @@ export default function CategoriesPage() {
     const items: ApiCategory[] = [];
     topLevelCategories.forEach((parent) => {
       if (parent.children && parent.children.length > 0) {
-        parent.children.forEach((child) => {
+        parent.children.forEach((child: ApiCategory) => {
           items.push({ ...child, parent });
         });
       }

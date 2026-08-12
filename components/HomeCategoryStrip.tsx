@@ -142,45 +142,11 @@ const getName = (name: any): string => {
 const normalizeCatKey = (cat: Category): string => {
   const rawSlug = String((cat as any).slug || cat.id || '').toLowerCase();
   const nameStr = getName(cat.name).toLowerCase();
-  const cleanStr = (nameStr || rawSlug)
+  return (nameStr || rawSlug)
     .replace(/[-_]/g, ' ')
     .replace(/&/g, 'and')
     .replace(/\s+/g, ' ')
     .trim();
-
-  // Map semantic aliases to single canonical keys
-  if (cleanStr.includes('agriculture') || cleanStr.includes('seed') || cleanStr.includes('agri')) {
-    return 'agriculture_seeds';
-  }
-  if (cleanStr.includes('pooja') || cleanStr.includes('religious') || cleanStr.includes('spiritual')) {
-    return 'religious_pooja';
-  }
-  if (cleanStr.includes('gifts') || cleanStr.includes('handicrafts')) {
-    return 'gifts_handicrafts';
-  }
-  if (cleanStr.includes('baby') || cleanStr.includes('kids')) {
-    return 'baby_kids';
-  }
-  if (cleanStr.includes('papad') || cleanStr.includes('kurdai')) {
-    return 'papad_kurdai';
-  }
-  if (cleanStr.includes('astro') || cleanStr.includes('stone')) {
-    return 'astro_stone';
-  }
-  if (cleanStr.includes('homemade') || cleanStr.includes('local')) {
-    return 'local_homemade';
-  }
-  if (cleanStr.includes('masale') || cleanStr.includes('spices')) {
-    return 'masale_spices';
-  }
-  if (cleanStr.includes('juices') || cleanStr.includes('syrups')) {
-    return 'juices_syrups';
-  }
-  if (cleanStr.includes('beauty') || cleanStr.includes('cosmetic') || cleanStr.includes('personal care')) {
-    return 'beauty_personal_care';
-  }
-
-  return cleanStr;
 };
 
 export const HomeCategoryStrip: React.FC<Props> = ({ categories }) => {
