@@ -65,6 +65,18 @@ export function getSubcategoryImage(subcatSlugOrId: string | number, subcatName?
   if (nameKey.includes('hawan') || nameKey.includes('havan') || slugKey.includes('hawan')) return '/images/subcategories/hawan-samagri.svg';
   if (nameKey.includes('idol') || nameKey.includes('statue') || slugKey.includes('idol')) return '/images/subcategories/idol-statues-photo-frames.svg';
 
+  // Astro Stone subcategories
+  if (nameKey.includes('opal') || slugKey.includes('opal')) return '/images/subcategories/ruby-manik.svg';
+  if (nameKey.includes('sphatik') || nameKey.includes('quartz') || slugKey.includes('sphatik')) return '/images/subcategories/blue-sapphire-neelam.svg';
+  if (nameKey.includes('ruby') || nameKey.includes('manik') || slugKey.includes('ruby')) return '/images/subcategories/ruby-manik.svg';
+  if (nameKey.includes('pyrite') || slugKey.includes('pyrite')) return '/images/subcategories/yellow-sapphire-pukhraj.svg';
+  if (nameKey.includes('blue sapphire') || nameKey.includes('neelam') || slugKey.includes('neelam')) return '/images/subcategories/blue-sapphire-neelam.svg';
+  if (nameKey.includes('firoza') || nameKey.includes('turquoise') || slugKey.includes('firoza')) return '/images/subcategories/blue-sapphire-neelam.svg';
+  if (nameKey.includes('hira') || nameKey.includes('diamond') || slugKey.includes('hira')) return '/images/subcategories/ruby-manik.svg';
+  if (nameKey.includes('panna') || nameKey.includes('emerald') || slugKey.includes('panna')) return '/images/subcategories/emerald-panna.svg';
+  if (nameKey.includes('gomed') || nameKey.includes('hessonite') || slugKey.includes('gomed')) return '/images/subcategories/emerald-panna.svg';
+  if (nameKey.includes('pukhraj') || nameKey.includes('pushkaraj') || slugKey.includes('pukhraj')) return '/images/subcategories/yellow-sapphire-pukhraj.svg';
+
   // 4. Physical SVG image asset in /images/subcategories/{slug}.svg
   if (slugKey) {
     return `/images/subcategories/${slugKey}.svg`;

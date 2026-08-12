@@ -241,6 +241,26 @@ export const CATEGORY_VISUALS_MAP: Record<string, CategoryVisualConfig> = {
       { name: 'Handmade Soaps', slug: 'soaps-candles', description: 'Explore collection', icon: Sparkles },
       { name: 'Pure Desi Ghee', slug: 'homemade-ghee', description: 'Explore collection', icon: Droplets },
     ]
+  },
+
+  astro_stone: {
+    key: 'astro_stone',
+    icon: Gem,
+    colorClass: 'text-purple-500',
+    iconBgLight: 'bg-purple-500/10 text-purple-600 border-purple-500/20',
+    iconBgDark: 'dark:bg-purple-500/20 dark:text-purple-400 dark:border-purple-500/30',
+    defaultSubcategories: [
+      { name: 'Opal', slug: 'opal', description: 'Explore collection', icon: Gem },
+      { name: 'Clear Quartz / Sphatik', slug: 'clear-quartz-sphatik', description: 'Explore collection', icon: Sparkles },
+      { name: 'Ruby / Manik', slug: 'ruby-manik', description: 'Explore collection', icon: Gem },
+      { name: 'Pyrite', slug: 'pyrite', description: 'Explore collection', icon: Sparkles },
+      { name: 'Blue Sapphire / Neelam', slug: 'blue-sapphire-neelam', description: 'Explore collection', icon: Gem },
+      { name: 'Turquoise / Firoza', slug: 'turquoise-firoza', description: 'Explore collection', icon: Gem },
+      { name: 'Diamond / Hira', slug: 'diamond-hira', description: 'Explore collection', icon: Crown },
+      { name: 'Emerald / Panna', slug: 'emerald-panna', description: 'Explore collection', icon: Gem },
+      { name: 'Hessonite / Gomed', slug: 'hessonite-gomed', description: 'Explore collection', icon: Gem },
+      { name: 'Yellow Sapphire / Pushkaraj', slug: 'yellow-sapphire-pushkaraj', description: 'Explore collection', icon: Gem },
+    ]
   }
 };
 
@@ -268,6 +288,7 @@ export function getCategoryVisualConfig(category: any): CategoryVisualConfig {
 
   const combined = `${rawSlug} ${rawName}`;
 
+  if (combined.includes('astro') || combined.includes('stone') || combined.includes('gem') || combined.includes('crystal')) return CATEGORY_VISUALS_MAP.astro_stone;
   if (combined.includes('juice') || combined.includes('syrup')) return CATEGORY_VISUALS_MAP.juices_syrups;
   if (combined.includes('kitchen') || combined.includes('home') || combined.includes('furniture')) return CATEGORY_VISUALS_MAP.home_kitchen;
   if (combined.includes('pooja') || combined.includes('religious') || combined.includes('spiritual')) return CATEGORY_VISUALS_MAP.religious_pooja;
