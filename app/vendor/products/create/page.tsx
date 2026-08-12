@@ -10,6 +10,7 @@ import { DynamicAttributeForm } from '@/components/vendor/DynamicAttributeForm';
 import { ProductVariantsManager } from '@/components/vendor/ProductVariantsManager';
 import { ImageGalleryUploader } from '@/components/vendor/ImageGalleryUploader';
 import { ApiProductVariant } from '@/types/api';
+import { CreateSubcategoryModal } from '@/components/CreateSubcategoryModal';
 
 import {
   ArrowLeft,
@@ -24,7 +25,8 @@ import {
   Truck,
   ShieldCheck,
   Globe,
-  Bot
+  Bot,
+  Plus
 } from 'lucide-react';
 
 export default function CreateVendorProductPage() {
@@ -33,8 +35,9 @@ export default function CreateVendorProductPage() {
   const { data: brandsData } = useBrands();
 
   const createProductMutation = useCreateVendorProductMutation();
-
   const brands = brandsData || [];
+
+  const [isCreateSubcatModalOpen, setIsCreateSubcatModalOpen] = useState(false);
 
   // Active Wizard Tab
   const [activeTab, setActiveTab] = useState<'basic' | 'attributes' | 'images' | 'pricing_variants' | 'shipping_policies_seo'>('basic');
@@ -320,14 +323,31 @@ export default function CreateVendorProductPage() {
             </div>
 
             <div>
-              <label className="text-xs font-bold text-foreground mb-1 block">Subcategory</label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-xs font-bold text-foreground">Subcategory</label>
+                {categoryId && (
+                  <button
+                    type="button"
+                    onClick={() => setIsCreateSubcatModalOpen(true)}
+                    className="text-[11px] font-bold text-primary hover:text-primary-hover flex items-center gap-0.5"
+                  >
+                    <Plus className="w-3 h-3" /> New Subcategory
+                  </button>
+                )}
+              </div>
               <select
                 value={subcategoryId || ''}
                 onChange={(e) => setSubcategoryId(e.target.value ? Number(e.target.value) : null)}
-                disabled={!categoryId || subcategories.length === 0}
+                disabled={!categoryId}
                 className="w-full px-4 py-2.5 text-xs rounded-2xl bg-background border border-border/60 focus:border-primary outline-none disabled:opacity-50"
               >
-                <option value="">Select Subcategory</option>
+                <option value="">
+                  {!categoryId
+                    ? 'Select Parent Category First'
+                    : subcategories.length === 0
+                    ? 'No Subcategories (Click + New Subcategory)'
+                    : 'Select Subcategory'}
+                </option>
                 {subcategories.map((sub: any) => (
                   <option key={sub.id} value={sub.id}>
                     {typeof sub.name === 'string' ? sub.name : sub.name.en || 'Subcategory'}
@@ -654,6 +674,23 @@ export default function CreateVendorProductPage() {
           </div>
         </div>
       )}
+
+      <CreateSubcategoryModal
+        isOpen={isCreateSubcatModalOpen}
+        onClose={() => setIsCreateSubcatModalOpen(false)}
+        parentCategoryId={categoryId}
+        parentCategoryName={selectedCategoryObj?.name?.en || (typeof selectedCategoryObj?.name === 'string' ? selectedCategoryObj.name : 'Selected Category')}
+        isVendor={true}
+        onSuccess={(newSubcat) => {
+          if (selectedCategoryObj) {
+            if (!Array.isArray(selectedCategoryObj.children)) {
+              selectedCategoryObj.children = [];
+            }
+            selectedCategoryObj.children.push(newSubcat);
+          }
+          setSubcategoryId(newSubcat.id);
+        }}
+      />
     </div>
   );
 }
