@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
@@ -28,7 +28,6 @@ import {
   LayoutGrid,
   Percent,
   Receipt,
-  Truck as SupplierIcon,
   UserCheck,
   Bell,
   HelpCircle,
@@ -43,15 +42,17 @@ interface AdminSidebarProps {
   onToggleCollapse?: () => void;
 }
 
+interface NavItem {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  exact?: boolean;
+  badge?: string;
+}
+
 interface NavGroup {
   groupName: string;
-  items: {
-    href: string;
-    label: string;
-    icon: React.ComponentType<{ size?: number; className?: string }>;
-    exact?: boolean;
-    badge?: string;
-  }[];
+  items: NavItem[];
 }
 
 const NAVIGATION_GROUPS: NavGroup[] = [
@@ -112,7 +113,7 @@ const NAVIGATION_GROUPS: NavGroup[] = [
     groupName: 'FINANCE & PROCUREMENT',
     items: [
       { href: '/admin/tax', label: 'Tax & GST', icon: Receipt },
-      { href: '/admin/suppliers', label: 'Suppliers', icon: SupplierIcon },
+      { href: '/admin/suppliers', label: 'Suppliers', icon: Truck },
     ],
   },
   {
@@ -127,16 +128,35 @@ const NAVIGATION_GROUPS: NavGroup[] = [
   },
 ];
 
+/** Determine which group owns the current pathname */
+function getActiveGroupName(pathname: string): string | null {
+  for (const group of NAVIGATION_GROUPS) {
+    for (const item of group.items) {
+      const isActive = item.exact
+        ? pathname === item.href
+        : pathname === item.href || pathname.startsWith(item.href + '/');
+      if (isActive) return group.groupName;
+    }
+  }
+  return null;
+}
+
 export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const queryClient = useQueryClient();
   const { user, logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
+
+  // Determine which group the current route belongs to
+  const activeGroupName = useMemo(() => getActiveGroupName(pathname), [pathname]);
+
+  // Single-open accordion: only the currently open group is expanded.
+  // Default: the group containing the active route is open; everything else is closed.
+  const [openGroup, setOpenGroup] = useState<string | null>(activeGroupName);
 
   const toggleGroup = (groupName: string) => {
-    setCollapsedGroups((prev) => ({ ...prev, [groupName]: !prev[groupName] }));
+    setOpenGroup((prev) => (prev === groupName ? null : groupName));
   };
 
   const handleLogout = async () => {
@@ -182,24 +202,35 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
       </div>
 
       {/* Navigation Group Accordion */}
-      <nav className="space-y-4 max-h-[calc(100vh-140px)] overflow-y-auto no-scrollbar pr-1">
+      <nav className="space-y-1 max-h-[calc(100vh-160px)] overflow-y-auto no-scrollbar pr-1">
         {NAVIGATION_GROUPS.map((group) => {
-          const isGroupCollapsed = collapsedGroups[group.groupName];
+          const isOpen = openGroup === group.groupName;
+          // In collapsed-icon mode, always show all items (tooltips show label)
+          const showItems = isCollapsed || isOpen;
 
           return (
-            <div key={group.groupName} className="space-y-1.5">
+            <div key={group.groupName}>
+              {/* Section heading / accordion trigger */}
               {!isCollapsed && (
                 <button
                   onClick={() => toggleGroup(group.groupName)}
-                  className="w-full flex items-center justify-between px-2 py-1 text-[12px] font-bold uppercase tracking-[0.1em] text-white hover:text-slate-200 transition-colors"
+                  className={`w-full flex items-center justify-between px-2 py-2 mt-1 rounded-xl text-[11px] font-bold uppercase tracking-[0.1em] transition-all ${
+                    isOpen
+                      ? 'text-white bg-white/5'
+                      : 'text-[#7090B8] hover:text-white hover:bg-white/5'
+                  }`}
                 >
                   <span>{group.groupName}</span>
-                  <ChevronDown size={14} className={`text-slate-300 transition-transform duration-200 ${isGroupCollapsed ? '-rotate-90' : ''}`} />
+                  <ChevronDown
+                    size={13}
+                    className={`text-[#7090B8] transition-transform duration-200 ${isOpen ? 'rotate-180 text-white' : ''}`}
+                  />
                 </button>
               )}
 
-              {!isGroupCollapsed && (
-                <div className="space-y-1">
+              {/* Menu items */}
+              {showItems && (
+                <div className={`space-y-0.5 ${!isCollapsed ? 'ml-1 mt-0.5 mb-2' : 'mt-1'}`}>
                   {group.items.map((item) => {
                     const Icon = item.icon;
                     const isActive = item.exact
@@ -211,13 +242,18 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
                         key={item.href}
                         href={item.href}
                         title={isCollapsed ? item.label : undefined}
-                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all ${
+                        className={`flex items-center gap-3 rounded-xl text-xs font-semibold transition-all ${
+                          isCollapsed ? 'px-2 py-2.5 justify-center' : 'px-3 py-2'
+                        } ${
                           isActive
                             ? 'bg-[#FF1654] text-white shadow-md font-bold'
                             : 'text-[#D7E2F3] hover:bg-white/10 hover:text-white'
-                        } ${isCollapsed ? 'justify-center px-2' : ''}`}
+                        }`}
                       >
-                        <Icon size={16} className={`shrink-0 ${isActive ? 'text-white' : 'text-[#94A3B8]'}`} />
+                        <Icon
+                          size={16}
+                          className={`shrink-0 ${isActive ? 'text-white' : 'text-[#94A3B8]'}`}
+                        />
                         {!isCollapsed && <span className="truncate flex-1">{item.label}</span>}
                         {!isCollapsed && item.badge && (
                           <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-white/20 text-white">
@@ -233,13 +269,13 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
           );
         })}
 
-        {/* Sign Out Button */}
-        <div className="pt-3 border-t border-[#1c325c] mt-4">
+        {/* Sign Out */}
+        <div className="pt-3 border-t border-[#1c325c] mt-2">
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold text-[#FF1654] hover:bg-[#FF1654]/15 hover:text-white transition-colors text-left disabled:opacity-50 ${
-              isCollapsed ? 'justify-center px-2' : ''
+            className={`w-full flex items-center gap-3 py-2.5 rounded-xl text-xs font-bold text-[#FF1654] hover:bg-[#FF1654]/15 hover:text-white transition-colors text-left disabled:opacity-50 ${
+              isCollapsed ? 'justify-center px-2' : 'px-3'
             }`}
           >
             {isLoggingOut ? (

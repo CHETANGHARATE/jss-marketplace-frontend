@@ -29,6 +29,8 @@ export interface AdminDashboardMetrics {
   total_categories?: number;
   low_stock_count?: number;
   sales_chart?: Array<{ date: string; revenue: number; orders: number }>;
+  orders_by_status?: Record<string, number>;
+  top_categories?: Array<{ id: number; name: string; total_sold: number; percentage: number }>;
 }
 
 export interface AdminSalesAnalytics {
