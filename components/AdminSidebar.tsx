@@ -152,21 +152,21 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
 
   return (
     <aside
-      className={`bg-card border border-border-custom/80 rounded-3xl p-4 shadow-sm shrink-0 lg:sticky lg:top-4 self-start transition-all duration-300 ${
+      className={`bg-[#07152F] text-white border border-[#1c325c] rounded-3xl p-4 shadow-xl shrink-0 lg:sticky lg:top-4 self-start transition-all duration-300 ${
         isCollapsed ? 'w-20' : 'w-full lg:w-64 xl:w-72'
       }`}
     >
       {/* Admin Profile Header */}
-      <div className="p-3.5 bg-rose-500/10 border border-rose-500/20 rounded-2xl space-y-1 mb-4 relative overflow-hidden">
+      <div className="p-3.5 bg-[#0d2146] border border-[#1e3a6e] rounded-2xl space-y-1 mb-4 relative overflow-hidden">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-rose-500 text-xs font-black uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 text-[#FF1654] text-[11px] font-bold uppercase tracking-wider">
             <Sparkles size={14} />
             {!isCollapsed && <span>Control Center</span>}
           </div>
           {onToggleCollapse && (
             <button
               onClick={onToggleCollapse}
-              className="text-rose-500 hover:bg-rose-500/20 p-1 rounded-lg transition-colors cursor-pointer hidden lg:block"
+              className="text-slate-300 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition-colors cursor-pointer hidden lg:block"
               title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
             >
               {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
@@ -175,8 +175,8 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
         </div>
         {!isCollapsed && (
           <>
-            <h4 className="font-black text-sm text-foreground truncate mt-1">{user?.name || 'Administrator'}</h4>
-            <span className="text-[11px] text-muted-custom font-semibold block truncate">{user?.email || 'admin@jss.com'}</span>
+            <h4 className="font-bold text-sm text-white truncate mt-1">{user?.name || 'Administrator'}</h4>
+            <span className="text-[11px] text-[#94A3B8] font-medium block truncate">{user?.email || 'admin@jss.com'}</span>
           </>
         )}
       </div>
@@ -187,19 +187,19 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
           const isGroupCollapsed = collapsedGroups[group.groupName];
 
           return (
-            <div key={group.groupName} className="space-y-1">
+            <div key={group.groupName} className="space-y-1.5">
               {!isCollapsed && (
                 <button
                   onClick={() => toggleGroup(group.groupName)}
-                  className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-black uppercase tracking-widest text-muted-custom/80 hover:text-foreground transition-colors"
+                  className="w-full flex items-center justify-between px-2 py-1 text-[12px] font-bold uppercase tracking-[0.1em] text-white hover:text-slate-200 transition-colors"
                 >
                   <span>{group.groupName}</span>
-                  <ChevronDown size={12} className={`transition-transform duration-200 ${isGroupCollapsed ? '-rotate-90' : ''}`} />
+                  <ChevronDown size={14} className={`text-slate-300 transition-transform duration-200 ${isGroupCollapsed ? '-rotate-90' : ''}`} />
                 </button>
               )}
 
               {!isGroupCollapsed && (
-                <div className="space-y-0.5">
+                <div className="space-y-1">
                   {group.items.map((item) => {
                     const Icon = item.icon;
                     const isActive = item.exact
@@ -211,16 +211,16 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
                         key={item.href}
                         href={item.href}
                         title={isCollapsed ? item.label : undefined}
-                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold transition-all ${
+                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all ${
                           isActive
-                            ? 'bg-rose-500 text-white shadow-xs'
-                            : 'text-foreground/75 hover:bg-background-secondary hover:text-foreground'
+                            ? 'bg-[#FF1654] text-white shadow-md font-bold'
+                            : 'text-[#D7E2F3] hover:bg-white/10 hover:text-white'
                         } ${isCollapsed ? 'justify-center px-2' : ''}`}
                       >
-                        <Icon size={16} className="shrink-0" />
+                        <Icon size={16} className={`shrink-0 ${isActive ? 'text-white' : 'text-[#94A3B8]'}`} />
                         {!isCollapsed && <span className="truncate flex-1">{item.label}</span>}
                         {!isCollapsed && item.badge && (
-                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-rose-400/20 text-white">
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-white/20 text-white">
                             {item.badge}
                           </span>
                         )}
@@ -234,16 +234,16 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
         })}
 
         {/* Sign Out Button */}
-        <div className="pt-3 border-t border-border-custom/60 mt-4">
+        <div className="pt-3 border-t border-[#1c325c] mt-4">
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold text-rose-500 hover:bg-rose-500/10 transition-colors text-left disabled:opacity-50 ${
+            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-bold text-[#FF1654] hover:bg-[#FF1654]/15 hover:text-white transition-colors text-left disabled:opacity-50 ${
               isCollapsed ? 'justify-center px-2' : ''
             }`}
           >
             {isLoggingOut ? (
-              <Sparkles size={16} className="animate-spin text-rose-500 shrink-0" />
+              <Sparkles size={16} className="animate-spin text-[#FF1654] shrink-0" />
             ) : (
               <LogOut size={16} className="shrink-0" />
             )}

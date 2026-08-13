@@ -47,7 +47,7 @@ export function AdminShell({ children }: AdminShellProps) {
               className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
               onClick={() => setIsMobileSidebarOpen(false)}
             />
-            <div className="relative w-72 max-w-[85vw] bg-card h-full p-4 overflow-y-auto shadow-2xl z-10">
+            <div className="relative w-72 max-w-[85vw] bg-[#07152F] h-full p-4 overflow-y-auto shadow-2xl z-10 border-r border-[#1c325c]">
               <AdminSidebar />
             </div>
           </div>
