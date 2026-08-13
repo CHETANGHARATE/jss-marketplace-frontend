@@ -27,7 +27,7 @@ export const SellerHeroBanner: React.FC<SellerHeroBannerProps> = ({ onStartSelli
       badgeColor: 'bg-emerald-700 text-white',
       borderColor: 'border-emerald-500/30',
       bgGlow: 'from-emerald-950/40 to-emerald-900/10',
-      image: '/promo/agriculture.png',
+      image: '/images/seller/farmer.jpg',
       fallbackIcon: '🌾',
     },
     {
@@ -36,7 +36,7 @@ export const SellerHeroBanner: React.FC<SellerHeroBannerProps> = ({ onStartSelli
       badgeColor: 'bg-emerald-700 text-white',
       borderColor: 'border-emerald-500/30',
       bgGlow: 'from-emerald-950/40 to-emerald-900/10',
-      image: '/promo/kitchen.png',
+      image: '/images/seller/manufacturer.jpg',
       fallbackIcon: '🏭',
     },
     {
@@ -45,7 +45,7 @@ export const SellerHeroBanner: React.FC<SellerHeroBannerProps> = ({ onStartSelli
       badgeColor: 'bg-emerald-700 text-white',
       borderColor: 'border-emerald-500/30',
       bgGlow: 'from-emerald-950/40 to-emerald-900/10',
-      image: '/promo/festival.png',
+      image: '/images/seller/home_business.jpg',
       fallbackIcon: '🏡',
     },
     {
@@ -54,7 +54,7 @@ export const SellerHeroBanner: React.FC<SellerHeroBannerProps> = ({ onStartSelli
       badgeColor: 'bg-purple-900 text-white',
       borderColor: 'border-purple-500/30',
       bgGlow: 'from-purple-950/40 to-purple-900/10',
-      image: '/promo/beauty.png',
+      image: '/images/seller/woman_entrepreneur.jpg',
       fallbackIcon: '👩‍💼',
     },
   ];
