@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../../contexts/AuthContext';
 import { useAdminDashboardQuery, useAdminSalesAnalyticsQuery } from '../../hooks/useAdmin';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   ShoppingBag,
   DollarSign,
@@ -14,6 +15,7 @@ import {
   TrendingDown,
   RefreshCw,
   ChevronRight,
+  ChevronDown,
   PlusCircle,
   Tag,
   Layers,
@@ -23,6 +25,7 @@ import {
   CheckCircle2,
   BarChart2,
   Calendar,
+  Check,
 } from 'lucide-react';
 import {
   AreaChart,
@@ -47,7 +50,12 @@ function formatINR(value: number): string {
 }
 
 function formatDate(dateStr: string): string {
+  if (!dateStr) return '';
   return new Date(dateStr).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+}
+
+function toISODate(d: Date): string {
+  return d.toISOString().split('T')[0];
 }
 
 // Status colours for order donut
@@ -68,6 +76,8 @@ const STATUS_LABEL: Record<string, string> = {
   cancelled: 'Cancelled',
   confirmed: 'Confirmed',
 };
+
+type DatePreset = 'today' | 'yesterday' | '7d' | '30d' | 'this_month' | 'last_month' | 'all' | 'custom';
 
 // ─── Skeleton loader ─────────────────────────────────────────────────────────
 
@@ -158,12 +168,126 @@ function DonutLegend({ data, total }: { data: { name: string; value: number; col
 
 export default function AdminDashboardPage() {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  // ── Date Range State & Preset Logic ──────────────────────────────────────
+  const [selectedPreset, setSelectedPreset] = useState<DatePreset>('all');
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const datePickerRef = useRef<HTMLDivElement>(null);
+
+  const [customStart, setCustomStart] = useState<string>(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 30);
+    return toISODate(d);
+  });
+  const [customEnd, setCustomEnd] = useState<string>(() => toISODate(new Date()));
+
+  // Close date picker dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
+        setIsDatePickerOpen(false);
+      }
+    }
+    if (isDatePickerOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDatePickerOpen]);
+
+  // Compute start_date and end_date based on selected preset
+  const dateRangeParams = useMemo(() => {
+    const now = new Date();
+    const today = toISODate(now);
+
+    switch (selectedPreset) {
+      case 'today':
+        return { start_date: today, end_date: today };
+      case 'yesterday': {
+        const y = new Date();
+        y.setDate(y.getDate() - 1);
+        const yStr = toISODate(y);
+        return { start_date: yStr, end_date: yStr };
+      }
+      case '7d': {
+        const d7 = new Date();
+        d7.setDate(d7.getDate() - 7);
+        return { start_date: toISODate(d7), end_date: today };
+      }
+      case '30d': {
+        const d30 = new Date();
+        d30.setDate(d30.getDate() - 30);
+        return { start_date: toISODate(d30), end_date: today };
+      }
+      case 'this_month': {
+        const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        return { start_date: toISODate(firstOfMonth), end_date: today };
+      }
+      case 'last_month': {
+        const firstOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const lastOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+        return { start_date: toISODate(firstOfLastMonth), end_date: toISODate(lastOfLastMonth) };
+      }
+      case 'custom':
+        return { start_date: customStart, end_date: customEnd };
+      case 'all':
+      default:
+        return undefined;
+    }
+  }, [selectedPreset, customStart, customEnd]);
+
+  // Dynamic label for the Date Range button
+  const dateRangeLabel = useMemo(() => {
+    const todayFormatted = new Date().toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
+
+    switch (selectedPreset) {
+      case 'today':
+        return `${todayFormatted} — Today`;
+      case 'yesterday':
+        return 'Yesterday';
+      case '7d':
+        return 'Last 7 Days';
+      case '30d':
+        return 'Last 30 Days';
+      case 'this_month':
+        return `This Month (${new Date().toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })})`;
+      case 'last_month':
+        return 'Last Month';
+      case 'custom':
+        return `${formatDate(customStart)} – ${formatDate(customEnd)}`;
+      case 'all':
+      default:
+        return `${todayFormatted} — All Time`;
+    }
+  }, [selectedPreset, customStart, customEnd]);
+
+  // ── Queries with date filtering ───────────────────────────────────────────
   const [chartPeriod, setChartPeriod] = useState<'7d' | '14d' | '30d'>('30d');
-  const { data: dashboard, isLoading, refetch } = useAdminDashboardQuery();
-  const { data: salesAnalytics } = useAdminSalesAnalyticsQuery(undefined);
+  const { data: dashboard, isLoading, refetch } = useAdminDashboardQuery(dateRangeParams);
+  const { data: salesAnalytics } = useAdminSalesAnalyticsQuery(dateRangeParams);
+
+  // ── Refresh Handler ───────────────────────────────────────────────────────
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] }),
+        queryClient.invalidateQueries({ queryKey: ['admin', 'analytics'] }),
+        refetch(),
+      ]);
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 600);
+    }
+  };
 
   // ── Derived chart data ────────────────────────────────────────────────────
-
   const salesChartData = useMemo(() => {
     const raw = dashboard?.sales_chart ?? [];
     const days = chartPeriod === '7d' ? 7 : chartPeriod === '14d' ? 14 : 30;
@@ -187,19 +311,9 @@ export default function AdminDashboardPage() {
   }, [dashboard?.orders_by_status, salesAnalytics?.orders_by_status]);
 
   const donutTotal = donutData.reduce((s, d) => s + d.value, 0);
-
   const topCategories = dashboard?.top_categories ?? [];
 
-  // ── Today string ─────────────────────────────────────────────────────────
-
-  const todayStr = new Date().toLocaleDateString('en-IN', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
-
   // ── Quick actions ─────────────────────────────────────────────────────────
-
   const quickActions = [
     {
       label: 'Add Product',
@@ -246,7 +360,6 @@ export default function AdminDashboardPage() {
   ];
 
   // ── Status badge colour ────────────────────────────────────────────────────
-
   function statusBadge(status: string) {
     const map: Record<string, string> = {
       delivered: 'bg-emerald-100 text-emerald-700',
@@ -264,7 +377,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-6 pb-8">
 
-      {/* ── Welcome Header ───────────────────────────────────────────────── */}
+      {/* ── Welcome Header with Interactive Controls ──────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
           <p className="text-sm text-slate-500 font-medium mb-0.5">Welcome back,</p>
@@ -277,17 +390,105 @@ export default function AdminDashboardPage() {
           <p className="text-sm text-slate-500 font-medium mt-0.5">Super Admin</p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
-          <div className="flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-600 shadow-sm">
-            <Calendar size={14} className="text-slate-400" />
-            <span>{todayStr} — Today</span>
-          </div>
+        <div className="flex items-center gap-2 shrink-0 relative" ref={datePickerRef}>
+          {/* Interactive Date Range Button */}
           <button
-            onClick={() => refetch()}
-            className="p-2 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-slate-800 transition-colors shadow-sm"
-            title="Refresh dashboard"
+            type="button"
+            onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+            className="flex items-center gap-2 px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-700 shadow-sm hover:bg-slate-50 hover:border-slate-300 active:scale-98 transition-all cursor-pointer"
+            title="Filter dashboard by date range"
           >
-            <RefreshCw size={15} className={isLoading ? 'animate-spin text-blue-500' : ''} />
+            <Calendar size={15} className="text-blue-600 shrink-0" />
+            <span>{dateRangeLabel}</span>
+            <ChevronDown size={14} className={`text-slate-400 transition-transform duration-200 ${isDatePickerOpen ? 'rotate-180 text-blue-600' : ''}`} />
+          </button>
+
+          {/* Date Range Dropdown Popover */}
+          {isDatePickerOpen && (
+            <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+              <div className="px-2 py-1 border-b border-slate-100 mb-2">
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Select Date Range</span>
+              </div>
+
+              {/* Preset Buttons */}
+              <div className="space-y-1">
+                {[
+                  { id: 'all' as DatePreset, label: 'All Time (Default)' },
+                  { id: 'today' as DatePreset, label: 'Today' },
+                  { id: 'yesterday' as DatePreset, label: 'Yesterday' },
+                  { id: '7d' as DatePreset, label: 'Last 7 Days' },
+                  { id: '30d' as DatePreset, label: 'Last 30 Days' },
+                  { id: 'this_month' as DatePreset, label: 'This Month' },
+                  { id: 'last_month' as DatePreset, label: 'Last Month' },
+                  { id: 'custom' as DatePreset, label: 'Custom Range' },
+                ].map((preset) => (
+                  <button
+                    key={preset.id}
+                    onClick={() => {
+                      setSelectedPreset(preset.id);
+                      if (preset.id !== 'custom') {
+                        setIsDatePickerOpen(false);
+                      }
+                    }}
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
+                      selectedPreset === preset.id
+                        ? 'bg-blue-50 text-blue-700 font-bold'
+                        : 'text-slate-700 hover:bg-slate-50'
+                    }`}
+                  >
+                    <span>{preset.label}</span>
+                    {selectedPreset === preset.id && <Check size={14} className="text-blue-600" />}
+                  </button>
+                ))}
+              </div>
+
+              {/* Custom Date Inputs (when Custom Range is active) */}
+              {selectedPreset === 'custom' && (
+                <div className="mt-3 pt-3 border-t border-slate-100 space-y-2.5">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Start Date</label>
+                      <input
+                        type="date"
+                        value={customStart}
+                        onChange={(e) => setCustomStart(e.target.value)}
+                        className="w-full px-2 py-1.5 text-xs font-medium border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">End Date</label>
+                      <input
+                        type="date"
+                        value={customEnd}
+                        onChange={(e) => setCustomEnd(e.target.value)}
+                        className="w-full px-2 py-1.5 text-xs font-medium border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsDatePickerOpen(false)}
+                    className="w-full py-2 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition-colors cursor-pointer"
+                  >
+                    Apply Custom Range
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Interactive Refresh Button */}
+          <button
+            type="button"
+            onClick={handleRefresh}
+            disabled={isRefreshing || isLoading}
+            className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 hover:border-slate-300 active:scale-95 transition-all shadow-sm cursor-pointer disabled:opacity-60"
+            title="Refresh dashboard data"
+          >
+            <RefreshCw
+              size={15}
+              className={`${isRefreshing || isLoading ? 'animate-spin text-blue-600' : ''}`}
+            />
           </button>
         </div>
       </div>
@@ -303,7 +504,7 @@ export default function AdminDashboardPage() {
               value={(dashboard?.total_orders ?? 0).toLocaleString()}
               icon={<ShoppingBag size={22} className="text-blue-600" />}
               iconBg="bg-blue-50"
-              trend={{ value: 'This period', up: true }}
+              trend={{ value: 'Filtered period', up: true }}
             />
             <KpiCard
               title="Total Revenue"
@@ -351,8 +552,9 @@ export default function AdminDashboardPage() {
               {(['7d', '14d', '30d'] as const).map((p) => (
                 <button
                   key={p}
+                  type="button"
                   onClick={() => setChartPeriod(p)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
                     chartPeriod === p
                       ? 'bg-white text-slate-800 shadow-sm'
                       : 'text-slate-500 hover:text-slate-700'
@@ -493,7 +695,7 @@ export default function AdminDashboardPage() {
             <Link
               key={a.href}
               href={a.href}
-              className={`flex flex-col items-center gap-2 p-4 rounded-2xl border bg-white hover:shadow-md transition-all group`}
+              className="flex flex-col items-center gap-2 p-4 rounded-2xl border bg-white hover:shadow-md transition-all group cursor-pointer"
             >
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${a.color} transition-transform group-hover:scale-110`}>
                 <Icon size={20} />
@@ -519,7 +721,7 @@ export default function AdminDashboardPage() {
             </div>
             <Link
               href="/admin/orders"
-              className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1"
+              className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1 cursor-pointer"
             >
               View All <ChevronRight size={14} />
             </Link>
@@ -596,7 +798,7 @@ export default function AdminDashboardPage() {
             </div>
             <Link
               href="/admin/categories"
-              className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1"
+              className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1 cursor-pointer"
             >
               View All <ChevronRight size={14} />
             </Link>
@@ -661,7 +863,7 @@ export default function AdminDashboardPage() {
                 {dashboard?.pending_vendor_approvals ?? 0} <span className="text-sm font-semibold">Stores</span>
               </p>
             </div>
-            <Link href="/admin/vendors" className="px-3 py-2 bg-amber-500 text-white text-[11px] font-bold rounded-xl hover:bg-amber-600 transition-colors shrink-0">
+            <Link href="/admin/vendors" className="px-3 py-2 bg-amber-500 text-white text-[11px] font-bold rounded-xl hover:bg-amber-600 transition-colors shrink-0 cursor-pointer">
               Verify
             </Link>
           </div>
@@ -673,7 +875,7 @@ export default function AdminDashboardPage() {
                 {dashboard?.pending_product_approvals ?? 0} <span className="text-sm font-semibold">Products</span>
               </p>
             </div>
-            <Link href="/admin/products" className="px-3 py-2 bg-blue-600 text-white text-[11px] font-bold rounded-xl hover:bg-blue-700 transition-colors shrink-0">
+            <Link href="/admin/products" className="px-3 py-2 bg-blue-600 text-white text-[11px] font-bold rounded-xl hover:bg-blue-700 transition-colors shrink-0 cursor-pointer">
               Review
             </Link>
           </div>
@@ -687,7 +889,7 @@ export default function AdminDashboardPage() {
                 {dashboard?.low_stock_count ?? 0} <span className="text-sm font-semibold">Alerts</span>
               </p>
             </div>
-            <Link href="/admin/inventory" className="px-3 py-2 bg-rose-500 text-white text-[11px] font-bold rounded-xl hover:bg-rose-600 transition-colors shrink-0">
+            <Link href="/admin/inventory" className="px-3 py-2 bg-rose-500 text-white text-[11px] font-bold rounded-xl hover:bg-rose-600 transition-colors shrink-0 cursor-pointer">
               Inventory
             </Link>
           </div>

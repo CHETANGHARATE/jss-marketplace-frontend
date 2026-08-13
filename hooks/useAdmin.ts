@@ -8,10 +8,13 @@ import {
 
 // ─── Dashboard / Analytics ────────────────────────────────────────────────────
 
-export function useAdminDashboardQuery(enabled = true) {
+export function useAdminDashboardQuery(
+  params?: { start_date?: string; end_date?: string },
+  enabled = true
+) {
   return useQuery({
-    queryKey: ['admin', 'dashboard'],
-    queryFn: () => adminService.getDashboard(),
+    queryKey: ['admin', 'dashboard', params],
+    queryFn: () => adminService.getDashboard(params),
     enabled,
     staleTime: 1000 * 60 * 2,
   });

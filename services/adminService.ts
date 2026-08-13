@@ -144,8 +144,8 @@ export const adminService = {
   // ── Dashboard / Analytics ──────────────────────────────────────────────────
 
   /** GET /admin/analytics/overview — main dashboard metrics */
-  async getDashboard(): Promise<AdminDashboardMetrics> {
-    const response = await apiClient.get<ApiResponse<AdminDashboardMetrics>>('/admin/analytics/overview');
+  async getDashboard(params?: { start_date?: string; end_date?: string }): Promise<AdminDashboardMetrics> {
+    const response = await apiClient.get<ApiResponse<AdminDashboardMetrics>>('/admin/analytics/overview', { params });
     return response.data.data;
   },
 
