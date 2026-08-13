@@ -2,11 +2,10 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  ShieldAlert,
   Users,
   Store,
   Package,
@@ -17,16 +16,10 @@ import {
   Sliders,
   LogOut,
   Sparkles,
-  Tag,
   Layers,
-  Award,
   MessageSquare,
   Warehouse,
   Ticket,
-  Zap,
-  FileSpreadsheet,
-  LayoutGrid,
-  Percent,
   Receipt,
   UserCheck,
   Bell,
@@ -36,8 +29,8 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronDown,
-  CircleDot,
   LayoutDashboard,
+  LayoutGrid,
 } from 'lucide-react';
 
 interface AdminSidebarProps {
@@ -45,341 +38,222 @@ interface AdminSidebarProps {
   onToggleCollapse?: () => void;
 }
 
-export interface NavItem {
-  href: string;
-  label: string;
-  exact?: boolean;
-  badge?: string;
-}
+export type NavEntry =
+  | {
+      type: 'link';
+      label: string;
+      href: string;
+      icon: React.ComponentType<{ size?: number; className?: string }>;
+      exact?: boolean;
+      badge?: string;
+    }
+  | {
+      type: 'group';
+      groupName: string;
+      icon: React.ComponentType<{ size?: number; className?: string }>;
+      items: {
+        label: string;
+        href: string;
+        exact?: boolean;
+        badge?: string;
+      }[];
+    };
 
-export interface NavGroup {
-  groupName: string;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
-  items: NavItem[];
-}
-
-export const NAVIGATION_GROUPS: NavGroup[] = [
+export const NAVIGATION_ENTRIES: NavEntry[] = [
+  // 1. Dashboard — 1 destination → Direct Link
   {
-    groupName: 'DASHBOARD',
+    type: 'link',
+    label: 'Dashboard',
+    href: '/admin',
     icon: LayoutDashboard,
-    items: [
-      { href: '/admin', label: 'Dashboard', exact: true },
-    ],
+    exact: true,
   },
+
+  // 2. Product Management — 5 real distinct destinations → Dropdown Accordion
   {
+    type: 'group',
     groupName: 'PRODUCT MANAGEMENT',
     icon: Package,
     items: [
       { href: '/admin/products', label: 'All Products', exact: true },
       { href: '/admin/products/create', label: 'Add Product' },
       { href: '/admin/products/import', label: 'Bulk Import' },
-      { href: '/admin/products?tab=pending', label: 'Product Approval' },
-      { href: '/admin/products?tab=draft', label: 'Draft Products' },
-      { href: '/admin/attribute-templates', label: 'Product Variants' },
       { href: '/admin/brands', label: 'Brands' },
       { href: '/admin/attribute-templates', label: 'Attributes' },
     ],
   },
+
+  // 3. Category Management — 1 real destination → Direct Link
   {
-    groupName: 'CATEGORY MANAGEMENT',
+    type: 'link',
+    label: 'CATEGORY MANAGEMENT',
+    href: '/admin/categories',
     icon: Layers,
-    items: [
-      { href: '/admin/categories', label: 'Main Categories', exact: true },
-      { href: '/admin/categories?tab=subcategories', label: 'Subcategories' },
-      { href: '/admin/categories?tab=child', label: 'Child Categories' },
-      { href: '/admin/cms?tab=banners', label: 'Category Banners' },
-      { href: '/admin/categories', label: 'Category Icons' },
-      { href: '/admin/categories', label: 'Category Ordering' },
-      { href: '/admin/categories', label: 'SEO / Slugs' },
-    ],
   },
+
+  // 4. Order Management — 1 real destination → Direct Link (tabs exist on page)
   {
-    groupName: 'ORDER MANAGEMENT',
+    type: 'link',
+    label: 'ORDER MANAGEMENT',
+    href: '/admin/orders',
     icon: ShoppingBag,
-    items: [
-      { href: '/admin/orders', label: 'All Orders', exact: true },
-      { href: '/admin/orders?status=pending', label: 'New Orders' },
-      { href: '/admin/orders?status=pending', label: 'Pending Orders' },
-      { href: '/admin/orders?status=processing', label: 'Processing' },
-      { href: '/admin/orders?status=packed', label: 'Packed' },
-      { href: '/admin/orders?status=shipped', label: 'Shipped' },
-      { href: '/admin/orders?status=delivered', label: 'Delivered' },
-      { href: '/admin/orders?status=cancelled', label: 'Cancelled' },
-      { href: '/admin/orders?status=returned', label: 'Returns' },
-      { href: '/admin/orders?status=replacement', label: 'Replacements' },
-      { href: '/admin/orders?status=exchange', label: 'Exchanges' },
-      { href: '/admin/payments?status=refunded', label: 'Refunds' },
-    ],
   },
+
+  // 5. Customer Management — 1 real destination → Direct Link
   {
-    groupName: 'CUSTOMER MANAGEMENT',
+    type: 'link',
+    label: 'CUSTOMER MANAGEMENT',
+    href: '/admin/users',
     icon: Users,
-    items: [
-      { href: '/admin/users', label: 'All Customers', exact: true },
-      { href: '/admin/users?tab=groups', label: 'Customer Groups' },
-      { href: '/admin/users?tab=memberships', label: 'Memberships' },
-      { href: '/admin/users?tab=wallet', label: 'Wallet' },
-      { href: '/admin/promotions?tab=loyalty', label: 'Loyalty Points' },
-      { href: '/admin/users?status=inactive', label: 'Blocked Customers' },
-      { href: '/admin/users', label: 'Customer Notes' },
-      { href: '/admin/support', label: 'Support History' },
-    ],
   },
+
+  // 6. Inventory Management — 1 real destination → Direct Link
   {
-    groupName: 'INVENTORY MANAGEMENT',
+    type: 'link',
+    label: 'INVENTORY MANAGEMENT',
+    href: '/admin/inventory',
     icon: Warehouse,
-    items: [
-      { href: '/admin/inventory', label: 'Stock Overview', exact: true },
-      { href: '/admin/inventory?tab=stock-in', label: 'Stock In' },
-      { href: '/admin/inventory?tab=stock-out', label: 'Stock Out' },
-      { href: '/admin/inventory?tab=adjust', label: 'Stock Adjustment' },
-      { href: '/admin/inventory?tab=low-stock', label: 'Low Stock' },
-      { href: '/admin/inventory?tab=out-of-stock', label: 'Out of Stock' },
-      { href: '/admin/inventory?tab=warehouses', label: 'Warehouses' },
-      { href: '/admin/inventory?tab=damaged', label: 'Damaged Stock' },
-      { href: '/admin/inventory?tab=returned', label: 'Returned Stock' },
-      { href: '/admin/inventory?tab=expired', label: 'Expired Stock' },
-      { href: '/admin/inventory?tab=transfer', label: 'Stock Transfer' },
-      { href: '/admin/inventory?tab=audit', label: 'Inventory Audit' },
-    ],
   },
+
+  // 7. Vendor Management — 1 real destination → Direct Link
   {
-    groupName: 'VENDOR MANAGEMENT',
+    type: 'link',
+    label: 'VENDOR MANAGEMENT',
+    href: '/admin/vendors',
     icon: Store,
-    items: [
-      { href: '/admin/vendors', label: 'All Vendors', exact: true },
-      { href: '/admin/vendors?tab=register', label: 'Vendor Registration' },
-      { href: '/admin/vendors?tab=kyc', label: 'KYC Verification' },
-      { href: '/admin/vendors?tab=pending', label: 'Pending Approval' },
-      { href: '/admin/products', label: 'Vendor Products' },
-      { href: '/admin/orders', label: 'Vendor Orders' },
-      { href: '/admin/reports?tab=commission', label: 'Commission' },
-      { href: '/admin/vendors?tab=settlements', label: 'Settlements' },
-      { href: '/admin/orders', label: 'Vendor Returns' },
-      { href: '/admin/reports', label: 'Vendor Performance' },
-    ],
   },
+
+  // 8. Payment Management — 1 real destination → Direct Link
   {
-    groupName: 'PAYMENT MANAGEMENT',
+    type: 'link',
+    label: 'PAYMENT MANAGEMENT',
+    href: '/admin/payments',
     icon: CreditCard,
-    items: [
-      { href: '/admin/payments', label: 'Transactions', exact: true },
-      { href: '/admin/payments?status=captured', label: 'Successful' },
-      { href: '/admin/payments?status=pending', label: 'Pending' },
-      { href: '/admin/payments?status=failed', label: 'Failed' },
-      { href: '/admin/payments?status=refunded', label: 'Refunds' },
-      { href: '/admin/payments?status=refunded', label: 'Partial Refunds' },
-      { href: '/admin/payments?tab=cod', label: 'COD Reconciliation' },
-      { href: '/admin/payments?tab=settlements', label: 'Settlements' },
-      { href: '/admin/settings', label: 'Payment Gateway Settings' },
-    ],
   },
+
+  // 9. Shipping Management — 1 real destination → Direct Link
   {
-    groupName: 'SHIPPING MANAGEMENT',
+    type: 'link',
+    label: 'SHIPPING MANAGEMENT',
+    href: '/admin/shipping',
     icon: Truck,
-    items: [
-      { href: '/admin/shipping', label: 'Shipping Zones', exact: true },
-      { href: '/admin/shipping?tab=pincodes', label: 'Serviceable Pincodes' },
-      { href: '/admin/shipping', label: 'Shipping Charges' },
-      { href: '/admin/promotions', label: 'Free Shipping Rules' },
-      { href: '/admin/shipping?tab=couriers', label: 'Courier Partners' },
-      { href: '/admin/shipping?tab=tracking', label: 'AWB / Tracking' },
-      { href: '/admin/shipping', label: 'Delivery Estimates' },
-      { href: '/admin/orders', label: 'Shipping Labels' },
-      { href: '/admin/shipping?tab=pickups', label: 'Pickup Requests' },
-      { href: '/admin/shipping?tab=ndr', label: 'NDR Management' },
-    ],
   },
+
+  // 10. Promotions & Coupons — 3 real distinct destinations → Dropdown Accordion
   {
+    type: 'group',
     groupName: 'PROMOTIONS & COUPONS',
     icon: Ticket,
     items: [
       { href: '/admin/coupons', label: 'Coupons', exact: true },
-      { href: '/admin/promotions', label: 'Automatic Discounts' },
-      { href: '/admin/promotions', label: 'Product Offers' },
-      { href: '/admin/promotions', label: 'Category Offers' },
-      { href: '/admin/promotions', label: 'Brand Offers' },
-      { href: '/admin/coupons', label: 'First Order Discount' },
-      { href: '/admin/promotions', label: 'Buy One Get One' },
-      { href: '/admin/promotions', label: 'Combo Offers' },
-      { href: '/admin/flash-sales', label: 'Festival Sales' },
+      { href: '/admin/promotions', label: 'Promotions' },
       { href: '/admin/flash-sales', label: 'Flash Sales' },
     ],
   },
+
+  // 11. CMS & Content — 1 real destination → Direct Link
   {
-    groupName: 'CMS & CONTENT',
+    type: 'link',
+    label: 'CMS & CONTENT',
+    href: '/admin/cms',
     icon: LayoutGrid,
-    items: [
-      { href: '/admin/cms', label: 'Home Sliders', exact: true },
-      { href: '/admin/cms?tab=banners', label: 'Promotional Banners' },
-      { href: '/admin/cms?tab=popups', label: 'Popup Banners' },
-      { href: '/admin/cms?tab=sections', label: 'Home Sections' },
-      { href: '/admin/cms?tab=pages', label: 'Pages' },
-      { href: '/admin/cms?tab=pages', label: 'About Us' },
-      { href: '/admin/cms?tab=pages', label: 'Contact Us' },
-      { href: '/admin/cms?tab=faq', label: 'FAQ' },
-      { href: '/admin/cms?tab=policies', label: 'Policies' },
-      { href: '/admin/cms?tab=blog', label: 'Blog' },
-      { href: '/admin/cms?tab=news', label: 'News' },
-      { href: '/admin/cms?tab=announcements', label: 'Announcements' },
-    ],
   },
+
+  // 12. Reviews & Ratings — 1 real destination → Direct Link
   {
-    groupName: 'REVIEWS & RATINGS',
+    type: 'link',
+    label: 'REVIEWS & RATINGS',
+    href: '/admin/reviews',
     icon: MessageSquare,
-    items: [
-      { href: '/admin/reviews', label: 'Product Reviews', exact: true },
-      { href: '/admin/reviews', label: 'Star Ratings' },
-      { href: '/admin/reviews?status=pending', label: 'Pending Reviews' },
-      { href: '/admin/reviews?status=reported', label: 'Reported Reviews' },
-      { href: '/admin/reviews?filter=photo', label: 'Photo Reviews' },
-      { href: '/admin/reviews?filter=video', label: 'Video Reviews' },
-      { href: '/admin/reviews', label: 'Verified Purchases' },
-    ],
   },
+
+  // 13. Reports & Analytics — 1 real destination → Direct Link
   {
-    groupName: 'REPORTS & ANALYTICS',
+    type: 'link',
+    label: 'REPORTS & ANALYTICS',
+    href: '/admin/reports',
     icon: BarChart3,
-    items: [
-      { href: '/admin/reports', label: 'Sales Reports', exact: true },
-      { href: '/admin/reports?tab=orders', label: 'Order Reports' },
-      { href: '/admin/reports?tab=revenue', label: 'Revenue Reports' },
-      { href: '/admin/reports?tab=products', label: 'Product Performance' },
-      { href: '/admin/reports?tab=categories', label: 'Category Performance' },
-      { href: '/admin/reports?tab=customers', label: 'Customer Reports' },
-      { href: '/admin/reports?tab=inventory', label: 'Inventory Reports' },
-      { href: '/admin/reports?tab=returns', label: 'Return / Refund Reports' },
-      { href: '/admin/reports?tab=payments', label: 'Payment Reports' },
-      { href: '/admin/reports?tab=commission', label: 'Vendor Commission' },
-      { href: '/admin/reports?tab=pnl', label: 'Profit & Loss' },
-      { href: '/admin/reports?tab=export', label: 'Export Reports' },
-    ],
   },
+
+  // 14. Tax & Invoicing — 1 real destination → Direct Link
   {
-    groupName: 'TAX & INVOICING',
+    type: 'link',
+    label: 'TAX & INVOICING',
+    href: '/admin/tax',
     icon: Receipt,
-    items: [
-      { href: '/admin/tax', label: 'GST Settings', exact: true },
-      { href: '/admin/tax?tab=hsn', label: 'HSN / SAC Codes' },
-      { href: '/admin/tax?tab=rules', label: 'Tax Rules' },
-      { href: '/admin/tax?tab=gstin', label: 'Company GSTIN' },
-      { href: '/admin/tax?tab=billing', label: 'Billing Address' },
-      { href: '/admin/tax?tab=invoice', label: 'Invoice Settings' },
-      { href: '/admin/tax?tab=invoices', label: 'Tax Invoices' },
-      { href: '/admin/tax?tab=credit-notes', label: 'Credit Notes' },
-      { href: '/admin/tax?tab=debit-notes', label: 'Debit Notes' },
-    ],
   },
+
+  // 15. Suppliers & Purchase — 1 real destination → Direct Link
   {
-    groupName: 'SUPPLIERS & PURCHASE',
+    type: 'link',
+    label: 'SUPPLIERS & PURCHASE',
+    href: '/admin/suppliers',
     icon: Boxes,
-    items: [
-      { href: '/admin/suppliers', label: 'Suppliers', exact: true },
-      { href: '/admin/suppliers', label: 'Supplier Profiles' },
-      { href: '/admin/suppliers?tab=po', label: 'Purchase Orders' },
-      { href: '/admin/suppliers?tab=invoices', label: 'Purchase Invoices' },
-      { href: '/admin/suppliers?tab=grn', label: 'Goods Received Notes' },
-      { href: '/admin/suppliers?tab=payments', label: 'Supplier Payments' },
-      { href: '/admin/suppliers?tab=due', label: 'Outstanding Payments' },
-      { href: '/admin/suppliers?tab=returns', label: 'Purchase Returns' },
-      { href: '/admin/suppliers?tab=costs', label: 'Product Cost History' },
-    ],
   },
+
+  // 16. Staff & Roles — 1 real destination → Direct Link
   {
-    groupName: 'STAFF & ROLES',
+    type: 'link',
+    label: 'STAFF & ROLES',
+    href: '/admin/staff',
     icon: UserCheck,
-    items: [
-      { href: '/admin/staff', label: 'Staff', exact: true },
-      { href: '/admin/staff?tab=roles', label: 'Roles' },
-      { href: '/admin/staff?tab=permissions', label: 'Permissions' },
-      { href: '/admin/staff?tab=departments', label: 'Department Users' },
-      { href: '/admin/security?tab=login-activity', label: 'Login Activity' },
-      { href: '/admin/security?tab=audit-logs', label: 'Audit Logs' },
-    ],
   },
+
+  // 17. Notifications — 1 real destination → Direct Link
   {
-    groupName: 'NOTIFICATIONS',
+    type: 'link',
+    label: 'NOTIFICATIONS',
+    href: '/admin/notifications',
     icon: Bell,
-    items: [
-      { href: '/admin/notifications', label: 'Notification Center', exact: true },
-      { href: '/admin/notifications?tab=push', label: 'Push Notifications' },
-      { href: '/admin/notifications?tab=sms', label: 'SMS' },
-      { href: '/admin/notifications?tab=email', label: 'Email' },
-      { href: '/admin/notifications?tab=whatsapp', label: 'WhatsApp' },
-      { href: '/admin/notifications?tab=templates', label: 'Order Templates' },
-      { href: '/admin/notifications?tab=otp', label: 'OTP Notifications' },
-      { href: '/admin/notifications?tab=campaigns', label: 'Promotional Campaigns' },
-      { href: '/admin/notifications?tab=cart', label: 'Abandoned Cart' },
-      { href: '/admin/notifications?tab=stock', label: 'Stock Alerts' },
-      { href: '/admin/notifications?tab=admin', label: 'Admin Alerts' },
-    ],
   },
+
+  // 18. Support — 1 real destination → Direct Link
   {
-    groupName: 'SUPPORT',
+    type: 'link',
+    label: 'SUPPORT',
+    href: '/admin/support',
     icon: HelpCircle,
-    items: [
-      { href: '/admin/support', label: 'Customer Tickets', exact: true },
-      { href: '/admin/support?type=complaint', label: 'Complaints' },
-      { href: '/admin/support?type=refund', label: 'Return / Refund Queries' },
-      { href: '/admin/support?tab=categories', label: 'Ticket Categories' },
-      { href: '/admin/support?tab=priority', label: 'Ticket Priority' },
-      { href: '/admin/support?tab=assigned', label: 'Assigned Tickets' },
-      { href: '/admin/support', label: 'Internal Notes' },
-      { href: '/admin/support', label: 'Conversation History' },
-    ],
   },
+
+  // 19. Settings — 1 real destination → Direct Link
   {
-    groupName: 'SETTINGS',
+    type: 'link',
+    label: 'SETTINGS',
+    href: '/admin/settings',
     icon: Sliders,
-    items: [
-      { href: '/admin/settings', label: 'General Settings', exact: true },
-      { href: '/admin/settings?tab=company', label: 'Company Details' },
-      { href: '/admin/settings?tab=branding', label: 'Logo / Favicon' },
-      { href: '/admin/settings?tab=contact', label: 'Contact Details' },
-      { href: '/admin/settings?tab=social', label: 'Social Media' },
-      { href: '/admin/settings?tab=localization', label: 'Currency' },
-      { href: '/admin/settings?tab=localization', label: 'Languages' },
-      { href: '/admin/settings?tab=localization', label: 'Date / Time' },
-      { href: '/admin/settings?tab=localization', label: 'Timezone' },
-      { href: '/admin/settings?tab=seo', label: 'SEO' },
-      { href: '/admin/settings?tab=analytics', label: 'Google Analytics' },
-      { href: '/admin/settings?tab=analytics', label: 'Meta Pixel' },
-      { href: '/admin/settings?tab=maintenance', label: 'Maintenance Mode' },
-      { href: '/admin/settings?tab=system', label: 'App Version' },
-    ],
   },
+
+  // 20. Security & Backup — 1 real destination → Direct Link
   {
-    groupName: 'SECURITY & BACKUP',
+    type: 'link',
+    label: 'SECURITY & BACKUP',
+    href: '/admin/security',
     icon: ShieldCheck,
-    items: [
-      { href: '/admin/security', label: 'Security Settings', exact: true },
-      { href: '/admin/security?tab=2fa', label: 'Two-Factor Authentication' },
-      { href: '/admin/security?tab=password-policy', label: 'Password Policy' },
-      { href: '/admin/security?tab=login-attempts', label: 'Login Attempts' },
-      { href: '/admin/security?tab=sessions', label: 'Session Control' },
-      { href: '/admin/security?tab=ip-restrictions', label: 'IP Restrictions' },
-      { href: '/admin/security?tab=activity-logs', label: 'Activity Logs' },
-      { href: '/admin/security?tab=change-history', label: 'Change History' },
-      { href: '/admin/security?tab=backup', label: 'Data Backup' },
-    ],
   },
 ];
 
-/** Determine which group owns the current pathname */
-function getActiveGroupName(pathname: string): string | null {
-  if (pathname === '/admin') return 'DASHBOARD';
+/** Check if a pathname matches a link route */
+function isLinkActive(pathname: string, href: string, exact?: boolean): boolean {
+  if (exact || href === '/admin') {
+    return pathname === href;
+  }
+  return pathname === href || pathname.startsWith(href + '/');
+}
 
-  for (const group of NAVIGATION_GROUPS) {
-    if (group.groupName === 'DASHBOARD') continue;
-    for (const item of group.items) {
-      const itemBase = item.href.split('?')[0];
-      if (item.exact) {
-        if (pathname === item.href) return group.groupName;
-      } else {
-        if (pathname === itemBase || pathname.startsWith(itemBase + '/')) {
-          return group.groupName;
-        }
-      }
+/** Check if a pathname belongs to a group */
+function isGroupActive(pathname: string, group: Extract<NavEntry, { type: 'group' }>): boolean {
+  return group.items.some((item) => {
+    if (item.exact) return pathname === item.href;
+    const base = item.href.split('?')[0];
+    return pathname === item.href || pathname.startsWith(base + '/');
+  });
+}
+
+/** Check which group is active for auto-expansion */
+function getActiveGroupName(pathname: string): string | null {
+  for (const entry of NAVIGATION_ENTRIES) {
+    if (entry.type === 'group' && isGroupActive(pathname, entry)) {
+      return entry.groupName;
     }
   }
   return null;
@@ -392,13 +266,10 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
   const { user, logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // Determine which group the current route belongs to
+  // Active group auto-expansion
   const activeGroupName = useMemo(() => getActiveGroupName(pathname), [pathname]);
-
-  // Single-open accordion: only one group is expanded at a time.
   const [openGroup, setOpenGroup] = useState<string | null>(activeGroupName);
 
-  // Auto-expand the active section whenever the route changes
   useEffect(() => {
     if (activeGroupName) {
       setOpenGroup(activeGroupName);
@@ -435,6 +306,7 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
           </div>
           {onToggleCollapse && (
             <button
+              type="button"
               onClick={onToggleCollapse}
               className="text-slate-300 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition-colors cursor-pointer hidden lg:block"
               title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
@@ -451,103 +323,124 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
         )}
       </div>
 
-      {/* Navigation Group Accordion (All 20 Modules) */}
+      {/* Navigation List (Intelligent Direct Links & Expandable Groups) */}
       <nav className="space-y-1 max-h-[calc(100vh-160px)] overflow-y-auto no-scrollbar pr-1">
-        {NAVIGATION_GROUPS.map((group) => {
-          const GroupIcon = group.icon;
-          const isDashboard = group.groupName === 'DASHBOARD';
-          const isOpen = isDashboard || openGroup === group.groupName;
-          const isGroupActive = activeGroupName === group.groupName;
+        {NAVIGATION_ENTRIES.map((entry) => {
+          const Icon = entry.icon;
 
-          // For Dashboard single-item direct link
-          if (isDashboard) {
-            const isDashActive = pathname === '/admin';
+          // ── CASE 1 & 2: Direct Link (0 or 1 real destination) ──
+          if (entry.type === 'link') {
+            const isActive = isLinkActive(pathname, entry.href, entry.exact);
+
             return (
-              <div key={group.groupName} className="mb-1">
+              <div key={entry.href} className="mb-0.5">
                 <Link
-                  href="/admin"
-                  title={isCollapsed ? 'Dashboard' : undefined}
-                  className={`flex items-center gap-2.5 rounded-xl text-xs font-bold transition-all ${
+                  href={entry.href}
+                  title={isCollapsed ? entry.label : undefined}
+                  className={`flex items-center gap-2.5 rounded-xl text-xs transition-all cursor-pointer ${
                     isCollapsed ? 'px-2 py-2.5 justify-center' : 'px-3 py-2.5'
                   } ${
-                    isDashActive
-                      ? 'bg-[#FF1654] text-white shadow-md'
-                      : 'text-white hover:bg-white/10'
+                    isActive
+                      ? 'bg-[#FF1654] text-white shadow-md font-bold'
+                      : 'text-[#D7E2F3] hover:bg-white/10 hover:text-white font-semibold'
                   }`}
                 >
-                  <GroupIcon size={16} className={isDashActive ? 'text-white' : 'text-[#7090B8]'} />
-                  {!isCollapsed && <span>Dashboard</span>}
+                  <Icon
+                    size={16}
+                    className={`shrink-0 ${isActive ? 'text-white' : 'text-[#7090B8]'}`}
+                  />
+                  {!isCollapsed && (
+                    <span className="truncate font-bold uppercase text-[11px] tracking-[0.04em]">
+                      {entry.label}
+                    </span>
+                  )}
+                  {!isCollapsed && entry.badge && (
+                    <span className="ml-auto px-1.5 py-0.5 rounded-full text-[9px] font-black bg-white/20 text-white">
+                      {entry.badge}
+                    </span>
+                  )}
                 </Link>
               </div>
             );
           }
 
-          // In collapsed-icon mode, clicking group icon navigates or toggles
+          // ── CASE 3: Expandable Accordion Group (2+ real distinct destinations) ──
+          const isGroupOpen = openGroup === entry.groupName;
+          const isGroupCurrentlyActive = isGroupActive(pathname, entry);
+
           return (
-            <div key={group.groupName} className="mb-0.5">
-              {/* Section heading / accordion trigger */}
+            <div key={entry.groupName} className="mb-0.5">
               {!isCollapsed ? (
                 <button
                   type="button"
-                  onClick={() => toggleGroup(group.groupName)}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 mt-0.5 rounded-xl text-[11px] font-black uppercase tracking-[0.06em] transition-all cursor-pointer ${
-                    isOpen
+                  onClick={() => toggleGroup(entry.groupName)}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 mt-0.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.04em] transition-all cursor-pointer ${
+                    isGroupOpen
                       ? 'text-white bg-white/10 shadow-xs'
-                      : isGroupActive
+                      : isGroupCurrentlyActive
                       ? 'text-white bg-white/5'
-                      : 'text-slate-300 hover:text-white hover:bg-white/5'
+                      : 'text-[#D7E2F3] hover:text-white hover:bg-white/5'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <GroupIcon
-                      size={15}
-                      className={isOpen || isGroupActive ? 'text-[#FF1654]' : 'text-slate-400'}
+                    <Icon
+                      size={16}
+                      className={`shrink-0 ${
+                        isGroupOpen || isGroupCurrentlyActive ? 'text-[#FF1654]' : 'text-[#7090B8]'
+                      }`}
                     />
-                    <span className="truncate">{group.groupName}</span>
+                    <span className="truncate">{entry.groupName}</span>
                   </div>
                   <ChevronDown
                     size={13}
                     className={`text-slate-400 transition-transform duration-200 shrink-0 ml-1 ${
-                      isOpen ? 'rotate-180 text-white' : ''
+                      isGroupOpen ? 'rotate-180 text-white' : ''
                     }`}
                   />
                 </button>
               ) : (
                 <button
                   type="button"
-                  onClick={() => toggleGroup(group.groupName)}
-                  title={group.groupName}
+                  onClick={() => toggleGroup(entry.groupName)}
+                  title={entry.groupName}
                   className={`w-full flex justify-center p-2.5 rounded-xl transition-all cursor-pointer ${
-                    isGroupActive ? 'bg-[#FF1654] text-white' : 'text-slate-400 hover:text-white hover:bg-white/10'
+                    isGroupCurrentlyActive
+                      ? 'bg-[#FF1654] text-white'
+                      : 'text-[#7090B8] hover:text-white hover:bg-white/10'
                   }`}
                 >
-                  <GroupIcon size={18} />
+                  <Icon size={18} />
                 </button>
               )}
 
-              {/* Submenu items */}
-              {isOpen && !isCollapsed && (
+              {/* Submenu Items (Only shown for 2+ child groups when open) */}
+              {isGroupOpen && !isCollapsed && (
                 <div className="space-y-0.5 ml-3 pl-2.5 border-l border-white/10 mt-1 mb-2">
-                  {group.items.map((item, idx) => {
-                    const itemBase = item.href.split('?')[0];
-                    const isExactMatch = pathname === item.href;
-                    const isBaseMatch = pathname === itemBase;
-                    const isActive = item.exact ? isExactMatch : isExactMatch || isBaseMatch;
+                  {entry.items.map((subItem) => {
+                    // Check exact single active child item
+                    let isSubActive = false;
+                    if (subItem.exact) {
+                      isSubActive = pathname === subItem.href;
+                    } else if (subItem.href === '/admin/products') {
+                      isSubActive = pathname === '/admin/products' || /^\/admin\/products\/\d+(\/edit)?$/.test(pathname);
+                    } else {
+                      isSubActive = pathname === subItem.href || pathname.startsWith(subItem.href + '/');
+                    }
 
                     return (
                       <Link
-                        key={`${item.href}-${idx}`}
-                        href={item.href}
-                        className={`flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                          isActive && isGroupActive
+                        key={subItem.href}
+                        href={subItem.href}
+                        className={`flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${
+                          isSubActive
                             ? 'bg-[#FF1654] text-white font-bold shadow-xs'
-                            : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                            : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium'
                         }`}
                       >
-                        <span className="truncate">{item.label}</span>
-                        {item.badge && (
+                        <span className="truncate">{subItem.label}</span>
+                        {subItem.badge && (
                           <span className="px-1.5 py-0.5 rounded-full text-[9px] font-black bg-white/20 text-white">
-                            {item.badge}
+                            {subItem.badge}
                           </span>
                         )}
                       </Link>
@@ -563,6 +456,7 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
       {/* Logout Action */}
       <div className="pt-3 mt-3 border-t border-[#1c325c]">
         <button
+          type="button"
           onClick={handleLogout}
           disabled={isLoggingOut}
           className={`w-full flex items-center gap-2.5 rounded-xl text-xs font-bold text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors cursor-pointer ${
