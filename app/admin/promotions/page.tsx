@@ -1,279 +1,319 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useAdminFlashSalesQuery, useCreateFlashSaleMutation } from '../../../hooks/useAdmin';
-import { Breadcrumbs } from '../../../components/Breadcrumbs';
-import { AdminSidebar } from '../../../components/AdminSidebar';
+import {
+  useAdminFlashSalesQuery,
+  useCreateFlashSaleMutation,
+  useToggleFlashSaleStatusMutation,
+  useDeleteFlashSaleMutation
+} from '../../../hooks/useAdmin';
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { AdminFlashSale } from '../../../services/adminService';
-import { Zap, Plus, Clock, Percent, Calendar, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Zap, Plus, Clock, Percent, Calendar, Trash2, Eye, Sparkles, CheckCircle2, XCircle } from 'lucide-react';
 
 export default function PromotionsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    name: '',
-    discount_percentage: 10,
+    title: '',
+    discount_percentage: 15,
     starts_at: '',
     ends_at: '',
     is_active: true
   });
 
-  const { data, isLoading, isError } = useAdminFlashSalesQuery();
+  const { data, isLoading } = useAdminFlashSalesQuery();
   const createMutation = useCreateFlashSaleMutation();
+  const toggleMutation = useToggleFlashSaleStatusMutation();
+  const deleteMutation = useDeleteFlashSaleMutation();
 
-  const flashSales = data || [];
+  const flashSales: AdminFlashSale[] = data || [];
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
+
+    if (!formData.title.trim()) {
+      setErrorMessage('Please enter a promotion / event title.');
+      return;
+    }
+    if (!formData.starts_at || !formData.ends_at) {
+      setErrorMessage('Please specify both start and end date/time.');
+      return;
+    }
+    if (new Date(formData.ends_at) <= new Date(formData.starts_at)) {
+      setErrorMessage('End time must be after start time.');
+      return;
+    }
+
     try {
       await createMutation.mutateAsync({
-        ...formData,
+        title: formData.title.trim(),
+        name: formData.title.trim(),
+        discount_percentage: Number(formData.discount_percentage),
         starts_at: new Date(formData.starts_at).toISOString(),
-        ends_at: new Date(formData.ends_at).toISOString()
-      });
+        ends_at: new Date(formData.ends_at).toISOString(),
+        is_active: formData.is_active,
+      } as any);
+
       setIsModalOpen(false);
       setFormData({
-        name: '',
-        discount_percentage: 10,
+        title: '',
+        discount_percentage: 15,
         starts_at: '',
         ends_at: '',
         is_active: true
       });
-    } catch (error) {
-      console.error('Failed to create flash sale', error);
+    } catch (error: any) {
+      const serverMsg = error?.response?.data?.message || error?.message || 'Failed to create promotion campaign.';
+      setErrorMessage(serverMsg);
     }
   };
 
-  const getStatus = (sale: AdminFlashSale) => {
+  const handleToggle = async (id: number) => {
+    try {
+      await toggleMutation.mutateAsync(id);
+    } catch (error: any) {
+      alert(error?.response?.data?.message || 'Failed to toggle status.');
+    }
+  };
+
+  const handleDelete = async (id: number, title: string) => {
+    if (!confirm(`Are you sure you want to delete promotion '${title}'?`)) return;
+    try {
+      await deleteMutation.mutateAsync(id);
+    } catch (error: any) {
+      alert(error?.response?.data?.message || 'Failed to delete promotion.');
+    }
+  };
+
+  const getStatus = (sale: any) => {
     const now = new Date();
     const start = new Date(sale.starts_at);
     const end = new Date(sale.ends_at);
 
-    if (!sale.is_active) return { label: 'Inactive', color: 'text-gray-600 bg-gray-100 dark:bg-gray-900/30' };
-    if (now < start) return { label: 'Scheduled', color: 'text-blue-600 bg-blue-100 dark:bg-blue-900/30' };
-    if (now > end) return { label: 'Expired', color: 'text-red-600 bg-red-100 dark:bg-red-900/30' };
-    return { label: 'Active', color: 'text-green-600 bg-green-100 dark:bg-green-900/30' };
+    if (!sale.is_active) return { label: 'Inactive', color: 'text-slate-500 bg-slate-500/10 border-slate-500/20' };
+    if (now < start) return { label: 'Scheduled', color: 'text-blue-500 bg-blue-500/10 border-blue-500/20' };
+    if (now > end) return { label: 'Expired', color: 'text-rose-500 bg-rose-500/10 border-rose-500/20' };
+    return { label: 'Active Now', color: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20' };
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <AdminSidebar />
-      <div className="flex-1 p-6 md:p-8 lg:p-12 md:ml-64 transition-all duration-300">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <Breadcrumbs 
-            items={[
-              { label: 'Admin', href: '/admin' },
-              { label: 'Promotions', href: '/admin/promotions' }
-            ]} 
-          />
+    <div className="space-y-6">
+      <AdminPageHeader
+        title="Promotions & Campaign Discounts"
+        subtitle="Create and manage limited-time discount campaigns, festival promotional banners, and sitewide flash offers."
+        badge="Promotions & Offers"
+        breadcrumbs={[{ label: 'Admin', href: '/admin' }, { label: 'Promotions' }]}
+        actions={
+          <button
+            type="button"
+            onClick={() => {
+              setErrorMessage(null);
+              setIsModalOpen(true);
+            }}
+            className="px-4 py-2.5 bg-rose-500 text-white font-bold text-xs rounded-xl hover:bg-rose-600 transition-colors flex items-center gap-2 shadow-2xs cursor-pointer"
+          >
+            <Plus size={16} />
+            <span>Create Promotion</span>
+          </button>
+        }
+      />
 
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
-                <Zap className="w-8 h-8 text-rose-500" />
-                Promotions & Flash Sales
-              </h1>
-              <p className="text-muted-foreground mt-1 text-sm">
-                Create and manage time-limited discounts across the platform.
-              </p>
-            </div>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-sm shadow-rose-500/20"
-            >
-              <Plus className="w-5 h-5" />
-              Create Flash Sale
-            </button>
-          </div>
-
-          <div className="bg-rose-50 border border-rose-100 rounded-2xl p-5 dark:bg-rose-950/10 dark:border-rose-900/20">
-            <div className="flex items-start gap-4">
-              <div className="bg-rose-100 p-2.5 rounded-xl dark:bg-rose-900/30">
-                <Percent className="w-5 h-5 text-rose-600 dark:text-rose-400" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-rose-900 dark:text-rose-200">About Flash Sales</h3>
-                <p className="text-sm text-rose-700 dark:text-rose-300/80 mt-1 leading-relaxed">
-                  Flash sales apply an automatic discount to selected products during a specific timeframe. 
-                  When active, products will display a countdown timer and the discounted price to drive urgency and conversions.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-card border border-border/40 rounded-3xl p-6 sm:p-8 shadow-sm">
-            <h2 className="text-lg font-semibold text-foreground mb-6">All Promotions</h2>
-            
-            {isLoading ? (
-              <div className="space-y-4">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="animate-pulse bg-muted/50 rounded-2xl h-24 w-full"></div>
-                ))}
-              </div>
-            ) : isError ? (
-              <div className="text-center py-8">
-                <p className="text-red-500">Failed to load promotions.</p>
-              </div>
-            ) : flashSales.length === 0 ? (
-              <div className="text-center py-16 px-4 border border-dashed border-border rounded-2xl">
-                <Zap className="w-10 h-10 text-muted-foreground mx-auto mb-4 opacity-50" />
-                <h3 className="text-lg font-medium text-foreground">No promotions yet</h3>
-                <p className="text-muted-foreground mt-1 text-sm mb-6">Create your first flash sale to boost sales.</p>
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                >
-                  Create Promotion
-                </button>
-              </div>
-            ) : (
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {flashSales.map((sale: AdminFlashSale) => {
-                  const status = getStatus(sale);
-                  return (
-                    <div key={sale.id} className="border border-border/40 rounded-2xl p-5 hover:border-rose-500/30 transition-colors flex flex-col">
-                      <div className="flex justify-between items-start mb-4">
-                        <h3 className="font-semibold text-foreground truncate pr-2" title={sale.name}>
-                          {sale.name}
-                        </h3>
-                        <span className={`px-2.5 py-1 text-xs font-medium rounded-full whitespace-nowrap ${status.color}`}>
-                          {status.label}
-                        </span>
-                      </div>
-                      
-                      <div className="space-y-3 mb-5 flex-1">
-                        <div className="flex items-center text-sm">
-                          <Percent className="w-4 h-4 text-rose-500 mr-2.5 shrink-0" />
-                          <span className="font-medium text-foreground">{sale.discount_percentage}% off</span>
-                        </div>
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Calendar className="w-4 h-4 mr-2.5 shrink-0" />
-                          <span className="truncate">
-                            {new Date(sale.starts_at).toLocaleDateString()} - {new Date(sale.ends_at).toLocaleDateString()}
-                          </span>
-                        </div>
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Clock className="w-4 h-4 mr-2.5 shrink-0" />
-                          <span>{sale.products?.length || 0} products</span>
-                        </div>
-                      </div>
-                      
-                      <div className="pt-4 border-t border-border/40 flex justify-between items-center">
-                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                          {sale.is_active ? (
-                            <><ToggleRight className="w-4 h-4 text-green-500" /> Enabled</>
-                          ) : (
-                            <><ToggleLeft className="w-4 h-4 text-muted-foreground" /> Disabled</>
-                          )}
-                        </div>
-                        <button className="text-xs font-medium text-rose-500 hover:text-rose-600 transition-colors">
-                          Manage Products
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+      {/* Info Card */}
+      <div className="bg-rose-500/10 border border-rose-500/20 rounded-3xl p-5 flex items-start gap-4">
+        <div className="p-2.5 bg-rose-500/20 rounded-2xl text-rose-600 dark:text-rose-400 shrink-0">
+          <Percent size={20} />
+        </div>
+        <div className="space-y-1 text-xs">
+          <h4 className="font-black text-sm text-foreground">About Automated Promotions & Flash Deals</h4>
+          <p className="text-muted-custom leading-relaxed">
+            Active promotions automatically apply discount percentages to products during the scheduled timeframe.
+            Countdown badges and offer prices are displayed across the storefront to boost buyer conversions.
+          </p>
         </div>
       </div>
 
+      {/* Promotions List */}
+      <div className="bg-card border border-border-custom/80 rounded-3xl p-6 shadow-2xs space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="font-black text-base text-foreground">All Configured Campaigns</h3>
+          <span className="text-xs font-bold text-muted-custom">
+            Total: {flashSales.length}
+          </span>
+        </div>
+
+        {isLoading ? (
+          <div className="py-16 text-center text-xs font-bold text-muted-custom animate-pulse flex flex-col items-center justify-center gap-2">
+            <Sparkles className="w-6 h-6 text-rose-500 animate-spin" />
+            <span>Loading promotion records...</span>
+          </div>
+        ) : flashSales.length === 0 ? (
+          <div className="py-16 text-center space-y-3 border-2 border-dashed border-border-custom/80 rounded-2xl">
+            <Zap className="w-10 h-10 text-muted-custom/40 mx-auto" />
+            <h4 className="font-bold text-sm text-foreground">No promotions created yet</h4>
+            <p className="text-xs text-muted-custom max-w-sm mx-auto">
+              Click &quot;Create Promotion&quot; above to launch your first promotional discount campaign.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {flashSales.map((sale: any) => {
+              const status = getStatus(sale);
+              return (
+                <div
+                  key={sale.id}
+                  className="bg-background-secondary border border-border-custom/80 rounded-2xl p-5 space-y-4 shadow-2xs relative overflow-hidden flex flex-col justify-between"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <h4 className="font-black text-sm text-foreground truncate">
+                        {sale.title || sale.name}
+                      </h4>
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase border ${status.color}`}>
+                        {status.label}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400 font-extrabold text-lg">
+                      <Percent size={18} />
+                      <span>{sale.discount_percentage}% OFF</span>
+                    </div>
+
+                    <div className="space-y-1 text-[11px] text-muted-custom pt-2 border-t border-border-custom/60">
+                      <div className="flex items-center gap-1.5 font-medium">
+                        <Calendar size={12} className="shrink-0" />
+                        <span>
+                          Start: {new Date(sale.starts_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5 font-medium">
+                        <Clock size={12} className="shrink-0" />
+                        <span>
+                          End: {new Date(sale.ends_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-border-custom/60 flex items-center justify-between">
+                    <button
+                      type="button"
+                      onClick={() => handleToggle(sale.id)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                        sale.is_active
+                          ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 hover:bg-emerald-500 hover:text-white'
+                          : 'bg-slate-500/10 text-slate-400 border border-slate-500/20 hover:bg-slate-500 hover:text-white'
+                      }`}
+                    >
+                      {sale.is_active ? <CheckCircle2 size={12} /> : <XCircle size={12} />}
+                      <span>{sale.is_active ? 'Active' : 'Paused'}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(sale.id, sale.title || sale.name)}
+                      className="p-1.5 text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer"
+                      title="Delete Campaign"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Create Promotion Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-card w-full max-w-md rounded-3xl shadow-xl overflow-hidden border border-border/40 flex flex-col max-h-[90vh]">
-            <div className="p-6 border-b border-border/40">
-              <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
-                <Zap className="w-5 h-5 text-rose-500" />
-                Create Flash Sale
-              </h2>
-            </div>
-            
-            <div className="p-6 overflow-y-auto">
-              <form id="create-promotion-form" onSubmit={handleCreate} className="space-y-5">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Promotion Name</label>
-                  <input
-                    required
-                    type="text"
-                    value={formData.name}
-                    onChange={e => setFormData({...formData, name: e.target.value})}
-                    className="w-full bg-background border border-input rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none transition-all"
-                    placeholder="e.g. Summer Blowout Sale"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Discount Percentage</label>
-                  <div className="relative">
-                    <input
-                      required
-                      type="number"
-                      min="1"
-                      max="100"
-                      value={formData.discount_percentage}
-                      onChange={e => setFormData({...formData, discount_percentage: Number(e.target.value)})}
-                      className="w-full bg-background border border-input rounded-xl pl-4 pr-10 py-2.5 text-sm focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none transition-all"
-                    />
-                    <Percent className="w-4 h-4 text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2" />
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-1.5">Starts At</label>
-                    <input
-                      required
-                      type="datetime-local"
-                      value={formData.starts_at}
-                      onChange={e => setFormData({...formData, starts_at: e.target.value})}
-                      className="w-full bg-background border border-input rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none transition-all"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-1.5">Ends At</label>
-                    <input
-                      required
-                      type="datetime-local"
-                      value={formData.ends_at}
-                      onChange={e => setFormData({...formData, ends_at: e.target.value})}
-                      className="w-full bg-background border border-input rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none transition-all"
-                    />
-                  </div>
-                </div>
-                
-                <label className="flex items-center gap-3 p-4 border border-input rounded-xl cursor-pointer hover:bg-muted/30 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={formData.is_active}
-                    onChange={e => setFormData({...formData, is_active: e.target.checked})}
-                    className="w-4 h-4 rounded text-rose-500 focus:ring-rose-500 focus:ring-offset-background bg-background border-input"
-                  />
-                  <div>
-                    <div className="text-sm font-medium text-foreground">Active upon creation</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">Sale will start automatically at the scheduled time.</div>
-                  </div>
-                </label>
-              </form>
-            </div>
-            
-            <div className="p-6 border-t border-border/40 bg-muted/20 flex justify-end gap-3 shrink-0">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <form
+            onSubmit={handleCreate}
+            className="bg-card border border-border-custom rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4"
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-border-custom">
+              <h3 className="text-lg font-black text-foreground">Launch Promotional Campaign</h3>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="px-5 py-2.5 text-sm font-medium text-foreground hover:bg-muted rounded-xl transition-colors"
+                className="text-muted-custom hover:text-foreground text-xs font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            {errorMessage && (
+              <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-xs text-rose-600 font-bold">
+                {errorMessage}
+              </div>
+            )}
+
+            <div className="space-y-1 text-xs">
+              <label className="font-bold text-muted-custom">Event Title *</label>
+              <input
+                type="text"
+                required
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                placeholder="e.g. Independence Day Super Sale"
+                className="w-full px-3 py-2 bg-background-secondary border border-border-custom text-foreground font-bold rounded-xl focus:outline-none"
+              />
+            </div>
+
+            <div className="space-y-1 text-xs">
+              <label className="font-bold text-muted-custom">Discount Percentage (%) *</label>
+              <input
+                type="number"
+                min="1"
+                max="99"
+                required
+                value={formData.discount_percentage}
+                onChange={(e) => setFormData({ ...formData, discount_percentage: Number(e.target.value) })}
+                className="w-full px-3 py-2 bg-background-secondary border border-border-custom text-foreground font-bold rounded-xl focus:outline-none"
+              />
+            </div>
+
+            <div className="space-y-1 text-xs">
+              <label className="font-bold text-muted-custom">Start Time *</label>
+              <input
+                type="datetime-local"
+                required
+                value={formData.starts_at}
+                onChange={(e) => setFormData({ ...formData, starts_at: e.target.value })}
+                className="w-full px-3 py-2 bg-background-secondary border border-border-custom text-foreground font-bold rounded-xl focus:outline-none"
+              />
+            </div>
+
+            <div className="space-y-1 text-xs">
+              <label className="font-bold text-muted-custom">End Time *</label>
+              <input
+                type="datetime-local"
+                required
+                value={formData.ends_at}
+                onChange={(e) => setFormData({ ...formData, ends_at: e.target.value })}
+                className="w-full px-3 py-2 bg-background-secondary border border-border-custom text-foreground font-bold rounded-xl focus:outline-none"
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-border-custom">
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                className="px-4 py-2 bg-background-secondary text-foreground text-xs font-bold rounded-xl cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                form="create-promotion-form"
                 disabled={createMutation.isPending}
-                className="px-5 py-2.5 text-sm font-medium text-white bg-rose-500 hover:bg-rose-600 rounded-xl transition-colors disabled:opacity-70 flex items-center gap-2"
+                className="px-5 py-2 bg-rose-500 text-white text-xs font-bold rounded-xl hover:bg-rose-600 transition-all cursor-pointer disabled:opacity-50"
               >
-                {createMutation.isPending ? 'Creating...' : 'Create Flash Sale'}
+                {createMutation.isPending ? 'Saving...' : 'Save Promotion'}
               </button>
             </div>
-          </div>
+          </form>
         </div>
       )}
     </div>

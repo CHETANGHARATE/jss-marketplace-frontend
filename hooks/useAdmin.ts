@@ -44,13 +44,22 @@ export function useAdminInventoryAnalyticsQuery(enabled = true) {
 // ─── Customers ────────────────────────────────────────────────────────────────
 
 export function useAdminCustomersQuery(
-  params?: { search?: string; status?: string; page?: number },
+  params?: { search?: string; status?: string; filter?: string; page?: number },
   enabled = true
 ) {
   return useQuery({
     queryKey: ['admin', 'customers', params],
     queryFn: () => adminService.getCustomers(params),
     enabled,
+    staleTime: 1000 * 60 * 2,
+  });
+}
+
+export function useAdminCustomerQuery(id: number | null, enabled = true) {
+  return useQuery({
+    queryKey: ['admin', 'customers', id],
+    queryFn: () => adminService.getCustomer(id!),
+    enabled: enabled && !!id,
     staleTime: 1000 * 60 * 2,
   });
 }
@@ -75,6 +84,15 @@ export function useAdminVendorsQuery(
     queryKey: ['admin', 'vendors', params],
     queryFn: () => adminService.getVendors(params),
     enabled,
+    staleTime: 1000 * 60 * 2,
+  });
+}
+
+export function useAdminVendorQuery(id: number | null, enabled = true) {
+  return useQuery({
+    queryKey: ['admin', 'vendors', id],
+    queryFn: () => adminService.getVendor(id!),
+    enabled: enabled && !!id,
     staleTime: 1000 * 60 * 2,
   });
 }
@@ -671,6 +689,27 @@ export function useCreateCouponMutation() {
   });
 }
 
+export function useUpdateCouponMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: Partial<AdminCoupon> }) =>
+      adminService.updateCoupon(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'coupons'] });
+    },
+  });
+}
+
+export function useToggleCouponStatusMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.toggleCouponStatus(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'coupons'] });
+    },
+  });
+}
+
 export function useDeleteCouponMutation() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -695,7 +734,39 @@ export function useAdminFlashSalesQuery(enabled = true) {
 export function useCreateFlashSaleMutation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (payload: Partial<AdminFlashSale>) => adminService.createFlashSale(payload),
+    mutationFn: (payload: Partial<AdminFlashSale> & { title?: string; products?: any[] }) =>
+      adminService.createFlashSale(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'flash-sales'] });
+    },
+  });
+}
+
+export function useUpdateFlashSaleMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: Partial<AdminFlashSale> & { title?: string } }) =>
+      adminService.updateFlashSale(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'flash-sales'] });
+    },
+  });
+}
+
+export function useToggleFlashSaleStatusMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.toggleFlashSaleStatus(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'flash-sales'] });
+    },
+  });
+}
+
+export function useDeleteFlashSaleMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.deleteFlashSale(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'flash-sales'] });
     },
@@ -803,6 +874,177 @@ export function useExecuteBulkImportMutation() {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       queryClient.invalidateQueries({ queryKey: ['categories'] });
       queryClient.invalidateQueries({ queryKey: ['brands'] });
+    },
+  });
+}
+
+// ─── CMS & Content ────────────────────────────────────────────────────────────
+
+export function useAdminCmsBannersQuery(enabled = true) {
+  return useQuery({
+    queryKey: ['admin', 'cms', 'banners'],
+    queryFn: () => adminService.getBanners(),
+    enabled,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+export function useCreateBannerMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: any) => adminService.createBanner(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'cms', 'banners'] });
+    },
+  });
+}
+
+export function useUpdateBannerMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: any }) =>
+      adminService.updateBanner(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'cms', 'banners'] });
+    },
+  });
+}
+
+export function useToggleBannerStatusMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.toggleBannerStatus(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'cms', 'banners'] });
+    },
+  });
+}
+
+export function useDeleteBannerMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.deleteBanner(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'cms', 'banners'] });
+    },
+  });
+}
+
+export function useAdminCmsPopupsQuery(enabled = true) {
+  return useQuery({
+    queryKey: ['admin', 'cms', 'popups'],
+    queryFn: () => adminService.getPopups(),
+    enabled,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+export function useUpdatePopupMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: any) => adminService.updatePopup(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'cms', 'popups'] });
+    },
+  });
+}
+
+export function useAdminCmsPagesQuery(enabled = true) {
+  return useQuery({
+    queryKey: ['admin', 'cms', 'pages'],
+    queryFn: () => adminService.getCmsPages(),
+    enabled,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+export function useUpdateCmsPageMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: any }) =>
+      adminService.updateCmsPage(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'cms', 'pages'] });
+    },
+  });
+}
+
+export function useAdminCmsFaqsQuery(enabled = true) {
+  return useQuery({
+    queryKey: ['admin', 'cms', 'faqs'],
+    queryFn: () => adminService.getFaqs(),
+    enabled,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+export function useCreateFaqMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: any) => adminService.createFaq(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'cms', 'faqs'] });
+    },
+  });
+}
+
+export function useDeleteFaqMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.deleteFaq(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'cms', 'faqs'] });
+    },
+  });
+}
+
+// ─── Staff & RBAC ─────────────────────────────────────────────────────────────
+
+export function useAdminStaffRolesQuery(enabled = true) {
+  return useQuery({
+    queryKey: ['admin', 'staff', 'roles'],
+    queryFn: () => adminService.getStaffRoles(),
+    enabled,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+export function useAdminStaffListQuery(enabled = true) {
+  return useQuery({
+    queryKey: ['admin', 'staff', 'list'],
+    queryFn: () => adminService.getStaffList(),
+    enabled,
+    staleTime: 1000 * 60 * 2,
+  });
+}
+
+export function useCreateStaffMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: any) => adminService.createStaff(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'staff'] });
+    },
+  });
+}
+
+export function useUpdateStaffMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: any }) =>
+      adminService.updateStaff(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'staff'] });
+    },
+  });
+}
+
+export function useDeleteStaffMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => adminService.deleteStaff(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'staff'] });
     },
   });
 }

@@ -164,14 +164,20 @@ export const adminService = {
   // ── Customers ─────────────────────────────────────────────────────────────
 
   /** GET /admin/customers */
-  async getCustomers(params?: { search?: string; status?: string; page?: number }): Promise<PaginatedApiResponse<ApiUser>> {
-    const response = await apiClient.get<PaginatedApiResponse<ApiUser>>('/admin/customers', { params });
+  async getCustomers(params?: { search?: string; status?: string; filter?: string; page?: number }): Promise<PaginatedApiResponse<any>> {
+    const response = await apiClient.get<PaginatedApiResponse<any>>('/admin/customers', { params });
     return response.data;
   },
 
+  /** GET /admin/customers/{id} */
+  async getCustomer(id: number): Promise<any> {
+    const response = await apiClient.get<ApiResponse<any>>(`/admin/customers/${id}`);
+    return response.data.data;
+  },
+
   /** PATCH /admin/customers/{id}/toggle-status */
-  async toggleCustomerStatus(id: number): Promise<ApiUser> {
-    const response = await apiClient.patch<ApiResponse<ApiUser>>(`/admin/customers/${id}/toggle-status`);
+  async toggleCustomerStatus(id: number): Promise<any> {
+    const response = await apiClient.patch<ApiResponse<any>>(`/admin/customers/${id}/toggle-status`);
     return response.data.data;
   },
 
@@ -181,6 +187,12 @@ export const adminService = {
   async getVendors(params?: { search?: string; status?: string; kyc_status?: string; page?: number }): Promise<PaginatedApiResponse<ApiVendorStore>> {
     const response = await apiClient.get<PaginatedApiResponse<ApiVendorStore>>('/admin/vendor/stores', { params });
     return response.data;
+  },
+
+  /** GET /admin/vendor/stores/{id} */
+  async getVendor(id: number): Promise<any> {
+    const response = await apiClient.get<ApiResponse<any>>(`/admin/vendor/stores/${id}`);
+    return response.data.data;
   },
 
   /** GET /admin/vendor/stats */
@@ -512,6 +524,18 @@ export const adminService = {
     return response.data.data;
   },
 
+  /** PUT /admin/coupons/{id} */
+  async updateCoupon(id: number, payload: Partial<AdminCoupon>): Promise<AdminCoupon> {
+    const response = await apiClient.put<ApiResponse<AdminCoupon>>(`/admin/coupons/${id}`, payload);
+    return response.data.data;
+  },
+
+  /** PATCH /admin/coupons/{id}/toggle-status */
+  async toggleCouponStatus(id: number): Promise<AdminCoupon> {
+    const response = await apiClient.patch<ApiResponse<AdminCoupon>>(`/admin/coupons/${id}/toggle-status`);
+    return response.data.data;
+  },
+
   /** DELETE /admin/coupons/{id} */
   async deleteCoupon(id: number): Promise<void> {
     await apiClient.delete(`/admin/coupons/${id}`);
@@ -526,9 +550,26 @@ export const adminService = {
   },
 
   /** POST /admin/flash-sales */
-  async createFlashSale(payload: Partial<AdminFlashSale>): Promise<AdminFlashSale> {
+  async createFlashSale(payload: Partial<AdminFlashSale> & { title?: string; products?: any[] }): Promise<AdminFlashSale> {
     const response = await apiClient.post<ApiResponse<AdminFlashSale>>('/admin/flash-sales', payload);
     return response.data.data;
+  },
+
+  /** PUT /admin/flash-sales/{id} */
+  async updateFlashSale(id: number, payload: Partial<AdminFlashSale> & { title?: string }): Promise<AdminFlashSale> {
+    const response = await apiClient.put<ApiResponse<AdminFlashSale>>(`/admin/flash-sales/${id}`, payload);
+    return response.data.data;
+  },
+
+  /** PATCH /admin/flash-sales/{id}/toggle-status */
+  async toggleFlashSaleStatus(id: number): Promise<AdminFlashSale> {
+    const response = await apiClient.patch<ApiResponse<AdminFlashSale>>(`/admin/flash-sales/${id}/toggle-status`);
+    return response.data.data;
+  },
+
+  /** DELETE /admin/flash-sales/{id} */
+  async deleteFlashSale(id: number): Promise<void> {
+    await apiClient.delete(`/admin/flash-sales/${id}`);
   },
 
   // ── Inventory ─────────────────────────────────────────────────────────────
@@ -663,5 +704,108 @@ export const adminService = {
       { timeout: 300000 } // 5 minutes timeout for bulk import execution
     );
     return response.data;
+  },
+
+  // ── CMS & Content ─────────────────────────────────────────────────────────
+
+  /** GET /admin/cms/banners */
+  async getBanners(): Promise<any[]> {
+    const response = await apiClient.get<ApiResponse<any[]>>('/admin/cms/banners');
+    return response.data.data;
+  },
+
+  /** POST /admin/cms/banners */
+  async createBanner(payload: any): Promise<any> {
+    const response = await apiClient.post<ApiResponse<any>>('/admin/cms/banners', payload);
+    return response.data.data;
+  },
+
+  /** PUT /admin/cms/banners/{id} */
+  async updateBanner(id: number, payload: any): Promise<any> {
+    const response = await apiClient.put<ApiResponse<any>>(`/admin/cms/banners/${id}`, payload);
+    return response.data.data;
+  },
+
+  /** PATCH /admin/cms/banners/{id}/toggle-status */
+  async toggleBannerStatus(id: number): Promise<any> {
+    const response = await apiClient.patch<ApiResponse<any>>(`/admin/cms/banners/${id}/toggle-status`);
+    return response.data.data;
+  },
+
+  /** DELETE /admin/cms/banners/{id} */
+  async deleteBanner(id: number): Promise<void> {
+    await apiClient.delete(`/admin/cms/banners/${id}`);
+  },
+
+  /** GET /admin/cms/popups */
+  async getPopups(): Promise<any[]> {
+    const response = await apiClient.get<ApiResponse<any[]>>('/admin/cms/popups');
+    return response.data.data;
+  },
+
+  /** PUT /admin/cms/popups */
+  async updatePopup(payload: any): Promise<any> {
+    const response = await apiClient.put<ApiResponse<any>>('/admin/cms/popups', payload);
+    return response.data.data;
+  },
+
+  /** GET /admin/cms/pages */
+  async getCmsPages(): Promise<any[]> {
+    const response = await apiClient.get<ApiResponse<any[]>>('/admin/cms/pages');
+    return response.data.data;
+  },
+
+  /** PUT /admin/cms/pages/{id} */
+  async updateCmsPage(id: number, payload: any): Promise<any> {
+    const response = await apiClient.put<ApiResponse<any>>(`/admin/cms/pages/${id}`, payload);
+    return response.data.data;
+  },
+
+  /** GET /admin/cms/faqs */
+  async getFaqs(): Promise<any[]> {
+    const response = await apiClient.get<ApiResponse<any[]>>('/admin/cms/faqs');
+    return response.data.data;
+  },
+
+  /** POST /admin/cms/faqs */
+  async createFaq(payload: any): Promise<any> {
+    const response = await apiClient.post<ApiResponse<any>>('/admin/cms/faqs', payload);
+    return response.data.data;
+  },
+
+  /** DELETE /admin/cms/faqs/{id} */
+  async deleteFaq(id: number): Promise<void> {
+    await apiClient.delete(`/admin/cms/faqs/${id}`);
+  },
+
+  // ── Staff & RBAC ──────────────────────────────────────────────────────────
+
+  /** GET /admin/staff/roles */
+  async getStaffRoles(): Promise<any> {
+    const response = await apiClient.get<ApiResponse<any>>('/admin/staff/roles');
+    return response.data.data;
+  },
+
+  /** GET /admin/staff */
+  async getStaffList(): Promise<any[]> {
+    const response = await apiClient.get<ApiResponse<any[]>>('/admin/staff');
+    return response.data.data;
+  },
+
+  /** POST /admin/staff */
+  async createStaff(payload: any): Promise<any> {
+    const response = await apiClient.post<ApiResponse<any>>('/admin/staff', payload);
+    return response.data.data;
+  },
+
+  /** PUT /admin/staff/{id} */
+  async updateStaff(id: number, payload: any): Promise<any> {
+    const response = await apiClient.put<ApiResponse<any>>(`/admin/staff/${id}`, payload);
+    return response.data.data;
+  },
+
+  /** DELETE /admin/staff/{id} */
+  async deleteStaff(id: number): Promise<void> {
+    await apiClient.delete(`/admin/staff/${id}`);
   },
 };
