@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles, Package } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getLocalizedText } from '../utils/translation';
 import { Category, Product } from '../types';
@@ -67,9 +67,30 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
   const [featuredData, setFeaturedData] = useState<Record<string, Product[]>>({});
   const [loading, setLoading] = useState(true);
 
+  // Ensure Astro Stone is in the category list if not already present
+  const astroStoneCategory: any = {
+    id: '17',
+    name: 'Astro Stone',
+    slug: 'astro-stone',
+    description: 'Certified astrological gemstones, natural healing crystals, rudraksha, and spiritual energy stones.',
+    icon: 'Sparkles',
+    image: '/categories/astro.webp',
+    subcategories: [],
+    popularBrands: [],
+    faqs: [],
+    is_active: true,
+  };
+
+  const hasAstroStone = categories.some((c) => {
+    const k = normalizeCatKey(c);
+    return k === 'astro_stone' || String((c as any).slug || '').includes('astro');
+  });
+
+  const mergedCategories = hasAstroStone ? categories : [...categories, astroStoneCategory];
+
   // Deduplicate categories strictly so each category section appears EXACTLY ONCE
   const seenKeys = new Set<string>();
-  const uniqueCategories = categories.filter((cat) => {
+  const uniqueCategories = mergedCategories.filter((cat) => {
     const idKey = String(cat.id).toLowerCase();
     const slugKey = String((cat as any).slug || '').toLowerCase();
     const semanticKey = normalizeCatKey(cat);
@@ -89,23 +110,42 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
       setLoading(true);
       try {
         const promises = uniqueCategories.map(async (cat) => {
+          const catKey = String(cat.id);
+          const slug = String((cat as any).slug || '').toLowerCase();
+
           try {
-            const response = await productService.getProducts({
-              category: String(cat.id),
+            // Try fetching by slug or ID
+            let response = await productService.getProducts({
+              category: slug || catKey,
+              category_id: typeof cat.id === 'number' ? cat.id : undefined,
               per_page: 5,
-              in_stock_first: 1
+              in_stock_first: 1,
             });
-            const products = (response.data || []).map(mapApiProductToProduct).slice(0, 5);
-            return { categoryId: String(cat.id), products };
+
+            let prods = (response.data || []).map(mapApiProductToProduct);
+
+            // If empty and it is Astro Stone, search by keyword fallback
+            if (prods.length === 0 && (slug.includes('astro') || catKey === '17')) {
+              const fallbackRes = await productService.getProducts({
+                search: 'stone',
+                per_page: 5,
+                in_stock_first: 1,
+              });
+              if (fallbackRes.data && fallbackRes.data.length > 0) {
+                prods = fallbackRes.data.map(mapApiProductToProduct);
+              }
+            }
+
+            return { categoryId: catKey, products: prods.slice(0, 5) };
           } catch {
-            return { categoryId: String(cat.id), products: [] };
+            return { categoryId: catKey, products: [] };
           }
         });
 
         const results = await Promise.all(promises);
         const dataMap: Record<string, Product[]> = {};
         results.forEach((res) => {
-          dataMap[res.categoryId] = res.products.slice(0, 5);
+          dataMap[res.categoryId] = res.products;
         });
 
         setFeaturedData(dataMap);
@@ -145,9 +185,12 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
         const products = (featuredData[String(cat.id)] || []).slice(0, 5);
         if (products.length === 0) return null;
 
+        const catName = getLocalizedText(cat.name, language);
+        const catDesc = getLocalizedText(cat.description, language);
+
         return (
           <section key={cat.id} className="space-y-6 scroll-mt-24 border-b border-border-custom/60 last:border-0 pb-8 last:pb-0">
-            {/* Header section */}
+            {/* Header section with CURATED COLLECTION pill */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
               <div>
                 <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-accent uppercase tracking-widest bg-accent/10 px-2.5 py-0.5 rounded-full mb-1">
@@ -155,18 +198,18 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
                   <span>{t('home.curated_collection')}</span>
                 </div>
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-foreground tracking-tight mt-1">
-                  {getLocalizedText(cat.name, language)}
+                  {catName}
                 </h2>
                 <p className="text-xs sm:text-sm text-muted-custom mt-1 max-w-2xl font-medium">
-                  {getLocalizedText(cat.description, language) || t('home.popular_categories_desc')}
+                  {catDesc || t('home.popular_categories_desc')}
                 </p>
               </div>
 
               <Link
                 href={getCategoryUrl(cat)}
-                className="inline-flex items-center gap-2 text-xs font-black text-primary hover:text-primary-hover bg-primary/10 hover:bg-primary/20 border border-primary/20 px-4 py-2.5 rounded-2xl transition-all self-start md:self-auto shrink-0 shadow-2xs group"
+                className="inline-flex items-center gap-2 text-xs font-black text-primary hover:text-primary-hover bg-primary/10 hover:bg-primary/20 border border-primary/20 px-4 py-2.5 rounded-2xl transition-all self-start md:self-auto shrink-0 shadow-2xs group cursor-pointer"
               >
-                <span>{t('home.view_all')} {getLocalizedText(cat.name, language)}</span>
+                <span>{t('home.view_all')} {catName}</span>
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>

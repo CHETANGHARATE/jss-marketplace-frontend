@@ -24,7 +24,7 @@ const faqs: FaqItem[] = [
 
 export const HomeFaqSection: React.FC = () => {
   const { t } = useLanguage();
-  const [openId, setOpenId] = useState<string>('track');
+  const [openId, setOpenId] = useState<string>('');
 
   const toggle = (id: string) => setOpenId(prev => (prev === id ? '' : id));
 
