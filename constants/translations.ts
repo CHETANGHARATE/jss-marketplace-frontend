@@ -295,6 +295,21 @@ export const translations: Record<Language, Record<string, string>> = {
     'promo.under399_sub': 'Premium Picks Under ₹399',
     'promo.under399_desc': 'Lifestyle & tech deals',
     'promo.shop_now': 'Shop Now →',
+
+    // ── Dedicated Offer Pages ───────────────────────────────────────────────
+    'offers.title': 'Special Offers & Deals',
+    'offers.breadcrumb': 'Offers',
+    'offers.active_filter': 'Active Offer',
+    'offers.showing_count': 'Showing',
+    'offers.matching_products': 'matching products',
+    'offers.no_products': 'No products available for this offer',
+    'offers.no_products_desc': 'Try exploring our other promotional offers or adjusting your selected filters.',
+    'offers.explore_all': 'Explore All Offers',
+    'offers.back_home': 'Back to Home',
+    'offers.under99_desc': 'Explore quality verified marketplace essentials and daily picks starting at ₹99 and below.',
+    'offers.flat80_desc': 'Massive clearance savings with genuine discounts of 80% and above directly from source.',
+    'offers.under299_desc': 'Top value fashion, home utility, and daily essentials all priced at or under ₹299.',
+    'offers.under399_desc': 'Curated lifestyle, tech accessories, and grooming essentials all priced under ₹399.',
   },
 
   hi: {
@@ -591,6 +606,21 @@ export const translations: Record<Language, Record<string, string>> = {
     'promo.under399_sub': '₹399 के अंदर प्रीमियम पिक्स',
     'promo.under399_desc': 'लाइफस्टाइल और तकनीकी डील्स',
     'promo.shop_now': 'अभी खरीदें →',
+
+    // ── Dedicated Offer Pages ───────────────────────────────────────────────
+    'offers.title': 'विशेष ऑफर्स और डील्स',
+    'offers.breadcrumb': 'ऑफर्स',
+    'offers.active_filter': 'सक्रिय ऑफर',
+    'offers.showing_count': 'दिखाए जा रहे हैं',
+    'offers.matching_products': 'संबंधित उत्पाद',
+    'offers.no_products': 'इस ऑफर के लिए कोई उत्पाद उपलब्ध नहीं है',
+    'offers.no_products_desc': 'हमारे अन्य प्रमोशनल ऑफर्स देखें या अपने फ़िल्टर समायोजित करें।',
+    'offers.explore_all': 'सभी ऑफर्स देखें',
+    'offers.back_home': 'होम पेज पर जाएं',
+    'offers.under99_desc': '₹99 और उससे कम में गुणवत्तापूर्ण मार्केटप्लेस आवश्यक वस्तुएं प्राप्त करें।',
+    'offers.flat80_desc': 'सीधे स्रोत से 80% और उससे अधिक की वास्तविक छूट के साथ भारी बचत।',
+    'offers.under299_desc': 'फैशन, घरेलू उपयोगिता और दैनिक आवश्यक वस्तुएं ₹299 या उससे कम में।',
+    'offers.under399_desc': 'प्रीमियम लाइफस्टाइल और तकनीकी उत्पाद ₹399 से कम कीमत में।',
   },
 
   mr: {
@@ -887,5 +917,20 @@ export const translations: Record<Language, Record<string, string>> = {
     'promo.under399_sub': '₹३९९ च्या आत प्रीमियम पिक्स',
     'promo.under399_desc': 'जीवनशैली आणि तंत्रज्ञान डील्स',
     'promo.shop_now': 'आता खरेदी करा →',
+
+    // ── Dedicated Offer Pages ───────────────────────────────────────────────
+    'offers.title': 'विशेष ऑफर्स आणि डील्स',
+    'offers.breadcrumb': 'ऑफर्स',
+    'offers.active_filter': 'सक्रिय ऑफर',
+    'offers.showing_count': 'दाखवत आहे',
+    'offers.matching_products': 'जुळणारी उत्पादने',
+    'offers.no_products': 'या ऑफरसाठी कोणतीही उत्पादने उपलब्ध नाहीत',
+    'offers.no_products_desc': 'आमच्या इतर प्रमोशनल ऑफर्स एक्सप्लोर करा किंवा तुमचे फिल्टर्स समायोजित करा.',
+    'offers.explore_all': 'सर्व ऑफर्स एक्सप्लोर करा',
+    'offers.back_home': 'मुख्यपृष्ठावर परत जा',
+    'offers.under99_desc': '₹९९ आणि त्यापेक्षा कमी किमतीत दर्जेदार मार्केटप्लेस आवश्यक वस्तू.',
+    'offers.flat80_desc': 'थेट स्रोताकडून ८०% आणि त्याहून अधिक सवलतींसह प्रचंड बचत.',
+    'offers.under299_desc': 'फॅशन, घरगुती उपयुक्तता आणि दैनंदिन आवश्यक वस्तू ₹२९९ किंवा त्यापेक्षा कमी किमतीत.',
+    'offers.under399_desc': 'प्रीमियम जीवनशैली आणि तंत्रज्ञान उत्पादने ₹३९९ पेक्षा कमी किमतीत.',
   },
 };
