@@ -5,12 +5,8 @@ import Link from 'next/link';
 import {
   Mail,
   ShieldCheck,
-  Truck,
-  RefreshCw,
-  Headphones,
   Send,
   Lock,
-  Award,
   ChevronRight,
   CheckCircle2,
   Users
@@ -139,49 +135,7 @@ export const Footer: React.FC = () => {
 
   return (
     <footer className="bg-[#0B132B] text-slate-200 border-t border-slate-800/80 mt-auto transition-colors">
-      
-      {/* ─── 1. TRUST BADGES STRIP ─── */}
-      <div className="border-b border-slate-800/80 bg-[#070D1E] py-8">
-        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            
-            <div className="flex flex-col items-center p-4 bg-slate-900/60 border border-slate-800 rounded-2xl hover:border-primary/40 transition-all">
-              <div className="h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3 border border-primary/20">
-                <Award size={22} />
-              </div>
-              <h4 className="font-black text-xs text-white uppercase tracking-wider">100% Authentic</h4>
-              <p className="text-[11px] text-slate-400 mt-1 font-medium">Verified products from trusted sellers</p>
-            </div>
-
-            <div className="flex flex-col items-center p-4 bg-slate-900/60 border border-slate-800 rounded-2xl hover:border-emerald-500/40 transition-all">
-              <div className="h-12 w-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-3 border border-emerald-500/20">
-                <Truck size={22} />
-              </div>
-              <h4 className="font-black text-xs text-white uppercase tracking-wider">Best Prices</h4>
-              <p className="text-[11px] text-slate-400 mt-1 font-medium">Competitive marketplace pricing</p>
-            </div>
-
-            <div className="flex flex-col items-center p-4 bg-slate-900/60 border border-slate-800 rounded-2xl hover:border-amber-500/40 transition-all">
-              <div className="h-12 w-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mb-3 border border-amber-500/20">
-                <RefreshCw size={22} />
-              </div>
-              <h4 className="font-black text-xs text-white uppercase tracking-wider">Easy Returns</h4>
-              <p className="text-[11px] text-slate-400 mt-1 font-medium">Simple return & replacement process</p>
-            </div>
-
-            <div className="flex flex-col items-center p-4 bg-slate-900/60 border border-slate-800 rounded-2xl hover:border-indigo-500/40 transition-all">
-              <div className="h-12 w-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-3 border border-indigo-500/20">
-                <Headphones size={22} />
-              </div>
-              <h4 className="font-black text-xs text-white uppercase tracking-wider">24x7 Support</h4>
-              <p className="text-[11px] text-slate-400 mt-1 font-medium">Dedicated customer assistance</p>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      {/* ─── 2. MAIN 5-COLUMN NAVIGATION FOOTER ─── */}
+      {/* ─── MAIN 5-COLUMN NAVIGATION FOOTER ─── */}
       <div className="max-w-[1536px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-12 sm:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
           
