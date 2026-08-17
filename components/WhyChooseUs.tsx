@@ -301,7 +301,7 @@ export const WhyChooseUs: React.FC = () => {
       {/* ── Indian Landmark Skyline Illustration Banner ── */}
       <div className="relative w-full max-w-5xl mx-auto -mb-1 overflow-hidden z-10 pointer-events-none">
         <img
-          src="/decor/indian_landmarks_skyline.jpg"
+          src="/decor/indian_landmarks_skyline.png"
           alt="Indian Heritage Landmarks"
           className="w-full h-auto object-contain max-h-[140px] sm:max-h-[180px] lg:max-h-[220px] mx-auto filter drop-shadow-xs dark:opacity-85 dark:brightness-95"
           loading="lazy"
