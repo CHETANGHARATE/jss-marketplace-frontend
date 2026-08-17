@@ -228,7 +228,7 @@ export const WhyChooseUs: React.FC = () => {
       </div>
 
       {/* ── 8 Benefit Cards (4 in Row 1, 4 in Row 2) ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 relative z-10 mt-10 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 relative z-10 mt-8 sm:mt-10 mb-4 sm:mb-6">
         {benefits.map((b) => {
           const Icon = b.icon;
           const title = t(b.titleKey);
@@ -277,61 +277,14 @@ export const WhyChooseUs: React.FC = () => {
         })}
       </div>
 
-      {/* ── Trust Quote Message ── */}
-      <div className="relative z-10 text-center flex items-center justify-center gap-2 mb-4">
-        {/* Left leaf sprig */}
-        <div className="text-emerald-600 dark:text-emerald-400">
-          <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-            <path d="M12 2C6.5 2 2 6.5 2 12c4-1 7-4 8-8 1 4 4 7 8 8-1-5.5-5.5-10-6-10z" />
-          </svg>
-        </div>
-
-        <p className="font-serif italic text-lg sm:text-2xl text-[#1e40af] dark:text-[#93c5fd] font-bold tracking-wide">
-          {t('home.why_trust_quote') || 'Aapka Vishwas, Hamari Pehchan. 💙'}
-        </p>
-
-        {/* Right leaf sprig */}
-        <div className="text-emerald-600 dark:text-emerald-400 rotate-180">
-          <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-            <path d="M12 2C6.5 2 2 6.5 2 12c4-1 7-4 8-8 1 4 4 7 8 8-1-5.5-5.5-10-6-10z" />
-          </svg>
-        </div>
-      </div>
-
-      {/* ── Indian Landmark Skyline Illustration Banner ── */}
-      <div className="relative w-full max-w-5xl mx-auto -mb-1 overflow-hidden z-10 pointer-events-none">
+      {/* ── Indian Landmark Skyline Banner (Flush at the bottom of the section) ── */}
+      <div className="relative w-full -mx-4 sm:-mx-8 lg:-mx-12 -mb-0 overflow-hidden z-10 pointer-events-none mt-2 sm:mt-4">
         <img
           src="/decor/indian_landmarks_skyline.png"
           alt="Indian Heritage Landmarks"
-          className="w-full h-auto object-contain max-h-[140px] sm:max-h-[180px] lg:max-h-[220px] mx-auto filter drop-shadow-xs dark:opacity-85 dark:brightness-95"
+          className="w-full h-auto object-cover object-top max-h-[140px] sm:max-h-[190px] lg:max-h-[230px] mx-auto filter drop-shadow-xs dark:opacity-85 dark:brightness-95"
           loading="lazy"
         />
-      </div>
-
-      {/* ── Flowing Indian Tricolor Wave Ribbon (Saffron / White / Green) ── */}
-      <div className="w-full relative h-4 sm:h-5 overflow-hidden z-20 -mx-4 sm:-mx-8 lg:-mx-12">
-        <svg
-          viewBox="0 0 1200 40"
-          preserveAspectRatio="none"
-          className="w-full h-full"
-        >
-          {/* Saffron Layer */}
-          <path
-            d="M0,25 Q300,5 600,20 T1200,10 L1200,40 L0,40 Z"
-            fill="#FF9933"
-          />
-          {/* White Layer */}
-          <path
-            d="M0,28 Q300,12 600,25 T1200,18 L1200,40 L0,40 Z"
-            fill="#FFFFFF"
-            className="dark:fill-slate-800"
-          />
-          {/* Green Layer */}
-          <path
-            d="M0,32 Q300,18 600,30 T1200,24 L1200,40 L0,40 Z"
-            fill="#138808"
-          />
-        </svg>
       </div>
     </section>
   );
