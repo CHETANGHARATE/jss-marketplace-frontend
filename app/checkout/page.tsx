@@ -45,6 +45,8 @@ export default function CheckoutPage() {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState<boolean>(false);
   const [isOrderPlaced, setIsOrderPlaced] = useState<boolean>(false);
   const [placedOrderNumber, setPlacedOrderNumber] = useState<string>('');
+  const [redeemedCoins, setRedeemedCoins] = useState<number>(0);
+  const [appliedCouponCode, setAppliedCouponCode] = useState<string>('');
 
   const [paymentModalState, setPaymentModalState] = useState<{
     isOpen: boolean;
@@ -98,18 +100,19 @@ export default function CheckoutPage() {
     return (
       <div className="space-y-8">
         <Breadcrumbs items={[{ label: 'Checkout' }]} />
-        <div className="py-20 text-center bg-card border border-border/40 rounded-3xl space-y-4 shadow-sm max-w-2xl mx-auto">
-          <ShoppingBag className="w-12 h-12 text-foreground/30 mx-auto" />
-          <h2 className="text-2xl font-bold text-foreground">Your Cart is Empty</h2>
-          <p className="text-sm text-foreground/60">
-            Please add items to your cart before proceeding to checkout.
+        <div className="py-16 px-6 text-center bg-card border border-border/60 rounded-3xl space-y-4 max-w-md mx-auto shadow-sm">
+          <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
+            <ShoppingBag className="w-8 h-8" />
+          </div>
+          <h2 className="text-2xl font-black text-foreground">Your Cart is Empty</h2>
+          <p className="text-xs text-foreground/60">
+            Looks like you haven't added any products to your shopping cart yet.
           </p>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-bold rounded-2xl shadow-sm hover:bg-primary/90 transition-all"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-black text-xs uppercase tracking-wider rounded-xl shadow-xs hover:bg-primary/90 transition-all"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Return to Shop</span>
+            Start Shopping Now
           </Link>
         </div>
       </div>
@@ -160,6 +163,8 @@ export default function CheckoutPage() {
       {
         shipping_address_id: selectedAddressId,
         payment_method: paymentProvider === 'bank_transfer' ? 'cod' : paymentProvider,
+        points_to_redeem: redeemedCoins > 0 ? redeemedCoins : undefined,
+        coupon_code: appliedCouponCode || undefined,
       },
       {
         onSuccess: (order) => {
@@ -337,6 +342,9 @@ export default function CheckoutPage() {
             subtotal={cartTotal}
             shippingFee={calculatedShippingFee}
             itemCount={cartItemCount}
+            isCheckoutPage={true}
+            onRedeemCoinsChange={(redeem, points) => setRedeemedCoins(redeem ? points : 0)}
+            onCouponApply={(code) => setAppliedCouponCode(code)}
           />
         </div>
       </div>

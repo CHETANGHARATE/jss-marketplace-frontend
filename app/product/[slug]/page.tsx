@@ -8,6 +8,7 @@ import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { ProductGallery } from '../../../components/ProductGallery';
 import { ProductDetailsInfo } from '../../../components/ProductDetailsInfo';
 import { ProductTabsSection } from '../../../components/ProductTabsSection';
+import { FrequentlyBoughtTogether } from '../../../components/FrequentlyBoughtTogether';
 import { RecentlyViewedSection } from '../../../components/RecentlyViewedSection';
 import { StickyPurchaseBar } from '../../../components/StickyPurchaseBar';
 import { seoService } from '../../../services/seoService';
@@ -128,6 +129,9 @@ export default function ProductDetailPage() {
 
       {/* Product Information Tabs (Overview, Specifications, Vendor Info, Shipping, Reviews) */}
       <ProductTabsSection product={product} />
+
+      {/* Frequently Bought Together Bundle Recommendations (Feature 19) */}
+      <FrequentlyBoughtTogether mainProduct={product as any} />
 
       {/* Related Products Showcase */}
       {relatedProducts.length > 0 && (

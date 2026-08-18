@@ -233,9 +233,14 @@ export interface ApiOrderItem {
   product_id: number;
   seller_id?: number;
   product_name: string;
+  product_sku?: string;
+  product_thumbnail?: string;
   quantity: number;
   unit_price: number;
   subtotal: number;
+  status?: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  cancellation_reason?: string;
+  cancelled_at?: string;
 }
 
 export interface ApiOrder {
@@ -243,15 +248,31 @@ export interface ApiOrder {
   order_number: string;
   user_id: number;
   status: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-  payment_status: 'unpaid' | 'paid' | 'refunded' | 'failed';
+  payment_status: 'unpaid' | 'paid' | 'refunded' | 'failed' | 'pending';
+  payment_method?: string;
   subtotal: number;
   tax?: number;
   shipping_fee?: number;
+  shipping_amount?: number;
+  discount_amount?: number;
+  loyalty_points_redeemed?: number;
+  loyalty_discount_amount?: number;
   total_amount: number;
-  shipping_address_snapshot?: ApiAddress;
-  billing_address_snapshot?: ApiAddress;
+  financials?: {
+    subtotal: number;
+    tax: number;
+    shipping: number;
+    discount: number;
+    loyalty_points_redeemed?: number;
+    loyalty_discount?: number;
+    total: number;
+  };
+  shipping_address_snapshot?: any;
+  billing_address_snapshot?: any;
   items?: ApiOrderItem[];
   user?: ApiUser;
+  cancellation_reason?: string;
+  cancelled_at?: string;
   created_at: string;
 }
 

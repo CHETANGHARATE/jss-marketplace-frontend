@@ -4,7 +4,9 @@ import { ApiOrder, ApiResponse } from '../types/api';
 export interface ProcessCheckoutPayload {
   shipping_address_id: number;
   billing_address_id?: number;
-  payment_method?: 'razorpay' | 'stripe' | 'cod';
+  payment_method?: 'razorpay' | 'stripe' | 'cod' | 'online' | 'upi' | 'wallet' | 'card' | 'netbanking';
+  points_to_redeem?: number;
+  coupon_code?: string;
   notes?: string;
 }
 

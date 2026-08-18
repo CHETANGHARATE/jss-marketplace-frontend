@@ -12,9 +12,21 @@ export const orderService = {
     return response.data.data;
   },
 
-  async cancelOrder(orderNumber: string): Promise<ApiOrder> {
-    const response = await apiClient.post<ApiResponse<ApiOrder>>(`/orders/${orderNumber}/cancel`);
+  async cancelOrder(orderNumber: string, reason: string = 'Customer requested cancellation'): Promise<ApiOrder> {
+    const response = await apiClient.post<ApiResponse<ApiOrder>>(`/orders/${orderNumber}/cancel`, { reason });
     return response.data.data;
+  },
+
+  async cancelOrderItem(orderNumber: string, itemId: number, reason: string): Promise<ApiOrder> {
+    const response = await apiClient.post<ApiResponse<ApiOrder>>(`/orders/${orderNumber}/items/${itemId}/cancel`, { reason });
+    return response.data.data;
+  },
+
+  async downloadInvoicePdf(orderNumber: string): Promise<Blob> {
+    const response = await apiClient.get(`/orders/${orderNumber}/invoice`, {
+      responseType: 'blob',
+    });
+    return response.data;
   },
 
   async getOrderShipment(orderNumber: string): Promise<any> {

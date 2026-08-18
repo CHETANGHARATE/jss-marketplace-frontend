@@ -149,5 +149,15 @@ export const productService = {
       const res = await apiClient.get<PaginatedApiResponse<ApiProduct>>('/products', { params: { per_page: 4 } });
       return res.data?.data || [];
     }
+  },
+
+  async getFrequentlyBoughtTogether(productId: number | string): Promise<ApiProduct[]> {
+    try {
+      const response = await apiClient.get<ApiResponse<ApiProduct[]>>(`/products/${productId}/frequently-bought-together`);
+      return response.data.data || [];
+    } catch {
+      return [];
+    }
   }
 };
+
