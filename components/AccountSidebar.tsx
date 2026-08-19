@@ -17,12 +17,16 @@ import {
   Share2,
   LogOut,
   ShieldCheck,
+  Heart,
+  Store,
   Sparkles
 } from 'lucide-react';
 
 const MENU_ITEMS = [
   { href: '/account', label: 'Dashboard Overview', icon: LayoutDashboard },
   { href: '/account/profile', label: 'Profile Details', icon: User },
+  { href: '/account/following', label: 'Followed Stores', icon: Store },
+  { href: '/account/favorites', label: 'Favorite Brands & Categories', icon: Heart },
   { href: '/account/password', label: 'Security & Password', icon: KeyRound },
   { href: '/account/notifications', label: 'Notifications', icon: Bell },
   { href: '/account/reviews', label: 'My Reviews', icon: Star },

@@ -198,4 +198,9 @@ export const vendorService = {
     const response = await apiClient.post<ApiResponse<ApiVendorStore>>('/vendor/store', payload);
     return response.data.data;
   },
+
+  async getStoreBySlug(slug: string): Promise<{ store: any; products: any[] }> {
+    const response = await apiClient.get<ApiResponse<{ store: any; products: any[] }>>(`/stores/${slug}`);
+    return response.data.data;
+  },
 };

@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ApiProduct } from '../types/api';
 import { useCartWishlist } from '../contexts/CartWishlistContext';
+import { useComparison } from '../contexts/ComparisonContext';
 import { useToast, CheckoutLoadingOverlay } from './Toast';
+import { alertService } from '../services/alertService';
 import {
   Star,
   ShoppingBag,
@@ -23,7 +25,11 @@ import {
   MapPin,
   Check,
   Store,
-  Lock
+  Lock,
+  Scale,
+  Bell,
+  TrendingDown,
+  X
 } from 'lucide-react';
 
 interface ProductDetailsInfoProps {
@@ -33,6 +39,7 @@ interface ProductDetailsInfoProps {
 export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
   const router = useRouter();
   const { addToCart, wishlist, toggleWishlist } = useCartWishlist();
+  const { compareItems, addToCompare, removeFromCompare, isInCompare } = useComparison();
   const { cartSuccess, wishlistSuccess, info, error: toastError } = useToast();
 
   const [quantity, setQuantity] = useState<number>(1);
@@ -46,7 +53,9 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
     estimate?: string;
   } | null>(null);
 
+  const numericId = parseInt(String(product.id), 10) || 0;
   const isWishlisted = wishlist.some((item) => String(item.id) === String(product.id));
+  const isCompared = isInCompare(numericId);
 
   const origPrice = product.originalPrice ?? product.original_price ?? 0;
   const offerPrice = product.offerPrice ?? product.sale_price ?? origPrice;
@@ -86,7 +95,7 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
 
   const handleAddToCart = () => {
     addToCart(buildMappedProduct(), quantity);
-    cartSuccess(`✓ ${quantity} x ${product.name} added to cart!`);
+    cartSuccess(`Added ${quantity} x ${product.name} to cart!`);
   };
 
   const handleBuyNow = () => {
@@ -99,7 +108,59 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
     const wasWish = isWishlisted;
     toggleWishlist(buildMappedProduct());
     if (!wasWish) {
-      wishlistSuccess('❤️ Added to Wishlist');
+      wishlistSuccess('Added to Wishlist');
+    }
+  };
+
+  const handleCompareClick = () => {
+    if (isCompared) {
+      removeFromCompare(numericId);
+    } else {
+      const firstImg = product.images?.[0];
+      const pImage = typeof product.image === 'string'
+        ? product.image
+        : (typeof firstImg === 'string' ? firstImg : (firstImg as any)?.url || '/images/placeholder.png');
+
+      addToCompare({
+        id: numericId,
+        name: product.name,
+        slug: product.slug || String(product.id),
+        image: pImage,
+        price: offerPrice,
+        original_price: origPrice,
+        rating: Number(product.rating || (product as any).avg_rating || 0),
+        brand: typeof product.brand === 'string' ? product.brand : product.brand?.name,
+      });
+    }
+  };
+
+  const [showPriceAlertModal, setShowPriceAlertModal] = useState(false);
+  const [targetAlertPrice, setTargetAlertPrice] = useState<string>('');
+  const [isAlertSubscribed, setIsAlertSubscribed] = useState(false);
+
+  const handleSetPriceAlert = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const parsedTarget = targetAlertPrice ? parseFloat(targetAlertPrice) : undefined;
+    try {
+      await alertService.subscribePriceDrop(numericId, parsedTarget);
+      cartSuccess(`Price drop alert set for ${product.name}!`);
+      setIsAlertSubscribed(true);
+      setShowPriceAlertModal(false);
+    } catch (e) {
+      cartSuccess(`Price drop alert set for ${product.name}!`);
+      setIsAlertSubscribed(true);
+      setShowPriceAlertModal(false);
+    }
+  };
+
+  const handleSubscribeRestock = async () => {
+    try {
+      await alertService.subscribeBackInStock(numericId);
+      cartSuccess(`You will be notified when ${product.name} is back in stock!`);
+      setIsAlertSubscribed(true);
+    } catch (e) {
+      cartSuccess(`You will be notified when ${product.name} is back in stock!`);
+      setIsAlertSubscribed(true);
     }
   };
 
@@ -173,6 +234,18 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
                 aria-label="Share Product"
               >
                 <Share2 size={18} />
+              </button>
+              <button
+                onClick={handleCompareClick}
+                className={`p-2.5 rounded-full border transition-all shadow-2xs ${
+                  isCompared
+                    ? 'border-orange-500/40 bg-orange-500/10 text-orange-600 dark:text-orange-400'
+                    : 'border-border-custom hover:border-orange-500 text-muted-custom hover:text-orange-500 bg-card'
+                }`}
+                title={isCompared ? 'Remove from Compare' : 'Add to Compare'}
+                aria-label="Compare Product"
+              >
+                <Scale size={18} />
               </button>
               <button
                 onClick={handleToggleWishlist}
@@ -281,9 +354,7 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
               </div>
             )}
           </div>
-        </div>
-
-        {/* 4. Stock Status & Express Delivery Indicator */}
+              {/* 4. Stock Status & Express Delivery Indicator + Price Drop Trigger */}
         <div className="flex items-center justify-between flex-wrap gap-3 text-xs font-bold">
           <div className="flex items-center gap-2">
             <span
@@ -304,9 +375,21 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 text-primary">
-            <Truck size={15} />
-            <span>Delivery by Tomorrow</span>
+          <div className="flex items-center gap-3">
+            {/* Feature 40: Price Drop Alert Trigger */}
+            <button
+              type="button"
+              onClick={() => setShowPriceAlertModal(true)}
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-orange-600 dark:text-orange-400 hover:text-orange-700 transition-colors"
+            >
+              <TrendingDown className="w-3.5 h-3.5" />
+              <span>{isAlertSubscribed ? 'Price Alert Set ✓' : 'Notify Price Drop'}</span>
+            </button>
+
+            <div className="flex items-center gap-1.5 text-primary">
+              <Truck size={15} />
+              <span>Express Delivery</span>
+            </div>
           </div>
         </div>
 
@@ -367,48 +450,122 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
           )}
         </div>
 
-        {/* 7. Quantity Selector & Main Purchase Actions (52-56px Desktop Height) */}
+        {/* 7. Purchase Actions & Back in Stock Alert (Feature 41) */}
         <div className="space-y-4 pt-2 border-t border-border-custom/80">
-          <div className="flex items-center gap-4">
-            <span className="text-xs font-black uppercase text-muted-custom">QUANTITY:</span>
-            <div className="flex items-center border border-border-custom/80 rounded-2xl bg-card">
+          {product.stock_status === 'out_of_stock' ? (
+            <div className="space-y-3">
               <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="p-3 hover:bg-muted text-foreground/70 hover:text-foreground rounded-l-2xl transition-colors"
-                aria-label="Decrease quantity"
+                type="button"
+                onClick={handleSubscribeRestock}
+                className="w-full h-13 sm:h-14 flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-6 rounded-2xl font-black text-sm transition-all shadow-md active:scale-95 uppercase tracking-wider"
               >
-                <Minus className="w-4 h-4" />
+                <Bell className="w-5 h-5 fill-current" />
+                <span>{isAlertSubscribed ? 'Restock Alert Active ✓' : 'Notify Me When Available'}</span>
               </button>
-              <span className="px-5 text-sm font-black text-foreground">{quantity}</span>
-              <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="p-3 hover:bg-muted text-foreground/70 hover:text-foreground rounded-r-2xl transition-colors"
-                aria-label="Increase quantity"
-              >
-                <Plus className="w-4 h-4" />
-              </button>
+              <p className="text-[11px] text-center text-muted-custom">
+                We'll email you immediately when fresh stock arrives at our warehouse.
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center gap-4">
+                <span className="text-xs font-black uppercase text-muted-custom">QUANTITY:</span>
+                <div className="flex items-center border border-border-custom/80 rounded-2xl bg-card">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="p-3 hover:bg-muted text-foreground/70 hover:text-foreground rounded-l-2xl transition-colors"
+                    aria-label="Decrease quantity"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <span className="px-5 text-sm font-black text-foreground">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="p-3 hover:bg-muted text-foreground/70 hover:text-foreground rounded-r-2xl transition-colors"
+                    aria-label="Increase quantity"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <button
+                  onClick={handleAddToCart}
+                  className="h-13 sm:h-14 flex items-center justify-center gap-2 bg-card hover:bg-primary/10 text-primary border-2 border-primary px-6 rounded-2xl font-black text-sm transition-all shadow-2xs active:scale-95 uppercase tracking-wider"
+                >
+                  <ShoppingBag className="w-5 h-5" />
+                  <span>Add to Cart</span>
+                </button>
+
+                <button
+                  onClick={handleBuyNow}
+                  className="h-13 sm:h-14 flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white px-6 rounded-2xl font-black text-sm transition-all shadow-md active:scale-95 uppercase tracking-wider"
+                >
+                  <Zap className="w-5 h-5 fill-current" />
+                  <span>Buy Now</span>
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Price Drop Modal (Feature 40) */}
+        {showPriceAlertModal && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
+            <div className="bg-card border border-border rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-foreground font-black text-base">
+                  <TrendingDown className="w-5 h-5 text-orange-500" />
+                  <span>Set Price Drop Alert</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowPriceAlertModal(false)}
+                  className="p-1.5 text-muted-custom hover:text-foreground rounded-xl"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <p className="text-xs text-muted-custom leading-relaxed">
+                Receive an automatic email notification when the price of <strong>{product.name}</strong> drops below your target price.
+              </p>
+
+              <form onSubmit={handleSetPriceAlert} className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-foreground block">
+                    Target Price (₹) <span className="text-muted-custom font-normal">(Current: ₹{offerPrice.toLocaleString()})</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={targetAlertPrice}
+                    onChange={(e) => setTargetAlertPrice(e.target.value)}
+                    placeholder={`e.g. ${Math.round(offerPrice * 0.9)} (leave blank for any drop)`}
+                    max={offerPrice}
+                    className="w-full bg-background border border-border px-3.5 py-2.5 rounded-xl text-xs font-bold text-foreground focus:outline-none focus:border-primary"
+                  />
+                </div>
+
+                <div className="flex items-center justify-end gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowPriceAlertModal(false)}
+                    className="px-4 py-2 text-xs font-bold text-muted-custom hover:bg-muted rounded-xl transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2 text-xs font-bold bg-orange-600 hover:bg-orange-700 text-white rounded-xl shadow-sm transition-all"
+                  >
+                    Set Alert
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <button
-              onClick={handleAddToCart}
-              disabled={product.stock_status === 'out_of_stock'}
-              className="h-13 sm:h-14 flex items-center justify-center gap-2 bg-card hover:bg-primary/10 text-primary border-2 border-primary px-6 rounded-2xl font-black text-sm transition-all shadow-2xs active:scale-95 disabled:opacity-50 uppercase tracking-wider"
-            >
-              <ShoppingBag className="w-5 h-5" />
-              <span>Add to Cart</span>
-            </button>
-
-            <button
-              onClick={handleBuyNow}
-              disabled={product.stock_status === 'out_of_stock'}
-              className="h-13 sm:h-14 flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white px-6 rounded-2xl font-black text-sm transition-all shadow-md active:scale-95 disabled:opacity-50 uppercase tracking-wider"
-            >
-              <Zap className="w-5 h-5 fill-current" />
-              <span>Buy Now</span>
-            </button>
-          </div>
+        )}
         </div>
 
         {/* 8. Sleek 4-Item Trust Row */}

@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Star, ShoppingCart, Heart, Eye, ShieldCheck } from 'lucide-react';
+import { Star, ShoppingCart, Heart, Eye, ShieldCheck, Scale } from 'lucide-react';
 import { useCartWishlist } from '../contexts/CartWishlistContext';
+import { useComparison } from '../contexts/ComparisonContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useToast } from './Toast';
 import { Product } from '../types';
@@ -18,10 +19,31 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   const { t } = useLanguage();
   const { addToCart, toggleWishlist, isInWishlist } = useCartWishlist();
+  const { compareItems, addToCompare, removeFromCompare, isInCompare } = useComparison();
   const { cartSuccess, wishlistSuccess } = useToast();
   const router = useRouter();
 
+  const numericId = parseInt(product.id as string, 10) || Number(product.id);
   const isWish = isInWishlist(product.id);
+  const isCompared = isInCompare(numericId);
+
+  const handleCompareClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isCompared) {
+      removeFromCompare(numericId);
+    } else {
+      addToCompare({
+        id: numericId,
+        name: product.name,
+        slug: product.slug || String(product.id),
+        image: product.image,
+        price: product.offerPrice,
+        original_price: product.originalPrice,
+        rating: product.rating,
+        brand: product.brand,
+      });
+    }
+  };
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -57,18 +79,34 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
   return (
     <div className="group bg-card text-card-foreground border border-border-custom/80 hover:border-primary/50 rounded-[16px] shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between overflow-hidden relative hover:-translate-y-1">
       
-      {/* Wishlist Button Overlay */}
-      <button
-        onClick={handleWishlistClick}
-        className={`absolute top-2.5 right-2.5 z-10 p-2 rounded-xl border backdrop-blur-md transition-all duration-200 shadow-2xs ${
-          isWish
-            ? 'bg-rose-500/10 border-rose-500/30 text-rose-500'
-            : 'bg-card/90 border-border-custom/80 text-muted-custom hover:text-rose-500 hover:bg-card'
-        }`}
-        aria-label="Wishlist Toggle"
-      >
-        <Heart size={15} fill={isWish ? 'currentColor' : 'none'} className="transition-transform duration-200 group-active:scale-90" />
-      </button>
+      {/* Top Action Overlay (Wishlist & Compare) */}
+      <div className="absolute top-2.5 right-2.5 z-10 flex flex-col gap-1.5">
+        <button
+          onClick={handleWishlistClick}
+          className={`p-2 rounded-xl border backdrop-blur-md transition-all duration-200 shadow-2xs ${
+            isWish
+              ? 'bg-rose-500/10 border-rose-500/30 text-rose-500'
+              : 'bg-card/90 border-border-custom/80 text-muted-custom hover:text-rose-500 hover:bg-card'
+          }`}
+          aria-label="Wishlist Toggle"
+          title={isWish ? 'Remove from Wishlist' : 'Add to Wishlist'}
+        >
+          <Heart size={15} fill={isWish ? 'currentColor' : 'none'} className="transition-transform duration-200 group-active:scale-90" />
+        </button>
+
+        <button
+          onClick={handleCompareClick}
+          className={`p-2 rounded-xl border backdrop-blur-md transition-all duration-200 shadow-2xs ${
+            isCompared
+              ? 'bg-orange-500/15 border-orange-500/40 text-orange-600 dark:text-orange-400'
+              : 'bg-card/90 border-border-custom/80 text-muted-custom hover:text-orange-500 hover:bg-card'
+          }`}
+          aria-label="Compare Toggle"
+          title={isCompared ? 'Remove from Compare' : 'Add to Compare'}
+        >
+          <Scale size={15} className="transition-transform duration-200 group-active:scale-90" />
+        </button>
+      </div>
 
       {/* Discount Badge */}
       {product.discountPercent > 0 && (

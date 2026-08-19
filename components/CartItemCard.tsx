@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Minus, Plus, Trash2 } from 'lucide-react';
+import { Minus, Plus, Trash2, Bookmark } from 'lucide-react';
 import { Product } from '../types';
 
 interface CartItemCardProps {
@@ -11,9 +11,10 @@ interface CartItemCardProps {
   };
   onUpdateQuantity: (productId: string, newQuantity: number) => void;
   onRemove: (productId: string) => void;
+  onSaveForLater?: (productId: string) => void;
 }
 
-export function CartItemCard({ item, onUpdateQuantity, onRemove }: CartItemCardProps) {
+export function CartItemCard({ item, onUpdateQuantity, onRemove, onSaveForLater }: CartItemCardProps) {
   const { product, quantity } = item;
   const itemSubtotal = product.offerPrice * quantity;
 
@@ -64,13 +65,27 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove }: CartItemCardP
           <span className="text-base font-black text-foreground">₹{itemSubtotal.toLocaleString()}</span>
         </div>
 
-        <button
-          onClick={() => onRemove(product.id)}
-          className="p-2 text-foreground/40 hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all"
-          title="Remove Item"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-1.5">
+          {onSaveForLater && (
+            <button
+              onClick={() => onSaveForLater(product.id)}
+              className="p-2 text-foreground/40 hover:text-orange-600 hover:bg-orange-500/10 rounded-xl transition-all"
+              title="Save for Later"
+              aria-label="Save for Later"
+            >
+              <Bookmark className="w-4 h-4" />
+            </button>
+          )}
+
+          <button
+            onClick={() => onRemove(product.id)}
+            className="p-2 text-foreground/40 hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all"
+            title="Remove Item"
+            aria-label="Remove Item"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -12,6 +12,9 @@ import { ToastProvider } from '../components/Toast';
 import { seoService } from '../services/seoService';
 
 
+import { ComparisonProvider } from '../contexts/ComparisonContext';
+import { ComparisonTray } from '../components/ComparisonTray';
+
 const inter = Inter({ subsets: ['latin'] });
 
 /**
@@ -87,9 +90,12 @@ export default function RootLayout({
               <AuthProvider>
                 <CartWishlistProvider>
                   <ToastProvider>
-                    <LayoutShell>
-                      {children}
-                    </LayoutShell>
+                    <ComparisonProvider>
+                      <LayoutShell>
+                        {children}
+                      </LayoutShell>
+                      <ComparisonTray />
+                    </ComparisonProvider>
                   </ToastProvider>
                 </CartWishlistProvider>
               </AuthProvider>
