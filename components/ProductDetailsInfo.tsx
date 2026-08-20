@@ -29,8 +29,13 @@ import {
   Scale,
   Bell,
   TrendingDown,
-  X
+  X,
+  Building2,
+  FileText,
+  Package,
+  Sparkles,
 } from 'lucide-react';
+import { b2bService, ProductPriceTier } from '../services/b2bService';
 
 interface ProductDetailsInfoProps {
   product: ApiProduct;
@@ -40,10 +45,22 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
   const router = useRouter();
   const { addToCart, wishlist, toggleWishlist } = useCartWishlist();
   const { compareItems, addToCompare, removeFromCompare, isInCompare } = useComparison();
-  const { cartSuccess, wishlistSuccess, info, error: toastError } = useToast();
+  const { cartSuccess, wishlistSuccess, success, info, error: toastError } = useToast();
 
   const [quantity, setQuantity] = useState<number>(1);
   const [isBuyNowLoading, setIsBuyNowLoading] = useState<boolean>(false);
+
+  // B2B Wholesale & Tiers State (Features 50, 51, 52, 84)
+  const [wholesaleEnabled, setWholesaleEnabled] = useState<boolean>(false);
+  const [wholesaleMoq, setWholesaleMoq] = useState<number>(1);
+  const [priceTiers, setPriceTiers] = useState<ProductPriceTier[]>([]);
+  const [showRfqModal, setShowRfqModal] = useState<boolean>(false);
+  const [showSampleModal, setShowSampleModal] = useState<boolean>(false);
+  const [rfqQuantity, setRfqQuantity] = useState<number>(50);
+  const [rfqTargetPrice, setRfqTargetPrice] = useState<string>('');
+  const [rfqNotes, setRfqNotes] = useState<string>('');
+  const [sampleNotes, setSampleNotes] = useState<string>('');
+  const [isB2bSubmitting, setIsB2bSubmitting] = useState<boolean>(false);
 
   // Pincode Checker State
   const [pincode, setPincode] = useState<string>('');
@@ -161,6 +178,63 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
     } catch (e) {
       cartSuccess(`You will be notified when ${product.name} is back in stock!`);
       setIsAlertSubscribed(true);
+    }
+  };
+
+  // Fetch Wholesale Tiers (Feature 50 & 52)
+  React.useEffect(() => {
+    if (numericId) {
+      b2bService.getProductTiers(numericId).then((res) => {
+        if (res) {
+          setWholesaleEnabled(res.is_wholesale_enabled);
+          setWholesaleMoq(res.wholesale_moq || 1);
+          setPriceTiers(res.tiers || []);
+        }
+      }).catch(() => {});
+    }
+  }, [numericId]);
+
+  const handleRfqSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsB2bSubmitting(true);
+
+    try {
+      await b2bService.createRfq({
+        title: `Bulk Inquiry: ${product.name}`,
+        description: rfqNotes || `Interested in procurement of ${rfqQuantity} units for ${product.name}.`,
+        product_id: numericId,
+        quantity: Number(rfqQuantity),
+        target_unit_price: rfqTargetPrice ? parseFloat(rfqTargetPrice) : undefined,
+      });
+
+      success(`Bulk quote request for ${rfqQuantity} units submitted! Suppliers will review and submit quotations.`, 'RFQ Submitted');
+      setShowRfqModal(false);
+      setRfqNotes('');
+    } catch (err: any) {
+      toastError(err.response?.data?.message || 'Failed to submit RFQ. Please make sure you are logged in.', 'RFQ Error');
+    } finally {
+      setIsB2bSubmitting(false);
+    }
+  };
+
+  const handleSampleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsB2bSubmitting(true);
+
+    try {
+      await b2bService.requestSample({
+        product_id: numericId,
+        quantity: 1,
+        notes: sampleNotes || 'Sample evaluation request.',
+      });
+
+      success(`Sample order request for ${product.name} submitted for seller approval!`, 'Sample Requested');
+      setShowSampleModal(false);
+      setSampleNotes('');
+    } catch (err: any) {
+      toastError(err.response?.data?.message || 'Failed to request sample. Please make sure you are logged in.', 'Sample Request Error');
+    } finally {
+      setIsB2bSubmitting(false);
     }
   };
 
@@ -354,7 +428,9 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
               </div>
             )}
           </div>
-              {/* 4. Stock Status & Express Delivery Indicator + Price Drop Trigger */}
+        </div>
+
+        {/* 4. Stock Status & Express Delivery Indicator + Price Drop Trigger */}
         <div className="flex items-center justify-between flex-wrap gap-3 text-xs font-bold">
           <div className="flex items-center gap-2">
             <span
@@ -489,6 +565,61 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
                 </div>
               </div>
 
+              {/* Feature 50 & 52: B2B Wholesale Volume Pricing Tier Table */}
+              {(wholesaleEnabled || priceTiers.length > 0) && (
+                <div className="p-4 bg-orange-500/5 border border-orange-500/20 rounded-2xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Building2 className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+                      <h4 className="text-xs font-black uppercase tracking-wider text-orange-700 dark:text-orange-400">
+                        Wholesale Volume Pricing (B2B)
+                      </h4>
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 bg-orange-500/20 text-orange-700 dark:text-orange-300 rounded-full">
+                      MOQ: {wholesaleMoq} Units
+                    </span>
+                  </div>
+
+                  {priceTiers.length > 0 && (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-center text-xs">
+                      {priceTiers.map((tier) => (
+                        <div
+                          key={tier.id}
+                          className="p-2.5 bg-card border border-border/60 rounded-xl space-y-0.5"
+                        >
+                          <span className="text-[10px] text-muted-custom block font-bold">
+                            {tier.min_quantity}{tier.max_quantity ? ` - ${tier.max_quantity}` : '+'} Units
+                          </span>
+                          <span className="text-sm font-black text-primary block">
+                            ₹{Number(tier.unit_price).toLocaleString('en-IN')}/unit
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* B2B Commercial Actions */}
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setShowRfqModal(true)}
+                      className="px-3 py-2 bg-card border border-orange-500/40 hover:bg-orange-500/10 text-orange-700 dark:text-orange-300 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-2xs"
+                    >
+                      <FileText className="w-3.5 h-3.5" />
+                      <span>Request Bulk Quote</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowSampleModal(true)}
+                      className="px-3 py-2 bg-card border border-border hover:bg-background text-foreground text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-2xs"
+                    >
+                      <Package className="w-3.5 h-3.5" />
+                      <span>Request Sample</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <button
                   onClick={handleAddToCart}
@@ -566,7 +697,147 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
             </div>
           </div>
         )}
-        </div>
+
+        {/* Feature 51: Bulk RFQ Modal */}
+        {showRfqModal && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
+            <div className="bg-card border border-border rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-foreground font-black text-base">
+                  <FileText className="w-5 h-5 text-orange-500" />
+                  <span>Request Bulk Quote (RFQ)</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowRfqModal(false)}
+                  className="p-1.5 text-muted-custom hover:text-foreground rounded-xl"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <p className="text-xs text-muted-custom leading-relaxed">
+                Submit your volume procurement inquiry for <strong>{product.name}</strong> directly to authorized suppliers.
+              </p>
+
+              <form onSubmit={handleRfqSubmit} className="space-y-4 text-xs font-semibold">
+                <div className="space-y-1.5">
+                  <label className="text-foreground/80 block">Procurement Quantity (Units) *</label>
+                  <input
+                    type="number"
+                    required
+                    min={wholesaleMoq}
+                    value={rfqQuantity}
+                    onChange={(e) => setRfqQuantity(parseInt(e.target.value, 10) || 1)}
+                    className="w-full bg-background border border-border px-3.5 py-2.5 rounded-xl text-xs font-mono font-bold text-foreground focus:outline-none focus:border-primary"
+                  />
+                  <span className="text-[10px] text-muted-custom">Minimum Order Quantity: {wholesaleMoq} units</span>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-foreground/80 block">Target Unit Price (₹ Optional)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={rfqTargetPrice}
+                    onChange={(e) => setRfqTargetPrice(e.target.value)}
+                    placeholder="e.g. 450.00"
+                    className="w-full bg-background border border-border px-3.5 py-2.5 rounded-xl text-xs font-mono text-foreground focus:outline-none focus:border-primary"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-foreground/80 block">Commercial Notes / Specifications</label>
+                  <textarea
+                    rows={2}
+                    value={rfqNotes}
+                    onChange={(e) => setRfqNotes(e.target.value)}
+                    placeholder="Custom packaging, required delivery date, payment terms..."
+                    className="w-full bg-background border border-border p-3 rounded-xl text-xs text-foreground focus:outline-none focus:border-primary resize-none font-normal"
+                  />
+                </div>
+
+                <div className="flex items-center justify-end gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowRfqModal(false)}
+                    className="px-4 py-2 text-xs font-bold text-muted-custom hover:bg-muted rounded-xl transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isB2bSubmitting}
+                    className="px-5 py-2 text-xs font-bold bg-orange-600 hover:bg-orange-700 text-white rounded-xl shadow-sm transition-all flex items-center gap-2"
+                  >
+                    {isB2bSubmitting ? <Sparkles className="w-4 h-4 animate-spin" /> : <span>Submit Bulk RFQ</span>}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Feature 84: Sample Order Request Modal */}
+        {showSampleModal && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
+            <div className="bg-card border border-border rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-foreground font-black text-base">
+                  <Package className="w-5 h-5 text-primary" />
+                  <span>Request Testing Sample</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowSampleModal(false)}
+                  className="p-1.5 text-muted-custom hover:text-foreground rounded-xl"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <p className="text-xs text-muted-custom leading-relaxed">
+                Order an evaluation sample of <strong>{product.name}</strong> to inspect quality before placing bulk orders.
+              </p>
+
+              <form onSubmit={handleSampleSubmit} className="space-y-4 text-xs font-semibold">
+                <div className="p-3 bg-background-secondary rounded-xl border border-border/50 space-y-1">
+                  <span className="text-[10px] text-muted-custom block font-bold uppercase">Sample Price</span>
+                  <span className="text-base font-black text-primary block">₹{offerPrice.toLocaleString('en-IN')}</span>
+                  <span className="text-[10px] text-emerald-600 block">Sample cost deductible on first bulk order</span>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-foreground/80 block">Notes for Manufacturer (Optional)</label>
+                  <textarea
+                    rows={2}
+                    value={sampleNotes}
+                    onChange={(e) => setSampleNotes(e.target.value)}
+                    placeholder="Specific test parameters or application context..."
+                    className="w-full bg-background border border-border p-3 rounded-xl text-xs text-foreground focus:outline-none focus:border-primary resize-none font-normal"
+                  />
+                </div>
+
+                <div className="flex items-center justify-end gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowSampleModal(false)}
+                    className="px-4 py-2 text-xs font-bold text-muted-custom hover:bg-muted rounded-xl transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isB2bSubmitting}
+                    className="px-5 py-2 text-xs font-bold bg-primary hover:bg-primary-hover text-white rounded-xl shadow-sm transition-all flex items-center gap-2"
+                  >
+                    {isB2bSubmitting ? <Sparkles className="w-4 h-4 animate-spin" /> : <span>Request Sample</span>}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
         {/* 8. Sleek 4-Item Trust Row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-border-custom/80 text-center">

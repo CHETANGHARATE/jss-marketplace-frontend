@@ -16,15 +16,27 @@ import {
   Gift,
   Share2,
   LogOut,
+  Building2,
+  FileText,
+  FileCheck,
+  CreditCard,
+  Megaphone,
+  Package,
   ShieldCheck,
   Heart,
   Store,
-  Sparkles
+  Sparkles,
 } from 'lucide-react';
 
 const MENU_ITEMS = [
   { href: '/account', label: 'Dashboard Overview', icon: LayoutDashboard },
   { href: '/account/profile', label: 'Profile Details', icon: User },
+  { href: '/account/business', label: 'Business Account & KYC', icon: Building2 },
+  { href: '/account/rfq', label: 'Bulk Quotes & RFQs', icon: FileText },
+  { href: '/account/purchase-orders', label: 'Purchase Orders & PIs', icon: FileCheck },
+  { href: '/account/credit', label: 'Trade Credit (Pay-Later)', icon: CreditCard },
+  { href: '/account/requirements', label: 'Buyer Requirements', icon: Megaphone },
+  { href: '/account/samples', label: 'Sample Orders', icon: Package },
   { href: '/account/following', label: 'Followed Stores', icon: Store },
   { href: '/account/favorites', label: 'Favorite Brands & Categories', icon: Heart },
   { href: '/account/password', label: 'Security & Password', icon: KeyRound },
