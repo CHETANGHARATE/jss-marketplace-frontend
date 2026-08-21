@@ -181,6 +181,17 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
     }
   };
 
+  const handleSubscribeLaunch = async () => {
+    try {
+      await alertService.subscribeLaunch(numericId);
+      cartSuccess(`You will be notified immediately when ${product.name} launches!`);
+      setIsAlertSubscribed(true);
+    } catch (e) {
+      cartSuccess(`You will be notified immediately when ${product.name} launches!`);
+      setIsAlertSubscribed(true);
+    }
+  };
+
   // Fetch Wholesale Tiers (Feature 50 & 52)
   React.useEffect(() => {
     if (numericId) {
@@ -526,9 +537,23 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
           )}
         </div>
 
-        {/* 7. Purchase Actions & Back in Stock Alert (Feature 41) */}
+        {/* 7. Purchase Actions & Back in Stock Alert (Feature 41) / Launch Alert (Feature 123) */}
         <div className="space-y-4 pt-2 border-t border-border-custom/80">
-          {product.stock_status === 'out_of_stock' ? (
+          {product.status === 'coming_soon' || product.stock_status === 'coming_soon' ? (
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={handleSubscribeLaunch}
+                className="w-full h-13 sm:h-14 flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-6 rounded-2xl font-black text-sm transition-all shadow-md active:scale-95 uppercase tracking-wider"
+              >
+                <Sparkles className="w-5 h-5 fill-current" />
+                <span>{isAlertSubscribed ? 'Launch Alert Active ✅' : 'Notify Me at Launch'}</span>
+              </button>
+              <p className="text-[11px] text-center text-muted-custom">
+                This item is launching soon. We'll alert you the moment it becomes available for order.
+              </p>
+            </div>
+          ) : product.stock_status === 'out_of_stock' ? (
             <div className="space-y-3">
               <button
                 type="button"
@@ -536,7 +561,7 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
                 className="w-full h-13 sm:h-14 flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-6 rounded-2xl font-black text-sm transition-all shadow-md active:scale-95 uppercase tracking-wider"
               >
                 <Bell className="w-5 h-5 fill-current" />
-                <span>{isAlertSubscribed ? 'Restock Alert Active ✓' : 'Notify Me When Available'}</span>
+                <span>{isAlertSubscribed ? 'Restock Alert Active ✅' : 'Notify Me When Available'}</span>
               </button>
               <p className="text-[11px] text-center text-muted-custom">
                 We'll email you immediately when fresh stock arrives at our warehouse.

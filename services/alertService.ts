@@ -31,6 +31,18 @@ export interface BackInStockSubscriptionItem {
   notified_at?: string | null;
 }
 
+export interface ProductLaunchSubscriptionItem {
+  id: number;
+  product_id: number;
+  product_name: string;
+  product_slug: string;
+  product_image: string;
+  brand?: string;
+  status: 'active' | 'notified' | 'cancelled';
+  subscribed_at: string;
+  notified_at?: string | null;
+}
+
 export const alertService = {
   // Feature 40: Price Drop Alerts
   async getPriceDropAlerts(): Promise<PriceDropAlertItem[]> {
@@ -66,6 +78,24 @@ export const alertService = {
 
   async cancelBackInStock(productId: number): Promise<any> {
     const response = await apiClient.delete<ApiResponse<any>>(`/alerts/back-in-stock/${productId}`);
+    return response.data;
+  },
+
+  // Feature 123: Product Launch Alerts ("Coming Soon")
+  async getLaunchSubscriptions(): Promise<ProductLaunchSubscriptionItem[]> {
+    const response = await apiClient.get<ApiResponse<ProductLaunchSubscriptionItem[]>>('/alerts/launch');
+    return response.data.data || [];
+  },
+
+  async subscribeLaunch(productId: number): Promise<any> {
+    const response = await apiClient.post<ApiResponse<any>>('/alerts/launch', {
+      product_id: productId,
+    });
+    return response.data;
+  },
+
+  async cancelLaunch(productId: number): Promise<any> {
+    const response = await apiClient.delete<ApiResponse<any>>(`/alerts/launch/${productId}`);
     return response.data;
   },
 };
