@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Maximize2,
   ChevronLeft,
@@ -12,9 +12,16 @@ import {
   CheckCircle2,
   PlayCircle,
   Gem,
-  Heart
+  Heart,
+  RotateCcw,
+  Box,
+  Sparkles,
 } from 'lucide-react';
 import { useCartWishlist } from '../contexts/CartWishlistContext';
+import { Product360Viewer } from './Product360Viewer';
+import { ArQuickViewer } from './ArQuickViewer';
+import { VirtualTryOnModal } from './VirtualTryOnModal';
+import { immersiveMediaService, Product360AndArData } from '../services/immersiveMediaService';
 
 interface ProductGalleryProps {
   images?: string[];
@@ -36,6 +43,11 @@ export function ProductGallery({
   const imageList = images.length > 0 ? images : ['/placeholder-product.png'];
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<'photos' | '360'>('photos');
+  const [isArOpen, setIsArOpen] = useState<boolean>(false);
+  const [isTryOnOpen, setIsTryOnOpen] = useState<boolean>(false);
+  const [mediaData, setMediaData] = useState<Product360AndArData | null>(null);
+
   const [zoomPos, setZoomPos] = useState<{ x: number; y: number; show: boolean }>({
     x: 50,
     y: 50,
@@ -46,6 +58,14 @@ export function ProductGallery({
   const isWishlisted = productId ? wishlist.some((item) => String(item.id) === String(productId)) : false;
 
   const mainImageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (productId) {
+      immersiveMediaService.get360AndAr(productId).then((data) => {
+        if (data) setMediaData(data);
+      }).catch(() => {});
+    }
+  }, [productId]);
 
   const nextImage = () => setSelectedIndex((prev) => (prev + 1) % imageList.length);
   const prevImage = () => setSelectedIndex((prev) => (prev - 1 + imageList.length) % imageList.length);
@@ -68,92 +88,152 @@ export function ProductGallery({
 
   return (
     <div className="space-y-4">
-
-      {/* Hero Main Showcase Image Container */}
-      <div className="relative aspect-square w-full rounded-2xl bg-white dark:bg-slate-900 border border-border-custom/80 p-2 sm:p-3 overflow-hidden shadow-xs group flex items-center justify-center">
-        
-        {/* Top-Left Discount Ribbon Badge */}
-        {discountPercent > 0 && (
-          <div className="absolute top-4 left-4 z-20 bg-gradient-to-r from-red-600 to-rose-500 text-white font-black text-xs px-3.5 py-1.5 rounded-br-2xl rounded-tl-2xl shadow-md uppercase tracking-wider flex items-center gap-1">
-            <span>{discountPercent}% OFF</span>
-          </div>
-        )}
-
-        {/* Top-Right Action Buttons: Wishlist & Fullscreen */}
-        <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
-          {productId && (
-            <button
-              onClick={() => toggleWishlist({ id: productId, name } as any)}
-              className={`p-2.5 rounded-2xl backdrop-blur-md transition-all shadow-xs ${
-                isWishlisted
-                  ? 'bg-rose-500 text-white'
-                  : 'bg-card/90 text-foreground/80 hover:text-rose-500 border border-border-custom/80'
-              }`}
-              title="Add to Wishlist"
-            >
-              <Heart size={16} className={isWishlisted ? 'fill-current' : ''} />
-            </button>
-          )}
+      {/* Immersive View Mode Switcher (Features 157, 158, 159) */}
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-1">
+        <div className="flex items-center gap-1.5 p-1 bg-background-secondary rounded-xl border border-border-custom/80">
+          <button
+            type="button"
+            onClick={() => setViewMode('photos')}
+            className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${
+              viewMode === 'photos'
+                ? 'bg-card text-foreground shadow-2xs'
+                : 'text-muted-custom hover:text-foreground'
+            }`}
+          >
+            Photos
+          </button>
 
           <button
-            onClick={() => setIsLightboxOpen(true)}
-            className="p-2.5 bg-card/90 backdrop-blur-md rounded-2xl text-foreground/80 hover:text-primary border border-border-custom/80 transition-all shadow-xs hover:scale-105"
-            title="Fullscreen View"
+            type="button"
+            onClick={() => setViewMode('360')}
+            className={`px-3 py-1 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 ${
+              viewMode === '360'
+                ? 'bg-primary text-white shadow-2xs'
+                : 'text-muted-custom hover:text-foreground'
+            }`}
           >
-            <Maximize2 className="w-4 h-4" />
+            <RotateCcw size={12} className={viewMode === '360' ? 'animate-spin' : ''} />
+            <span>360° Spin</span>
           </button>
         </div>
 
-        {/* Bottom-Left Authenticity Tag */}
-        <div className="absolute bottom-4 left-4 z-20 bg-emerald-500/10 backdrop-blur-md border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-extrabold text-[11px] px-3 py-1 rounded-xl flex items-center gap-1.5 shadow-xs">
-          <CheckCircle2 size={13} />
-          <span>100% Authentic</span>
-        </div>
+        <div className="flex items-center gap-1.5">
+          {/* AR View in Room Trigger (Features 157 & 158) */}
+          <button
+            type="button"
+            onClick={() => setIsArOpen(true)}
+            className="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
+            title="View in Augmented Reality"
+          >
+            <Box size={13} />
+            <span>View in Room (AR)</span>
+          </button>
 
-        {/* Main Lens-Zoom Image View */}
-        <div
-          ref={mainImageRef}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          onClick={() => setIsLightboxOpen(true)}
-          className="w-full h-full flex items-center justify-center cursor-zoom-in relative overflow-hidden rounded-xl bg-white dark:bg-slate-950"
-        >
-          <img
-            src={imageList[selectedIndex]}
-            alt={`${name} image ${selectedIndex + 1}`}
-            className={`w-full h-full object-cover rounded-xl transition-transform duration-200 ${
-              zoomPos.show ? 'scale-150' : 'group-hover:scale-105'
-            }`}
-            style={
-              zoomPos.show
-                ? {
-                    transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
-                  }
-                : undefined
-            }
-          />
+          {/* Virtual Try-On Trigger (Feature 156) */}
+          <button
+            type="button"
+            onClick={() => setIsTryOnOpen(true)}
+            className="px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/30 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
+            title="Try On Product Virtually"
+          >
+            <Sparkles size={13} />
+            <span>Virtual Try-On</span>
+          </button>
         </div>
-
-        {/* Navigation Arrows */}
-        {imageList.length > 1 && (
-          <>
-            <button
-              onClick={prevImage}
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-card/80 backdrop-blur-md text-foreground/80 hover:text-primary hover:bg-card border border-border-custom shadow-md transition-all opacity-0 group-hover:opacity-100 active:scale-95"
-              aria-label="Previous image"
-            >
-              <ChevronLeft size={18} />
-            </button>
-            <button
-              onClick={nextImage}
-              className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-card/80 backdrop-blur-md text-foreground/80 hover:text-primary hover:bg-card border border-border-custom shadow-md transition-all opacity-0 group-hover:opacity-100 active:scale-95"
-              aria-label="Next image"
-            >
-              <ChevronRight size={18} />
-            </button>
-          </>
-        )}
       </div>
+
+      {/* Mode 1: 360 Degree Spin Viewer */}
+      {viewMode === '360' ? (
+        <Product360Viewer
+          frames={mediaData?.frames && mediaData.frames.length > 0 ? mediaData.frames : [imageList[0]]}
+          productName={name}
+        />
+      ) : (
+        /* Mode 2: Standard Lens-Zoom Photo Showcase */
+        <div className="relative aspect-square w-full rounded-2xl bg-white dark:bg-slate-900 border border-border-custom/80 p-2 sm:p-3 overflow-hidden shadow-xs group flex items-center justify-center">
+          {/* Top-Left Discount Ribbon Badge */}
+          {discountPercent > 0 && (
+            <div className="absolute top-4 left-4 z-20 bg-gradient-to-r from-red-600 to-rose-500 text-white font-black text-xs px-3.5 py-1.5 rounded-br-2xl rounded-tl-2xl shadow-md uppercase tracking-wider flex items-center gap-1">
+              <span>{discountPercent}% OFF</span>
+            </div>
+          )}
+
+          {/* Top-Right Action Buttons: Wishlist & Fullscreen */}
+          <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+            {productId && (
+              <button
+                onClick={() => toggleWishlist({ id: productId, name } as any)}
+                className={`p-2.5 rounded-2xl backdrop-blur-md transition-all shadow-xs ${
+                  isWishlisted
+                    ? 'bg-rose-500 text-white'
+                    : 'bg-card/90 text-foreground/80 hover:text-rose-500 border border-border-custom/80'
+                }`}
+                title="Add to Wishlist"
+              >
+                <Heart size={16} className={isWishlisted ? 'fill-current' : ''} />
+              </button>
+            )}
+
+            <button
+              onClick={() => setIsLightboxOpen(true)}
+              className="p-2.5 bg-card/90 backdrop-blur-md rounded-2xl text-foreground/80 hover:text-primary border border-border-custom/80 transition-all shadow-xs hover:scale-105"
+              title="Fullscreen View"
+            >
+              <Maximize2 className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Bottom-Left Authenticity Tag */}
+          <div className="absolute bottom-4 left-4 z-20 bg-emerald-500/10 backdrop-blur-md border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-extrabold text-[11px] px-3 py-1 rounded-xl flex items-center gap-1.5 shadow-xs">
+            <CheckCircle2 size={13} />
+            <span>100% Authentic</span>
+          </div>
+
+          {/* Main Lens-Zoom Image View */}
+          <div
+            ref={mainImageRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => setIsLightboxOpen(true)}
+            className="w-full h-full flex items-center justify-center cursor-zoom-in relative overflow-hidden rounded-xl bg-white dark:bg-slate-950"
+          >
+            <img
+              src={imageList[selectedIndex]}
+              alt={`${name} image ${selectedIndex + 1}`}
+              className={`w-full h-full object-cover rounded-xl transition-transform duration-200 ${
+                zoomPos.show ? 'scale-150' : 'group-hover:scale-105'
+              }`}
+              style={
+                zoomPos.show
+                  ? {
+                      transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
+                    }
+                  : undefined
+              }
+            />
+          </div>
+
+          {/* Navigation Arrows */}
+          {imageList.length > 1 && (
+            <>
+              <button
+                onClick={prevImage}
+                className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-card/80 backdrop-blur-md text-foreground/80 hover:text-primary hover:bg-card border border-border-custom shadow-md transition-all opacity-0 group-hover:opacity-100 active:scale-95"
+                aria-label="Previous image"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                onClick={nextImage}
+                className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-card/80 backdrop-blur-md text-foreground/80 hover:text-primary hover:bg-card border border-border-custom shadow-md transition-all opacity-0 group-hover:opacity-100 active:scale-95"
+                aria-label="Next image"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Horizontal Thumbnail Bar (64-76px rounded 10-12px) */}
       {imageList.length > 1 && (
@@ -254,6 +334,26 @@ export function ProductGallery({
           </div>
         </div>
       )}
+
+      {/* AR Quick Look / WebXR Modal */}
+      <ArQuickViewer
+        isOpen={isArOpen}
+        onClose={() => setIsArOpen(false)}
+        productName={name}
+        glbUrl={mediaData?.ar_model_glb}
+        usdzUrl={mediaData?.ar_model_usdz}
+        fallbackImage={imageList[0]}
+      />
+
+      {/* Virtual Try-On Modal */}
+      <VirtualTryOnModal
+        isOpen={isTryOnOpen}
+        onClose={() => setIsTryOnOpen(false)}
+        productId={productId}
+        productName={name}
+        productImage={imageList[0]}
+        tryOnCategory={mediaData?.try_on_category || 'apparel'}
+      />
 
     </div>
   );

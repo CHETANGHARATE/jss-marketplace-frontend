@@ -4,7 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSearchSuggestionsQuery } from '../hooks/useSearchSuggestions';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Search, X, Sparkles, TrendingUp, History } from 'lucide-react';
+import { Search, X, Sparkles, TrendingUp, History, Camera } from 'lucide-react';
+import { VisualSearchModal } from './VisualSearchModal';
 
 export function SearchBar() {
   const router = useRouter();
@@ -12,6 +13,7 @@ export function SearchBar() {
 
   const [query, setQuery] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isVisualSearchOpen, setIsVisualSearchOpen] = useState<boolean>(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -87,12 +89,22 @@ export function SearchBar() {
         {query && (
           <button
             onClick={() => setQuery('')}
-            className="p-1 text-foreground/40 hover:text-foreground shrink-0 mr-2 transition-colors"
+            className="p-1 text-foreground/40 hover:text-foreground shrink-0 mr-1 transition-colors"
             title="Clear search"
           >
             <X size={16} />
           </button>
         )}
+
+        {/* Features 59 + 61: Camera / Visual Search Trigger */}
+        <button
+          type="button"
+          onClick={() => setIsVisualSearchOpen(true)}
+          className="p-2 text-foreground/50 hover:text-primary hover:bg-primary/10 rounded-xl shrink-0 mr-1 transition-all"
+          title="Search by Image / Camera (Visual Search)"
+        >
+          <Camera size={18} />
+        </button>
 
         {/* Right Search Button */}
         <button
@@ -104,6 +116,12 @@ export function SearchBar() {
           <span className="hidden sm:inline">{t('search.button')}</span>
         </button>
       </div>
+
+      {/* Visual Search Modal */}
+      <VisualSearchModal
+        isOpen={isVisualSearchOpen}
+        onClose={() => setIsVisualSearchOpen(false)}
+      />
 
       {/* Instant Suggestions & Recent Searches Dropdown */}
       {isOpen && (

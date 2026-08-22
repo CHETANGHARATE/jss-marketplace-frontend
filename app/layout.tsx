@@ -14,6 +14,7 @@ import { seoService } from '../services/seoService';
 
 import { ComparisonProvider } from '../contexts/ComparisonContext';
 import { ComparisonTray } from '../components/ComparisonTray';
+import { AiShoppingAssistant } from '../components/AiShoppingAssistant';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -95,6 +96,7 @@ export default function RootLayout({
                         {children}
                       </LayoutShell>
                       <ComparisonTray />
+                      <AiShoppingAssistant />
                     </ComparisonProvider>
                   </ToastProvider>
                 </CartWishlistProvider>

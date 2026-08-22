@@ -94,6 +94,37 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = 'login' }) => 
     }
   };
 
+  const handlePasskeyLogin = async () => {
+    setErrorMessage(null);
+    setErrorCode(null);
+    setIsSubmitting(true);
+
+    try {
+      const { passkeyService } = await import('../../services/passkeyService');
+      const res = await passkeyService.loginWithPasskey();
+
+      if (res?.token) {
+        localStorage.setItem('auth_token', res.token);
+        if (res.user) {
+          localStorage.setItem('user', JSON.stringify(res.user));
+        }
+        setSuccessMessage('Passkey verified successfully! Redirecting...');
+        setTimeout(() => {
+          if (redirectParam && redirectParam !== '/account') {
+            router.replace(redirectParam);
+          } else {
+            router.replace('/account');
+          }
+        }, 400);
+      }
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || err?.message || 'Passkey authentication failed.';
+      setErrorMessage(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handlePasswordSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
@@ -294,6 +325,25 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = 'login' }) => 
                 </>
               )}
             </button>
+
+            {/* Feature 171: Passkey / Biometrics Login */}
+            <div className="pt-2">
+              <div className="relative flex py-1 items-center">
+                <div className="flex-grow border-t border-border-custom/60"></div>
+                <span className="flex-shrink mx-2 text-[10px] uppercase font-bold text-muted-custom">Or passwordless</span>
+                <div className="flex-grow border-t border-border-custom/60"></div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handlePasskeyLogin}
+                disabled={isSubmitting}
+                className="w-full mt-2 bg-background hover:bg-background-secondary border border-border-custom/90 text-foreground font-black text-xs py-3 px-4 rounded-2xl transition-all shadow-2xs flex items-center justify-center gap-2 cursor-pointer hover:border-primary/50"
+              >
+                <ShieldCheck size={16} className="text-primary" />
+                <span>Sign in with Passkey (Face ID / Fingerprint)</span>
+              </button>
+            </div>
           </form>
         ) : (
           /* SIGNUP FORM (EMAIL & PASSWORD) */
