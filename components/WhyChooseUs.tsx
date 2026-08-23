@@ -282,130 +282,115 @@ export const WhyChooseUs: React.FC = () => {
         </svg>
       </div>
 
-      {/* ── Section Header ── */}
-      <div className="text-center max-w-3xl mx-auto space-y-3.5 relative z-10">
-        {/* Top Gold Pill Badge (Matching Image 1) */}
-        <div className="inline-flex items-center gap-1.5 bg-amber-50/80 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-400/70 dark:border-amber-500/40 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-2xs">
-          <Star size={13} className="fill-amber-500 text-amber-500" />
-          <span>{t('home.excellence') || 'MARKETPLACE EXCELLENCE'}</span>
-        </div>
-
-        {/* Main Heading: "Why Choose JSS Marketplace?" */}
-        <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-black text-slate-900 dark:text-white leading-tight tracking-tight">
-          Why Choose <span className="text-[#1565D8]">JSS</span> Marketplace?
-        </h2>
-
-        {/* Subtitle */}
-        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-xl mx-auto font-medium leading-relaxed">
-          {t('home.why_choose_sub') ||
-            "India's most trusted direct-from-source multi-vendor platform for retail & wholesale buyers."}
-        </p>
-
-        {/* Decorative Separator: Green leaf laurels + blue lines + central blue star (Matching Image 1) */}
-        <div className="flex items-center justify-center gap-3 pt-1.5">
-          {/* Left Laurel */}
-          <svg viewBox="0 0 32 20" className="w-6 h-4 text-emerald-500 fill-current">
-            <path d="M2,10 Q14,2 24,0 Q18,8 2,10 M2,10 Q16,10 26,8 Q18,14 2,10 M2,10 Q14,16 22,20 Q16,16 2,10" />
-          </svg>
-
-          {/* Left Line */}
-          <span className="h-[1.5px] w-12 sm:w-16 bg-blue-300/80 dark:bg-blue-500/30 rounded-full" />
-          
-          {/* Central Blue Star */}
-          <div className="text-[#1565D8] dark:text-blue-400">
-            <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-            </svg>
+      {/* ── Inner Content Container (with horizontal padding) ── */}
+      <div className="px-4 sm:px-8 lg:px-12">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto space-y-3.5 relative z-10">
+          {/* Top Gold Pill Badge (Matching Image 1) */}
+          <div className="inline-flex items-center gap-1.5 bg-amber-50/80 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-400/70 dark:border-amber-500/40 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-2xs">
+            <Star size={13} className="fill-amber-500 text-amber-500" />
+            <span>{t('home.excellence') || 'MARKETPLACE EXCELLENCE'}</span>
           </div>
 
-          {/* Right Line */}
-          <span className="h-[1.5px] w-12 sm:w-16 bg-blue-300/80 dark:bg-blue-500/30 rounded-full" />
+          {/* Main Heading: "Why Choose JSS Marketplace?" */}
+          <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-black text-slate-900 dark:text-white leading-tight tracking-tight">
+            Why Choose <span className="text-[#1565D8]">JSS</span> Marketplace?
+          </h2>
 
-          {/* Right Laurel (flipped) */}
-          <svg viewBox="0 0 32 20" className="w-6 h-4 text-emerald-500 fill-current -scale-x-100">
-            <path d="M2,10 Q14,2 24,0 Q18,8 2,10 M2,10 Q16,10 26,8 Q18,14 2,10 M2,10 Q14,16 22,20 Q16,16 2,10" />
-          </svg>
+          {/* Subtitle */}
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-xl mx-auto font-medium leading-relaxed">
+            {t('home.why_choose_sub') ||
+              "India's most trusted direct-from-source multi-vendor platform for retail & wholesale buyers."}
+          </p>
+
+          {/* Decorative Separator: Green leaf laurels + blue lines + central blue star (Matching Image 1) */}
+          <div className="flex items-center justify-center gap-3 pt-1.5">
+            {/* Left Laurel */}
+            <svg viewBox="0 0 32 20" className="w-6 h-4 text-emerald-500 fill-current">
+              <path d="M2,10 Q14,2 24,0 Q18,8 2,10 M2,10 Q16,10 26,8 Q18,14 2,10 M2,10 Q14,16 22,20 Q16,16 2,10" />
+            </svg>
+
+            {/* Left Line */}
+            <span className="h-[1.5px] w-12 sm:w-16 bg-blue-300/80 dark:bg-blue-500/30 rounded-full" />
+            
+            {/* Central Blue Star */}
+            <div className="text-[#1565D8] dark:text-blue-400">
+              <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+            </div>
+
+            {/* Right Line */}
+            <span className="h-[1.5px] w-12 sm:w-16 bg-blue-300/80 dark:bg-blue-500/30 rounded-full" />
+
+            {/* Right Laurel (flipped) */}
+            <svg viewBox="0 0 32 20" className="w-6 h-4 text-emerald-500 fill-current -scale-x-100">
+              <path d="M2,10 Q14,2 24,0 Q18,8 2,10 M2,10 Q16,10 26,8 Q18,14 2,10 M2,10 Q14,16 22,20 Q16,16 2,10" />
+            </svg>
+          </div>
+        </div>
+
+        {/* ── 8 Feature Cards (4 in Row 1, 4 in Row 2 — Matching Image 1) ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 relative z-10 mt-8 sm:mt-10 mb-4">
+          {benefits.map((b) => {
+            const title = t(b.titleKey) || b.title;
+            const desc = t(b.descKey) || b.desc;
+
+            return (
+              <div
+                key={b.id}
+                className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-[28px] p-6 sm:p-7 flex flex-col items-center text-center shadow-xs hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group justify-between"
+              >
+                {/* Top Large Circular Icon Container */}
+                <div
+                  className="w-20 h-20 sm:w-[84px] sm:h-[84px] rounded-full flex items-center justify-center mb-4 sm:mb-5 transition-transform duration-300 group-hover:scale-110 shadow-xs border"
+                  style={{
+                    background: b.iconBg,
+                    borderColor: b.iconBorder,
+                  }}
+                >
+                  {b.renderIcon()}
+                </div>
+
+                {/* Title */}
+                <h3
+                  className="font-black text-base sm:text-[17px] mb-1.5 tracking-tight transition-colors"
+                  style={{ color: b.titleColor }}
+                >
+                  {title}
+                </h3>
+
+                {/* Decorative mini divider under title */}
+                <div
+                  className="w-7 h-0.5 rounded-full mb-3 opacity-60 transition-all duration-300 group-hover:w-10"
+                  style={{ backgroundColor: b.dividerColor }}
+                />
+
+                {/* Description */}
+                <p className="text-xs sm:text-[13px] text-slate-600 dark:text-slate-400 leading-relaxed font-medium flex-1 pb-4">
+                  {desc}
+                </p>
+
+                {/* Full-width Rounded Bottom Accent Strip (Matching Image 1) */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-3.5 sm:h-4 w-full transition-all duration-300 group-hover:h-4.5"
+                  style={{
+                    background: b.bottomGradient,
+                    boxShadow: `0 -2px 10px ${b.bottomGlow}`,
+                  }}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* ── 8 Feature Cards (4 in Row 1, 4 in Row 2 — Matching Image 1) ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 relative z-10 mt-8 sm:mt-10 mb-6">
-        {benefits.map((b) => {
-          const title = t(b.titleKey) || b.title;
-          const desc = t(b.descKey) || b.desc;
-
-          return (
-            <div
-              key={b.id}
-              className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-[28px] p-6 sm:p-7 flex flex-col items-center text-center shadow-xs hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group justify-between"
-            >
-              {/* Top Large Circular Icon Container */}
-              <div
-                className="w-20 h-20 sm:w-[84px] sm:h-[84px] rounded-full flex items-center justify-center mb-4 sm:mb-5 transition-transform duration-300 group-hover:scale-110 shadow-xs border"
-                style={{
-                  background: b.iconBg,
-                  borderColor: b.iconBorder,
-                }}
-              >
-                {b.renderIcon()}
-              </div>
-
-              {/* Title */}
-              <h3
-                className="font-black text-base sm:text-[17px] mb-1.5 tracking-tight transition-colors"
-                style={{ color: b.titleColor }}
-              >
-                {title}
-              </h3>
-
-              {/* Decorative mini divider under title */}
-              <div
-                className="w-7 h-0.5 rounded-full mb-3 opacity-60 transition-all duration-300 group-hover:w-10"
-                style={{ backgroundColor: b.dividerColor }}
-              />
-
-              {/* Description */}
-              <p className="text-xs sm:text-[13px] text-slate-600 dark:text-slate-400 leading-relaxed font-medium flex-1 pb-4">
-                {desc}
-              </p>
-
-              {/* Full-width Rounded Bottom Accent Strip (Matching Image 1) */}
-              <div
-                className="absolute bottom-0 left-0 right-0 h-3.5 sm:h-4 w-full transition-all duration-300 group-hover:h-4.5"
-                style={{
-                  background: b.bottomGradient,
-                  boxShadow: `0 -2px 10px ${b.bottomGlow}`,
-                }}
-              />
-            </div>
-          );
-        })}
-      </div>
-
-      {/* ── Slogan with Leaf Sprigs & Blue Heart (Matching Image 1) ── */}
-      <div className="flex items-center justify-center gap-3 pt-6 pb-2 text-center relative z-20">
-        {/* Left Laurel */}
-        <svg viewBox="0 0 32 20" className="w-6 h-4 text-emerald-500 fill-current">
-          <path d="M2,10 Q14,2 24,0 Q18,8 2,10 M2,10 Q16,10 26,8 Q18,14 2,10 M2,10 Q14,16 22,20 Q16,16 2,10" />
-        </svg>
-
-        <p className="font-serif italic font-black text-xl sm:text-2xl text-[#1565D8] dark:text-blue-400 tracking-wide flex items-center gap-2">
-          <span>Aapka Vishwas, Hamari Pehchan.</span>
-          <span className="inline-block text-[#1565D8] drop-shadow-xs not-italic">💙</span>
-        </p>
-
-        {/* Right Laurel (flipped) */}
-        <svg viewBox="0 0 32 20" className="w-6 h-4 text-emerald-500 fill-current -scale-x-100">
-          <path d="M2,10 Q14,2 24,0 Q18,8 2,10 M2,10 Q16,10 26,8 Q18,14 2,10 M2,10 Q14,16 22,20 Q16,16 2,10" />
-        </svg>
-      </div>
-
-      {/* ── Indian Landmark Skyline Banner (Flush at bottom, matching Image 1) ── */}
-      <div className="relative w-full -mx-4 sm:-mx-8 lg:-mx-12 -mb-0 overflow-hidden z-10 pointer-events-none mt-2 sm:mt-4">
+      {/* ── Indian Landmark Skyline Banner (100% Full Width Edge-to-Edge, Flush at Bottom) ── */}
+      <div className="w-full relative overflow-hidden z-10 pointer-events-none mt-4 sm:mt-6 -mb-1 leading-none">
         <img
           src="/decor/indian_landmarks_skyline.png"
           alt="Indian Heritage Landmarks"
-          className="w-full h-auto object-cover object-top max-h-[160px] sm:max-h-[220px] lg:max-h-[260px] mx-auto filter drop-shadow-xs dark:opacity-90 dark:brightness-95"
+          className="w-full h-auto object-cover object-bottom block max-h-[170px] sm:max-h-[230px] lg:max-h-[280px] mx-auto filter drop-shadow-xs dark:opacity-90 dark:brightness-95"
           loading="lazy"
         />
       </div>
