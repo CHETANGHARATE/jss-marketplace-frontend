@@ -21,6 +21,11 @@ import {
   ArrowRight,
   Rocket,
   Package,
+  Flame,
+  HeartHandshake,
+  BadgePercent,
+  Tag,
+  Gift,
 } from 'lucide-react';
 
 export interface FloatingCallout {
@@ -53,11 +58,11 @@ export interface HeroSlideData {
 }
 
 export const HERO_SLIDES: HeroSlideData[] = [
-  // ─── SLIDE 1: PRIMARY DESIGN TARGET (Matching Reference Image) ───
+  // ─── SLIDE 1: EXPLORE MARKETPLACE (Main Shopping Cart Visual) ───
   {
     id: 'slide_main_marketplace',
-    categoryTitle: 'All Categories',
-    categoryIcon: <ShoppingCart size={14} />,
+    categoryTitle: 'Explore Marketplace',
+    categoryIcon: <ShoppingCart size={15} />,
     badgeText: "India's Most Trusted Marketplace",
     titleLine1: 'Shop Quality Products',
     titleLine2: 'From Verified Sellers',
@@ -104,11 +109,161 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ],
   },
 
-  // ─── SLIDE 2: HOME & KITCHEN APPLIANCES ───
+  // ─── SLIDE 2: NEW ARRIVALS (New Releases & Trending Gadgets) ───
+  {
+    id: 'slide_new_arrival',
+    categoryTitle: 'New Arrival',
+    categoryIcon: <Flame size={15} />,
+    badgeText: '✨ Fresh Drops — 500+ New Arrivals Daily',
+    titleLine1: 'Discover Trending &',
+    titleLine2: 'Fresh New Arrivals',
+    subtitle: 'Smart Electronics • Festive Fashion • Organic Harvest',
+    description: 'Explore the latest trending products launched directly by verified brands, innovators, and artisan weavers across India.',
+    ctaPrimary: 'Explore New In',
+    ctaPrimaryLink: '/search?sort=newest',
+    ctaSecondary: 'View Top Trending',
+    ctaSecondaryLink: '/search',
+    ctaSecondaryStyle: 'blue',
+    bgGradient: 'linear-gradient(120deg, #F0F9FF 0%, #E0F2FE 45%, #F0FDF4 100%)',
+    accentColor: '#0284C7',
+    heroImage: '/promo/electronics.png',
+    floatingCallouts: [
+      {
+        icon: <Sparkles size={16} className="text-sky-600" />,
+        iconBg: 'bg-sky-100',
+        title: 'Smart Audio',
+        subtitle: 'ANC Wireless',
+        href: '/category/electronics',
+      },
+      {
+        icon: <Shirt size={16} className="text-pink-600" />,
+        iconBg: 'bg-pink-100',
+        title: 'Festive Wear',
+        subtitle: 'Silk & Cotton',
+        href: '/category/fashion',
+      },
+      {
+        icon: <Sprout size={16} className="text-emerald-600" />,
+        iconBg: 'bg-emerald-100',
+        title: 'Cold-Pressed',
+        subtitle: 'Wood Pressed Oils',
+        href: '/category/agriculture-seeds',
+      },
+      {
+        icon: <Package size={16} className="text-purple-600" />,
+        iconBg: 'bg-purple-100',
+        title: 'Kitchen Tech',
+        subtitle: 'Smart Blenders',
+        href: '/category/home-kitchen',
+      },
+    ],
+  },
+
+  // ─── SLIDE 3: LOCAL AND HANDMADE (Artisans & Handicrafts) ───
+  {
+    id: 'slide_local_handmade',
+    categoryTitle: 'Local and Handmade',
+    categoryIcon: <HeartHandshake size={15} />,
+    badgeText: '🇮🇳 100% Made in India — Direct from Rural Artisans',
+    titleLine1: 'Authentic Indian Crafts &',
+    titleLine2: 'Handmade Treasures',
+    subtitle: 'Terracotta Pottery • Brass Art • Kolhapuri Leather • Organic Snacks',
+    description: 'Support local MSMEs, self-help groups, and traditional craftsmen by buying authentic, handcrafted heritage goods straight from the creators.',
+    ctaPrimary: 'Shop Handmade',
+    ctaPrimaryLink: '/search?filter=handmade',
+    ctaSecondary: 'Meet Our Artisans',
+    ctaSecondaryLink: '/about',
+    ctaSecondaryStyle: 'emerald',
+    bgGradient: 'linear-gradient(120deg, #FFFBEB 0%, #FEF3C7 45%, #F0FDFA 100%)',
+    accentColor: '#0D9488',
+    heroImage: '/promo/jewellery.png',
+    floatingCallouts: [
+      {
+        icon: <Package size={16} className="text-teal-600" />,
+        iconBg: 'bg-teal-100',
+        title: 'Handcrafted Art',
+        subtitle: 'Brass & Copper',
+        href: '/search',
+      },
+      {
+        icon: <Shirt size={16} className="text-amber-600" />,
+        iconBg: 'bg-amber-100',
+        title: 'Handloom Khadi',
+        subtitle: 'Pure Organic',
+        href: '/category/fashion',
+      },
+      {
+        icon: <Sparkles size={16} className="text-rose-600" />,
+        iconBg: 'bg-rose-100',
+        title: 'Temple Jewellery',
+        subtitle: 'Hand-Crafted',
+        href: '/search',
+      },
+      {
+        icon: <Sprout size={16} className="text-emerald-600" />,
+        iconBg: 'bg-emerald-100',
+        title: 'Village Faral',
+        subtitle: 'Homemade Sweets',
+        href: '/search',
+      },
+    ],
+  },
+
+  // ─── SLIDE 4: OFFER ZONE (Mega Clearance & Flash Discounts) ───
+  {
+    id: 'slide_offer_zone',
+    categoryTitle: 'Offer Zone',
+    categoryIcon: <BadgePercent size={15} />,
+    badgeText: '🔥 Mega Savings Festival — Up to 80% OFF',
+    titleLine1: 'Super Saver Dhamaka &',
+    titleLine2: 'Exclusive Flash Deals',
+    subtitle: 'Buy 1 Get 1 Free • Factory Direct Combos • Minimum 50% Off',
+    description: 'Grab unbelievable wholesale discounts, clearance bundles, and limited-time lightning deals with verified quality guarantee.',
+    ctaPrimary: 'Explore Offer Zone',
+    ctaPrimaryLink: '/promotions',
+    ctaSecondary: 'Daily Deals',
+    ctaSecondaryLink: '/search?discount=50',
+    ctaSecondaryStyle: 'blue',
+    bgGradient: 'linear-gradient(120deg, #FEF2F2 0%, #FEE2E2 45%, #FFF7ED 100%)',
+    accentColor: '#DC2626',
+    heroImage: '/promo/festival.png',
+    floatingCallouts: [
+      {
+        icon: <BadgePercent size={16} className="text-rose-600" />,
+        iconBg: 'bg-rose-100',
+        title: 'Flash 70% Off',
+        subtitle: 'Limited Stock',
+        href: '/promotions',
+      },
+      {
+        icon: <Zap size={16} className="text-amber-600" />,
+        iconBg: 'bg-amber-100',
+        title: 'Buy 1 Get 1',
+        subtitle: 'Combo Bundles',
+        href: '/promotions',
+      },
+      {
+        icon: <Truck size={16} className="text-blue-600" />,
+        iconBg: 'bg-blue-100',
+        title: 'Free Delivery',
+        subtitle: 'On Orders ₹499+',
+        href: '/promotions',
+      },
+      {
+        icon: <ShieldCheck size={16} className="text-emerald-600" />,
+        iconBg: 'bg-emerald-100',
+        title: 'Verified Deals',
+        subtitle: '100% Authentic',
+        href: '/promotions',
+      },
+    ],
+  },
+
+  // ─── SLIDE 5: HOME & KITCHEN APPLIANCES ───
   {
     id: 'slide_home_kitchen',
     categoryTitle: 'Home & Kitchen',
-    categoryIcon: <Home size={14} />,
+    categoryIcon: <Home size={15} />,
     badgeText: '🏠 Kitchen Festival Sale — Up to 50% OFF',
     titleLine1: 'Modern Home &',
     titleLine2: 'Kitchen Appliances',
@@ -154,11 +309,11 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ],
   },
 
-  // ─── SLIDE 3: BEAUTY & PERSONAL CARE ───
+  // ─── SLIDE 6: BEAUTY & PERSONAL CARE ───
   {
     id: 'slide_beauty_care',
     categoryTitle: 'Beauty & Skincare',
-    categoryIcon: <Sparkles size={14} />,
+    categoryIcon: <Sparkles size={15} />,
     badgeText: '💄 Organic Glow Collection — 40% OFF',
     titleLine1: 'Organic Beauty &',
     titleLine2: 'Personal Care',
@@ -204,11 +359,11 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ],
   },
 
-  // ─── SLIDE 4: AGRICULTURE & FARMING SOLUTIONS ───
+  // ─── SLIDE 7: AGRICULTURE & FARMING SOLUTIONS ───
   {
     id: 'slide_agriculture',
     categoryTitle: 'Agriculture & Seeds',
-    categoryIcon: <Tractor size={14} />,
+    categoryIcon: <Tractor size={15} />,
     badgeText: '🌾 Empowering Indian Farmers — Direct Factory Price',
     titleLine1: 'Bio Fertilizers &',
     titleLine2: 'High Yield Seeds',
@@ -254,11 +409,11 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ],
   },
 
-  // ─── SLIDE 5: ELECTRONICS & SMART GADGETS ───
+  // ─── SLIDE 8: ELECTRONICS & SMART GADGETS ───
   {
     id: 'slide_electronics',
     categoryTitle: 'Electronics & Smart',
-    categoryIcon: <Tv size={14} />,
+    categoryIcon: <Tv size={15} />,
     badgeText: '⚡ Mega Tech Sale — Up to 70% OFF',
     titleLine1: 'Smart Gadgets &',
     titleLine2: 'Auto Electronics',
@@ -304,11 +459,11 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ],
   },
 
-  // ─── SLIDE 6: FASHION & LIFESTYLE ───
+  // ─── SLIDE 9: FASHION & LIFESTYLE ───
   {
     id: 'slide_fashion',
     categoryTitle: 'Fashion & Handloom',
-    categoryIcon: <Shirt size={14} />,
+    categoryIcon: <Shirt size={15} />,
     badgeText: '👗 Handcrafted Weaver Art — 65% OFF',
     titleLine1: 'Handloom Sarees &',
     titleLine2: 'Ethnic Fashion',
@@ -429,11 +584,11 @@ export const HeroBannerSlider: React.FC = () => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* ─── 1. TOP CATEGORY PILL SELECTOR STRIP ─── */}
-      <div className="w-full bg-slate-50/90 border-b border-slate-200/70 px-4 sm:px-6 py-2 flex items-center justify-between gap-2 z-20 relative">
+      {/* ─── 1. TOP CATEGORY PILL SELECTOR STRIP (Enlarged font + dynamic colors) ─── */}
+      <div className="w-full bg-slate-50/90 border-b border-slate-200/70 px-4 sm:px-6 py-2.5 flex items-center justify-between gap-2 z-20 relative">
         <div
           ref={navContainerRef}
-          className="flex-1 flex items-center overflow-x-auto no-scrollbar gap-1.5 scroll-smooth"
+          className="flex-1 flex items-center overflow-x-auto no-scrollbar gap-2 sm:gap-2.5 scroll-smooth"
         >
           {HERO_SLIDES.map((s, idx) => {
             const isActive = idx === current;
@@ -446,14 +601,14 @@ export const HeroBannerSlider: React.FC = () => {
                     ? {
                         backgroundColor: s.accentColor,
                         color: '#ffffff',
-                        boxShadow: `0 3px 12px ${s.accentColor}35`,
+                        boxShadow: `0 4px 14px ${s.accentColor}35`,
                       }
                     : undefined
                 }
-                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 shrink-0 cursor-pointer ${
+                className={`inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl sm:rounded-2xl text-[13px] sm:text-sm font-extrabold transition-all duration-300 shrink-0 cursor-pointer ${
                   isActive
-                    ? 'text-white shadow-xs scale-[1.02]'
-                    : 'text-slate-600 hover:text-slate-900 bg-white/70 hover:bg-white border border-slate-200/60'
+                    ? 'text-white shadow-sm scale-[1.02]'
+                    : 'text-slate-700 hover:text-slate-900 bg-white/80 hover:bg-white border border-slate-200/70 shadow-2xs'
                 }`}
               >
                 <span
@@ -462,7 +617,7 @@ export const HeroBannerSlider: React.FC = () => {
                 >
                   {s.categoryIcon}
                 </span>
-                <span className="whitespace-nowrap">{s.categoryTitle}</span>
+                <span className="whitespace-nowrap tracking-tight">{s.categoryTitle}</span>
               </button>
             );
           })}
@@ -482,196 +637,190 @@ export const HeroBannerSlider: React.FC = () => {
         <div
           className="absolute inset-0 opacity-[0.025] pointer-events-none"
           style={{
-            backgroundImage: 'radial-gradient(#1565D8 1px, transparent 1px)',
+            backgroundImage: `radial-gradient(${slide.accentColor} 1px, transparent 1px)`,
             backgroundSize: '24px 24px',
           }}
         />
 
-        {/* ─── 3-Zone Hero Desktop Layout (Text Area 48% | Cart Visual 30% | Category Cards 22%) ─── */}
-        <div className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center">
+        {/* ── Content Grid: Left Text Column + Right Visual/Cards Zone ── */}
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center relative z-10">
           
-          {/* ── LEFT COLUMN: Text, CTAs, Benefit Cards (5 to 6 cols) ── */}
-          <div className="lg:col-span-6 xl:col-span-5 flex flex-col justify-center space-y-4 sm:space-y-5 text-left animate-in fade-in slide-in-from-left-3 duration-300">
-            
-            {/* Top Pill Badge */}
-            <div>
-              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#1565D8] text-white text-[11px] sm:text-xs font-black shadow-xs tracking-wide">
-                <Sparkles size={13} className="text-amber-300 fill-amber-300" />
-                <span>{slide.badgeText}</span>
+          {/* ═══════════════════════════════════════════════════════════
+              LEFT HERO TEXT CONTENT
+              ═══════════════════════════════════════════════════════════ */}
+          <div
+            className={`lg:col-span-6 xl:col-span-6 space-y-4 sm:space-y-5 text-left transition-all duration-400 ${
+              isAnimating ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'
+            }`}
+          >
+            {/* 1. Top Mini Pill Badge */}
+            <div className="inline-flex items-center gap-2 bg-white/95 backdrop-blur-sm border border-slate-200/80 px-3.5 py-1.5 rounded-full shadow-xs">
+              <span
+                className="w-2 h-2 rounded-full animate-pulse shrink-0"
+                style={{ backgroundColor: slide.accentColor }}
+              />
+              <span
+                className="text-[11px] sm:text-xs font-black tracking-wide"
+                style={{ color: slide.accentColor }}
+              >
+                {slide.badgeText}
               </span>
             </div>
 
-            {/* Main Headline */}
+            {/* 2. Bold Two-Line Main Heading */}
             <div className="space-y-1">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-[1.12]">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[52px] font-black text-slate-900 leading-[1.08] tracking-tight">
                 {slide.titleLine1}
               </h1>
               <h2
-                className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-[1.12]"
-                style={{ color: slide.isFirstSlide ? '#1565D8' : slide.accentColor }}
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[52px] font-black leading-[1.08] tracking-tight"
+                style={{ color: slide.accentColor }}
               >
                 {slide.titleLine2}
               </h2>
             </div>
 
-            {/* Subtitle & Keywords */}
+            {/* 3. Subtitle & Description */}
             <div className="space-y-1">
-              <p className="text-sm sm:text-base font-bold text-slate-700 leading-relaxed">
+              <p className="text-sm sm:text-base font-bold text-slate-700 leading-snug">
                 {slide.subtitle}
               </p>
-              <p className="text-xs sm:text-sm font-semibold text-slate-500">
+              <p className="text-xs sm:text-[13px] font-medium text-slate-500 leading-relaxed">
                 {slide.description}
               </p>
             </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center gap-3.5 pt-1">
-              {/* Primary CTA (Shop Now - Royal Blue #1565D8) */}
+            {/* 4. Action CTA Buttons */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
+              {/* Primary Action Button */}
               <button
                 type="button"
                 onClick={() => router.push(slide.ctaPrimaryLink)}
-                className="px-7 sm:px-8 py-3.5 bg-[#1565D8] hover:bg-[#0D47A1] active:bg-[#0A3880] text-white font-black text-xs sm:text-sm rounded-2xl transition-all shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center gap-2 cursor-pointer group"
+                className="inline-flex items-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl text-sm sm:text-base font-black text-white shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
+                style={{
+                  backgroundColor: slide.accentColor,
+                  boxShadow: `0 10px 25px -5px ${slide.accentColor}55`,
+                }}
               >
-                <ShoppingCart size={17} className="transition-transform group-hover:scale-110" />
+                <ShoppingCart size={18} className="shrink-0" />
                 <span>{slide.ctaPrimary}</span>
               </button>
 
-              {/* Secondary CTA (Become a Seller / Deals) */}
+              {/* Secondary Action Button */}
               <button
                 type="button"
                 onClick={() => router.push(slide.ctaSecondaryLink)}
-                className={`px-6 sm:px-7 py-3.5 font-black text-xs sm:text-sm rounded-2xl transition-all shadow-2xs active:scale-95 flex items-center justify-center gap-2 cursor-pointer ${
+                className={`inline-flex items-center gap-2 px-5 sm:px-6 py-3.5 sm:py-4 rounded-2xl text-sm sm:text-base font-black transition-all duration-200 hover:scale-105 active:scale-95 border bg-white shadow-xs cursor-pointer ${
                   slide.ctaSecondaryStyle === 'emerald'
-                    ? 'bg-white hover:bg-emerald-50 text-emerald-700 border-2 border-emerald-500/80 hover:border-emerald-600'
-                    : 'bg-white hover:bg-blue-50 text-[#1565D8] border-2 border-[#1565D8]/80 hover:border-[#1565D8]'
+                    ? 'border-emerald-500/30 text-emerald-700 hover:bg-emerald-50/60'
+                    : 'border-slate-300 text-slate-700 hover:bg-slate-50'
                 }`}
               >
-                {slide.ctaSecondaryStyle === 'emerald' ? (
-                  <Rocket size={16} className="text-emerald-600" />
-                ) : (
-                  <ArrowRight size={16} />
-                )}
+                <Rocket size={17} className={slide.ctaSecondaryStyle === 'emerald' ? 'text-emerald-600' : 'text-slate-600'} />
                 <span>{slide.ctaSecondary}</span>
               </button>
             </div>
 
-            {/* ── Bottom Benefit Cards Strip (4 Compact Cards) ── */}
-            <div className="pt-2 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
-              {/* Benefit 1 */}
-              <div className="bg-white/95 backdrop-blur-md border border-slate-200/80 p-2.5 sm:p-3 rounded-2xl shadow-xs flex items-center gap-2.5 group hover:border-blue-400/50 transition-all">
-                <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                  <Truck size={16} />
-                </div>
-                <div className="min-w-0">
-                  <h4 className="text-[11px] font-black text-slate-900 truncate leading-tight">Free Shipping</h4>
-                  <p className="text-[9px] font-bold text-slate-500 truncate leading-tight">Above ₹499</p>
+            {/* 5. Four Key Trust Badges */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-3 sm:pt-4">
+              <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-slate-200/70 px-2.5 py-1.5 rounded-xl shadow-2xs">
+                <Truck size={14} className="text-emerald-600 shrink-0" />
+                <div className="text-[10px] sm:text-[11px] leading-tight">
+                  <div className="font-extrabold text-slate-800">Free Shipping</div>
+                  <div className="text-slate-400 font-medium">Above ₹499</div>
                 </div>
               </div>
 
-              {/* Benefit 2 */}
-              <div className="bg-white/95 backdrop-blur-md border border-slate-200/80 p-2.5 sm:p-3 rounded-2xl shadow-xs flex items-center gap-2.5 group hover:border-blue-400/50 transition-all">
-                <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                  <ShieldCheck size={16} />
-                </div>
-                <div className="min-w-0">
-                  <h4 className="text-[11px] font-black text-slate-900 truncate leading-tight">Secure Payment</h4>
-                  <p className="text-[9px] font-bold text-slate-500 truncate leading-tight">100% Protected</p>
+              <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-slate-200/70 px-2.5 py-1.5 rounded-xl shadow-2xs">
+                <ShieldCheck size={14} className="text-amber-600 shrink-0" />
+                <div className="text-[10px] sm:text-[11px] leading-tight">
+                  <div className="font-extrabold text-slate-800">Secure Escrow</div>
+                  <div className="text-slate-400 font-medium">100% Protection</div>
                 </div>
               </div>
 
-              {/* Benefit 3 */}
-              <div className="bg-white/95 backdrop-blur-md border border-slate-200/80 p-2.5 sm:p-3 rounded-2xl shadow-xs flex items-center gap-2.5 group hover:border-blue-400/50 transition-all">
-                <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                  <BadgeCheck size={16} />
-                </div>
-                <div className="min-w-0">
-                  <h4 className="text-[11px] font-black text-slate-900 truncate leading-tight">Verified Sellers</h4>
-                  <p className="text-[9px] font-bold text-slate-500 truncate leading-tight">GST Certified</p>
+              <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-slate-200/70 px-2.5 py-1.5 rounded-xl shadow-2xs">
+                <BadgeCheck size={14} className="text-blue-600 shrink-0" />
+                <div className="text-[10px] sm:text-[11px] leading-tight">
+                  <div className="font-extrabold text-slate-800">Verified Sellers</div>
+                  <div className="text-slate-400 font-medium">GST Certified</div>
                 </div>
               </div>
 
-              {/* Benefit 4 */}
-              <div className="bg-white/95 backdrop-blur-md border border-slate-200/80 p-2.5 sm:p-3 rounded-2xl shadow-xs flex items-center gap-2.5 group hover:border-blue-400/50 transition-all">
-                <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
-                  <RefreshCw size={16} />
-                </div>
-                <div className="min-w-0">
-                  <h4 className="text-[11px] font-black text-slate-900 truncate leading-tight">Easy Returns</h4>
-                  <p className="text-[9px] font-bold text-slate-500 truncate leading-tight">Hassle Free</p>
+              <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-slate-200/70 px-2.5 py-1.5 rounded-xl shadow-2xs">
+                <RefreshCw size={14} className="text-pink-600 shrink-0" />
+                <div className="text-[10px] sm:text-[11px] leading-tight">
+                  <div className="font-extrabold text-slate-800">Easy Returns</div>
+                  <div className="text-slate-400 font-medium">Hassle Free</div>
                 </div>
               </div>
             </div>
 
           </div>
 
-          {/* ── RIGHT VISUAL AREA (6 to 7 cols): Divided into Focal Illustration + Reserved Category Column ── */}
-          <div className="lg:col-span-6 xl:col-span-7 flex flex-col sm:flex-row items-center justify-between gap-4 lg:gap-6 min-h-[340px] sm:min-h-[380px] lg:min-h-[440px] w-full">
+          {/* ═══════════════════════════════════════════════════════════
+              RIGHT HERO VISUAL ZONE
+              ═══════════════════════════════════════════════════════════ */}
+          <div className="lg:col-span-6 xl:col-span-6 relative flex items-center justify-center min-h-[340px] sm:min-h-[380px] md:min-h-[420px] lg:min-h-[460px]">
             
-            {/* 1. Center Focal Illustration (Cart / Product Visual) — Completely Separate Safe Zone */}
-            <div className="flex-1 flex items-center justify-center w-full min-w-0 pr-0 sm:pr-2">
-              <div className="relative w-full max-w-[280px] sm:max-w-[340px] lg:max-w-[370px] xl:max-w-[410px] aspect-square flex items-center justify-center">
+            {/* Left Spatial Zone: Product Cut-Out Asset */}
+            <div className="w-full flex items-center justify-center lg:justify-start lg:pr-[190px] xl:lg:pr-[210px] z-10">
+              <div
+                className={`relative w-full max-w-[280px] sm:max-w-[340px] md:max-w-[380px] lg:max-w-[420px] transition-all duration-500 ${
+                  isAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+                }`}
+              >
                 {slide.heroImage ? (
                   <img
                     src={slide.heroImage}
                     alt={slide.titleLine1}
-                    className="w-full h-full object-contain filter drop-shadow-lg select-none transition-transform duration-500 hover:scale-[1.02]"
+                    className="w-full h-auto max-h-[290px] sm:max-h-[340px] lg:max-h-[400px] object-contain drop-shadow-xl select-none pointer-events-none mx-auto lg:mx-0 filter"
                     loading="eager"
                   />
                 ) : (
-                  <div className="w-56 h-56 rounded-3xl bg-white/70 backdrop-blur-md border border-slate-200/80 shadow-md flex items-center justify-center">
-                    <ShoppingCart size={70} className="text-[#1565D8]" />
+                  <div className="w-64 h-64 sm:w-72 sm:h-72 rounded-full bg-white/60 border border-slate-200/60 shadow-lg flex items-center justify-center">
+                    <ShoppingCart size={80} style={{ color: slide.accentColor }} />
                   </div>
                 )}
               </div>
             </div>
 
-            {/* 2. Dedicated Category Callouts Column (Desktop & Tablet Vertical Stack — Reserved Space) */}
-            {slide.floatingCallouts && slide.floatingCallouts.length > 0 && (
-              <div className="hidden sm:flex flex-col justify-center gap-2.5 lg:gap-3 w-44 sm:w-48 lg:w-52 shrink-0 z-10">
-                {slide.floatingCallouts.map((callout, i) => (
-                  <Link
-                    key={i}
-                    href={callout.href}
-                    className="bg-white/95 backdrop-blur-md border border-slate-200/80 hover:border-blue-500/60 p-2.5 sm:p-3 rounded-2xl shadow-xs hover:shadow-md transition-all duration-200 hover:scale-[1.03] flex items-center gap-2.5 cursor-pointer w-full group"
-                  >
-                    <div className={`w-8 h-8 rounded-xl ${callout.iconBg} flex items-center justify-center shrink-0 transition-transform group-hover:scale-110`}>
-                      {callout.icon}
-                    </div>
-                    <div className="text-left min-w-0 flex-1">
-                      <h5 className="text-xs font-black text-slate-900 leading-tight truncate">{callout.title}</h5>
-                      <p className="text-[10px] font-bold text-slate-500 leading-tight truncate">{callout.subtitle}</p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-
-          </div>
-
-          {/* ── Mobile-Only Category Callouts (Clean 2-Col Grid rendered underneath on small mobile screens) ── */}
-          {slide.floatingCallouts && slide.floatingCallouts.length > 0 && (
-            <div className="sm:hidden grid grid-cols-2 gap-2 w-full pt-2 z-10">
-              {slide.floatingCallouts.map((callout, i) => (
+            {/* Right Spatial Zone: 4 Floating Category Callout Cards */}
+            <div className="hidden sm:flex flex-col gap-2.5 z-20 absolute right-0 top-1/2 -translate-y-1/2 w-[180px] xl:w-[195px]">
+              {slide.floatingCallouts.map((callout, cIdx) => (
                 <Link
-                  key={i}
+                  key={cIdx}
                   href={callout.href}
-                  className="bg-white/95 backdrop-blur-md border border-slate-200/80 p-2 rounded-xl shadow-2xs flex items-center gap-2"
+                  className={`flex items-center gap-3 bg-white/95 hover:bg-white backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 group cursor-pointer ${
+                    isAnimating ? 'opacity-0 translate-x-3' : 'opacity-100 translate-x-0'
+                  }`}
+                  style={{
+                    transitionDelay: `${cIdx * 60}ms`,
+                  }}
                 >
-                  <div className={`w-7 h-7 rounded-lg ${callout.iconBg} flex items-center justify-center shrink-0`}>
+                  <div
+                    className={`w-9 h-9 rounded-xl ${callout.iconBg} flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-110 transition-transform`}
+                  >
                     {callout.icon}
                   </div>
-                  <div className="text-left min-w-0 flex-1">
-                    <h5 className="text-[11px] font-black text-slate-900 leading-tight truncate">{callout.title}</h5>
-                    <p className="text-[9px] font-bold text-slate-500 leading-tight truncate">{callout.subtitle}</p>
+                  <div className="flex-1 min-w-0 text-left">
+                    <div className="text-xs font-black text-slate-800 truncate group-hover:text-[#1565D8] transition-colors">
+                      {callout.title}
+                    </div>
+                    <div className="text-[10px] font-semibold text-slate-400 truncate">
+                      {callout.subtitle}
+                    </div>
                   </div>
+                  <ArrowRight size={13} className="text-slate-300 group-hover:text-[#1565D8] group-hover:translate-x-0.5 transition-all shrink-0" />
                 </Link>
               ))}
             </div>
-          )}
+
+          </div>
 
         </div>
 
-        {/* ─── Navigation Controls (Previous & Next Arrows Outside Main Visual Zone) ─── */}
+        {/* ─── Navigation Controls (Previous & Next Arrows) ─── */}
         <button
           type="button"
           onClick={prev}
