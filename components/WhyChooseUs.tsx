@@ -331,7 +331,7 @@ export const WhyChooseUs: React.FC = () => {
         </div>
 
         {/* ── 8 Feature Cards (4 in Row 1, 4 in Row 2 — Matching Image 1) ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 relative z-10 mt-8 sm:mt-10 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 relative z-10 mt-7 sm:mt-9 mb-1 sm:mb-2">
           {benefits.map((b) => {
             const title = t(b.titleKey) || b.title;
             const desc = t(b.descKey) || b.desc;
@@ -385,12 +385,12 @@ export const WhyChooseUs: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Indian Landmark Skyline Banner (100% Full Width Edge-to-Edge, Flush at Bottom) ── */}
-      <div className="w-full relative overflow-hidden z-10 pointer-events-none mt-4 sm:mt-6 -mb-1 leading-none">
+      {/* ── Indian Landmark Skyline Banner (Scaled & Snug at Bottom to eliminate all gaps) ── */}
+      <div className="w-full relative overflow-hidden z-10 pointer-events-none mt-0 sm:mt-1 -mb-3 sm:-mb-5 lg:-mb-7 leading-none">
         <img
           src="/decor/indian_landmarks_skyline.png"
           alt="Indian Heritage Landmarks"
-          className="w-full h-auto object-cover object-bottom block max-h-[170px] sm:max-h-[230px] lg:max-h-[280px] mx-auto filter drop-shadow-xs dark:opacity-90 dark:brightness-95"
+          className="w-[108%] sm:w-[106%] lg:w-[105%] max-w-none -ml-[4%] sm:-ml-[3%] lg:-ml-[2.5%] h-auto object-cover object-top block mx-auto filter drop-shadow-xs dark:opacity-90 dark:brightness-95"
           loading="lazy"
         />
       </div>
