@@ -2,260 +2,347 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import {
   ChevronLeft,
   ChevronRight,
-  ShoppingBag,
-  Tag,
+  ShoppingCart,
   ShieldCheck,
   Zap,
+  Truck,
   RefreshCw,
-  Umbrella,
-  Home,
   Sparkles,
+  Lock,
+  BadgeCheck,
   Sprout,
-  Tv,
   Shirt,
-  Flame,
+  Tv,
+  Home,
   Gem,
+  Flame,
+  Umbrella,
   Tractor,
   ArrowRight,
-  Play,
-  Star
+  Rocket,
+  Package,
 } from 'lucide-react';
 
-export interface CategoryHeroSlide {
+export interface FloatingCallout {
+  icon: React.ReactNode;
+  iconBg: string;
+  title: string;
+  subtitle: string;
+  href: string;
+  positionClass: string;
+}
+
+export interface HeroSlideData {
   id: string;
   categoryTitle: string;
   categoryIcon: React.ReactNode;
-  tag: string;
-  eyebrow: string;
-  title: string;
-  accentTitle: string;
+  badgeText: string;
+  badgeBg?: string;
+  titleLine1: string;
+  titleLine2: string;
   subtitle: string;
   description: string;
-  discountPercent: string;
-  offerBadge: string;
   ctaPrimary: string;
+  ctaPrimaryLink: string;
   ctaSecondary: string;
-  ctaLink: string;
-  bgFrom: string;
-  bgTo: string;
+  ctaSecondaryLink: string;
+  ctaSecondaryStyle?: 'emerald' | 'blue' | 'neutral';
+  bgGradient: string;
   accentColor: string;
-  bgImage: string;
-  foregroundImages: string[];
-  trustBadges: { icon: React.ReactNode; text: string }[];
+  isFirstSlide?: boolean;
+  heroImage?: string;
+  floatingCallouts: FloatingCallout[];
 }
 
-export const categoryHeroSlides: CategoryHeroSlide[] = [
+export const HERO_SLIDES: HeroSlideData[] = [
+  // ─── SLIDE 1: PRIMARY DESIGN TARGET (Matching Reference Image) ───
   {
-    id: 'rain_essentials',
-    categoryTitle: 'Rain Essentials',
-    categoryIcon: <Umbrella size={15} className="text-white" />,
-    tag: '🌧️ MONSOON EXCLUSIVE',
-    eyebrow: 'Limited Time Monsoon Offer',
-    title: 'Monsoon Rain',
-    accentTitle: 'Essentials 60% OFF',
-    subtitle: 'Heavy Duty Umbrellas • Raincoats • Waterproof Boots',
-    description: 'Protect yourself this monsoon with premium wind-resistant umbrellas, double-layered raincoats, and non-slip waterproof footwear directly from verified Indian manufacturers.',
-    discountPercent: '60%',
-    offerBadge: 'MONSOON SPECIAL',
-    ctaPrimary: 'Shop Rain Gear',
-    ctaSecondary: 'Explore All Deals',
-    ctaLink: '/search?tag=monsoon',
-    bgFrom: '#060f1f',
-    bgTo: '#0b1e3a',
-    accentColor: '#38bdf8',
-    bgImage: '/hero-monsoon.jpg',
-    foregroundImages: ['/categories/footwear.webp', '/categories/auto.webp'],
-    trustBadges: [
-      { icon: <ShieldCheck size={13} className="text-emerald-400" />, text: '100% Waterproof Guarantee' },
-      { icon: <Zap size={13} className="text-amber-400" />, text: 'Same Day Dispatch' },
-      { icon: <RefreshCw size={13} className="text-blue-400" />, text: '10-Day Easy Replacement' }
-    ]
+    id: 'slide_main_marketplace',
+    categoryTitle: 'All Categories',
+    categoryIcon: <ShoppingCart size={14} className="text-white" />,
+    badgeText: "India's Most Trusted Marketplace",
+    titleLine1: 'Shop Quality Products',
+    titleLine2: 'From Verified Sellers',
+    subtitle: 'Explore 10,000+ products across multiple categories.',
+    description: 'Best Quality • Best Price • 100% Trust',
+    ctaPrimary: 'Shop Now',
+    ctaPrimaryLink: '/search',
+    ctaSecondary: 'Become a Seller',
+    ctaSecondaryLink: '/seller/register',
+    ctaSecondaryStyle: 'emerald',
+    bgGradient: 'linear-gradient(120deg, #F0F6FF 0%, #E9F4FF 45%, #E6FAF4 100%)',
+    accentColor: '#1565D8',
+    isFirstSlide: true,
+    heroImage: '/hero/hero-cart-visual.png',
+    floatingCallouts: [
+      {
+        icon: <Sprout size={16} className="text-emerald-600" />,
+        iconBg: 'bg-emerald-100',
+        title: 'Agriculture',
+        subtitle: 'Fresh & Organic',
+        href: '/category/agriculture-seeds',
+        positionClass: 'top-3 right-4 lg:right-6',
+      },
+      {
+        icon: <Shirt size={16} className="text-pink-600" />,
+        iconBg: 'bg-pink-100',
+        title: 'Fashion',
+        subtitle: 'Style for You',
+        href: '/category/fashion',
+        positionClass: 'top-24 right-2 lg:right-4',
+      },
+      {
+        icon: <Tv size={16} className="text-amber-600" />,
+        iconBg: 'bg-amber-100',
+        title: 'Electronics',
+        subtitle: 'Latest & Smart',
+        href: '/category/electronics',
+        positionClass: 'top-44 right-2 lg:right-4',
+      },
+      {
+        icon: <Home size={16} className="text-blue-600" />,
+        iconBg: 'bg-blue-100',
+        title: 'Home & Kitchen',
+        subtitle: 'Everything Home',
+        href: '/category/home-kitchen',
+        positionClass: 'top-64 right-4 lg:right-6',
+      },
+    ],
   },
+
+  // ─── SLIDE 2: HOME & KITCHEN APPLIANCES ───
   {
-    id: 'home_kitchen',
+    id: 'slide_home_kitchen',
     categoryTitle: 'Home & Kitchen',
-    categoryIcon: <Home size={15} className="text-white" />,
-    tag: '🏠 HOME & KITCHEN FESTIVAL',
-    eyebrow: 'Kitchen Festival Sale',
-    title: 'Modern Home &',
-    accentTitle: 'Kitchen Appliances',
+    categoryIcon: <Home size={14} className="text-white" />,
+    badgeText: '🏠 Kitchen Festival Sale — Up to 50% OFF',
+    titleLine1: 'Modern Home &',
+    titleLine2: 'Kitchen Appliances',
     subtitle: 'High Speed Juicers • Brass Utensils • Solar Appliances',
-    description: 'Upgrade your culinary space with stone-ground mixers, food processors, copper cookware sets, and energy-efficient solar appliances at direct-from-factory prices.',
-    discountPercent: '50%',
-    offerBadge: 'KITCHEN SALE',
+    description: 'Upgrade your culinary space with food processors, copper cookware, and energy-efficient appliances at factory prices.',
     ctaPrimary: 'Shop Kitchenware',
+    ctaPrimaryLink: '/category/home-kitchen',
     ctaSecondary: 'View Appliances',
-    ctaLink: '/category/home-kitchen',
-    bgFrom: '#160f02',
-    bgTo: '#2d1c04',
-    accentColor: '#f59e0b',
-    bgImage: '/categories/kitchen.webp',
-    foregroundImages: ['/categories/juices.webp', '/categories/kitchen.webp'],
-    trustBadges: [
-      { icon: <ShieldCheck size={13} className="text-emerald-400" />, text: '1 Year Brand Warranty' },
-      { icon: <Zap size={13} className="text-amber-400" />, text: 'Free Express Shipping' },
-      { icon: <RefreshCw size={13} className="text-blue-400" />, text: 'GST Invoice Available' }
-    ]
+    ctaSecondaryLink: '/category/home-kitchen',
+    ctaSecondaryStyle: 'blue',
+    bgGradient: 'linear-gradient(120deg, #FFFBEB 0%, #FEF3C7 45%, #F0F6FF 100%)',
+    accentColor: '#D97706',
+    heroImage: '/categories/kitchen.webp',
+    floatingCallouts: [
+      {
+        icon: <Package size={16} className="text-amber-600" />,
+        iconBg: 'bg-amber-100',
+        title: 'Brass Cookware',
+        subtitle: 'Traditional & Pure',
+        href: '/category/home-kitchen',
+        positionClass: 'top-4 right-6',
+      },
+      {
+        icon: <Zap size={16} className="text-blue-600" />,
+        iconBg: 'bg-blue-100',
+        title: 'Solar Appliances',
+        subtitle: 'Energy Saver',
+        href: '/category/home-kitchen',
+        positionClass: 'top-28 right-2',
+      },
+      {
+        icon: <RefreshCw size={16} className="text-emerald-600" />,
+        iconBg: 'bg-emerald-100',
+        title: 'High Speed Juicers',
+        subtitle: 'Cold-Press Tech',
+        href: '/category/home-kitchen',
+        positionClass: 'top-52 right-4',
+      },
+    ],
   },
+
+  // ─── SLIDE 3: BEAUTY & PERSONAL CARE ───
   {
-    id: 'beauty_care',
-    categoryTitle: 'Beauty & Personal Care',
-    categoryIcon: <Sparkles size={15} className="text-white" />,
-    tag: '💄 BEAUTY & SKINCARE',
-    eyebrow: 'Organic Glow Collection',
-    title: 'Organic Beauty &',
-    accentTitle: 'Personal Care',
+    id: 'slide_beauty_care',
+    categoryTitle: 'Beauty & Skincare',
+    categoryIcon: <Sparkles size={14} className="text-white" />,
+    badgeText: '💄 Organic Glow Collection — 40% OFF',
+    titleLine1: 'Organic Beauty &',
+    titleLine2: 'Personal Care',
     subtitle: 'Ayurvedic Serums • Herbal Shampoos • Makeup Kits',
-    description: 'Transform your daily routine with toxin-free botanical serums, cold-pressed oils, pure aloe vera gels, and branded cosmetic hampers for glowing health.',
-    discountPercent: '40%',
-    offerBadge: 'GLOW DEALS',
+    description: 'Transform your daily routine with toxin-free botanical serums, cold-pressed oils, and branded cosmetic hampers.',
     ctaPrimary: 'Explore Beauty',
+    ctaPrimaryLink: '/category/beauty-personal-care',
     ctaSecondary: 'View Cosmetics',
-    ctaLink: '/category/beauty-personal-care',
-    bgFrom: '#1c0810',
-    bgTo: '#370e1e',
-    accentColor: '#f43f5e',
-    bgImage: '/categories/beauty.webp',
-    foregroundImages: ['/categories/cosmetics.webp', '/categories/beauty.webp'],
-    trustBadges: [
-      { icon: <ShieldCheck size={13} className="text-emerald-400" />, text: 'Dermatologically Tested' },
-      { icon: <Zap size={13} className="text-amber-400" />, text: '100% Organic & Chemical-Free' },
-      { icon: <RefreshCw size={13} className="text-blue-400" />, text: 'Direct Manufacturer Supply' }
-    ]
+    ctaSecondaryLink: '/category/beauty-personal-care',
+    ctaSecondaryStyle: 'blue',
+    bgGradient: 'linear-gradient(120deg, #FDF2F8 0%, #FCE7F3 45%, #F0FDF4 100%)',
+    accentColor: '#E11D48',
+    heroImage: '/categories/beauty.webp',
+    floatingCallouts: [
+      {
+        icon: <Sparkles size={16} className="text-pink-600" />,
+        iconBg: 'bg-pink-100',
+        title: 'Herbal Serums',
+        subtitle: '100% Botanical',
+        href: '/category/beauty-personal-care',
+        positionClass: 'top-4 right-6',
+      },
+      {
+        icon: <ShieldCheck size={16} className="text-emerald-600" />,
+        iconBg: 'bg-emerald-100',
+        title: 'Derma Tested',
+        subtitle: 'Safe & Certified',
+        href: '/category/beauty-personal-care',
+        positionClass: 'top-28 right-2',
+      },
+      {
+        icon: <Sparkles size={16} className="text-purple-600" />,
+        iconBg: 'bg-purple-100',
+        title: 'Cosmetic Kits',
+        subtitle: 'Bridal & Festive',
+        href: '/category/beauty-personal-care',
+        positionClass: 'top-52 right-4',
+      },
+    ],
   },
+
+  // ─── SLIDE 4: AGRICULTURE & FARMING SOLUTIONS ───
   {
-    id: 'agriculture',
+    id: 'slide_agriculture',
     categoryTitle: 'Agriculture & Seeds',
-    categoryIcon: <Tractor size={15} className="text-white" />,
-    tag: '🌾 AGRI-SOLUTIONS DIRECT',
-    eyebrow: 'Empowering Indian Farmers',
-    title: 'Bio Fertilizers &',
-    accentTitle: 'High Yield Seeds',
+    categoryIcon: <Tractor size={14} className="text-white" />,
+    badgeText: '🌾 Empowering Indian Farmers — Direct Factory Price',
+    titleLine1: 'Bio Fertilizers &',
+    titleLine2: 'High Yield Seeds',
     subtitle: 'Certified Hybrid Seeds • Drip Kits • Bio Pesticides',
-    description: 'Empowering Indian farmers with government-certified hybrid seeds, organic bio-fertilizers, micro-drip irrigation kits, and hand sprayers delivered to your doorstep.',
-    discountPercent: '45%',
-    offerBadge: 'FARM SAVINGS',
+    description: 'Government-certified hybrid seeds, organic bio-fertilizers, and micro-drip irrigation kits delivered to your village doorstep.',
     ctaPrimary: 'Shop Agri Tools',
+    ctaPrimaryLink: '/category/agriculture-seeds',
     ctaSecondary: 'Seeds & Fertilizers',
-    ctaLink: '/category/agriculture-seeds',
-    bgFrom: '#060f08',
-    bgTo: '#0a2010',
-    accentColor: '#10b981',
-    bgImage: '/promo-agriculture.jpg',
-    foregroundImages: ['/categories/oil.webp'],
-    trustBadges: [
-      { icon: <ShieldCheck size={13} className="text-emerald-400" />, text: 'Lab Tested Germination' },
-      { icon: <Zap size={13} className="text-amber-400" />, text: 'Doorstep Village Delivery' },
-      { icon: <RefreshCw size={13} className="text-blue-400" />, text: 'Bulk Kisan Discounts' }
-    ]
+    ctaSecondaryLink: '/category/agriculture-seeds',
+    ctaSecondaryStyle: 'emerald',
+    bgGradient: 'linear-gradient(120deg, #F0FDF4 0%, #DCFCE7 45%, #E0F2FE 100%)',
+    accentColor: '#059669',
+    heroImage: '/promo/agriculture.png',
+    floatingCallouts: [
+      {
+        icon: <Sprout size={16} className="text-emerald-600" />,
+        iconBg: 'bg-emerald-100',
+        title: 'Certified Seeds',
+        subtitle: 'Lab Tested 98%',
+        href: '/category/agriculture-seeds',
+        positionClass: 'top-4 right-6',
+      },
+      {
+        icon: <Truck size={16} className="text-blue-600" />,
+        iconBg: 'bg-blue-100',
+        title: 'Village Delivery',
+        subtitle: 'Direct Logistics',
+        href: '/category/agriculture-seeds',
+        positionClass: 'top-28 right-2',
+      },
+      {
+        icon: <Zap size={16} className="text-amber-600" />,
+        iconBg: 'bg-amber-100',
+        title: 'Kisan Bulk Rates',
+        subtitle: 'Wholesale Savings',
+        href: '/category/agriculture-seeds',
+        positionClass: 'top-52 right-4',
+      },
+    ],
   },
+
+  // ─── SLIDE 5: ELECTRONICS & SMART GADGETS ───
   {
-    id: 'electronics',
-    categoryTitle: 'Electronics & Gadgets',
-    categoryIcon: <Tv size={15} className="text-white" />,
-    tag: '⚡ TECHPULSE ELECTRONICS',
-    eyebrow: 'Mega Tech Sale Event',
-    title: 'Smart Gadgets &',
-    accentTitle: 'Auto Electronics',
+    id: 'slide_electronics',
+    categoryTitle: 'Electronics & Smart',
+    categoryIcon: <Tv size={14} className="text-white" />,
+    badgeText: '⚡ Mega Tech Sale — Up to 70% OFF',
+    titleLine1: 'Smart Gadgets &',
+    titleLine2: 'Auto Electronics',
     subtitle: 'Smartwatches • Wireless Audio • Dashcams & Power Banks',
-    description: 'Experience cutting-edge technology with active noise-canceling headphones, Bluetooth party speakers, high-speed power banks, and solar auto accessories.',
-    discountPercent: '70%',
-    offerBadge: 'MEGA TECH SALE',
+    description: 'Experience cutting-edge technology with active noise-canceling headphones, Bluetooth party speakers, and power banks.',
     ctaPrimary: 'Shop Electronics',
+    ctaPrimaryLink: '/category/electronics',
     ctaSecondary: 'View Auto Gear',
-    ctaLink: '/category/electronics',
-    bgFrom: '#080d20',
-    bgTo: '#131a3f',
-    accentColor: '#818cf8',
-    bgImage: '/categories/electronics.webp',
-    foregroundImages: ['/categories/electronics.webp', '/categories/auto.webp'],
-    trustBadges: [
-      { icon: <ShieldCheck size={13} className="text-emerald-400" />, text: 'Brand Authorized Distributor' },
-      { icon: <Zap size={13} className="text-amber-400" />, text: 'Fast Express Shipping' },
-      { icon: <RefreshCw size={13} className="text-blue-400" />, text: 'Secure Escrow Payment' }
-    ]
+    ctaSecondaryLink: '/category/electronics',
+    ctaSecondaryStyle: 'blue',
+    bgGradient: 'linear-gradient(120deg, #EEF2FF 0%, #E0E7FF 45%, #ECFDF5 100%)',
+    accentColor: '#4F46E5',
+    heroImage: '/categories/electronics.webp',
+    floatingCallouts: [
+      {
+        icon: <Tv size={16} className="text-indigo-600" />,
+        iconBg: 'bg-indigo-100',
+        title: 'Wireless Audio',
+        subtitle: 'ANC & Bass Boost',
+        href: '/category/electronics',
+        positionClass: 'top-4 right-6',
+      },
+      {
+        icon: <ShieldCheck size={16} className="text-emerald-600" />,
+        iconBg: 'bg-emerald-100',
+        title: 'Brand Warranty',
+        subtitle: '1 Year Authorized',
+        href: '/category/electronics',
+        positionClass: 'top-28 right-2',
+      },
+      {
+        icon: <Zap size={16} className="text-amber-600" />,
+        iconBg: 'bg-amber-100',
+        title: 'Smart Gadgets',
+        subtitle: 'Fast Charging',
+        href: '/category/electronics',
+        positionClass: 'top-52 right-4',
+      },
+    ],
   },
+
+  // ─── SLIDE 6: FASHION & LIFESTYLE ───
   {
-    id: 'fashion',
-    categoryTitle: 'Fashion & Lifestyle',
-    categoryIcon: <Shirt size={15} className="text-white" />,
-    tag: '👗 ETHNIC & HANDLOOM',
-    eyebrow: 'Handcrafted Indian Artisan Wear',
-    title: 'Handloom Sarees &',
-    accentTitle: 'Ethnic Fashion',
+    id: 'slide_fashion',
+    categoryTitle: 'Fashion & Handloom',
+    categoryIcon: <Shirt size={14} className="text-white" />,
+    badgeText: '👗 Handcrafted Weaver Art — 65% OFF',
+    titleLine1: 'Handloom Sarees &',
+    titleLine2: 'Ethnic Fashion',
     subtitle: 'Pure Silk Sarees • Designer Kurtis • Kolhapuri Footwear',
-    description: 'Discover exquisite handwoven sarees, breathable organic cotton kurtas, festive dupattas, and handcrafted Kolhapuri juttis made by master Indian artisans.',
-    discountPercent: '65%',
-    offerBadge: 'FASHION BONANZA',
+    description: 'Discover exquisite handwoven sarees, breathable organic cotton kurtas, festive dupattas, and handcrafted juttis.',
     ctaPrimary: 'Explore Fashion',
+    ctaPrimaryLink: '/category/fashion',
     ctaSecondary: 'View Ethnic Wear',
-    ctaLink: '/category/fashion',
-    bgFrom: '#1a061e',
-    bgTo: '#350c3c',
-    accentColor: '#e879f9',
-    bgImage: '/categories/fashion.webp',
-    foregroundImages: ['/categories/fashion.webp', '/categories/footwear.webp'],
-    trustBadges: [
-      { icon: <ShieldCheck size={13} className="text-emerald-400" />, text: 'Authentic Weaver Craft' },
-      { icon: <Zap size={13} className="text-amber-400" />, text: 'Custom Sizing Support' },
-      { icon: <RefreshCw size={13} className="text-blue-400" />, text: 'Hassle Free Exchanges' }
-    ]
+    ctaSecondaryLink: '/category/fashion',
+    ctaSecondaryStyle: 'blue',
+    bgGradient: 'linear-gradient(120deg, #FAF5FF 0%, #F3E8FF 45%, #FEF3C7 100%)',
+    accentColor: '#9333EA',
+    heroImage: '/categories/fashion.webp',
+    floatingCallouts: [
+      {
+        icon: <Shirt size={16} className="text-purple-600" />,
+        iconBg: 'bg-purple-100',
+        title: 'Pure Silk Sarees',
+        subtitle: 'Authentic Weave',
+        href: '/category/fashion',
+        positionClass: 'top-4 right-6',
+      },
+      {
+        icon: <Sparkles size={16} className="text-pink-600" />,
+        iconBg: 'bg-pink-100',
+        title: 'Designer Kurtis',
+        subtitle: 'Festive Ready',
+        href: '/category/fashion',
+        positionClass: 'top-28 right-2',
+      },
+      {
+        icon: <ShieldCheck size={16} className="text-emerald-600" />,
+        iconBg: 'bg-emerald-100',
+        title: 'Handmade Juttis',
+        subtitle: 'Pure Leather',
+        href: '/category/fashion',
+        positionClass: 'top-52 right-4',
+      },
+    ],
   },
-  {
-    id: 'festive_pooja',
-    categoryTitle: 'Festive & Pooja',
-    categoryIcon: <Flame size={15} className="text-white" />,
-    tag: '🪔 POOJA & FESTIVE SPECIAL',
-    eyebrow: 'Sacred & Festive Collection',
-    title: 'Pooja Samagri &',
-    accentTitle: 'Fresh Faral Snacks',
-    subtitle: 'Brass Idols • Sandalwood Incense • Homemade Faral Combos',
-    description: 'Prepare for holy celebrations with complete ritual kits, brass oil diyas, organic camphor, and traditional Diwali faral snacks made with pure cow ghee.',
-    discountPercent: '35%',
-    offerBadge: 'FESTIVE OFFER',
-    ctaPrimary: 'Shop Pooja Kits',
-    ctaSecondary: 'Order Faral Combo',
-    ctaLink: '/category/religious-pooja-items',
-    bgFrom: '#1a0e04',
-    bgTo: '#362006',
-    accentColor: '#fbbf24',
-    bgImage: '/promo-festival.jpg',
-    foregroundImages: ['/categories/pooja.webp', '/categories/diwali.webp'],
-    trustBadges: [
-      { icon: <ShieldCheck size={13} className="text-emerald-400" />, text: 'Pure & Sacred Ingredients' },
-      { icon: <Zap size={13} className="text-amber-400" />, text: 'Fresh Batch Preparation' },
-      { icon: <RefreshCw size={13} className="text-blue-400" />, text: 'Hygienic Eco Packaging' }
-    ]
-  },
-  {
-    id: 'jewellery_crafts',
-    categoryTitle: 'Jewellery & Crafts',
-    categoryIcon: <Gem size={15} className="text-white" />,
-    tag: '💎 ROYAL HERITAGE COLLECTION',
-    eyebrow: 'Hallmarked & Lab Certified',
-    title: 'Handcrafted Ornaments &',
-    accentTitle: 'Astro Gemstones',
-    subtitle: 'Silver Jewellery • Certified Gems • Artisan Gifts',
-    description: 'Explore hallmarked silver ornaments, certified planetary gemstones, carved marble idols, and handcrafted gift hampers with authenticity certification.',
-    discountPercent: '50%',
-    offerBadge: 'ROYAL HERITAGE',
-    ctaPrimary: 'Shop Jewellery',
-    ctaSecondary: 'View Astro Stones',
-    ctaLink: '/category/jewellery',
-    bgFrom: '#0e0720',
-    bgTo: '#1e1040',
-    accentColor: '#a78bfa',
-    bgImage: '/categories/jewellery.webp',
-    foregroundImages: ['/categories/jewellery.webp', '/categories/gifts.webp'],
-    trustBadges: [
-      { icon: <ShieldCheck size={13} className="text-emerald-400" />, text: '925 Silver & Hallmarked' },
-      { icon: <Zap size={13} className="text-amber-400" />, text: 'Lab Certified Gemstones' },
-      { icon: <RefreshCw size={13} className="text-blue-400" />, text: 'Insured Transit Shipping' }
-    ]
-  }
 ];
 
 export const HeroBannerSlider: React.FC = () => {
@@ -263,18 +350,17 @@ export const HeroBannerSlider: React.FC = () => {
   const [current, setCurrent] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [progressKey, setProgressKey] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const navContainerRef = useRef<HTMLDivElement>(null);
 
-  const SLIDE_DURATION = 5500;
+  const SLIDE_DURATION = 6000;
 
   const goTo = useCallback(
     (idx: number) => {
       if (isAnimating || idx === current) return;
       setIsAnimating(true);
       setCurrent(idx);
-      setProgressKey((k) => k + 1);
-      setTimeout(() => setIsAnimating(false), 600);
+      setTimeout(() => setIsAnimating(false), 500);
     },
     [isAnimating, current]
   );
@@ -282,343 +368,296 @@ export const HeroBannerSlider: React.FC = () => {
   const next = useCallback(() => {
     if (isAnimating) return;
     setIsAnimating(true);
-    setCurrent((prev) => (prev + 1) % categoryHeroSlides.length);
-    setProgressKey((k) => k + 1);
-    setTimeout(() => setIsAnimating(false), 600);
+    setCurrent((prev) => (prev + 1) % HERO_SLIDES.length);
+    setTimeout(() => setIsAnimating(false), 500);
   }, [isAnimating]);
 
   const prev = useCallback(() => {
     if (isAnimating) return;
     setIsAnimating(true);
-    setCurrent((prev) => (prev - 1 + categoryHeroSlides.length) % categoryHeroSlides.length);
-    setProgressKey((k) => k + 1);
-    setTimeout(() => setIsAnimating(false), 600);
+    setCurrent((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+    setTimeout(() => setIsAnimating(false), 500);
   }, [isAnimating]);
 
-  const scrollNavLeft = () => {
-    if (navContainerRef.current) navContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
-  };
-
-  const scrollNavRight = () => {
-    if (navContainerRef.current) navContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
-  };
-
+  // Auto-play timer
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(() => next(), SLIDE_DURATION);
     return () => clearInterval(timer);
   }, [next, isPaused]);
 
-  // Keep active tab scrolled into view
+  // Keyboard navigation
   useEffect(() => {
-    const container = navContainerRef.current;
-    if (!container) return;
-    const activeTab = container.children[current * 2] as HTMLElement;
-    if (activeTab) {
-      const containerLeft = container.scrollLeft;
-      const containerWidth = container.clientWidth;
-      const tabLeft = activeTab.offsetLeft;
-      const tabWidth = activeTab.clientWidth;
-      if (tabLeft < containerLeft || tabLeft + tabWidth > containerLeft + containerWidth) {
-        container.scrollTo({ left: tabLeft - containerWidth / 2 + tabWidth / 2, behavior: 'smooth' });
-      }
-    }
-  }, [current]);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [next, prev]);
 
-  const slide = categoryHeroSlides[current];
+  // Mobile Touch handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (diff > 50) next();
+    if (diff < -50) prev();
+    setTouchStartX(null);
+  };
+
+  const slide = HERO_SLIDES[current];
 
   return (
     <div
-      className="w-full relative overflow-hidden shadow-2xl"
-      style={{ borderRadius: '0' }}
+      className="w-full relative rounded-3xl lg:rounded-[32px] overflow-hidden border border-slate-200/80 shadow-md transition-all duration-300 bg-white"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
-      {/* ─── 1. CATEGORY NAVIGATION STRIP ─── */}
-      <div
-        className="w-full border-b border-white/10 flex items-center justify-between px-2 sm:px-3 py-1.5 z-30 relative"
-        style={{ background: 'linear-gradient(180deg, #040a14 0%, #070f1e 100%)' }}
-      >
-        {/* Left scroll button */}
-        <button
-          onClick={scrollNavLeft}
-          aria-label="Scroll Categories Left"
-          className="hidden sm:flex items-center justify-center w-6 h-6 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition-colors shrink-0 mr-1"
-        >
-          <ChevronLeft size={15} />
-        </button>
-
-        {/* Categories scroll area */}
+      {/* ─── 1. TOP CATEGORY PILL SELECTOR STRIP ─── */}
+      <div className="w-full bg-slate-50/90 border-b border-slate-200/70 px-3 sm:px-6 py-2 flex items-center justify-between gap-2 z-20 relative">
         <div
           ref={navContainerRef}
-          className="flex-1 flex items-center overflow-x-auto no-scrollbar py-1 gap-0.5 scroll-smooth"
+          className="flex-1 flex items-center overflow-x-auto no-scrollbar gap-1.5 scroll-smooth"
         >
-          {categoryHeroSlides.map((cat, idx) => {
+          {HERO_SLIDES.map((s, idx) => {
             const isActive = idx === current;
             return (
-              <React.Fragment key={cat.id}>
-                <button
-                  onClick={() => goTo(idx)}
-                  className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-lg text-[11px] font-bold transition-all duration-300 shrink-0 cursor-pointer ${
-                    isActive
-                      ? 'text-white shadow-lg scale-[1.03]'
-                      : 'bg-transparent text-white/65 hover:text-white/90 hover:bg-white/8'
-                  }`}
-                  style={isActive ? { background: `linear-gradient(135deg, ${slide.accentColor}30, ${slide.accentColor}18)`, borderBottom: `2px solid ${slide.accentColor}`, paddingBottom: '4px' } : {}}
-                >
-                  <span className="shrink-0">{cat.categoryIcon}</span>
-                  <span className="whitespace-nowrap tracking-tight">{cat.categoryTitle}</span>
-                </button>
-                {idx < categoryHeroSlides.length - 1 && (
-                  <div className="h-3.5 w-px bg-white/12 shrink-0" />
-                )}
-              </React.Fragment>
+              <button
+                key={s.id}
+                onClick={() => goTo(idx)}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 shrink-0 cursor-pointer ${
+                  isActive
+                    ? 'bg-[#1565D8] text-white shadow-xs scale-[1.02]'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                }`}
+              >
+                <span className="shrink-0">{s.categoryIcon}</span>
+                <span className="whitespace-nowrap">{s.categoryTitle}</span>
+              </button>
             );
           })}
         </div>
-
-        {/* Right scroll button */}
-        <button
-          onClick={scrollNavRight}
-          aria-label="Scroll Categories Right"
-          className="hidden sm:flex items-center justify-center w-6 h-6 rounded-full text-white/50 hover:text-white hover:bg-white/10 transition-colors shrink-0 ml-1"
-        >
-          <ChevronRight size={15} />
-        </button>
       </div>
 
-      {/* ─── 2. MAIN HERO STAGE ─── */}
+      {/* ─── 2. MAIN HERO BANNER STAGE ─── */}
       <div
-        className="relative h-[380px] sm:h-[440px] md:h-[490px] lg:h-[520px] xl:h-[540px] overflow-hidden transition-all duration-700"
-        style={{ background: `linear-gradient(145deg, ${slide.bgFrom} 0%, ${slide.bgTo} 100%)` }}
+        className="relative min-h-[460px] sm:min-h-[500px] md:min-h-[520px] lg:min-h-[540px] flex items-center p-6 sm:p-8 lg:p-12 overflow-hidden transition-all duration-500"
+        style={{ background: slide.bgGradient }}
       >
-        {/* Background image layer */}
+        {/* Soft Background Circular Glows & Decorative Grid */}
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none" />
+        
+        {/* Subtle Decorative Pattern Dots */}
         <div
-          key={`bg_${slide.id}`}
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 opacity-[0.025] pointer-events-none"
           style={{
-            backgroundImage: `url(${slide.bgImage})`,
-            opacity: isAnimating ? 0.15 : 0.55,
-            transform: isAnimating ? 'scale(1.06)' : 'scale(1.01)',
-            transition: 'opacity 0.7s ease, transform 6s ease',
+            backgroundImage: 'radial-gradient(#1565D8 1px, transparent 1px)',
+            backgroundSize: '24px 24px',
           }}
         />
 
-        {/* Gradient overlay — stronger on left for readability */}
-        <div className="absolute inset-0" style={{
-          background: 'linear-gradient(100deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.75) 45%, rgba(0,0,0,0.25) 100%)'
-        }} />
-
-        {/* Subtle noise texture overlay for depth */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")',
-        }} />
-
-        {/* Decorative accent glow — top right corner */}
-        <div
-          className="absolute -top-32 -right-32 w-80 h-80 rounded-full blur-3xl opacity-20 pointer-events-none"
-          style={{ backgroundColor: slide.accentColor }}
-        />
-
-        {/* ─── Main Content ─── */}
-        <div
-          key={`stage_${slide.id}`}
-          className="relative z-10 w-full h-full flex items-center px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 gap-8"
-          style={{ opacity: isAnimating ? 0 : 1, transform: isAnimating ? 'translateY(8px)' : 'translateY(0)', transition: 'opacity 0.55s ease, transform 0.55s ease' }}
-        >
-          {/* LEFT: Text content */}
-          <div className="w-full md:w-[55%] lg:w-[52%] flex flex-col justify-center space-y-4 sm:space-y-5">
-            {/* Eyebrow */}
-            <div className="flex items-center gap-2">
-              <span
-                className="inline-flex items-center gap-2 text-[10px] sm:text-[11px] font-black text-white tracking-widest uppercase px-3.5 py-1.5 rounded-full backdrop-blur-sm border"
-                style={{ backgroundColor: `${slide.accentColor}20`, borderColor: `${slide.accentColor}45` }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full animate-ping inline-block" style={{ backgroundColor: slide.accentColor }} />
-                {slide.tag}
+        {/* ─── Two-Sided Hero Grid ─── */}
+        <div className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center">
+          
+          {/* ── LEFT COLUMN: Text, CTAs, Benefit Cards ── */}
+          <div className="lg:col-span-6 xl:col-span-7 flex flex-col justify-center space-y-5 text-left animate-in fade-in slide-in-from-left-3 duration-300">
+            
+            {/* Top Pill Badge */}
+            <div>
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#1565D8] text-white text-[11px] sm:text-xs font-black shadow-xs tracking-wide">
+                <Sparkles size={13} className="text-amber-300 fill-amber-300" />
+                <span>{slide.badgeText}</span>
               </span>
             </div>
 
-            {/* Eyebrow subtitle */}
-            <p className="text-[11px] sm:text-xs font-semibold text-white/60 uppercase tracking-widest -mt-1">
-              {slide.eyebrow}
-            </p>
-
-            {/* Main headline */}
-            <div className="-mt-1">
-              <h1 className="text-[2rem] sm:text-[2.6rem] md:text-5xl lg:text-[3.4rem] xl:text-[3.75rem] font-black text-white leading-[1.05] tracking-tight drop-shadow-md">
-                {slide.title}
+            {/* Main Headline */}
+            <div className="space-y-1">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-[1.12]">
+                {slide.titleLine1}
               </h1>
-              <h1
-                className="text-[2rem] sm:text-[2.6rem] md:text-5xl lg:text-[3.4rem] xl:text-[3.75rem] font-black leading-[1.05] tracking-tight mt-1"
-                style={{ color: slide.accentColor, filter: `drop-shadow(0 0 30px ${slide.accentColor}60)` }}
+              <h2
+                className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-[1.12]"
+                style={{ color: slide.isFirstSlide ? '#1565D8' : slide.accentColor }}
               >
-                {slide.accentTitle}
-              </h1>
+                {slide.titleLine2}
+              </h2>
             </div>
 
-            {/* Subtitle keywords */}
-            <p className="text-xs sm:text-sm font-bold text-white/80 tracking-wide border-l-2 pl-3" style={{ borderColor: slide.accentColor }}>
-              {slide.subtitle}
-            </p>
-
-            {/* Description */}
-            <p className="text-xs sm:text-[13px] text-white/60 font-medium leading-relaxed max-w-lg line-clamp-2 hidden sm:block">
-              {slide.description}
-            </p>
+            {/* Subtitle & Keywords */}
+            <div className="space-y-1">
+              <p className="text-sm sm:text-base font-bold text-slate-700 leading-relaxed">
+                {slide.subtitle}
+              </p>
+              <p className="text-xs sm:text-sm font-semibold text-slate-500">
+                {slide.description}
+              </p>
+            </div>
 
             {/* CTA Buttons */}
-            <div className="flex items-center flex-wrap gap-3 pt-1">
+            <div className="flex flex-wrap items-center gap-3.5 pt-1">
+              {/* Primary CTA (Shop Now - Royal Blue #1565D8) */}
               <button
-                onClick={() => router.push(slide.ctaLink)}
-                className="inline-flex items-center gap-2 text-white font-black text-xs sm:text-sm px-6 sm:px-8 py-3 sm:py-3.5 rounded-full transition-all shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 cursor-pointer"
-                style={{ backgroundColor: slide.accentColor }}
+                type="button"
+                onClick={() => router.push(slide.ctaPrimaryLink)}
+                className="px-7 sm:px-8 py-3.5 bg-[#1565D8] hover:bg-[#0D47A1] active:bg-[#0A3880] text-white font-black text-xs sm:text-sm rounded-2xl transition-all shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center gap-2 cursor-pointer group"
               >
-                <ShoppingBag size={16} />
+                <ShoppingCart size={17} className="transition-transform group-hover:scale-110" />
                 <span>{slide.ctaPrimary}</span>
-                <ArrowRight size={15} className="ml-0.5" />
               </button>
+
+              {/* Secondary CTA (Become a Seller / Deals) */}
               <button
-                onClick={() => router.push('/search')}
-                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/18 border border-white/25 text-white font-bold text-xs sm:text-sm px-5 sm:px-6 py-3 sm:py-3.5 rounded-full transition-all backdrop-blur-sm hover:scale-105 active:scale-95 cursor-pointer"
+                type="button"
+                onClick={() => router.push(slide.ctaSecondaryLink)}
+                className={`px-6 sm:px-7 py-3.5 font-black text-xs sm:text-sm rounded-2xl transition-all shadow-2xs active:scale-95 flex items-center justify-center gap-2 cursor-pointer ${
+                  slide.ctaSecondaryStyle === 'emerald'
+                    ? 'bg-white hover:bg-emerald-50 text-emerald-700 border-2 border-emerald-500/80 hover:border-emerald-600'
+                    : 'bg-white hover:bg-blue-50 text-[#1565D8] border-2 border-[#1565D8]/80 hover:border-[#1565D8]'
+                }`}
               >
-                <Tag size={14} />
+                {slide.ctaSecondaryStyle === 'emerald' ? (
+                  <Rocket size={16} className="text-emerald-600" />
+                ) : (
+                  <ArrowRight size={16} />
+                )}
                 <span>{slide.ctaSecondary}</span>
               </button>
             </div>
 
-            {/* Trust badges row (mobile: compact, desktop: full) */}
-            <div className="flex flex-wrap items-center gap-2 pt-1">
-              {slide.trustBadges.map((badge, i) => (
-                <div key={i} className="flex items-center gap-1.5 bg-black/50 backdrop-blur-sm border border-white/12 px-2.5 py-1.5 rounded-xl shadow-sm">
-                  {badge.icon}
-                  <span className="text-white text-[10px] sm:text-[11px] font-bold whitespace-nowrap">{badge.text}</span>
+            {/* ── Bottom Benefit Cards Strip (4 Compact Cards) ── */}
+            <div className="pt-3 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+              {/* Benefit 1 */}
+              <div className="bg-white/95 backdrop-blur-md border border-slate-200/80 p-2.5 sm:p-3 rounded-2xl shadow-xs flex items-center gap-2.5 group hover:border-blue-400/50 transition-all">
+                <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                  <Truck size={16} />
                 </div>
-              ))}
+                <div className="min-w-0">
+                  <h4 className="text-[11px] font-black text-slate-900 truncate leading-tight">Free Shipping</h4>
+                  <p className="text-[9px] font-bold text-slate-500 truncate leading-tight">Above ₹499</p>
+                </div>
+              </div>
+
+              {/* Benefit 2 */}
+              <div className="bg-white/95 backdrop-blur-md border border-slate-200/80 p-2.5 sm:p-3 rounded-2xl shadow-xs flex items-center gap-2.5 group hover:border-blue-400/50 transition-all">
+                <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                  <ShieldCheck size={16} />
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-[11px] font-black text-slate-900 truncate leading-tight">Secure Payment</h4>
+                  <p className="text-[9px] font-bold text-slate-500 truncate leading-tight">100% Protected</p>
+                </div>
+              </div>
+
+              {/* Benefit 3 */}
+              <div className="bg-white/95 backdrop-blur-md border border-slate-200/80 p-2.5 sm:p-3 rounded-2xl shadow-xs flex items-center gap-2.5 group hover:border-blue-400/50 transition-all">
+                <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                  <BadgeCheck size={16} />
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-[11px] font-black text-slate-900 truncate leading-tight">Verified Sellers</h4>
+                  <p className="text-[9px] font-bold text-slate-500 truncate leading-tight">GST Certified</p>
+                </div>
+              </div>
+
+              {/* Benefit 4 */}
+              <div className="bg-white/95 backdrop-blur-md border border-slate-200/80 p-2.5 sm:p-3 rounded-2xl shadow-xs flex items-center gap-2.5 group hover:border-blue-400/50 transition-all">
+                <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+                  <RefreshCw size={16} />
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-[11px] font-black text-slate-900 truncate leading-tight">Easy Returns</h4>
+                  <p className="text-[9px] font-bold text-slate-500 truncate leading-tight">Hassle Free</p>
+                </div>
+              </div>
             </div>
+
           </div>
 
-          {/* RIGHT: Visual showcase */}
-          <div className="hidden md:flex flex-col items-center justify-center gap-5 flex-1">
-            {/* Product image cards */}
-            <div className="flex items-center justify-center gap-4">
-              {slide.foregroundImages.map((img, i) => (
-                <div
+          {/* ── RIGHT COLUMN: 3D Marketplace Visual & Floating Category Callouts ── */}
+          <div className="lg:col-span-6 xl:col-span-5 relative flex items-center justify-center min-h-[320px] sm:min-h-[380px] lg:min-h-[440px]">
+            
+            {/* Center 3D Shopping Artwork */}
+            <div className="relative w-full max-w-[380px] sm:max-w-[420px] lg:max-w-[450px] aspect-square flex items-center justify-center">
+              {slide.heroImage ? (
+                <img
+                  src={slide.heroImage}
+                  alt={slide.titleLine1}
+                  className="w-full h-full object-contain filter drop-shadow-xl select-none"
+                  loading="eager"
+                />
+              ) : (
+                <div className="w-64 h-64 rounded-3xl bg-white/60 backdrop-blur-md border border-slate-200/80 shadow-xl flex items-center justify-center">
+                  <ShoppingCart size={80} className="text-[#1565D8]" />
+                </div>
+              )}
+            </div>
+
+            {/* Floating Category Callout Mini-Cards (Desktop/Tablet) */}
+            <div className="hidden sm:block absolute inset-0 pointer-events-none">
+              {slide.floatingCallouts.map((callout, i) => (
+                <Link
                   key={i}
-                  className="rounded-2xl overflow-hidden border border-white/20 shadow-2xl backdrop-blur-sm bg-black/40 hover:scale-105 transition-all duration-300"
-                  style={{
-                    width: i === 0 ? '140px' : '118px',
-                    height: i === 0 ? '140px' : '118px',
-                    transform: i === 1 ? 'translateY(12px)' : 'none',
-                    animationDelay: `${i * 150}ms`,
-                    boxShadow: `0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px ${slide.accentColor}20`
-                  }}
+                  href={callout.href}
+                  className={`pointer-events-auto absolute ${callout.positionClass} bg-white/95 backdrop-blur-md border border-slate-200/80 hover:border-blue-500/60 p-2.5 sm:p-3 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 flex items-center gap-2.5 cursor-pointer z-10`}
                 >
-                  <img src={img} alt={slide.categoryTitle} className="w-full h-full object-cover" />
-                </div>
+                  <div className={`w-8 h-8 rounded-xl ${callout.iconBg} flex items-center justify-center shrink-0`}>
+                    {callout.icon}
+                  </div>
+                  <div className="text-left">
+                    <h5 className="text-xs font-black text-slate-900 leading-tight">{callout.title}</h5>
+                    <p className="text-[10px] font-bold text-slate-500 leading-tight">{callout.subtitle}</p>
+                  </div>
+                </Link>
               ))}
             </div>
 
-            {/* Discount badge */}
-            <div className="flex items-center gap-5 mt-2">
-              <div
-                className="w-28 h-28 lg:w-32 lg:h-32 rounded-full flex flex-col items-center justify-center text-center shadow-2xl border-[3px] relative overflow-hidden"
-                style={{
-                  borderColor: slide.accentColor,
-                  background: 'radial-gradient(circle at center, rgba(0,0,0,0.9), rgba(5,5,5,0.95))',
-                  boxShadow: `0 0 40px ${slide.accentColor}35, 0 20px 60px rgba(0,0,0,0.6)`
-                }}
-              >
-                {/* Shine ring */}
-                <div className="absolute inset-0 rounded-full" style={{
-                  background: `conic-gradient(from 180deg, ${slide.accentColor}30, transparent 60%, ${slide.accentColor}20)`
-                }} />
-                <span className="text-white text-[9px] font-black uppercase tracking-widest z-10 relative">UP TO</span>
-                <span className="font-black leading-none z-10 relative text-3xl lg:text-4xl" style={{ color: slide.accentColor }}>
-                  {slide.discountPercent}
-                </span>
-                <span className="text-white text-[9px] font-black uppercase tracking-widest z-10 relative">OFF</span>
-              </div>
-
-              {/* Star rating decoration */}
-              <div className="flex flex-col gap-1.5 hidden lg:flex">
-                <div className="flex items-center gap-1">
-                  {[1,2,3,4,5].map(s => <Star key={s} size={10} className="fill-amber-400 text-amber-400" />)}
-                </div>
-                <p className="text-white/60 text-[10px] font-semibold">4.8 / 5 · 10k+ reviews</p>
-                <div className="flex items-center gap-1.5 mt-1">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-[10px] text-white/70 font-bold">2,400+ Active Sellers</span>
-                </div>
-              </div>
-            </div>
           </div>
+
         </div>
 
-        {/* Prev / Next Navigation Arrows */}
+        {/* ─── Navigation Controls (Previous & Next Arrows) ─── */}
         <button
+          type="button"
           onClick={prev}
           aria-label="Previous Slide"
-          className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/50 hover:bg-black/80 border border-white/20 text-white flex items-center justify-center backdrop-blur-sm transition-all shadow-lg hover:scale-110 active:scale-95"
+          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 hover:bg-white text-slate-800 hover:text-[#1565D8] shadow-md hover:shadow-lg border border-slate-200/80 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer"
         >
           <ChevronLeft size={20} />
         </button>
+
         <button
+          type="button"
           onClick={next}
           aria-label="Next Slide"
-          className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/50 hover:bg-black/80 border border-white/20 text-white flex items-center justify-center backdrop-blur-sm transition-all shadow-lg hover:scale-110 active:scale-95"
+          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 hover:bg-white text-slate-800 hover:text-[#1565D8] shadow-md hover:shadow-lg border border-slate-200/80 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer"
         >
           <ChevronRight size={20} />
         </button>
 
-        {/* Progress Bar + Dot Indicators — bottom */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 px-6 sm:px-10 pb-4 pt-8 flex items-end justify-between"
-          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.5), transparent)' }}>
-          {/* Dot indicators */}
-          <div className="flex items-center gap-2">
-            {categoryHeroSlides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                className={`rounded-full transition-all duration-300 cursor-pointer ${
-                  i === current ? 'h-2' : 'w-2 h-2 bg-white/35 hover:bg-white/60'
-                }`}
-                style={i === current ? { width: '28px', backgroundColor: slide.accentColor, boxShadow: `0 0 8px ${slide.accentColor}80` } : {}}
-                aria-label={`Go to slide ${i + 1}`}
-              />
-            ))}
-          </div>
-
-          {/* Slide count */}
-          <div className="text-white/50 text-[11px] font-bold tabular-nums hidden sm:block">
-            <span style={{ color: slide.accentColor }}>{String(current + 1).padStart(2, '0')}</span>
-            <span className="mx-1">/</span>
-            <span>{String(categoryHeroSlides.length).padStart(2, '0')}</span>
-          </div>
+        {/* ─── Slide Indicator Dots (Bottom Centered) ─── */}
+        <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-200/60 shadow-xs">
+          {HERO_SLIDES.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              aria-label={`Go to slide ${i + 1}`}
+              className={`rounded-full transition-all duration-300 cursor-pointer ${
+                i === current
+                  ? 'w-6 h-2 bg-[#1565D8]'
+                  : 'w-2 h-2 bg-slate-300 hover:bg-slate-400'
+              }`}
+            />
+          ))}
         </div>
 
-        {/* Auto-play progress bar */}
-        {!isPaused && (
-          <div className="absolute bottom-0 left-0 right-0 h-[2px] z-30">
-            <div
-              key={`progress_${progressKey}_${current}`}
-              className="h-full opacity-70"
-              style={{
-                backgroundColor: slide.accentColor,
-                animation: `slideProgress ${SLIDE_DURATION}ms linear forwards`,
-                transformOrigin: 'left',
-              }}
-            />
-          </div>
-        )}
       </div>
-
-      <style jsx>{`
-        @keyframes slideProgress {
-          from { transform: scaleX(0); }
-          to   { transform: scaleX(1); }
-        }
-      `}</style>
     </div>
   );
 };
