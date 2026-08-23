@@ -23,9 +23,9 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
 }) => {
   // Logo image dimension sizing
   const imgSizeMap = {
-    sm: { width: 44, height: 44, class: 'w-10 h-10 sm:w-11 sm:h-11' },
-    md: { width: 56, height: 56, class: 'w-12 h-12 sm:w-[54px] sm:h-[54px]' },
-    lg: { width: 72, height: 72, class: 'w-16 h-16 sm:w-20 sm:h-20' },
+    sm: { width: 48, height: 48, class: 'w-11 h-11 sm:w-12 sm:h-12' },
+    md: { width: 64, height: 64, class: 'w-14 h-14 sm:w-16 sm:h-16' },
+    lg: { width: 84, height: 84, class: 'w-18 h-18 sm:w-22 sm:h-22' },
   };
 
   const currentSize = imgSizeMap[size];
@@ -63,10 +63,10 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         <span
           className={`font-black tracking-tight ${
             isFooter || isAuth
-              ? 'text-white text-lg sm:text-xl'
+              ? 'text-white text-xl sm:text-2xl'
               : isAdmin
-              ? 'text-foreground text-base sm:text-lg'
-              : 'text-foreground text-base sm:text-lg'
+              ? 'text-foreground text-lg sm:text-xl'
+              : 'text-foreground text-lg sm:text-xl'
           }`}
         >
           JSS<span className={isFooter ? 'text-primary-light' : 'text-primary'}>Solutions</span>
@@ -75,7 +75,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
 
       {showSlogan && (
         <span
-          className={`text-[10px] sm:text-[11px] font-extrabold tracking-wide ${
+          className={`text-[11px] sm:text-[12px] font-extrabold tracking-wide ${
             isFooter
               ? 'text-slate-300'
               : isAuth

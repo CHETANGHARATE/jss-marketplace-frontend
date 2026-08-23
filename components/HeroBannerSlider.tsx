@@ -57,7 +57,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
   {
     id: 'slide_main_marketplace',
     categoryTitle: 'All Categories',
-    categoryIcon: <ShoppingCart size={14} className="text-white" />,
+    categoryIcon: <ShoppingCart size={14} />,
     badgeText: "India's Most Trusted Marketplace",
     titleLine1: 'Shop Quality Products',
     titleLine2: 'From Verified Sellers',
@@ -108,7 +108,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
   {
     id: 'slide_home_kitchen',
     categoryTitle: 'Home & Kitchen',
-    categoryIcon: <Home size={14} className="text-white" />,
+    categoryIcon: <Home size={14} />,
     badgeText: '🏠 Kitchen Festival Sale — Up to 50% OFF',
     titleLine1: 'Modern Home &',
     titleLine2: 'Kitchen Appliances',
@@ -158,7 +158,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
   {
     id: 'slide_beauty_care',
     categoryTitle: 'Beauty & Skincare',
-    categoryIcon: <Sparkles size={14} className="text-white" />,
+    categoryIcon: <Sparkles size={14} />,
     badgeText: '💄 Organic Glow Collection — 40% OFF',
     titleLine1: 'Organic Beauty &',
     titleLine2: 'Personal Care',
@@ -208,7 +208,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
   {
     id: 'slide_agriculture',
     categoryTitle: 'Agriculture & Seeds',
-    categoryIcon: <Tractor size={14} className="text-white" />,
+    categoryIcon: <Tractor size={14} />,
     badgeText: '🌾 Empowering Indian Farmers — Direct Factory Price',
     titleLine1: 'Bio Fertilizers &',
     titleLine2: 'High Yield Seeds',
@@ -258,7 +258,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
   {
     id: 'slide_electronics',
     categoryTitle: 'Electronics & Smart',
-    categoryIcon: <Tv size={14} className="text-white" />,
+    categoryIcon: <Tv size={14} />,
     badgeText: '⚡ Mega Tech Sale — Up to 70% OFF',
     titleLine1: 'Smart Gadgets &',
     titleLine2: 'Auto Electronics',
@@ -308,7 +308,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
   {
     id: 'slide_fashion',
     categoryTitle: 'Fashion & Handloom',
-    categoryIcon: <Shirt size={14} className="text-white" />,
+    categoryIcon: <Shirt size={14} />,
     badgeText: '👗 Handcrafted Weaver Art — 65% OFF',
     titleLine1: 'Handloom Sarees &',
     titleLine2: 'Ethnic Fashion',
@@ -441,13 +441,27 @@ export const HeroBannerSlider: React.FC = () => {
               <button
                 key={s.id}
                 onClick={() => goTo(idx)}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 shrink-0 cursor-pointer ${
+                style={
                   isActive
-                    ? 'bg-[#1565D8] text-white shadow-xs scale-[1.02]'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                    ? {
+                        backgroundColor: s.accentColor,
+                        color: '#ffffff',
+                        boxShadow: `0 3px 12px ${s.accentColor}35`,
+                      }
+                    : undefined
+                }
+                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 shrink-0 cursor-pointer ${
+                  isActive
+                    ? 'text-white shadow-xs scale-[1.02]'
+                    : 'text-slate-600 hover:text-slate-900 bg-white/70 hover:bg-white border border-slate-200/60'
                 }`}
               >
-                <span className="shrink-0">{s.categoryIcon}</span>
+                <span
+                  className="shrink-0 transition-colors"
+                  style={{ color: isActive ? '#ffffff' : s.accentColor }}
+                >
+                  {s.categoryIcon}
+                </span>
                 <span className="whitespace-nowrap">{s.categoryTitle}</span>
               </button>
             );
@@ -678,14 +692,15 @@ export const HeroBannerSlider: React.FC = () => {
 
         {/* ─── Slide Indicator Dots (Bottom Centered) ─── */}
         <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-200/60 shadow-xs">
-          {HERO_SLIDES.map((_, i) => (
+          {HERO_SLIDES.map((s, i) => (
             <button
-              key={i}
+              key={s.id}
               onClick={() => goTo(i)}
               aria-label={`Go to slide ${i + 1}`}
+              style={i === current ? { backgroundColor: s.accentColor } : undefined}
               className={`rounded-full transition-all duration-300 cursor-pointer ${
                 i === current
-                  ? 'w-6 h-2 bg-[#1565D8]'
+                  ? 'w-6 h-2 shadow-xs'
                   : 'w-2 h-2 bg-slate-300 hover:bg-slate-400'
               }`}
             />
