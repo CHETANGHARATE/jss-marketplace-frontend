@@ -615,10 +615,10 @@ export const HeroBannerSlider: React.FC = () => {
                       }
                     : undefined
                 }
-                className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs sm:text-[12.5px] font-bold transition-all duration-300 shrink-0 cursor-pointer ${
+                className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs sm:text-[12.5px] font-extrabold transition-all duration-300 shrink-0 cursor-pointer ${
                   isActive
                     ? 'text-white shadow-sm scale-[1.02]'
-                    : 'text-slate-700 hover:text-slate-900 bg-white/80 hover:bg-white border border-slate-200/70 shadow-2xs'
+                    : 'text-black hover:text-black bg-white hover:bg-slate-50 border border-slate-300/80 shadow-2xs'
                 }`}
               >
                 <span
