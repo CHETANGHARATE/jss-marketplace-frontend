@@ -92,7 +92,7 @@ export const Step2BusinessDetails: React.FC<Step2Props> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
       <div className="space-y-1">
         <h3 className="text-lg font-black text-foreground">Business Details</h3>
         <p className="text-xs text-muted-custom font-medium">Configure your store identity, category & business address</p>

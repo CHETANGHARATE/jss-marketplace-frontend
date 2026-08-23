@@ -157,6 +157,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem('jss-wishlist');
       localStorage.removeItem('user_profile');
       localStorage.removeItem('recent_searches');
+      localStorage.removeItem('jss_seller_registration_draft_v2');
+      localStorage.removeItem('jss_seller_registration_draft');
       sessionStorage.clear();
 
       if (typeof window !== 'undefined') {

@@ -96,7 +96,7 @@ export const Step4Documents: React.FC<Step4Props> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
       <div className="space-y-1">
         <h3 className="text-lg font-black text-foreground">Documents</h3>
         <p className="text-xs text-muted-custom font-medium">

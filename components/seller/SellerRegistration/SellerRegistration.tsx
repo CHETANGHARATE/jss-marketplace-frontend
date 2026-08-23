@@ -26,8 +26,6 @@ import { Step3BankDetails, Step3Data } from './Step3BankDetails';
 import { Step4Documents, Step4Data } from './Step4Documents';
 import { Step5Verification } from './Step5Verification';
 
-const STORAGE_KEY = 'jss_seller_registration_draft_v2';
-
 export const SellerRegistration: React.FC = () => {
   const { isAuthenticated, user, setAuthSession } = useAuth();
   const { success: toastSuccess, error: toastError } = useToast();
@@ -38,7 +36,7 @@ export const SellerRegistration: React.FC = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
 
-  // 5-step form state
+  // 5-step in-memory temporary form state (resets on refresh/navigation/logout)
   const [step1, setStep1] = useState<Step1Data>({
     fullName: user?.name || '',
     mobile: user?.phone || '',
@@ -82,6 +80,52 @@ export const SellerRegistration: React.FC = () => {
     bankProofDoc: '',
   });
 
+  // Centralized form reset function
+  const resetSellerRegistrationForm = () => {
+    setCurrentStep(1);
+    setSubmitted(false);
+    setErrorMsg('');
+    setStep1({
+      fullName: user?.name || '',
+      mobile: user?.phone || '',
+      email: user?.email || '',
+      password: '',
+      confirmPassword: '',
+      panNumber: '',
+      dob: '',
+      gender: 'male',
+      address: '',
+      state: 'Maharashtra',
+      city: 'Mumbai',
+      pincode: '400001',
+    });
+    setStep2({
+      storeName: '',
+      businessType: 'Individual / Proprietorship',
+      primaryCategory: categories.length > 0 ? categories[0].name : '',
+      gstin: '',
+      businessAddress: '',
+      businessState: 'Maharashtra',
+      businessCity: 'Mumbai',
+      businessPincode: '400001',
+      description: '',
+    });
+    setStep3({
+      accountHolderName: '',
+      bankName: '',
+      accountNumber: '',
+      confirmAccountNumber: '',
+      ifscCode: '',
+      accountType: 'savings',
+    });
+    setStep4({
+      panCardDoc: '',
+      idProofDoc: '',
+      addressProofDoc: '',
+      bankProofDoc: '',
+    });
+  };
+
   // Autofill user details if logged in
   useEffect(() => {
     if (user) {
@@ -94,7 +138,7 @@ export const SellerRegistration: React.FC = () => {
     }
   }, [user]);
 
-  // Load categories and restore draft if available
+  // Load categories and ensure no legacy unsaved drafts persist
   useEffect(() => {
     getCategories().then((cats) => {
       setCategories(cats);
@@ -103,32 +147,23 @@ export const SellerRegistration: React.FC = () => {
       }
     });
 
+    // Explicitly wipe any legacy drafts from browser storage
     try {
-      const savedDraft = localStorage.getItem(STORAGE_KEY);
-      if (savedDraft) {
-        const parsed = JSON.parse(savedDraft);
-        if (parsed.step1) setStep1((prev) => ({ ...prev, ...parsed.step1 }));
-        if (parsed.step2) setStep2((prev) => ({ ...prev, ...parsed.step2 }));
-        if (parsed.step3) setStep3((prev) => ({ ...prev, ...parsed.step3 }));
-        if (parsed.step4) setStep4((prev) => ({ ...prev, ...parsed.step4 }));
-        if (parsed.currentStep) setCurrentStep(parsed.currentStep);
-      }
-    } catch (e) {
-      // Ignore draft parse errors
-    }
+      localStorage.removeItem('jss_seller_registration_draft_v2');
+      localStorage.removeItem('jss_seller_registration_draft');
+      sessionStorage.removeItem('jss_seller_registration_draft_v2');
+      sessionStorage.removeItem('jss_seller_registration_draft');
+    } catch (e) {}
   }, []);
 
-  // Save progress draft whenever step state changes
+  // Listen for logout event to immediately reset form state
   useEffect(() => {
-    try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({ step1, step2, step3, step4, currentStep })
-      );
-    } catch (e) {
-      // Ignore localstorage errors
-    }
-  }, [step1, step2, step3, step4, currentStep]);
+    const handleLogout = () => {
+      resetSellerRegistrationForm();
+    };
+    window.addEventListener('jss-logout', handleLogout);
+    return () => window.removeEventListener('jss-logout', handleLogout);
+  }, []);
 
   const handleFinalSubmission = async () => {
     setIsSubmitting(true);
@@ -185,7 +220,6 @@ export const SellerRegistration: React.FC = () => {
       }
 
       setSubmitted(true);
-      localStorage.removeItem(STORAGE_KEY);
       toastSuccess('Vendor store application submitted into system for admin verification!', 'Application Submitted');
     } catch (err: any) {
       const msg = err.response?.data?.message || err.message || 'Failed to submit seller application.';

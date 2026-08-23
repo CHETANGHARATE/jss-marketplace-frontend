@@ -84,7 +84,7 @@ export const Step1BasicInfo: React.FC<Step1Props> = ({ data, onChange, onNext, i
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
       <div className="space-y-1">
         <h3 className="text-lg font-black text-foreground">Basic Information</h3>
         <p className="text-xs text-muted-custom font-medium">Fill your personal and contact details</p>
