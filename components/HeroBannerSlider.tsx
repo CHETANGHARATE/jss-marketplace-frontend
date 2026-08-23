@@ -12,15 +12,11 @@ import {
   Truck,
   RefreshCw,
   Sparkles,
-  Lock,
   BadgeCheck,
   Sprout,
   Shirt,
   Tv,
   Home,
-  Gem,
-  Flame,
-  Umbrella,
   Tractor,
   ArrowRight,
   Rocket,
@@ -33,7 +29,6 @@ export interface FloatingCallout {
   title: string;
   subtitle: string;
   href: string;
-  positionClass: string;
 }
 
 export interface HeroSlideData {
@@ -41,7 +36,6 @@ export interface HeroSlideData {
   categoryTitle: string;
   categoryIcon: React.ReactNode;
   badgeText: string;
-  badgeBg?: string;
   titleLine1: string;
   titleLine2: string;
   subtitle: string;
@@ -85,7 +79,6 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Agriculture',
         subtitle: 'Fresh & Organic',
         href: '/category/agriculture-seeds',
-        positionClass: 'top-3 right-4 lg:right-6',
       },
       {
         icon: <Shirt size={16} className="text-pink-600" />,
@@ -93,7 +86,6 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Fashion',
         subtitle: 'Style for You',
         href: '/category/fashion',
-        positionClass: 'top-24 right-2 lg:right-4',
       },
       {
         icon: <Tv size={16} className="text-amber-600" />,
@@ -101,7 +93,6 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Electronics',
         subtitle: 'Latest & Smart',
         href: '/category/electronics',
-        positionClass: 'top-44 right-2 lg:right-4',
       },
       {
         icon: <Home size={16} className="text-blue-600" />,
@@ -109,7 +100,6 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Home & Kitchen',
         subtitle: 'Everything Home',
         href: '/category/home-kitchen',
-        positionClass: 'top-64 right-4 lg:right-6',
       },
     ],
   },
@@ -139,7 +129,6 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Brass Cookware',
         subtitle: 'Traditional & Pure',
         href: '/category/home-kitchen',
-        positionClass: 'top-4 right-6',
       },
       {
         icon: <Zap size={16} className="text-blue-600" />,
@@ -147,7 +136,6 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Solar Appliances',
         subtitle: 'Energy Saver',
         href: '/category/home-kitchen',
-        positionClass: 'top-28 right-2',
       },
       {
         icon: <RefreshCw size={16} className="text-emerald-600" />,
@@ -155,7 +143,13 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'High Speed Juicers',
         subtitle: 'Cold-Press Tech',
         href: '/category/home-kitchen',
-        positionClass: 'top-52 right-4',
+      },
+      {
+        icon: <Home size={16} className="text-purple-600" />,
+        iconBg: 'bg-purple-100',
+        title: 'Modular Storage',
+        subtitle: 'Kitchen Organizers',
+        href: '/category/home-kitchen',
       },
     ],
   },
@@ -185,7 +179,6 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Herbal Serums',
         subtitle: '100% Botanical',
         href: '/category/beauty-personal-care',
-        positionClass: 'top-4 right-6',
       },
       {
         icon: <ShieldCheck size={16} className="text-emerald-600" />,
@@ -193,7 +186,6 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Derma Tested',
         subtitle: 'Safe & Certified',
         href: '/category/beauty-personal-care',
-        positionClass: 'top-28 right-2',
       },
       {
         icon: <Sparkles size={16} className="text-purple-600" />,
@@ -201,7 +193,13 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Cosmetic Kits',
         subtitle: 'Bridal & Festive',
         href: '/category/beauty-personal-care',
-        positionClass: 'top-52 right-4',
+      },
+      {
+        icon: <RefreshCw size={16} className="text-blue-600" />,
+        iconBg: 'bg-blue-100',
+        title: 'Pure Aloe Vera',
+        subtitle: 'Cold-Pressed Gels',
+        href: '/category/beauty-personal-care',
       },
     ],
   },
@@ -231,7 +229,6 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Certified Seeds',
         subtitle: 'Lab Tested 98%',
         href: '/category/agriculture-seeds',
-        positionClass: 'top-4 right-6',
       },
       {
         icon: <Truck size={16} className="text-blue-600" />,
@@ -239,7 +236,6 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Village Delivery',
         subtitle: 'Direct Logistics',
         href: '/category/agriculture-seeds',
-        positionClass: 'top-28 right-2',
       },
       {
         icon: <Zap size={16} className="text-amber-600" />,
@@ -247,7 +243,13 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Kisan Bulk Rates',
         subtitle: 'Wholesale Savings',
         href: '/category/agriculture-seeds',
-        positionClass: 'top-52 right-4',
+      },
+      {
+        icon: <Package size={16} className="text-teal-600" />,
+        iconBg: 'bg-teal-100',
+        title: 'Bio Fertilizers',
+        subtitle: 'Organic Compost',
+        href: '/category/agriculture-seeds',
       },
     ],
   },
@@ -277,7 +279,6 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Wireless Audio',
         subtitle: 'ANC & Bass Boost',
         href: '/category/electronics',
-        positionClass: 'top-4 right-6',
       },
       {
         icon: <ShieldCheck size={16} className="text-emerald-600" />,
@@ -285,7 +286,6 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Brand Warranty',
         subtitle: '1 Year Authorized',
         href: '/category/electronics',
-        positionClass: 'top-28 right-2',
       },
       {
         icon: <Zap size={16} className="text-amber-600" />,
@@ -293,7 +293,13 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Smart Gadgets',
         subtitle: 'Fast Charging',
         href: '/category/electronics',
-        positionClass: 'top-52 right-4',
+      },
+      {
+        icon: <Package size={16} className="text-blue-600" />,
+        iconBg: 'bg-blue-100',
+        title: 'Car Electronics',
+        subtitle: 'Dashcams & Audio',
+        href: '/category/electronics',
       },
     ],
   },
@@ -323,7 +329,6 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Pure Silk Sarees',
         subtitle: 'Authentic Weave',
         href: '/category/fashion',
-        positionClass: 'top-4 right-6',
       },
       {
         icon: <Sparkles size={16} className="text-pink-600" />,
@@ -331,7 +336,6 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Designer Kurtis',
         subtitle: 'Festive Ready',
         href: '/category/fashion',
-        positionClass: 'top-28 right-2',
       },
       {
         icon: <ShieldCheck size={16} className="text-emerald-600" />,
@@ -339,7 +343,13 @@ export const HERO_SLIDES: HeroSlideData[] = [
         title: 'Handmade Juttis',
         subtitle: 'Pure Leather',
         href: '/category/fashion',
-        positionClass: 'top-52 right-4',
+      },
+      {
+        icon: <Package size={16} className="text-amber-600" />,
+        iconBg: 'bg-amber-100',
+        title: 'Artisan Dupattas',
+        subtitle: 'Hand-Dyed Cotton',
+        href: '/category/fashion',
       },
     ],
   },
@@ -360,7 +370,7 @@ export const HeroBannerSlider: React.FC = () => {
       if (isAnimating || idx === current) return;
       setIsAnimating(true);
       setCurrent(idx);
-      setTimeout(() => setIsAnimating(false), 500);
+      setTimeout(() => setIsAnimating(false), 400);
     },
     [isAnimating, current]
   );
@@ -369,14 +379,14 @@ export const HeroBannerSlider: React.FC = () => {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrent((prev) => (prev + 1) % HERO_SLIDES.length);
-    setTimeout(() => setIsAnimating(false), 500);
+    setTimeout(() => setIsAnimating(false), 400);
   }, [isAnimating]);
 
   const prev = useCallback(() => {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrent((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
-    setTimeout(() => setIsAnimating(false), 500);
+    setTimeout(() => setIsAnimating(false), 400);
   }, [isAnimating]);
 
   // Auto-play timer
@@ -420,7 +430,7 @@ export const HeroBannerSlider: React.FC = () => {
       onTouchEnd={handleTouchEnd}
     >
       {/* ─── 1. TOP CATEGORY PILL SELECTOR STRIP ─── */}
-      <div className="w-full bg-slate-50/90 border-b border-slate-200/70 px-3 sm:px-6 py-2 flex items-center justify-between gap-2 z-20 relative">
+      <div className="w-full bg-slate-50/90 border-b border-slate-200/70 px-4 sm:px-6 py-2 flex items-center justify-between gap-2 z-20 relative">
         <div
           ref={navContainerRef}
           className="flex-1 flex items-center overflow-x-auto no-scrollbar gap-1.5 scroll-smooth"
@@ -447,7 +457,7 @@ export const HeroBannerSlider: React.FC = () => {
 
       {/* ─── 2. MAIN HERO BANNER STAGE ─── */}
       <div
-        className="relative min-h-[460px] sm:min-h-[500px] md:min-h-[520px] lg:min-h-[540px] flex items-center p-6 sm:p-8 lg:p-12 overflow-hidden transition-all duration-500"
+        className="relative min-h-[460px] sm:min-h-[500px] md:min-h-[520px] lg:min-h-[540px] flex items-center px-6 sm:px-12 md:px-14 lg:px-16 py-8 sm:py-10 lg:py-12 overflow-hidden transition-all duration-500"
         style={{ background: slide.bgGradient }}
       >
         {/* Soft Background Circular Glows & Decorative Grid */}
@@ -463,11 +473,11 @@ export const HeroBannerSlider: React.FC = () => {
           }}
         />
 
-        {/* ─── Two-Sided Hero Grid ─── */}
+        {/* ─── 3-Zone Hero Desktop Layout (Text Area 48% | Cart Visual 30% | Category Cards 22%) ─── */}
         <div className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center">
           
-          {/* ── LEFT COLUMN: Text, CTAs, Benefit Cards ── */}
-          <div className="lg:col-span-6 xl:col-span-7 flex flex-col justify-center space-y-5 text-left animate-in fade-in slide-in-from-left-3 duration-300">
+          {/* ── LEFT COLUMN: Text, CTAs, Benefit Cards (5 to 6 cols) ── */}
+          <div className="lg:col-span-6 xl:col-span-5 flex flex-col justify-center space-y-4 sm:space-y-5 text-left animate-in fade-in slide-in-from-left-3 duration-300">
             
             {/* Top Pill Badge */}
             <div>
@@ -532,7 +542,7 @@ export const HeroBannerSlider: React.FC = () => {
             </div>
 
             {/* ── Bottom Benefit Cards Strip (4 Compact Cards) ── */}
-            <div className="pt-3 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+            <div className="pt-2 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
               {/* Benefit 1 */}
               <div className="bg-white/95 backdrop-blur-md border border-slate-200/80 p-2.5 sm:p-3 rounded-2xl shadow-xs flex items-center gap-2.5 group hover:border-blue-400/50 transition-all">
                 <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
@@ -580,54 +590,79 @@ export const HeroBannerSlider: React.FC = () => {
 
           </div>
 
-          {/* ── RIGHT COLUMN: 3D Marketplace Visual & Floating Category Callouts ── */}
-          <div className="lg:col-span-6 xl:col-span-5 relative flex items-center justify-center min-h-[320px] sm:min-h-[380px] lg:min-h-[440px]">
+          {/* ── RIGHT VISUAL AREA (6 to 7 cols): Divided into Focal Illustration + Reserved Category Column ── */}
+          <div className="lg:col-span-6 xl:col-span-7 flex flex-col sm:flex-row items-center justify-between gap-4 lg:gap-6 min-h-[340px] sm:min-h-[380px] lg:min-h-[440px] w-full">
             
-            {/* Center 3D Shopping Artwork */}
-            <div className="relative w-full max-w-[380px] sm:max-w-[420px] lg:max-w-[450px] aspect-square flex items-center justify-center">
-              {slide.heroImage ? (
-                <img
-                  src={slide.heroImage}
-                  alt={slide.titleLine1}
-                  className="w-full h-full object-contain filter drop-shadow-xl select-none"
-                  loading="eager"
-                />
-              ) : (
-                <div className="w-64 h-64 rounded-3xl bg-white/60 backdrop-blur-md border border-slate-200/80 shadow-xl flex items-center justify-center">
-                  <ShoppingCart size={80} className="text-[#1565D8]" />
-                </div>
-              )}
+            {/* 1. Center Focal Illustration (Cart / Product Visual) — Completely Separate Safe Zone */}
+            <div className="flex-1 flex items-center justify-center w-full min-w-0 pr-0 sm:pr-2">
+              <div className="relative w-full max-w-[280px] sm:max-w-[340px] lg:max-w-[370px] xl:max-w-[410px] aspect-square flex items-center justify-center">
+                {slide.heroImage ? (
+                  <img
+                    src={slide.heroImage}
+                    alt={slide.titleLine1}
+                    className="w-full h-full object-contain filter drop-shadow-lg select-none transition-transform duration-500 hover:scale-[1.02]"
+                    loading="eager"
+                  />
+                ) : (
+                  <div className="w-56 h-56 rounded-3xl bg-white/70 backdrop-blur-md border border-slate-200/80 shadow-md flex items-center justify-center">
+                    <ShoppingCart size={70} className="text-[#1565D8]" />
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Floating Category Callout Mini-Cards (Desktop/Tablet) */}
-            <div className="hidden sm:block absolute inset-0 pointer-events-none">
+            {/* 2. Dedicated Category Callouts Column (Desktop & Tablet Vertical Stack — Reserved Space) */}
+            {slide.floatingCallouts && slide.floatingCallouts.length > 0 && (
+              <div className="hidden sm:flex flex-col justify-center gap-2.5 lg:gap-3 w-44 sm:w-48 lg:w-52 shrink-0 z-10">
+                {slide.floatingCallouts.map((callout, i) => (
+                  <Link
+                    key={i}
+                    href={callout.href}
+                    className="bg-white/95 backdrop-blur-md border border-slate-200/80 hover:border-blue-500/60 p-2.5 sm:p-3 rounded-2xl shadow-xs hover:shadow-md transition-all duration-200 hover:scale-[1.03] flex items-center gap-2.5 cursor-pointer w-full group"
+                  >
+                    <div className={`w-8 h-8 rounded-xl ${callout.iconBg} flex items-center justify-center shrink-0 transition-transform group-hover:scale-110`}>
+                      {callout.icon}
+                    </div>
+                    <div className="text-left min-w-0 flex-1">
+                      <h5 className="text-xs font-black text-slate-900 leading-tight truncate">{callout.title}</h5>
+                      <p className="text-[10px] font-bold text-slate-500 leading-tight truncate">{callout.subtitle}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+
+          </div>
+
+          {/* ── Mobile-Only Category Callouts (Clean 2-Col Grid rendered underneath on small mobile screens) ── */}
+          {slide.floatingCallouts && slide.floatingCallouts.length > 0 && (
+            <div className="sm:hidden grid grid-cols-2 gap-2 w-full pt-2 z-10">
               {slide.floatingCallouts.map((callout, i) => (
                 <Link
                   key={i}
                   href={callout.href}
-                  className={`pointer-events-auto absolute ${callout.positionClass} bg-white/95 backdrop-blur-md border border-slate-200/80 hover:border-blue-500/60 p-2.5 sm:p-3 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 flex items-center gap-2.5 cursor-pointer z-10`}
+                  className="bg-white/95 backdrop-blur-md border border-slate-200/80 p-2 rounded-xl shadow-2xs flex items-center gap-2"
                 >
-                  <div className={`w-8 h-8 rounded-xl ${callout.iconBg} flex items-center justify-center shrink-0`}>
+                  <div className={`w-7 h-7 rounded-lg ${callout.iconBg} flex items-center justify-center shrink-0`}>
                     {callout.icon}
                   </div>
-                  <div className="text-left">
-                    <h5 className="text-xs font-black text-slate-900 leading-tight">{callout.title}</h5>
-                    <p className="text-[10px] font-bold text-slate-500 leading-tight">{callout.subtitle}</p>
+                  <div className="text-left min-w-0 flex-1">
+                    <h5 className="text-[11px] font-black text-slate-900 leading-tight truncate">{callout.title}</h5>
+                    <p className="text-[9px] font-bold text-slate-500 leading-tight truncate">{callout.subtitle}</p>
                   </div>
                 </Link>
               ))}
             </div>
-
-          </div>
+          )}
 
         </div>
 
-        {/* ─── Navigation Controls (Previous & Next Arrows) ─── */}
+        {/* ─── Navigation Controls (Previous & Next Arrows Outside Main Visual Zone) ─── */}
         <button
           type="button"
           onClick={prev}
           aria-label="Previous Slide"
-          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 hover:bg-white text-slate-800 hover:text-[#1565D8] shadow-md hover:shadow-lg border border-slate-200/80 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer"
+          className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 hover:bg-white text-slate-800 hover:text-[#1565D8] shadow-md hover:shadow-lg border border-slate-200/80 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer"
         >
           <ChevronLeft size={20} />
         </button>
@@ -636,7 +671,7 @@ export const HeroBannerSlider: React.FC = () => {
           type="button"
           onClick={next}
           aria-label="Next Slide"
-          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 hover:bg-white text-slate-800 hover:text-[#1565D8] shadow-md hover:shadow-lg border border-slate-200/80 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer"
+          className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 hover:bg-white text-slate-800 hover:text-[#1565D8] shadow-md hover:shadow-lg border border-slate-200/80 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer"
         >
           <ChevronRight size={20} />
         </button>
