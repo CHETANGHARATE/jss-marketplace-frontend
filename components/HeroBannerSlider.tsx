@@ -73,7 +73,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondary: 'Become a Seller',
     ctaSecondaryLink: '/seller/register',
     ctaSecondaryStyle: 'emerald',
-    bgGradient: 'linear-gradient(120deg, #F0F6FF 0%, #E9F4FF 45%, #E6FAF4 100%)',
+    bgGradient: 'linear-gradient(120deg, #DBEAFE 0%, #D0E6FF 45%, #CCF2E5 100%)',
     accentColor: '#1565D8',
     isFirstSlide: true,
     heroImage: '/hero/hero-cart-visual.png',
@@ -124,7 +124,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondary: 'View Top Trending',
     ctaSecondaryLink: '/search',
     ctaSecondaryStyle: 'blue',
-    bgGradient: 'linear-gradient(120deg, #F0F9FF 0%, #E0F2FE 45%, #F0FDF4 100%)',
+    bgGradient: 'linear-gradient(120deg, #BAE6FD 0%, #A5F3FC 45%, #DCFCE7 100%)',
     accentColor: '#0284C7',
     heroImage: '/promo/electronics.png',
     floatingCallouts: [
@@ -174,7 +174,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondary: 'Meet Our Artisans',
     ctaSecondaryLink: '/about',
     ctaSecondaryStyle: 'emerald',
-    bgGradient: 'linear-gradient(120deg, #FFFBEB 0%, #FEF3C7 45%, #F0FDFA 100%)',
+    bgGradient: 'linear-gradient(120deg, #FEF3C7 0%, #FDE68A 45%, #CCFBF1 100%)',
     accentColor: '#0D9488',
     heroImage: '/promo/jewellery.png',
     floatingCallouts: [
@@ -224,7 +224,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondary: 'Daily Deals',
     ctaSecondaryLink: '/search?discount=50',
     ctaSecondaryStyle: 'blue',
-    bgGradient: 'linear-gradient(120deg, #FEF2F2 0%, #FEE2E2 45%, #FFF7ED 100%)',
+    bgGradient: 'linear-gradient(120deg, #FECDD3 0%, #FCA5A5 45%, #FED7AA 100%)',
     accentColor: '#DC2626',
     heroImage: '/promo/festival.png',
     floatingCallouts: [
@@ -274,7 +274,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondary: 'View Appliances',
     ctaSecondaryLink: '/category/home-kitchen',
     ctaSecondaryStyle: 'blue',
-    bgGradient: 'linear-gradient(120deg, #FFFBEB 0%, #FEF3C7 45%, #F0F6FF 100%)',
+    bgGradient: 'linear-gradient(120deg, #FDE68A 0%, #FCD34D 45%, #BFDBFE 100%)',
     accentColor: '#D97706',
     heroImage: '/promo/kitchen.png',
     floatingCallouts: [
@@ -324,7 +324,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondary: 'View Cosmetics',
     ctaSecondaryLink: '/category/beauty-personal-care',
     ctaSecondaryStyle: 'blue',
-    bgGradient: 'linear-gradient(120deg, #FDF2F8 0%, #FCE7F3 45%, #F0FDF4 100%)',
+    bgGradient: 'linear-gradient(120deg, #FBCFE8 0%, #F9A8D4 45%, #DCFCE7 100%)',
     accentColor: '#E11D48',
     heroImage: '/promo/beauty.png',
     floatingCallouts: [
@@ -374,7 +374,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondary: 'Seeds & Fertilizers',
     ctaSecondaryLink: '/category/agriculture-seeds',
     ctaSecondaryStyle: 'emerald',
-    bgGradient: 'linear-gradient(120deg, #F0FDF4 0%, #DCFCE7 45%, #E0F2FE 100%)',
+    bgGradient: 'linear-gradient(120deg, #BBF7D0 0%, #86EFAC 45%, #BAE6FD 100%)',
     accentColor: '#059669',
     heroImage: '/promo/agriculture.png',
     floatingCallouts: [
@@ -424,7 +424,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondary: 'View Auto Gear',
     ctaSecondaryLink: '/category/electronics',
     ctaSecondaryStyle: 'blue',
-    bgGradient: 'linear-gradient(120deg, #EEF2FF 0%, #E0E7FF 45%, #ECFDF5 100%)',
+    bgGradient: 'linear-gradient(120deg, #C7D2FE 0%, #A5B4FC 45%, #A7F3D0 100%)',
     accentColor: '#4F46E5',
     heroImage: '/promo/electronics.png',
     floatingCallouts: [
@@ -474,7 +474,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondary: 'View Ethnic Wear',
     ctaSecondaryLink: '/category/fashion',
     ctaSecondaryStyle: 'blue',
-    bgGradient: 'linear-gradient(120deg, #FAF5FF 0%, #F3E8FF 45%, #FEF3C7 100%)',
+    bgGradient: 'linear-gradient(120deg, #E9D5FF 0%, #D8B4FE 45%, #FDE68A 100%)',
     accentColor: '#9333EA',
     heroImage: '/promo/fashion.png',
     floatingCallouts: [
