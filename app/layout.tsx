@@ -40,16 +40,16 @@ export async function generateMetadata(): Promise<Metadata> {
   const siteUrl = getSiteUrl();
   return {
     title: {
-      default: 'JSS Marketplace - Enterprise Multi-Vendor eCommerce Platform',
-      template: '%s | JSS Marketplace',
+      default: 'JSS Marketplace - India Shops Here',
+      template: '%s | JSS Marketplace - India Shops Here',
     },
-    description: 'Shop millions of products from verified multi-vendor merchants on JSS Marketplace.',
-    keywords: ['eCommerce', 'Multi-vendor', 'Marketplace', 'Online Shopping', 'JSS Marketplace'],
+    description: 'JSS Solutions Marketplace - India Shops Here. Direct-from-source authentic products from verified sellers across India.',
+    keywords: ['eCommerce', 'Multi-vendor', 'Marketplace', 'Online Shopping', 'India Shops Here', 'JSS Marketplace'],
     authors: [{ name: 'JSS Solutions' }],
     metadataBase: new URL(siteUrl),
     openGraph: {
-      title: 'JSS Marketplace - Enterprise Multi-Vendor eCommerce Platform',
-      description: 'Shop millions of products from verified multi-vendor merchants on JSS Marketplace.',
+      title: 'JSS Marketplace - India Shops Here',
+      description: 'JSS Solutions Marketplace - India Shops Here. Direct-from-source authentic products from verified sellers across India.',
       url: siteUrl,
       siteName: 'JSS Marketplace',
       locale: 'en_US',
@@ -57,8 +57,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'JSS Marketplace',
-      description: 'Shop millions of products from verified multi-vendor merchants.',
+      title: 'JSS Marketplace - India Shops Here',
+      description: 'JSS Solutions Marketplace - India Shops Here. Direct-from-source authentic products.',
     },
     robots: {
       index: true,

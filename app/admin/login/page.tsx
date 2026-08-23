@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../contexts/AuthContext';
 import { ShieldCheck, Lock, Mail, Eye, EyeOff, AlertCircle, Sparkles, ArrowRight } from 'lucide-react';
+import { BrandLogo } from '../../../components/BrandLogo';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -56,16 +57,15 @@ export default function AdminLoginPage() {
 
       <div className="w-full max-w-md space-y-8 relative z-10">
         {/* Header Branding */}
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-rose-500/10 border border-rose-500/20 text-rose-500 shadow-inner mb-2">
-            <ShieldCheck className="w-8 h-8" />
-          </div>
+        <div className="text-center space-y-3 flex flex-col items-center">
+          <BrandLogo variant="admin" size="lg" />
+
           <div>
-            <div className="flex items-center justify-center gap-1.5 text-xs font-black uppercase tracking-wider text-rose-500">
+            <div className="flex items-center justify-center gap-1.5 text-xs font-black uppercase tracking-wider text-rose-500 mt-2">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Platform Portal</span>
             </div>
-            <h1 className="text-3xl font-black text-foreground tracking-tight mt-1">
+            <h1 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight mt-1">
               Admin Authentication
             </h1>
             <p className="text-xs text-foreground/60 font-medium mt-1">

@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useToast } from './Toast';
+import { BrandLogo } from './BrandLogo';
 
 // ── Social Media SVG Icons (Official Brand Vectors) ─────────────────
 const FacebookIcon = ({ size = 18 }: { size?: number }) => (
@@ -141,14 +142,7 @@ export const Footer: React.FC = () => {
           
           {/* COLUMN 1 — JSS MARKETPLACE BRAND (4 Cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <Link href="/" className="inline-flex items-center gap-2 group">
-              <span className="text-2xl font-black tracking-tight text-primary">
-                JSS<span className="text-accent group-hover:text-primary transition-colors">Solutions</span>
-              </span>
-              <span className="text-[9px] font-extrabold bg-primary/20 text-primary border border-primary/30 px-2 py-0.5 rounded-lg uppercase tracking-widest">
-                Marketplace
-              </span>
-            </Link>
+            <BrandLogo variant="footer" size="lg" />
             
             <p className="text-xs text-slate-400 leading-relaxed font-medium max-w-sm">
               India's trusted multi-vendor marketplace connecting verified sellers, manufacturers, and farmers directly with customers across India.

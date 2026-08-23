@@ -23,6 +23,7 @@ import { OtpLoginForm } from './OtpLoginForm';
 import { OtpSignupForm } from './OtpSignupForm';
 import { EmailOtpLoginForm } from './EmailOtpLoginForm';
 import { EmailOtpSignupForm } from './EmailOtpSignupForm';
+import { BrandLogo } from '../BrandLogo';
 
 interface AuthCardProps {
   initialMode?: 'login' | 'signup';
@@ -170,15 +171,11 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = 'login' }) => 
   return (
     <div className="w-full bg-card text-card-foreground p-6 sm:p-10 rounded-3xl shadow-xl border border-border-custom/80 space-y-6">
       
-      {/* Header Title */}
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center justify-center gap-2 mb-1">
-          <div className="h-10 w-10 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-black">
-            <ShoppingBag size={20} />
-          </div>
-        </div>
+      {/* Header Title & Branding */}
+      <div className="text-center space-y-3 flex flex-col items-center">
+        <BrandLogo variant="header" size="md" />
 
-        <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight pt-1">
           {mode === 'login' ? 'Welcome Back!' : 'Create Your Account'}
         </h2>
         <p className="text-xs text-muted-custom font-medium max-w-sm mx-auto">

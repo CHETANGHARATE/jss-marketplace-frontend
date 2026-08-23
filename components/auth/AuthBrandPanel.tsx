@@ -16,6 +16,7 @@ import {
   CheckCircle2,
   Headphones
 } from 'lucide-react';
+import { BrandLogo } from '../BrandLogo';
 
 export const TRUST_STATS = [
   { value: '10,000+', label: 'Happy Customers', icon: Users },
@@ -34,18 +35,7 @@ export const AuthBrandPanel: React.FC = () => {
 
       {/* Top Header & Branding */}
       <div className="relative z-10 space-y-6">
-        <Link href="/" className="inline-flex items-center gap-3 group">
-          <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-[#0A58CA] to-[#0284C7] p-2.5 flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform border border-blue-400/30">
-            <ShoppingBag className="w-full h-full text-white" />
-          </div>
-          <div>
-            <div className="text-xl font-black tracking-tight text-white flex items-center gap-1.5">
-              <span>JSSSolutions</span>
-              <span className="text-[#F97316]">Marketplace</span>
-            </div>
-            <p className="text-[11px] font-bold uppercase tracking-widest text-blue-300">India's Trusted B2B & B2C Platform</p>
-          </div>
-        </Link>
+        <BrandLogo variant="auth" size="lg" />
 
         <div className="space-y-2 pt-2">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-400/30 px-3.5 py-1.5 rounded-full text-amber-300 text-xs font-black tracking-wide">

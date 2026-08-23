@@ -46,6 +46,7 @@ import { getLocalizedText } from '../utils/translation';
 import { SearchBar } from './SearchBar';
 import { ProductQuickView } from './ProductQuickView';
 import { MegaMenu } from './MegaMenu';
+import { BrandLogo } from './BrandLogo';
 
 export const Header: React.FC = () => {
   const router = useRouter();
@@ -121,7 +122,7 @@ export const Header: React.FC = () => {
             <div className="hidden md:flex items-center gap-2 shrink-0">
               <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-white/90">
                 <span className="text-base leading-none">🇮🇳</span>
-                <span className="text-slate-300">{t('nav.india_platform') || "India's #1 Direct-from-Source Marketplace"}</span>
+                <span className="text-slate-300">{t('nav.india_platform') || 'India Shops Here'}</span>
               </span>
             </div>
 
@@ -199,21 +200,7 @@ export const Header: React.FC = () => {
                 <Menu size={20} />
               </button>
 
-              <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-                {/* Logo mark */}
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center shadow-md shrink-0">
-                  <span className="text-white font-black text-sm sm:text-base leading-none">J</span>
-                </div>
-                {/* Logo text */}
-                <div className="flex flex-col leading-tight">
-                  <span className="text-base sm:text-lg font-black tracking-tight text-foreground flex items-baseline gap-0.5">
-                    JSS<span className="text-primary">Solutions</span>
-                  </span>
-                  <span className="hidden sm:block text-[9px] font-bold text-muted-custom uppercase tracking-[0.15em] -mt-0.5">
-                    {t('nav.all_categories').includes('All') ? 'Marketplace' : 'मार्केट'}
-                  </span>
-                </div>
-              </Link>
+              <BrandLogo variant="header" size="md" />
             </div>
 
             {/* ─── CENTER: Categories Button + Premium Search ─── */}
@@ -448,14 +435,7 @@ export const Header: React.FC = () => {
           <div className="w-4/5 max-w-sm bg-card text-card-foreground shadow-2xl flex flex-col h-full animate-slide-in relative border-r border-border-custom/80">
             {/* Drawer Header */}
             <div className="flex items-center justify-between border-b border-border-custom/80 px-5 py-4">
-              <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center">
-                  <span className="text-white font-black text-sm">J</span>
-                </div>
-                <span className="text-base font-black text-foreground">
-                  JSS<span className="text-primary">Solutions</span>
-                </span>
-              </Link>
+              <BrandLogo variant="header" size="sm" onClick={() => setMobileMenuOpen(false)} />
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-2 text-foreground hover:bg-background-secondary rounded-xl border border-border-custom/80"

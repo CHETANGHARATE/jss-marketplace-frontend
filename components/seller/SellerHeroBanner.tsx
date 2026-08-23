@@ -100,7 +100,7 @@ export const SellerHeroBanner: React.FC<SellerHeroBannerProps> = ({ onStartSelli
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 rounded-full text-xs font-black uppercase tracking-wider">
                 <Sparkles size={14} className="text-emerald-500 animate-pulse" />
-                <span>India's Direct Marketplace</span>
+                <span>India Shops Here</span>
               </div>
               <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight leading-[1.15]">
                 GROW YOUR BUSINESS WITH{' '}

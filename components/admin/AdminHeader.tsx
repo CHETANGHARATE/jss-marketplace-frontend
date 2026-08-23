@@ -20,6 +20,7 @@ import {
   LogOut,
   Sparkles,
 } from 'lucide-react';
+import { BrandLogo } from '../BrandLogo';
 
 interface AdminHeaderProps {
   onToggleSidebar?: () => void;
@@ -60,7 +61,7 @@ export function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
   return (
     <header className="sticky top-0 z-40 bg-card/90 backdrop-blur-md border-b border-border-custom/80 px-4 sm:px-6 py-3 transition-colors">
       <div className="flex items-center justify-between gap-4">
-        {/* Left: Mobile Sidebar Toggle & Global Search */}
+        {/* Left: Mobile Sidebar Toggle, Admin Brand Logo & Global Search */}
         <div className="flex items-center gap-3 flex-1 max-w-xl">
           {onToggleSidebar && (
             <button
@@ -71,6 +72,8 @@ export function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
               <Menu size={20} />
             </button>
           )}
+
+          <BrandLogo variant="admin" size="sm" href="/admin" className="hidden md:inline-flex" />
 
           {/* Quick Global Search Bar */}
           <form onSubmit={handleGlobalSearch} className="relative flex-1 max-w-md hidden sm:block">
