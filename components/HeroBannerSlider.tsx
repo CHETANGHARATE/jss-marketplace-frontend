@@ -121,7 +121,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondaryStyle: 'blue',
     bgGradient: 'linear-gradient(120deg, #FFFBEB 0%, #FEF3C7 45%, #F0F6FF 100%)',
     accentColor: '#D97706',
-    heroImage: '/categories/kitchen.webp',
+    heroImage: '/promo/kitchen.png',
     floatingCallouts: [
       {
         icon: <Package size={16} className="text-amber-600" />,
@@ -171,7 +171,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondaryStyle: 'blue',
     bgGradient: 'linear-gradient(120deg, #FDF2F8 0%, #FCE7F3 45%, #F0FDF4 100%)',
     accentColor: '#E11D48',
-    heroImage: '/categories/beauty.webp',
+    heroImage: '/promo/beauty.png',
     floatingCallouts: [
       {
         icon: <Sparkles size={16} className="text-pink-600" />,
@@ -271,7 +271,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondaryStyle: 'blue',
     bgGradient: 'linear-gradient(120deg, #EEF2FF 0%, #E0E7FF 45%, #ECFDF5 100%)',
     accentColor: '#4F46E5',
-    heroImage: '/categories/electronics.webp',
+    heroImage: '/promo/electronics.png',
     floatingCallouts: [
       {
         icon: <Tv size={16} className="text-indigo-600" />,
@@ -321,7 +321,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondaryStyle: 'blue',
     bgGradient: 'linear-gradient(120deg, #FAF5FF 0%, #F3E8FF 45%, #FEF3C7 100%)',
     accentColor: '#9333EA',
-    heroImage: '/categories/fashion.webp',
+    heroImage: '/promo/fashion.png',
     floatingCallouts: [
       {
         icon: <Shirt size={16} className="text-purple-600" />,
