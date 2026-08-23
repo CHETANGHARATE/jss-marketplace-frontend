@@ -126,7 +126,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondaryStyle: 'blue',
     bgGradient: 'linear-gradient(120deg, #BAE6FD 0%, #A5F3FC 45%, #DCFCE7 100%)',
     accentColor: '#0284C7',
-    heroImage: '/promo/electronics.png',
+    heroImage: '/promo/new-arrival.png',
     floatingCallouts: [
       {
         icon: <Sparkles size={16} className="text-sky-600" />,
@@ -176,7 +176,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondaryStyle: 'emerald',
     bgGradient: 'linear-gradient(120deg, #FEF3C7 0%, #FDE68A 45%, #CCFBF1 100%)',
     accentColor: '#0D9488',
-    heroImage: '/promo/jewellery.png',
+    heroImage: '/promo/handmade.png',
     floatingCallouts: [
       {
         icon: <Package size={16} className="text-teal-600" />,
@@ -226,7 +226,7 @@ export const HERO_SLIDES: HeroSlideData[] = [
     ctaSecondaryStyle: 'blue',
     bgGradient: 'linear-gradient(120deg, #FECDD3 0%, #FCA5A5 45%, #FED7AA 100%)',
     accentColor: '#DC2626',
-    heroImage: '/promo/festival.png',
+    heroImage: '/promo/offer-zone.png',
     floatingCallouts: [
       {
         icon: <BadgePercent size={16} className="text-rose-600" />,
