@@ -197,13 +197,13 @@ export function MegaMenu() {
                         </button>
                       </div>
 
-                      {/* Subcategories Grid (Small & Compact Cards) */}
+                      {/* Subcategories Grid (Compact Length + Prominent Image & Text) */}
                       <div className="space-y-3">
                         <h4 className="text-[11px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                           Subcategories & Featured Collections
                         </h4>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
                           {(() => {
                             const apiSubcats = activeCategory.children || activeCategory.subcategories || [];
                             const activeCatSlug = String(activeCategory.slug || activeCategory.id || '').toLowerCase();
@@ -219,30 +219,30 @@ export function MegaMenu() {
                                   <div
                                     key={sub.id || sub.slug || idx}
                                     onClick={() => handleSubcategoryClick(activeCategory, subSlug)}
-                                    className="group relative cursor-pointer rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 hover:bg-white dark:bg-slate-900/80 dark:hover:bg-slate-800/80 p-2.5 sm:p-3 transition-all duration-200 hover:shadow-md hover:border-blue-400 dark:hover:border-blue-600 flex items-center justify-between gap-2.5 overflow-hidden"
+                                    className="group relative cursor-pointer rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 hover:bg-white dark:bg-slate-900/80 dark:hover:bg-slate-800 p-3 transition-all duration-200 hover:shadow-md hover:border-blue-500 dark:hover:border-blue-500 flex flex-col items-center text-center gap-2 overflow-hidden hover:-translate-y-0.5"
                                   >
-                                    {/* Left Text Block */}
-                                    <div className="min-w-0 flex-1 space-y-1 z-10">
-                                      <h5 className="font-extrabold text-xs sm:text-[13px] text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
-                                        {subName}
-                                      </h5>
-                                      <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors inline-flex items-center gap-1">
-                                        <span>Explore</span>
-                                        <ArrowRight className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" />
-                                      </span>
-                                    </div>
-
-                                    {/* Right Cutout Image Container (Small & Compact) */}
-                                    <div className="w-14 h-14 sm:w-16 sm:h-16 shrink-0 flex items-center justify-center relative overflow-hidden rounded-lg sm:rounded-xl bg-white dark:bg-slate-950/80 border border-slate-200/60 dark:border-slate-800/80 p-1.5 shadow-2xs">
+                                    {/* Large Prominent Cutout Image Box */}
+                                    <div className="w-full h-24 sm:h-28 flex items-center justify-center rounded-xl bg-white dark:bg-slate-950/80 border border-slate-200/60 dark:border-slate-800 p-2 shadow-2xs">
                                       <img
                                         src={imageUrl}
                                         alt={subName}
-                                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                                        className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-300"
                                         loading="lazy"
                                         onError={(e) => {
                                           (e.target as HTMLImageElement).src = '/images/subcategories/high-yield-seeds.svg';
                                         }}
                                       />
+                                    </div>
+
+                                    {/* Bold Title & Callout Block */}
+                                    <div className="w-full space-y-0.5">
+                                      <h5 className="font-black text-xs sm:text-sm text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
+                                        {subName}
+                                      </h5>
+                                      <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors inline-flex items-center gap-1">
+                                        <span>Explore</span>
+                                        <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                                      </span>
                                     </div>
                                   </div>
                                 );
@@ -258,30 +258,30 @@ export function MegaMenu() {
                                 <div
                                   key={preset.slug || idx}
                                   onClick={() => handleSubcategoryClick(activeCategory, preset.slug)}
-                                  className="group relative cursor-pointer rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 hover:bg-white dark:bg-slate-900/80 dark:hover:bg-slate-800/80 p-2.5 sm:p-3 transition-all duration-200 hover:shadow-md hover:border-blue-400 dark:hover:border-blue-600 flex items-center justify-between gap-2.5 overflow-hidden"
+                                  className="group relative cursor-pointer rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 hover:bg-white dark:bg-slate-900/80 dark:hover:bg-slate-800 p-3 transition-all duration-200 hover:shadow-md hover:border-blue-500 dark:hover:border-blue-500 flex flex-col items-center text-center gap-2 overflow-hidden hover:-translate-y-0.5"
                                 >
-                                  {/* Left Text Block */}
-                                  <div className="min-w-0 flex-1 space-y-1 z-10">
-                                    <h5 className="font-extrabold text-xs sm:text-[13px] text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
-                                      {preset.name}
-                                    </h5>
-                                    <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors inline-flex items-center gap-1">
-                                      <span>Explore</span>
-                                      <ArrowRight className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" />
-                                    </span>
-                                  </div>
-
-                                  {/* Right Cutout Image Container (Small & Compact) */}
-                                  <div className="w-14 h-14 sm:w-16 sm:h-16 shrink-0 flex items-center justify-center relative overflow-hidden rounded-lg sm:rounded-xl bg-white dark:bg-slate-950/80 border border-slate-200/60 dark:border-slate-800/80 p-1.5 shadow-2xs">
+                                  {/* Large Prominent Cutout Image Box */}
+                                  <div className="w-full h-24 sm:h-28 flex items-center justify-center rounded-xl bg-white dark:bg-slate-950/80 border border-slate-200/60 dark:border-slate-800 p-2 shadow-2xs">
                                     <img
                                       src={imageUrl}
                                       alt={preset.name}
-                                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                                      className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-300"
                                       loading="lazy"
                                       onError={(e) => {
                                         (e.target as HTMLImageElement).src = '/images/subcategories/high-yield-seeds.svg';
                                       }}
                                     />
+                                  </div>
+
+                                  {/* Bold Title & Callout Block */}
+                                  <div className="w-full space-y-0.5">
+                                    <h5 className="font-black text-xs sm:text-sm text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
+                                      {preset.name}
+                                    </h5>
+                                    <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors inline-flex items-center gap-1">
+                                      <span>Explore</span>
+                                      <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                                    </span>
                                   </div>
                                 </div>
                               );
