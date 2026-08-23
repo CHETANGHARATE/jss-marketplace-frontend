@@ -221,7 +221,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
             </button>
             <button
               onClick={handleBuyNow}
-              className="flex-1 bg-primary hover:bg-primary-hover text-white text-xs font-black py-2 rounded-xl transition-all text-center shadow-2xs active:scale-95"
+              className="flex-1 bg-[#1565D8] hover:bg-[#0D47A1] active:bg-[#0A3880] text-white text-xs font-black py-2 rounded-xl transition-all text-center shadow-2xs active:scale-95"
             >
               {t('prod.buy_now')}
             </button>

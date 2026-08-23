@@ -127,7 +127,7 @@ export function StickyPurchaseBar({ product }: StickyPurchaseBarProps) {
           <button
             onClick={handleBuyNow}
             disabled={product.stock_status === 'out_of_stock'}
-            className="flex items-center gap-1.5 bg-primary hover:bg-primary-hover text-white px-5 sm:px-8 py-2.5 rounded-xl font-black text-xs transition-all shadow-md uppercase tracking-wider disabled:opacity-50"
+            className="flex items-center gap-1.5 bg-[#1565D8] hover:bg-[#0D47A1] active:bg-[#0A3880] text-white px-5 sm:px-8 py-2.5 rounded-xl font-black text-xs transition-all shadow-md uppercase tracking-wider disabled:opacity-50"
           >
             <Zap size={15} className="fill-current" />
             <span>Buy Now</span>

@@ -228,7 +228,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ productId, o
             </button>
             <button
               onClick={handleBuyNow}
-              className="flex-1 bg-accent text-white font-bold py-3.5 rounded-2xl hover:bg-accent-hover transition-all shadow-lg hover:shadow-accent/20"
+              className="flex-1 bg-[#1565D8] hover:bg-[#0D47A1] active:bg-[#0A3880] text-white font-bold py-3.5 rounded-2xl transition-all shadow-lg hover:shadow-primary/20"
             >
               {t('prod.buy_now')}
             </button>

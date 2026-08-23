@@ -656,7 +656,7 @@ export function ProductDetailsInfo({ product }: ProductDetailsInfoProps) {
 
                 <button
                   onClick={handleBuyNow}
-                  className="h-13 sm:h-14 flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white px-6 rounded-2xl font-black text-sm transition-all shadow-md active:scale-95 uppercase tracking-wider"
+                  className="h-13 sm:h-14 flex items-center justify-center gap-2 bg-[#1565D8] hover:bg-[#0D47A1] active:bg-[#0A3880] text-white px-6 rounded-2xl font-black text-sm transition-all shadow-md active:scale-95 uppercase tracking-wider"
                 >
                   <Zap className="w-5 h-5 fill-current" />
                   <span>Buy Now</span>

@@ -55,7 +55,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   const [quickViewProductId, setQuickViewProductId] = useState<string | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 6;
+  const productsPerPage = 8;
 
   const [filters, setFilters] = useState<FilterParams>({
     category: categorySlug,
@@ -312,8 +312,8 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
           {/* Catalog State */}
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {Array.from({ length: 6 }).map((_, idx) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+              {Array.from({ length: 8 }).map((_, idx) => (
                 <div key={idx} className="h-[380px] bg-card border border-border-custom/80 rounded-3xl animate-pulse" />
               ))}
             </div>
@@ -323,7 +323,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
               <p className="text-xs font-bold text-muted-custom">{t('cat.no_products')}</p>
             </div>
           ) : isGridView ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
               {currentProducts.map((prod) => (
                 <ProductCard
                   key={prod.id}
