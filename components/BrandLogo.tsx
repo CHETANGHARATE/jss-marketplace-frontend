@@ -23,9 +23,9 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
 }) => {
   // Logo image dimension sizing
   const imgSizeMap = {
-    sm: { width: 48, height: 48, class: 'w-11 h-11 sm:w-12 sm:h-12' },
-    md: { width: 64, height: 64, class: 'w-14 h-14 sm:w-16 sm:h-16' },
-    lg: { width: 84, height: 84, class: 'w-18 h-18 sm:w-22 sm:h-22' },
+    sm: { width: 38, height: 38, class: 'w-9 h-9 sm:w-10 sm:h-10' },
+    md: { width: 48, height: 48, class: 'w-11 h-11 sm:w-12 sm:h-12' },
+    lg: { width: 64, height: 64, class: 'w-14 h-14 sm:w-16 sm:h-16' },
   };
 
   const currentSize = imgSizeMap[size];
@@ -90,7 +90,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   );
 
   const content = (
-    <div className={`flex items-center gap-2.5 sm:gap-3 group shrink-0 ${className}`}>
+    <div className={`flex items-center gap-1.5 sm:gap-2 group shrink-0 ${className}`}>
       {logoImage}
       {brandText}
     </div>
