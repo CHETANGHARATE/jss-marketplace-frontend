@@ -574,6 +574,16 @@ export const HeroBannerSlider: React.FC = () => {
     setTouchStartX(null);
   };
 
+  // Scroll active tab into view smoothly
+  useEffect(() => {
+    if (navContainerRef.current) {
+      const activeBtn = navContainerRef.current.children[current] as HTMLElement;
+      if (activeBtn) {
+        activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }, [current]);
+
   const slide = HERO_SLIDES[current];
 
   return (
@@ -584,11 +594,11 @@ export const HeroBannerSlider: React.FC = () => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* ─── 1. TOP CATEGORY PILL SELECTOR STRIP (Enlarged font + dynamic colors) ─── */}
-      <div className="w-full bg-slate-50/90 border-b border-slate-200/70 px-4 sm:px-6 py-2.5 flex items-center justify-between gap-2 z-20 relative">
+      {/* ─── 1. TOP CATEGORY PILL SELECTOR STRIP (Balanced font + dynamic colors) ─── */}
+      <div className="w-full bg-slate-50/90 border-b border-slate-200/70 px-3 sm:px-4 py-2 flex items-center justify-between gap-1.5 z-20 relative">
         <div
           ref={navContainerRef}
-          className="flex-1 flex items-center overflow-x-auto no-scrollbar gap-2 sm:gap-2.5 scroll-smooth"
+          className="flex-1 flex items-center overflow-x-auto no-scrollbar gap-1 sm:gap-1.5 scroll-smooth"
         >
           {HERO_SLIDES.map((s, idx) => {
             const isActive = idx === current;
@@ -601,11 +611,11 @@ export const HeroBannerSlider: React.FC = () => {
                     ? {
                         backgroundColor: s.accentColor,
                         color: '#ffffff',
-                        boxShadow: `0 4px 14px ${s.accentColor}35`,
+                        boxShadow: `0 3px 12px ${s.accentColor}35`,
                       }
                     : undefined
                 }
-                className={`inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl sm:rounded-2xl text-[13px] sm:text-sm font-extrabold transition-all duration-300 shrink-0 cursor-pointer ${
+                className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs sm:text-[12.5px] font-bold transition-all duration-300 shrink-0 cursor-pointer ${
                   isActive
                     ? 'text-white shadow-sm scale-[1.02]'
                     : 'text-slate-700 hover:text-slate-900 bg-white/80 hover:bg-white border border-slate-200/70 shadow-2xs'
