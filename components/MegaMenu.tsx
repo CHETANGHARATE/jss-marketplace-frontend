@@ -165,19 +165,19 @@ export function MegaMenu() {
                 </div>
 
                 {/* ─── RIGHT COLUMN: CATEGORY EXPLORER & SUBCATEGORIES GRID ─── */}
-                <div className="col-span-8 lg:col-span-9 p-6 sm:p-8 space-y-6 overflow-y-auto max-h-[76vh] scrollbar-thin bg-white dark:bg-[#0B1428]">
+                <div className="col-span-8 lg:col-span-9 p-4 sm:p-6 space-y-4 overflow-y-auto max-h-[76vh] scrollbar-thin bg-white dark:bg-[#0B1428]">
                   {activeCategory ? (
                     <>
                       {/* Active Category Header Bar */}
-                      <div className="flex items-center justify-between pb-5 border-b border-slate-200/80 dark:border-slate-800 gap-4">
-                        <div className="flex items-center gap-4">
-                          {/* Large Category Icon Container */}
-                          <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 border border-blue-200/60 dark:bg-blue-950/60 dark:text-blue-400 dark:border-blue-800/60 flex items-center justify-center shrink-0 shadow-2xs">
-                            <ActiveCategoryIcon className="w-7 h-7" />
+                      <div className="flex items-center justify-between pb-3.5 border-b border-slate-200/80 dark:border-slate-800 gap-3">
+                        <div className="flex items-center gap-3">
+                          {/* Category Icon Container */}
+                          <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 border border-blue-200/60 dark:bg-blue-950/60 dark:text-blue-400 dark:border-blue-800/60 flex items-center justify-center shrink-0 shadow-2xs">
+                            <ActiveCategoryIcon className="w-5 h-5" />
                           </div>
 
                           <div className="space-y-0.5">
-                            <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                            <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
                               {getLocalizedText(activeCategory.name, language)}
                             </h3>
                             <p className="text-xs text-slate-500 dark:text-slate-400 font-medium max-w-xl line-clamp-1">
@@ -190,20 +190,20 @@ export function MegaMenu() {
 
                         <button
                           onClick={() => handleSubcategoryClick(activeCategory)}
-                          className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-full transition-all shadow-2xs shrink-0 group cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-full transition-all shadow-2xs shrink-0 group cursor-pointer"
                         >
-                          <span>View All Products</span>
-                          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                          <span>View All</span>
+                          <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                         </button>
                       </div>
 
-                      {/* Subcategories Grid */}
-                      <div className="space-y-4">
+                      {/* Subcategories Grid (Small & Compact Cards) */}
+                      <div className="space-y-3">
                         <h4 className="text-[11px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                           Subcategories & Featured Collections
                         </h4>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
                           {(() => {
                             const apiSubcats = activeCategory.children || activeCategory.subcategories || [];
                             const activeCatSlug = String(activeCategory.slug || activeCategory.id || '').toLowerCase();
@@ -219,21 +219,21 @@ export function MegaMenu() {
                                   <div
                                     key={sub.id || sub.slug || idx}
                                     onClick={() => handleSubcategoryClick(activeCategory, subSlug)}
-                                    className="group relative cursor-pointer rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-slate-50/70 hover:bg-white dark:bg-slate-900/90 dark:hover:bg-slate-800/80 p-4 transition-all duration-200 hover:shadow-md hover:border-blue-400 dark:hover:border-blue-700 flex items-center justify-between overflow-hidden"
+                                    className="group relative cursor-pointer rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 hover:bg-white dark:bg-slate-900/80 dark:hover:bg-slate-800/80 p-2.5 sm:p-3 transition-all duration-200 hover:shadow-md hover:border-blue-400 dark:hover:border-blue-600 flex items-center justify-between gap-2.5 overflow-hidden"
                                   >
                                     {/* Left Text Block */}
-                                    <div className="min-w-0 flex-1 pr-3 space-y-1.5 z-10">
-                                      <h5 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
+                                    <div className="min-w-0 flex-1 space-y-1 z-10">
+                                      <h5 className="font-extrabold text-xs sm:text-[13px] text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
                                         {subName}
                                       </h5>
-                                      <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors inline-flex items-center gap-1">
-                                        <span>Explore collection</span>
-                                        <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                                      <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors inline-flex items-center gap-1">
+                                        <span>Explore</span>
+                                        <ArrowRight className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" />
                                       </span>
                                     </div>
 
-                                    {/* Right Cutout Image Container */}
-                                    <div className="w-28 sm:w-36 h-24 shrink-0 flex items-center justify-center relative overflow-hidden rounded-xl bg-white dark:bg-slate-950/80 border border-slate-200/60 dark:border-slate-800/80 p-2 shadow-2xs">
+                                    {/* Right Cutout Image Container (Small & Compact) */}
+                                    <div className="w-14 h-14 sm:w-16 sm:h-16 shrink-0 flex items-center justify-center relative overflow-hidden rounded-lg sm:rounded-xl bg-white dark:bg-slate-950/80 border border-slate-200/60 dark:border-slate-800/80 p-1.5 shadow-2xs">
                                       <img
                                         src={imageUrl}
                                         alt={subName}
@@ -258,21 +258,21 @@ export function MegaMenu() {
                                 <div
                                   key={preset.slug || idx}
                                   onClick={() => handleSubcategoryClick(activeCategory, preset.slug)}
-                                  className="group relative cursor-pointer rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-slate-50/70 hover:bg-white dark:bg-slate-900/90 dark:hover:bg-slate-800/80 p-4 transition-all duration-200 hover:shadow-md hover:border-blue-400 dark:hover:border-blue-700 flex items-center justify-between overflow-hidden"
+                                  className="group relative cursor-pointer rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 hover:bg-white dark:bg-slate-900/80 dark:hover:bg-slate-800/80 p-2.5 sm:p-3 transition-all duration-200 hover:shadow-md hover:border-blue-400 dark:hover:border-blue-600 flex items-center justify-between gap-2.5 overflow-hidden"
                                 >
                                   {/* Left Text Block */}
-                                  <div className="min-w-0 flex-1 pr-3 space-y-1.5 z-10">
-                                    <h5 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
+                                  <div className="min-w-0 flex-1 space-y-1 z-10">
+                                    <h5 className="font-extrabold text-xs sm:text-[13px] text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
                                       {preset.name}
                                     </h5>
-                                    <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors inline-flex items-center gap-1">
-                                      <span>Explore collection</span>
-                                      <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                                    <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors inline-flex items-center gap-1">
+                                      <span>Explore</span>
+                                      <ArrowRight className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" />
                                     </span>
                                   </div>
 
-                                  {/* Right Cutout Image Container */}
-                                  <div className="w-28 sm:w-36 h-24 shrink-0 flex items-center justify-center relative overflow-hidden rounded-xl bg-white dark:bg-slate-950/80 border border-slate-200/60 dark:border-slate-800/80 p-2 shadow-2xs">
+                                  {/* Right Cutout Image Container (Small & Compact) */}
+                                  <div className="w-14 h-14 sm:w-16 sm:h-16 shrink-0 flex items-center justify-center relative overflow-hidden rounded-lg sm:rounded-xl bg-white dark:bg-slate-950/80 border border-slate-200/60 dark:border-slate-800/80 p-1.5 shadow-2xs">
                                     <img
                                       src={imageUrl}
                                       alt={preset.name}
