@@ -23,15 +23,15 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
 }) => {
   // Logo image dimension sizing
   const imgSizeMap = {
-    sm: { width: 36, height: 36, class: 'w-9 h-9' },
-    md: { width: 44, height: 44, class: 'w-10 h-10 sm:w-11 sm:h-11' },
-    lg: { width: 54, height: 54, class: 'w-12 h-12 sm:w-14 sm:h-14' },
+    sm: { width: 44, height: 44, class: 'w-10 h-10 sm:w-11 sm:h-11' },
+    md: { width: 56, height: 56, class: 'w-12 h-12 sm:w-[54px] sm:h-[54px]' },
+    lg: { width: 72, height: 72, class: 'w-16 h-16 sm:w-20 sm:h-20' },
   };
 
   const currentSize = imgSizeMap[size];
 
   const logoImage = (
-    <div className={`relative ${currentSize.class} shrink-0 rounded-2xl bg-white p-1 shadow-sm border border-slate-200/80 flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105`}>
+    <div className={`relative ${currentSize.class} shrink-0 flex items-center justify-center transition-transform duration-200 group-hover:scale-105`}>
       <img
         src="/logo.png"
         alt="JSS Solutions Marketplace - India Shops Here"
