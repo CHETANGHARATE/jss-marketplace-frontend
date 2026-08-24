@@ -118,7 +118,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
             let response = await productService.getProducts({
               category: slug || catKey,
               category_id: typeof cat.id === 'number' ? cat.id : undefined,
-              per_page: 5,
+              per_page: 6,
               in_stock_first: 1,
             });
 
@@ -128,7 +128,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
             if (prods.length === 0 && (slug.includes('astro') || catKey === '17')) {
               const fallbackRes = await productService.getProducts({
                 search: 'stone',
-                per_page: 5,
+                per_page: 6,
                 in_stock_first: 1,
               });
               if (fallbackRes.data && fallbackRes.data.length > 0) {
@@ -136,7 +136,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
               }
             }
 
-            return { categoryId: catKey, products: prods.slice(0, 5) };
+            return { categoryId: catKey, products: prods.slice(0, 6) };
           } catch {
             return { categoryId: catKey, products: [] };
           }
@@ -168,8 +168,8 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
           <div key={idx} className="space-y-4 animate-pulse">
             <div className="h-8 bg-background-secondary rounded-2xl w-1/4" />
             <div className="h-4 bg-background-secondary rounded-xl w-1/3" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 pt-4">
-              {Array.from({ length: 5 }).map((_, i) => (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5 sm:gap-4 pt-4">
+              {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="h-80 bg-background-secondary rounded-3xl" />
               ))}
             </div>
@@ -182,7 +182,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
   return (
     <div className="space-y-10 lg:space-y-12">
       {uniqueCategories.map((cat) => {
-        const products = (featuredData[String(cat.id)] || []).slice(0, 5);
+        const products = (featuredData[String(cat.id)] || []).slice(0, 6);
         if (products.length === 0) return null;
 
         const catName = getLocalizedText(cat.name, language);
@@ -214,8 +214,8 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ categori
               </Link>
             </div>
 
-            {/* Product Cards Grid - Exactly 5 items visible per row on desktop */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5">
+            {/* Product Cards Grid - Exactly 6 items visible per row on desktop */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5 sm:gap-4">
               {products.map((product) => (
                 <ProductCard
                   key={product.id}
