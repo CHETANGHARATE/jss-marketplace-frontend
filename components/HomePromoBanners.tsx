@@ -193,14 +193,14 @@ export const HomePromoBanners: React.FC = () => {
           <Link
             key={b.id}
             href={b.href}
-            className="relative rounded-2xl overflow-hidden group flex flex-col justify-between h-[255px] sm:h-[265px] lg:h-[275px] border border-black/5 shadow-2xs hover:shadow-md transition-all duration-300 p-3 sm:p-3.5"
+            className="relative rounded-2xl overflow-hidden group flex flex-col justify-between h-[270px] sm:h-[280px] lg:h-[290px] border border-black/5 shadow-2xs hover:shadow-md transition-all duration-300 p-3.5 sm:p-4"
             style={{ background: b.bgGradient }}
           >
-            {/* Top Text Header: Tag, Title, Subtitle */}
-            <div className="space-y-0.5 z-10">
+            {/* Top Text Header: Tag, Title, Subtitle (Enlarged & Bold) */}
+            <div className="space-y-1 z-10">
               {/* Tag / Category Label */}
               <span
-                className="text-[10px] sm:text-[11px] font-bold tracking-tight block line-clamp-1"
+                className="text-[11px] sm:text-xs font-black tracking-wide uppercase block truncate"
                 style={{ color: b.tagColor }}
               >
                 {tag}
@@ -208,7 +208,7 @@ export const HomePromoBanners: React.FC = () => {
 
               {/* Main Title */}
               <h3
-                className="font-black text-sm sm:text-base lg:text-[14px] xl:text-[15px] leading-tight tracking-tight line-clamp-1"
+                className="font-black text-base sm:text-lg lg:text-[16px] xl:text-[18px] leading-tight tracking-tight truncate"
                 style={{ color: b.titleColor }}
               >
                 {title}
@@ -216,7 +216,7 @@ export const HomePromoBanners: React.FC = () => {
 
               {/* Subtitle */}
               <p
-                className="text-[10px] sm:text-[11px] font-medium line-clamp-1"
+                className="text-[11px] sm:text-xs font-bold leading-tight truncate"
                 style={{ color: b.subtitleColor }}
               >
                 {subtitle}
@@ -228,15 +228,15 @@ export const HomePromoBanners: React.FC = () => {
               <img
                 src={b.image}
                 alt={title}
-                className="w-full h-full max-h-[120px] sm:max-h-[130px] lg:max-h-[140px] object-contain group-hover:scale-110 transition-transform duration-300 filter drop-shadow-md"
+                className="w-full h-full max-h-[125px] sm:max-h-[135px] lg:max-h-[145px] object-contain group-hover:scale-110 transition-transform duration-300 filter drop-shadow-md"
                 loading="lazy"
               />
             </div>
 
             {/* Bottom Compact CTA Pill Button */}
-            <div className="mt-auto pt-1 z-10 w-full">
+            <div className="mt-auto pt-1.5 z-10 w-full">
               <span
-                className="inline-flex items-center justify-center text-[11px] sm:text-xs font-extrabold py-2 px-3 rounded-xl text-white shadow-2xs group-hover:shadow-sm group-hover:scale-[1.03] transition-all duration-300 w-full text-center leading-tight"
+                className="inline-flex items-center justify-center text-xs sm:text-[13px] font-black py-2.5 px-3 rounded-xl text-white shadow-xs group-hover:shadow-md group-hover:scale-[1.03] transition-all duration-300 w-full text-center leading-tight"
                 style={{ backgroundColor: b.ctaBg }}
               >
                 {cta}

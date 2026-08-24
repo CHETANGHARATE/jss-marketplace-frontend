@@ -574,12 +574,17 @@ export const HeroBannerSlider: React.FC = () => {
     setTouchStartX(null);
   };
 
-  // Scroll active tab into view smoothly
+  // Scroll only the tab container horizontally without affecting window vertical scroll
   useEffect(() => {
     if (navContainerRef.current) {
       const activeBtn = navContainerRef.current.children[current] as HTMLElement;
       if (activeBtn) {
-        activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        const container = navContainerRef.current;
+        const btnLeft = activeBtn.offsetLeft;
+        const btnWidth = activeBtn.offsetWidth;
+        const containerWidth = container.offsetWidth;
+        const targetScroll = btnLeft - containerWidth / 2 + btnWidth / 2;
+        container.scrollTo({ left: Math.max(0, targetScroll), behavior: 'smooth' });
       }
     }
   }, [current]);
