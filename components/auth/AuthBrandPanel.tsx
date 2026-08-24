@@ -27,17 +27,17 @@ export const TRUST_STATS = [
 
 export const AuthBrandPanel: React.FC = () => {
   return (
-    <div className="relative h-full w-full bg-gradient-to-br from-white via-blue-50/30 to-slate-50/60 text-slate-900 p-8 lg:p-12 flex flex-col justify-between overflow-hidden shadow-xl shadow-slate-200/60 rounded-3xl border border-slate-200/80">
+    <div className="relative h-full w-full flex flex-col justify-between space-y-6">
       
       {/* Background Subtle E-Commerce Ambient Accents */}
       <div className="absolute top-0 right-0 -mr-20 -mt-20 w-72 h-72 bg-blue-100/50 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-72 h-72 bg-amber-100/40 rounded-full blur-3xl pointer-events-none" />
 
       {/* Top Header & Branding */}
-      <div className="relative z-10 space-y-6">
+      <div className="relative z-10 space-y-5">
         <BrandLogo variant="header" size="lg" />
 
-        <div className="space-y-2 pt-2">
+        <div className="space-y-2 pt-1">
           <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-200/80 px-3.5 py-1.5 rounded-full text-amber-800 text-xs font-black tracking-wide shadow-2xs">
             <Sparkles size={14} className="animate-pulse text-amber-600" />
             <span>Shop More. Save More...!</span>

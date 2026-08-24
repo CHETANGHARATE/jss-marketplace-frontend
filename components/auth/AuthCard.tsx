@@ -169,13 +169,15 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = 'login' }) => 
   };
 
   return (
-    <div className="w-full bg-card text-card-foreground p-6 sm:p-10 rounded-3xl shadow-xl border border-border-custom/80 space-y-6">
+    <div className="w-full text-card-foreground space-y-6">
       
       {/* Header Title & Branding */}
-      <div className="text-center space-y-3 flex flex-col items-center">
-        <BrandLogo variant="header" size="md" />
+      <div className="text-center space-y-2 flex flex-col items-center">
+        <div className="lg:hidden mb-1">
+          <BrandLogo variant="header" size="md" />
+        </div>
 
-        <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight pt-1">
+        <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
           {mode === 'login' ? 'Welcome Back!' : 'Create Your Account'}
         </h2>
         <p className="text-xs text-muted-custom font-medium max-w-sm mx-auto">
