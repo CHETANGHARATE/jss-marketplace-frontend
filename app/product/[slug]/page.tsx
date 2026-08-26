@@ -115,6 +115,7 @@ export default function ProductDetailPage() {
         <div className="lg:col-span-6">
           <ProductGallery
             images={product.images || [product.image || '/placeholder-product.png']}
+            galleryVariants={product.gallery_variants}
             name={product.name}
             discountPercent={discountPercent}
             productId={String(product.id)}

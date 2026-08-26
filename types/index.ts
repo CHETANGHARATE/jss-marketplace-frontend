@@ -33,6 +33,23 @@ export interface Product {
   reviewsCount: number;
   stockStatus: 'in_stock' | 'low_stock' | 'out_of_stock';
   image: string;
+  images?: string[];
+  imageVariants?: {
+    thumb?: string;
+    card?: string;
+    listing?: string;
+    detail?: string;
+    zoom?: string;
+    original?: string;
+  };
+  galleryVariants?: Array<{
+    thumb?: string;
+    card?: string;
+    listing?: string;
+    detail?: string;
+    zoom?: string;
+    original?: string;
+  }>;
   description: string;
   features: string[];
   reviews: Review[];

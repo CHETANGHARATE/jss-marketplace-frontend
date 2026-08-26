@@ -182,6 +182,22 @@ export interface ApiProduct {
   features?: string[];
   image?: string;
   images?: string[];
+  image_variants?: {
+    thumb?: string;
+    card?: string;
+    listing?: string;
+    detail?: string;
+    zoom?: string;
+    original?: string;
+  };
+  gallery_variants?: Array<{
+    thumb?: string;
+    card?: string;
+    listing?: string;
+    detail?: string;
+    zoom?: string;
+    original?: string;
+  }>;
   specifications?: { key?: string; value?: string; spec_key?: string; spec_value?: string }[];
   category?: ApiCategory;
   subcategory?: ApiCategory;

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { OptimizedImage } from './OptimizedImage';
 import {
   Heart,
   ShoppingCart,
@@ -583,7 +584,17 @@ export const Header: React.FC = () => {
               ) : (
                 cart.map((item) => (
                   <div key={item.product.id} className="flex gap-3.5 p-3.5 bg-background-secondary rounded-2xl border border-border-custom/80">
-                    <img src={item.product.image} alt={item.product.name} className="h-16 w-16 rounded-xl object-contain bg-card p-1 border border-border-custom/80 shrink-0" />
+                    <div className="relative h-16 w-16 rounded-xl overflow-hidden bg-card p-1 border border-border-custom/80 shrink-0">
+                      <OptimizedImage
+                        src={item.product.image}
+                        alt={item.product.name}
+                        variant="thumb"
+                        imageVariants={item.product.imageVariants}
+                        fill
+                        sizes="64px"
+                        className="object-contain"
+                      />
+                    </div>
                     <div className="flex-1 min-w-0 flex flex-col justify-between">
                       <div>
                         <h4 className="font-bold text-xs text-foreground truncate">{item.product.name}</h4>
@@ -644,7 +655,17 @@ export const Header: React.FC = () => {
               ) : (
                 wishlist.map((prod) => (
                   <div key={prod.id} className="flex gap-3.5 p-3.5 bg-background-secondary rounded-2xl border border-border-custom/80">
-                    <img src={prod.image} alt={prod.name} className="h-16 w-16 rounded-xl object-contain bg-card p-1 border border-border-custom/80 shrink-0" />
+                    <div className="relative h-16 w-16 rounded-xl overflow-hidden bg-card p-1 border border-border-custom/80 shrink-0">
+                      <OptimizedImage
+                        src={prod.image}
+                        alt={prod.name}
+                        variant="thumb"
+                        imageVariants={prod.imageVariants}
+                        fill
+                        sizes="64px"
+                        className="object-contain"
+                      />
+                    </div>
                     <div className="flex-1 min-w-0 flex flex-col justify-between">
                       <div>
                         <h4 className="font-bold text-xs text-foreground truncate">{prod.name}</h4>

@@ -46,7 +46,7 @@ export function mapApiProductToProduct(apiProd: ApiProduct): Product {
     subcategoryName = getLocalizedText((apiProd as any).child_category.name, 'en') || (apiProd as any).child_category.slug || '';
   }
 
-  const imgUrl = apiProd.image || apiProd.images?.[0] || '/placeholder-product.png';
+  const imgUrl = apiProd.image_variants?.card || apiProd.image || apiProd.images?.[0] || '/placeholder-product.png';
   const stockStat = (apiProd.stockStatus || apiProd.stock_status || 'in_stock') as any;
 
   return {
@@ -74,6 +74,9 @@ export function mapApiProductToProduct(apiProd: ApiProduct): Product {
     reviewsCount: apiProd.reviewsCount || apiProd.reviews_count || 0,
     stockStatus: stockStat,
     image: imgUrl,
+    images: apiProd.images,
+    imageVariants: apiProd.image_variants,
+    galleryVariants: apiProd.gallery_variants,
     description: apiProd.description || '',
     features: apiProd.features || [],
     reviews: [],

@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { OptimizedImage } from './OptimizedImage';
 import { Category } from '../types';
 import { getCategoryUrl } from '../utils/categoryUtils';
 
@@ -280,12 +281,15 @@ export const HomeCategoryStrip: React.FC<Props> = ({ categories }) => {
                   className="w-[90px] h-[90px] sm:w-[108px] sm:h-[108px] rounded-full flex items-center justify-center p-2.5 sm:p-3 shadow-2xs group-hover:shadow-md group-hover:scale-105 transition-all duration-300 border border-black/5 relative overflow-hidden shrink-0"
                   style={{ backgroundColor: bgTint }}
                 >
-                  <img
-                    src={imgUrl}
-                    alt={label}
-                    className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-300"
-                    loading="lazy"
-                  />
+                  <div className="relative w-full h-full rounded-full overflow-hidden">
+                    <OptimizedImage
+                      src={imgUrl}
+                      alt={label}
+                      fill
+                      sizes="108px"
+                      className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
                 </div>
                 {/* Category Name */}
                 <span className="text-[11px] sm:text-xs font-bold text-center text-foreground group-hover:text-primary transition-colors max-w-[96px] sm:max-w-[110px] mt-2 line-clamp-2 leading-tight">

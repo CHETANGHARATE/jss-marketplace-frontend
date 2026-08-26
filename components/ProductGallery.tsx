@@ -17,6 +17,7 @@ import {
   Box,
   Sparkles,
 } from 'lucide-react';
+import { OptimizedImage } from './OptimizedImage';
 import { useCartWishlist } from '../contexts/CartWishlistContext';
 import { Product360Viewer } from './Product360Viewer';
 import { ArQuickViewer } from './ArQuickViewer';
@@ -25,6 +26,14 @@ import { immersiveMediaService, Product360AndArData } from '../services/immersiv
 
 interface ProductGalleryProps {
   images?: string[];
+  galleryVariants?: Array<{
+    thumb?: string;
+    card?: string;
+    listing?: string;
+    detail?: string;
+    zoom?: string;
+    original?: string;
+  }>;
   name: string;
   discountPercent?: number;
   videoUrl?: string;
@@ -34,6 +43,7 @@ interface ProductGalleryProps {
 
 export function ProductGallery({
   images = [],
+  galleryVariants,
   name,
   discountPercent = 0,
   videoUrl,
@@ -197,9 +207,14 @@ export function ProductGallery({
             onClick={() => setIsLightboxOpen(true)}
             className="w-full h-full flex items-center justify-center cursor-zoom-in relative overflow-hidden rounded-xl bg-white dark:bg-slate-950"
           >
-            <img
+            <OptimizedImage
               src={imageList[selectedIndex]}
               alt={`${name} image ${selectedIndex + 1}`}
+              variant="detail"
+              imageVariants={galleryVariants?.[selectedIndex]}
+              fill
+              priority={selectedIndex === 0}
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className={`w-full h-full object-cover rounded-xl transition-transform duration-200 ${
                 zoomPos.show ? 'scale-150' : 'group-hover:scale-105'
               }`}
@@ -218,14 +233,14 @@ export function ProductGallery({
             <>
               <button
                 onClick={prevImage}
-                className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-card/80 backdrop-blur-md text-foreground/80 hover:text-primary hover:bg-card border border-border-custom shadow-md transition-all opacity-0 group-hover:opacity-100 active:scale-95"
+                className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-card/80 backdrop-blur-md text-foreground/80 hover:text-primary hover:bg-card border border-border-custom shadow-md transition-all opacity-0 group-hover:opacity-100 active:scale-95 cursor-pointer"
                 aria-label="Previous image"
               >
                 <ChevronLeft size={18} />
               </button>
               <button
                 onClick={nextImage}
-                className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-card/80 backdrop-blur-md text-foreground/80 hover:text-primary hover:bg-card border border-border-custom shadow-md transition-all opacity-0 group-hover:opacity-100 active:scale-95"
+                className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-card/80 backdrop-blur-md text-foreground/80 hover:text-primary hover:bg-card border border-border-custom shadow-md transition-all opacity-0 group-hover:opacity-100 active:scale-95 cursor-pointer"
                 aria-label="Next image"
               >
                 <ChevronRight size={18} />
@@ -242,13 +257,21 @@ export function ProductGallery({
             <button
               key={idx}
               onClick={() => setSelectedIndex(idx)}
-              className={`relative h-16 w-16 sm:h-18 sm:w-18 shrink-0 rounded-xl bg-white dark:bg-slate-900 border-2 p-1 overflow-hidden transition-all shadow-2xs ${
+              className={`relative h-16 w-16 sm:h-18 sm:w-18 shrink-0 rounded-xl bg-white dark:bg-slate-900 border-2 p-1 overflow-hidden transition-all shadow-2xs cursor-pointer ${
                 selectedIndex === idx
                   ? 'border-primary shadow-md scale-95 ring-2 ring-primary/20'
                   : 'border-border-custom/60 opacity-70 hover:opacity-100 hover:border-primary/50'
               }`}
             >
-              <img src={imgUrl} alt={`${name} thumbnail ${idx + 1}`} className="w-full h-full object-cover rounded-lg" />
+              <OptimizedImage
+                src={imgUrl}
+                alt={`${name} thumbnail ${idx + 1}`}
+                variant="thumb"
+                imageVariants={galleryVariants?.[idx]}
+                fill
+                sizes="72px"
+                className="w-full h-full object-cover rounded-lg"
+              />
             </button>
           ))}
 
@@ -256,7 +279,7 @@ export function ProductGallery({
           {remainingCount > 0 && (
             <button
               onClick={() => setIsLightboxOpen(true)}
-              className="relative h-16 w-16 sm:h-18 sm:w-18 shrink-0 rounded-xl bg-slate-900 text-white border-2 border-slate-800 p-1 flex flex-col items-center justify-center hover:border-primary transition-all font-black text-xs"
+              className="relative h-16 w-16 sm:h-18 sm:w-18 shrink-0 rounded-xl bg-slate-900 text-white border-2 border-slate-800 p-1 flex flex-col items-center justify-center hover:border-primary transition-all font-black text-xs cursor-pointer"
             >
               <span>+{remainingCount}</span>
               <span className="text-[9px] text-slate-400 font-medium">More</span>
@@ -266,7 +289,7 @@ export function ProductGallery({
           {videoUrl && (
             <button
               onClick={() => setIsLightboxOpen(true)}
-              className="relative h-16 w-16 sm:h-18 sm:w-18 shrink-0 rounded-xl bg-slate-900 text-white border-2 border-slate-800 p-1 flex flex-col items-center justify-center gap-0.5 hover:border-primary transition-all"
+              className="relative h-16 w-16 sm:h-18 sm:w-18 shrink-0 rounded-xl bg-slate-900 text-white border-2 border-slate-800 p-1 flex flex-col items-center justify-center gap-0.5 hover:border-primary transition-all cursor-pointer"
             >
               <PlayCircle size={20} className="text-primary" />
               <span className="text-[9px] font-black uppercase">Video</span>
@@ -280,7 +303,7 @@ export function ProductGallery({
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-fade-in">
           <button
             onClick={() => setIsLightboxOpen(false)}
-            className="absolute top-6 right-6 text-white/80 hover:text-white p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all"
+            className="absolute top-6 right-6 text-white/80 hover:text-white p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all cursor-pointer"
             aria-label="Close Lightbox"
           >
             <X size={24} />
@@ -292,11 +315,18 @@ export function ProductGallery({
           </div>
 
           <div className="relative max-w-4xl max-h-[85vh] w-full h-full flex flex-col items-center justify-center gap-4">
-            <img
-              src={imageList[selectedIndex]}
-              alt={name}
-              className="max-w-full max-h-[75vh] object-contain drop-shadow-2xl rounded-2xl"
-            />
+            <div className="relative w-full h-[65vh] sm:h-[75vh]">
+              <OptimizedImage
+                src={imageList[selectedIndex]}
+                alt={name}
+                variant="zoom"
+                imageVariants={galleryVariants?.[selectedIndex]}
+                fill
+                priority={true}
+                sizes="90vw"
+                className="max-w-full max-h-[75vh] object-contain drop-shadow-2xl rounded-2xl"
+              />
+            </div>
 
             {/* Lightbox Bottom Thumbnail Bar */}
             {imageList.length > 1 && (
@@ -305,11 +335,19 @@ export function ProductGallery({
                   <button
                     key={idx}
                     onClick={() => setSelectedIndex(idx)}
-                    className={`h-12 w-12 rounded-lg border-2 overflow-hidden shrink-0 ${
+                    className={`relative h-12 w-12 rounded-lg border-2 overflow-hidden shrink-0 cursor-pointer ${
                       selectedIndex === idx ? 'border-primary scale-105' : 'border-transparent opacity-50'
                     }`}
                   >
-                    <img src={imgUrl} alt="" className="w-full h-full object-cover" />
+                    <OptimizedImage
+                      src={imgUrl}
+                      alt=""
+                      variant="thumb"
+                      imageVariants={galleryVariants?.[idx]}
+                      fill
+                      sizes="48px"
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 ))}
               </div>

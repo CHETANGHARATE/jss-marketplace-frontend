@@ -22,6 +22,7 @@ import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { Filters } from '../../../components/Filters';
 import { ProductCard } from '../../../components/ProductCard';
 import { ProductQuickView } from '../../../components/ProductQuickView';
+import { OptimizedImage } from '../../../components/OptimizedImage';
 import { getProducts } from '../../../services/product';
 import { Product, FilterParams } from '../../../types';
 
@@ -341,7 +342,15 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                   className="group bg-card text-card-foreground border border-border-custom/80 hover:border-primary/50 rounded-3xl p-5 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col sm:flex-row gap-5 cursor-pointer relative"
                 >
                   <div className="h-40 w-full sm:w-40 bg-[#ECEFF3] dark:bg-slate-900/40 rounded-2xl relative shrink-0 border border-border-custom/60 overflow-hidden">
-                    <img src={prod.image} alt={prod.name} className="w-full h-full object-cover object-center transition-transform duration-300 ease-out group-hover:scale-105" />
+                    <OptimizedImage
+                      src={prod.image}
+                      alt={prod.name}
+                      variant="card"
+                      imageVariants={prod.imageVariants}
+                      fill
+                      sizes="160px"
+                      className="w-full h-full object-cover object-center transition-transform duration-300 ease-out group-hover:scale-105"
+                    />
                     {prod.discountPercent > 0 && (
                       <span className="absolute top-2.5 left-2.5 bg-rose-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
                         {prod.discountPercent}% OFF

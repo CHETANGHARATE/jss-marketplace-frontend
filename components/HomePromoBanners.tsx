@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { OptimizedImage } from './OptimizedImage';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface PromoBanner {
@@ -225,12 +226,15 @@ export const HomePromoBanners: React.FC = () => {
 
             {/* Middle Large Product Cutout Visual */}
             <div className="w-full flex-1 flex items-center justify-center relative overflow-hidden z-0 pointer-events-none py-1.5 px-0.5 my-1">
-              <img
-                src={b.image}
-                alt={title}
-                className="w-full h-full max-h-[125px] sm:max-h-[135px] lg:max-h-[145px] object-contain group-hover:scale-110 transition-transform duration-300 filter drop-shadow-md"
-                loading="lazy"
-              />
+              <div className="relative w-full h-full max-h-[125px] sm:max-h-[135px] lg:max-h-[145px]">
+                <OptimizedImage
+                  src={b.image}
+                  alt={title}
+                  fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 12.5vw"
+                  className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 filter drop-shadow-md"
+                />
+              </div>
             </div>
 
             {/* Bottom Compact CTA Pill Button */}

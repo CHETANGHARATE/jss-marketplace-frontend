@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { OptimizedImage } from './OptimizedImage';
 import {
   ChevronLeft,
   ChevronRight,
@@ -786,12 +787,16 @@ export const HeroBannerSlider: React.FC = () => {
                 }`}
               >
                 {slide.heroImage ? (
-                  <img
-                    src={slide.heroImage}
-                    alt={slide.titleLine1}
-                    className="w-full h-auto max-h-[290px] sm:max-h-[340px] lg:max-h-[400px] object-contain drop-shadow-xl select-none pointer-events-none mx-auto lg:mx-0 filter"
-                    loading="eager"
-                  />
+                  <div className="relative w-full h-[290px] sm:h-[340px] lg:h-[400px]">
+                    <OptimizedImage
+                      src={slide.heroImage}
+                      alt={slide.titleLine1}
+                      fill
+                      priority={current === 0}
+                      sizes="(max-width: 640px) 280px, (max-width: 1024px) 380px, 420px"
+                      className="w-full h-full object-contain drop-shadow-xl select-none pointer-events-none mx-auto lg:mx-0 filter"
+                    />
+                  </div>
                 ) : (
                   <div className="w-64 h-64 sm:w-72 sm:h-72 rounded-full bg-white/60 border border-slate-200/60 shadow-lg flex items-center justify-center">
                     <ShoppingCart size={80} style={{ color: slide.accentColor }} />

@@ -3,6 +3,7 @@
 import React from 'react';
 import { Minus, Plus, Trash2, Bookmark } from 'lucide-react';
 import { Product } from '../types';
+import { OptimizedImage } from './OptimizedImage';
 
 interface CartItemCardProps {
   item: {
@@ -21,8 +22,16 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove, onSaveForLater 
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 bg-card border border-border/40 rounded-3xl shadow-sm hover:border-primary/40 transition-all">
       <div className="flex items-center gap-4 flex-1 min-w-0">
-        <div className="h-20 w-20 shrink-0 bg-muted/20 rounded-2xl p-2 flex items-center justify-center overflow-hidden border border-border/40">
-          <img src={product.image} alt={product.name} className="max-w-full max-h-full object-contain" />
+        <div className="relative h-20 w-20 shrink-0 bg-muted/20 rounded-2xl p-2 flex items-center justify-center overflow-hidden border border-border/40">
+          <OptimizedImage
+            src={product.image}
+            alt={product.name}
+            variant="thumb"
+            imageVariants={product.imageVariants}
+            fill
+            sizes="80px"
+            className="max-w-full max-h-full object-contain"
+          />
         </div>
 
         <div className="min-w-0 space-y-1">

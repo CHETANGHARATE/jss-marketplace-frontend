@@ -118,6 +118,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
       {/* Premium Product Image Frame */}
       <ProductImageFrame
         src={product.image}
+        imageVariants={product.imageVariants}
         alt={product.name}
         onClick={handleProductClick}
       >

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useSearch } from '../../hooks/useSearch';
 import { Breadcrumbs } from '../../components/Breadcrumbs';
 import { ProductGridSkeleton } from '../../components/ProductGridSkeleton';
+import { OptimizedImage } from '../../components/OptimizedImage';
 import { ApiProduct } from '../../types/api';
 import {
   Search,
@@ -181,7 +182,15 @@ function SearchResultsContent() {
               className="group bg-card border border-border/40 rounded-3xl p-4 shadow-sm hover:shadow-md hover:border-primary/50 transition-all flex flex-col sm:flex-row gap-5 items-center justify-between"
             >
               <div className="h-32 w-32 shrink-0 bg-[#ECEFF3] dark:bg-slate-900/40 rounded-2xl overflow-hidden relative">
-                <img src={prod.images?.[0] || '/placeholder-product.png'} alt={prod.name} className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300" />
+                <OptimizedImage
+                  src={prod.image_variants?.card || prod.images?.[0] || prod.image || '/placeholder-product.png'}
+                  alt={prod.name}
+                  variant="card"
+                  imageVariants={prod.image_variants}
+                  fill
+                  sizes="128px"
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                />
               </div>
               <div className="flex-1 space-y-2 text-center sm:text-left">
                 {prod.brand && <span className="text-xs font-bold text-primary uppercase">{prod.brand.name}</span>}
