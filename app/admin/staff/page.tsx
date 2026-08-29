@@ -35,15 +35,19 @@ export default function AdminStaffPage() {
 
   const [activeTab, setActiveTab] = useState<'roles' | 'accounts'>('roles');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [generalError, setGeneralError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const [form, setForm] = useState({
+  const INITIAL_STAFF_FORM = {
     name: '',
     email: '',
     phone: '',
     password: '',
     role_title: 'Catalog Manager'
-  });
+  };
+
+  const [form, setForm] = useState(INITIAL_STAFF_FORM);
 
   const roles = rolesData?.data || [
     { name: 'Super Admin', slug: 'super_admin', users_count: 0, permissions: 'Full Access across all modules & settings' },
@@ -53,29 +57,60 @@ export default function AdminStaffPage() {
     { name: 'Customer Support', slug: 'support_executive', users_count: 0, permissions: 'Support Tickets & Orders (View Only)' },
   ];
 
+  const openCreateModal = (defaultRole?: string) => {
+    setForm({
+      ...INITIAL_STAFF_FORM,
+      role_title: defaultRole || 'Catalog Manager',
+    });
+    setFieldErrors({});
+    setGeneralError(null);
+    setIsCreateModalOpen(true);
+  };
+
+  const closeCreateModal = () => {
+    setIsCreateModalOpen(false);
+    setForm(INITIAL_STAFF_FORM);
+    setFieldErrors({});
+    setGeneralError(null);
+  };
+
   const handleCreateStaff = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage(null);
+    setGeneralError(null);
+    setFieldErrors({});
 
     if (form.password.length < 8) {
-      setErrorMessage('Password must be at least 8 characters long.');
+      setFieldErrors({ password: ['Temporary password must be at least 8 characters long.'] });
       return;
     }
 
     try {
-      await createStaffMutation.mutateAsync(form);
-      setIsCreateModalOpen(false);
-      setForm({
-        name: '',
-        email: '',
-        phone: '',
-        password: '',
-        role_title: 'Catalog Manager'
+      await createStaffMutation.mutateAsync({
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim() || undefined,
+        password: form.password,
+        role_title: form.role_title,
       });
+
+      const createdName = form.name.trim();
+      closeCreateModal();
+      setSuccessMessage(`Staff account for '${createdName}' created successfully.`);
       setActiveTab('accounts');
+
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 5000);
     } catch (err: any) {
-      const msg = err?.response?.data?.message || err?.message || 'Failed to create staff account.';
-      setErrorMessage(msg);
+      const backendFieldErrors = err?.errors || err?.response?.data?.errors;
+      if (backendFieldErrors && typeof backendFieldErrors === 'object' && Object.keys(backendFieldErrors).length > 0) {
+        setFieldErrors(backendFieldErrors);
+        const firstFieldMsg = Object.values(backendFieldErrors).flat().filter(Boolean)[0];
+        setGeneralError((firstFieldMsg as string) || err.message || 'Please correct the highlighted fields.');
+      } else {
+        const msg = err?.response?.data?.message || err?.message || 'Failed to create staff account.';
+        setGeneralError(msg);
+      }
     }
   };
 
@@ -83,8 +118,10 @@ export default function AdminStaffPage() {
     if (!confirm(`Are you sure you want to delete staff account '${name}'?`)) return;
     try {
       await deleteStaffMutation.mutateAsync(id);
+      setSuccessMessage(`Staff account '${name}' deleted successfully.`);
+      setTimeout(() => setSuccessMessage(null), 4000);
     } catch (err: any) {
-      alert(err?.response?.data?.message || 'Failed to delete staff account.');
+      alert(err?.response?.data?.message || err?.message || 'Failed to delete staff account.');
     }
   };
 
@@ -98,10 +135,7 @@ export default function AdminStaffPage() {
         actions={
           <button
             type="button"
-            onClick={() => {
-              setErrorMessage(null);
-              setIsCreateModalOpen(true);
-            }}
+            onClick={() => openCreateModal()}
             className="px-4 py-2.5 bg-rose-500 text-white font-bold text-xs rounded-xl hover:bg-rose-600 transition-colors flex items-center gap-2 shadow-2xs cursor-pointer"
           >
             <Plus size={16} />
@@ -109,6 +143,23 @@ export default function AdminStaffPage() {
           </button>
         }
       />
+
+      {/* Global Success Notification */}
+      {successMessage && (
+        <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-between text-emerald-600 font-bold text-xs shadow-2xs animate-fade-in">
+          <div className="flex items-center gap-2.5">
+            <CheckCircle2 size={16} className="text-emerald-500 shrink-0" />
+            <span>{successMessage}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSuccessMessage(null)}
+            className="text-emerald-600 hover:text-emerald-800 text-xs font-black cursor-pointer"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex items-center gap-2 border-b border-border-custom/60 pb-1">
@@ -175,10 +226,7 @@ export default function AdminStaffPage() {
                       <span className="text-[11px] font-mono text-muted-custom">Role Code: {r.slug || 'system'}</span>
                       <button
                         type="button"
-                        onClick={() => {
-                          setForm((prev) => ({ ...prev, role_title: r.name }));
-                          setIsCreateModalOpen(true);
-                        }}
+                        onClick={() => openCreateModal(r.name)}
                         className="px-3 py-1.5 bg-background-secondary border border-border-custom/80 text-foreground font-bold text-xs rounded-xl hover:bg-card cursor-pointer"
                       >
                         + Assign User
@@ -208,7 +256,7 @@ export default function AdminStaffPage() {
               </p>
               <button
                 type="button"
-                onClick={() => setIsCreateModalOpen(true)}
+                onClick={() => openCreateModal()}
                 className="px-6 py-2.5 bg-rose-500 hover:bg-rose-600 text-white text-xs font-black rounded-xl transition-all cursor-pointer shadow-2xs"
               >
                 Create First Staff Account
@@ -243,10 +291,10 @@ export default function AdminStaffPage() {
                       </td>
 
                       <td className="py-4 px-4 font-medium text-foreground">{st.email}</td>
-                      <td className="py-4 px-4 font-mono text-muted-custom">{st.phone || 'N/A'}</td>
+                      <td className="py-4 px-4 font-mono text-muted-custom">{st.phone || '—'}</td>
                       <td className="py-4 px-4">
                         <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-primary/10 text-primary border border-primary/20">
-                          {st.role?.toUpperCase() || 'ADMIN'}
+                          {st.role_title || st.role?.toUpperCase() || 'ADMIN'}
                         </span>
                       </td>
                       <td className="py-4 px-4">
@@ -276,18 +324,30 @@ export default function AdminStaffPage() {
 
       {/* Add Staff Modal */}
       {isCreateModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <form onSubmit={handleCreateStaff} className="bg-card border border-border-custom rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in"
+          onClick={closeCreateModal}
+        >
+          <form
+            onSubmit={handleCreateStaff}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-card border border-border-custom rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-4"
+          >
             <div className="flex items-center justify-between pb-3 border-b border-border-custom">
               <h3 className="text-lg font-black text-foreground">Add New Staff Account</h3>
-              <button type="button" onClick={() => setIsCreateModalOpen(false)} className="text-muted-custom hover:text-foreground text-xs font-bold cursor-pointer">
+              <button
+                type="button"
+                onClick={closeCreateModal}
+                className="text-muted-custom hover:text-foreground text-xs font-bold cursor-pointer p-1 rounded-lg hover:bg-background-secondary"
+              >
                 ✕
               </button>
             </div>
 
-            {errorMessage && (
-              <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-xs text-rose-600 font-bold">
-                {errorMessage}
+            {generalError && (
+              <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-xs text-rose-600 font-bold flex items-start gap-2">
+                <ShieldAlert size={16} className="shrink-0 mt-0.5" />
+                <span>{generalError}</span>
               </div>
             )}
 
@@ -297,10 +357,18 @@ export default function AdminStaffPage() {
                 type="text"
                 required
                 value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                onChange={(e) => {
+                  setForm({ ...form, name: e.target.value });
+                  if (fieldErrors.name) setFieldErrors((prev) => ({ ...prev, name: [] }));
+                }}
                 placeholder="e.g. Rahul Sharma"
-                className="w-full px-3 py-2 bg-background-secondary border border-border-custom text-foreground font-bold rounded-xl focus:outline-none"
+                className={`w-full px-3 py-2 bg-background-secondary border ${
+                  fieldErrors.name?.length ? 'border-rose-500 ring-1 ring-rose-500/30' : 'border-border-custom'
+                } text-foreground font-bold rounded-xl focus:outline-none`}
               />
+              {fieldErrors.name?.length ? (
+                <p className="text-[11px] font-bold text-rose-500">{fieldErrors.name[0]}</p>
+              ) : null}
             </div>
 
             <div className="space-y-1 text-xs">
@@ -309,10 +377,18 @@ export default function AdminStaffPage() {
                 type="email"
                 required
                 value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                onChange={(e) => {
+                  setForm({ ...form, email: e.target.value });
+                  if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: [] }));
+                }}
                 placeholder="staff@jsssolutions.in"
-                className="w-full px-3 py-2 bg-background-secondary border border-border-custom text-foreground font-medium rounded-xl focus:outline-none"
+                className={`w-full px-3 py-2 bg-background-secondary border ${
+                  fieldErrors.email?.length ? 'border-rose-500 ring-1 ring-rose-500/30' : 'border-border-custom'
+                } text-foreground font-medium rounded-xl focus:outline-none`}
               />
+              {fieldErrors.email?.length ? (
+                <p className="text-[11px] font-bold text-rose-500">{fieldErrors.email[0]}</p>
+              ) : null}
             </div>
 
             <div className="space-y-1 text-xs">
@@ -320,25 +396,50 @@ export default function AdminStaffPage() {
               <input
                 type="text"
                 value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                onChange={(e) => {
+                  setForm({ ...form, phone: e.target.value });
+                  if (fieldErrors.phone) setFieldErrors((prev) => ({ ...prev, phone: [] }));
+                }}
                 placeholder="+91 9876543210"
-                className="w-full px-3 py-2 bg-background-secondary border border-border-custom text-foreground font-mono font-bold rounded-xl focus:outline-none"
+                className={`w-full px-3 py-2 bg-background-secondary border ${
+                  fieldErrors.phone?.length ? 'border-rose-500 ring-1 ring-rose-500/30' : 'border-border-custom'
+                } text-foreground font-mono font-bold rounded-xl focus:outline-none`}
               />
+              {fieldErrors.phone?.length ? (
+                <p className="text-[11px] font-bold text-rose-500">{fieldErrors.phone[0]}</p>
+              ) : null}
             </div>
 
             <div className="space-y-1 text-xs">
               <label className="font-bold text-muted-custom">Assigned Role *</label>
               <select
                 value={form.role_title}
-                onChange={(e) => setForm({ ...form, role_title: e.target.value })}
-                className="w-full px-3 py-2 bg-background-secondary border border-border-custom text-foreground font-bold rounded-xl focus:outline-none"
+                onChange={(e) => {
+                  setForm({ ...form, role_title: e.target.value });
+                  if (fieldErrors.role_title || fieldErrors.role) {
+                    setFieldErrors((prev) => {
+                      const updated = { ...prev };
+                      delete updated.role_title;
+                      delete updated.role;
+                      return updated;
+                    });
+                  }
+                }}
+                className={`w-full px-3 py-2 bg-background-secondary border ${
+                  fieldErrors.role_title?.length || fieldErrors.role?.length
+                    ? 'border-rose-500 ring-1 ring-rose-500/30'
+                    : 'border-border-custom'
+                } text-foreground font-bold rounded-xl focus:outline-none`}
               >
-                <option value="Super Admin">Super Admin (Full System Access)</option>
                 <option value="Catalog Manager">Catalog Manager (Products, Categories, Brands)</option>
                 <option value="Order & Logistics Manager">Order & Logistics Manager</option>
                 <option value="Finance & Settlement Officer">Finance & Settlement Officer</option>
                 <option value="Customer Support Executive">Customer Support Executive</option>
+                <option value="Super Admin">Super Admin (Full System Access)</option>
               </select>
+              {fieldErrors.role_title?.length ? (
+                <p className="text-[11px] font-bold text-rose-500">{fieldErrors.role_title[0]}</p>
+              ) : null}
             </div>
 
             <div className="space-y-1 text-xs">
@@ -348,17 +449,34 @@ export default function AdminStaffPage() {
                 required
                 minLength={8}
                 value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                onChange={(e) => {
+                  setForm({ ...form, password: e.target.value });
+                  if (fieldErrors.password) setFieldErrors((prev) => ({ ...prev, password: [] }));
+                }}
                 placeholder="••••••••"
-                className="w-full px-3 py-2 bg-background-secondary border border-border-custom text-foreground font-mono font-bold rounded-xl focus:outline-none"
+                autoComplete="new-password"
+                className={`w-full px-3 py-2 bg-background-secondary border ${
+                  fieldErrors.password?.length ? 'border-rose-500 ring-1 ring-rose-500/30' : 'border-border-custom'
+                } text-foreground font-mono font-bold rounded-xl focus:outline-none`}
               />
+              {fieldErrors.password?.length ? (
+                <p className="text-[11px] font-bold text-rose-500">{fieldErrors.password[0]}</p>
+              ) : null}
             </div>
 
             <div className="flex justify-end gap-2 pt-3 border-t border-border-custom">
-              <button type="button" onClick={() => setIsCreateModalOpen(false)} className="px-4 py-2 bg-background-secondary text-foreground text-xs font-bold rounded-xl cursor-pointer">
+              <button
+                type="button"
+                onClick={closeCreateModal}
+                className="px-4 py-2 bg-background-secondary text-foreground text-xs font-bold rounded-xl cursor-pointer hover:bg-card transition-colors"
+              >
                 Cancel
               </button>
-              <button type="submit" disabled={createStaffMutation.isPending} className="px-5 py-2 bg-rose-500 text-white text-xs font-bold rounded-xl hover:bg-rose-600 cursor-pointer disabled:opacity-50">
+              <button
+                type="submit"
+                disabled={createStaffMutation.isPending}
+                className="px-5 py-2 bg-rose-500 text-white text-xs font-bold rounded-xl hover:bg-rose-600 cursor-pointer disabled:opacity-50 transition-colors shadow-2xs"
+              >
                 {createStaffMutation.isPending ? 'Creating...' : 'Create Account'}
               </button>
             </div>

@@ -57,7 +57,7 @@ apiClient.interceptors.request.use(
 );
 
 /**
- * Response Interceptor: Normalize API error messages & handle 401
+ * Response Interceptor: Normalize API error messages, preserve field errors, & handle 401
  */
 apiClient.interceptors.response.use(
   (response) => response,
@@ -67,7 +67,22 @@ apiClient.interceptors.response.use(
       sessionStorage.removeItem('auth_token');
     }
 
+    const fieldErrors = error.response?.data?.errors;
     let message = error.response?.data?.message;
+
+    // If backend returned 422 with field-level validation errors, unpack specific errors into message
+    if (fieldErrors && typeof fieldErrors === 'object' && Object.keys(fieldErrors).length > 0) {
+      const errorList = Object.values(fieldErrors).flat().filter(Boolean);
+      if (errorList.length > 0) {
+        if (
+          !message ||
+          message.toLowerCase().includes('validation failed') ||
+          message.toLowerCase().includes('given data was invalid')
+        ) {
+          message = errorList.join(' ');
+        }
+      }
+    }
 
     if (!message) {
       if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
@@ -85,6 +100,12 @@ apiClient.interceptors.response.use(
       }
     }
 
-    return Promise.reject(new Error(message));
+    const customError = new Error(message) as any;
+    customError.response = error.response;
+    customError.errors = fieldErrors;
+    customError.status = error.response?.status;
+    customError.isAxiosError = true;
+
+    return Promise.reject(customError);
   }
 );
