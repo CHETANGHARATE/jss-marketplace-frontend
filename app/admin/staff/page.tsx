@@ -220,6 +220,25 @@ export default function AdminStaffPage() {
                         </span>
                       </div>
                       <p className="text-xs text-muted-custom font-semibold leading-relaxed">{r.permissions}</p>
+
+                      {/* Action Matrix Tags */}
+                      {r.slug === 'catalog_manager' && (
+                        <div className="pt-2 space-y-1.5 bg-background-secondary/60 p-3 rounded-2xl border border-border-custom/60">
+                          <span className="text-[10px] font-black uppercase tracking-wider text-muted-custom block">
+                            Enforced Actions & Scope:
+                          </span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {['Products (View, Create, Edit, Approve, Export)', 'Categories (View, Create, Edit)', 'Brands (View, Create, Edit)', 'Attributes (View, Create, Edit)'].map((scope) => (
+                              <span key={scope} className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-card text-foreground border border-border-custom">
+                                {scope}
+                              </span>
+                            ))}
+                          </div>
+                          <span className="text-[10px] text-rose-500 font-bold block pt-0.5">
+                            ✕ Blocked: Orders, Customers, Vendors, Payments, Shipping, Promotions, Staff, Settings
+                          </span>
+                        </div>
+                      )}
                     </div>
 
                     <div className="pt-2 flex justify-between items-center border-t border-border-custom/60 text-xs">
@@ -271,50 +290,77 @@ export default function AdminStaffPage() {
                     <th className="py-3.5 px-4">Email</th>
                     <th className="py-3.5 px-4">Phone</th>
                     <th className="py-3.5 px-4">Assigned Role</th>
+                    <th className="py-3.5 px-4">Permissions Summary</th>
                     <th className="py-3.5 px-4">Status</th>
                     <th className="py-3.5 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border-custom/60">
-                  {staffList.map((st: any) => (
-                    <tr key={st.id} className="hover:bg-background-secondary/50 transition-colors">
-                      <td className="py-4 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary font-black flex items-center justify-center text-xs">
-                            {st.name?.charAt(0)?.toUpperCase() || 'S'}
-                          </div>
-                          <div>
-                            <div className="font-extrabold text-foreground">{st.name}</div>
-                            <div className="text-[10px] text-muted-custom font-mono">ID: #{st.id}</div>
-                          </div>
-                        </div>
-                      </td>
+                  {staffList.map((st: any) => {
+                    const modules: string[] = st.module_access || (
+                      st.role_slug === 'catalog_manager'
+                        ? ['Products', 'Categories', 'Brands', 'Attributes']
+                        : st.role_slug === 'order_manager'
+                        ? ['Orders', 'Shipments']
+                        : st.role_slug === 'finance_officer'
+                        ? ['Payments', 'Reports', 'Tax']
+                        : st.role_slug === 'support_executive'
+                        ? ['Customers', 'Reviews', 'Tickets']
+                        : ['All Modules']
+                    );
 
-                      <td className="py-4 px-4 font-medium text-foreground">{st.email}</td>
-                      <td className="py-4 px-4 font-mono text-muted-custom">{st.phone || '—'}</td>
-                      <td className="py-4 px-4">
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-primary/10 text-primary border border-primary/20">
-                          {st.role_title || st.role?.toUpperCase() || 'ADMIN'}
-                        </span>
-                      </td>
-                      <td className="py-4 px-4">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
-                          <CheckCircle2 size={12} />
-                          <span>Active</span>
-                        </span>
-                      </td>
-                      <td className="py-4 px-4 text-right">
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteStaff(st.id, st.name)}
-                          className="p-1.5 text-rose-500 hover:bg-rose-500/10 rounded-lg cursor-pointer"
-                          title="Delete Staff Account"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                    return (
+                      <tr key={st.id} className="hover:bg-background-secondary/50 transition-colors">
+                        <td className="py-4 px-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary font-black flex items-center justify-center text-xs">
+                              {st.name?.charAt(0)?.toUpperCase() || 'S'}
+                            </div>
+                            <div>
+                              <div className="font-extrabold text-foreground">{st.name}</div>
+                              <div className="text-[10px] text-muted-custom font-mono">ID: #{st.id}</div>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td className="py-4 px-4 font-medium text-foreground">{st.email}</td>
+                        <td className="py-4 px-4 font-mono text-muted-custom">{st.phone || '—'}</td>
+                        <td className="py-4 px-4">
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-primary/10 text-primary border border-primary/20">
+                            {st.role_title || st.role?.toUpperCase() || 'ADMIN'}
+                          </span>
+                        </td>
+                        <td className="py-4 px-4 max-w-xs">
+                          <div className="flex flex-wrap gap-1">
+                            {modules.map((m: string) => (
+                              <span
+                                key={m}
+                                className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-background-secondary text-foreground/80 border border-border-custom"
+                              >
+                                {m}
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="py-4 px-4">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
+                            <CheckCircle2 size={12} />
+                            <span>Active</span>
+                          </span>
+                        </td>
+                        <td className="py-4 px-4 text-right">
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteStaff(st.id, st.name)}
+                            className="p-1.5 text-rose-500 hover:bg-rose-500/10 rounded-lg cursor-pointer"
+                            title="Delete Staff Account"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

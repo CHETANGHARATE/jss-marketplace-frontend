@@ -46,21 +46,24 @@ export type NavEntry =
       icon: React.ComponentType<{ size?: number; className?: string }>;
       exact?: boolean;
       badge?: string;
+      permission?: string;
     }
   | {
       type: 'group';
       groupName: string;
       icon: React.ComponentType<{ size?: number; className?: string }>;
+      permission?: string;
       items: {
         label: string;
         href: string;
         exact?: boolean;
         badge?: string;
+        permission?: string;
       }[];
     };
 
 export const NAVIGATION_ENTRIES: NavEntry[] = [
-  // 1. Dashboard — 1 destination → Direct Link
+  // 1. Dashboard — Accessible to all authenticated admin & staff
   {
     type: 'link',
     label: 'Dashboard',
@@ -69,166 +72,185 @@ export const NAVIGATION_ENTRIES: NavEntry[] = [
     exact: true,
   },
 
-  // 2. Product Management — 5 real distinct destinations → Dropdown Accordion
+  // 2. Product Management
   {
     type: 'group',
     groupName: 'PRODUCT MANAGEMENT',
     icon: Package,
+    permission: 'products.view',
     items: [
-      { href: '/admin/products', label: 'All Products', exact: true },
-      { href: '/admin/products/create', label: 'Add Product' },
-      { href: '/admin/products/import', label: 'Bulk Import' },
-      { href: '/admin/brands', label: 'Brands' },
-      { href: '/admin/attribute-templates', label: 'Attributes' },
+      { href: '/admin/products', label: 'All Products', exact: true, permission: 'products.view' },
+      { href: '/admin/products/create', label: 'Add Product', permission: 'products.create' },
+      { href: '/admin/products/import', label: 'Bulk Import', permission: 'products.create' },
+      { href: '/admin/brands', label: 'Brands', permission: 'brands.view' },
+      { href: '/admin/attribute-templates', label: 'Attributes', permission: 'attributes.view' },
     ],
   },
 
-  // 3. Category Management — 1 real destination → Direct Link
+  // 3. Category Management
   {
     type: 'link',
     label: 'CATEGORY MANAGEMENT',
     href: '/admin/categories',
     icon: Layers,
+    permission: 'categories.view',
   },
 
-  // 4. Order Management — 1 real destination → Direct Link (tabs exist on page)
+  // 4. Order Management
   {
     type: 'link',
     label: 'ORDER MANAGEMENT',
     href: '/admin/orders',
     icon: ShoppingBag,
+    permission: 'orders.view',
   },
 
-  // 5. Customer Management — 1 real destination → Direct Link
+  // 5. Customer Management
   {
     type: 'link',
     label: 'CUSTOMER MANAGEMENT',
     href: '/admin/users',
     icon: Users,
+    permission: 'customers.view',
   },
 
-  // 6. Inventory Management — 1 real destination → Direct Link
+  // 6. Inventory Management
   {
     type: 'link',
     label: 'INVENTORY MANAGEMENT',
     href: '/admin/inventory',
     icon: Warehouse,
+    permission: 'inventory.view',
   },
 
-  // 7. Vendor Management — 1 real destination → Direct Link
+  // 7. Vendor Management
   {
     type: 'link',
     label: 'VENDOR MANAGEMENT',
     href: '/admin/vendors',
     icon: Store,
+    permission: 'vendors.view',
   },
 
-  // 8. Payment Management — 1 real destination → Direct Link
+  // 8. Payment Management
   {
     type: 'link',
     label: 'PAYMENT MANAGEMENT',
     href: '/admin/payments',
     icon: CreditCard,
+    permission: 'payments.view',
   },
 
-  // 9. Shipping Management — 1 real destination → Direct Link
+  // 9. Shipping Management
   {
     type: 'link',
     label: 'SHIPPING MANAGEMENT',
     href: '/admin/shipping',
     icon: Truck,
+    permission: 'shipping.view',
   },
 
-  // 10. Promotions & Coupons — 3 real distinct destinations → Dropdown Accordion
+  // 10. Promotions & Coupons
   {
     type: 'group',
     groupName: 'PROMOTIONS & COUPONS',
     icon: Ticket,
+    permission: 'promotions.view',
     items: [
-      { href: '/admin/coupons', label: 'Coupons', exact: true },
-      { href: '/admin/promotions', label: 'Promotions' },
-      { href: '/admin/flash-sales', label: 'Flash Sales' },
+      { href: '/admin/coupons', label: 'Coupons', exact: true, permission: 'promotions.view' },
+      { href: '/admin/promotions', label: 'Promotions', permission: 'promotions.view' },
+      { href: '/admin/flash-sales', label: 'Flash Sales', permission: 'promotions.view' },
     ],
   },
 
-  // 11. CMS & Content — 1 real destination → Direct Link
+  // 11. CMS & Content
   {
     type: 'link',
     label: 'CMS & CONTENT',
     href: '/admin/cms',
     icon: LayoutGrid,
+    permission: 'cms.view',
   },
 
-  // 12. Reviews & Ratings — 1 real destination → Direct Link
+  // 12. Reviews & Ratings
   {
     type: 'link',
     label: 'REVIEWS & RATINGS',
     href: '/admin/reviews',
     icon: MessageSquare,
+    permission: 'reviews.view',
   },
 
-  // 13. Reports & Analytics — 1 real destination → Direct Link
+  // 13. Reports & Analytics
   {
     type: 'link',
     label: 'REPORTS & ANALYTICS',
     href: '/admin/reports',
     icon: BarChart3,
+    permission: 'reports.view',
   },
 
-  // 14. Tax & Invoicing — 1 real destination → Direct Link
+  // 14. Tax & Invoicing
   {
     type: 'link',
     label: 'TAX & INVOICING',
     href: '/admin/tax',
     icon: Receipt,
+    permission: 'tax.view',
   },
 
-  // 15. Suppliers & Purchase — 1 real destination → Direct Link
+  // 15. Suppliers & Purchase
   {
     type: 'link',
     label: 'SUPPLIERS & PURCHASE',
     href: '/admin/suppliers',
     icon: Boxes,
+    permission: 'suppliers.view',
   },
 
-  // 16. Staff & Roles — 1 real destination → Direct Link
+  // 16. Staff & Roles
   {
     type: 'link',
     label: 'STAFF & ROLES',
     href: '/admin/staff',
     icon: UserCheck,
+    permission: 'staff.view',
   },
 
-  // 17. Notifications — 1 real destination → Direct Link
+  // 17. Notifications
   {
     type: 'link',
     label: 'NOTIFICATIONS',
     href: '/admin/notifications',
     icon: Bell,
+    permission: 'notifications.view',
   },
 
-  // 18. Support — 1 real destination → Direct Link
+  // 18. Support
   {
     type: 'link',
     label: 'SUPPORT',
     href: '/admin/support',
     icon: HelpCircle,
+    permission: 'support.view',
   },
 
-  // 19. Settings — 1 real destination → Direct Link
+  // 19. Settings
   {
     type: 'link',
     label: 'SETTINGS',
     href: '/admin/settings',
     icon: Sliders,
+    permission: 'settings.view',
   },
 
-  // 20. Security & Backup — 1 real destination → Direct Link
+  // 20. Security & Backup
   {
     type: 'link',
     label: 'SECURITY & BACKUP',
     href: '/admin/security',
     icon: ShieldCheck,
+    permission: 'security.view',
   },
 ];
 
@@ -250,8 +272,8 @@ function isGroupActive(pathname: string, group: Extract<NavEntry, { type: 'group
 }
 
 /** Check which group is active for auto-expansion */
-function getActiveGroupName(pathname: string): string | null {
-  for (const entry of NAVIGATION_ENTRIES) {
+function getActiveGroupName(pathname: string, entries: NavEntry[]): string | null {
+  for (const entry of entries) {
     if (entry.type === 'group' && isGroupActive(pathname, entry)) {
       return entry.groupName;
     }
@@ -263,11 +285,59 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
   const pathname = usePathname();
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { user, logout } = useAuth();
+  const { user, logout, can } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+  // Filter navigation entries based on user permissions + Smart Sidebar Rule:
+  // 0 accessible children → completely hidden
+  // 1 accessible child → direct link without dropdown
+  // 2+ accessible children → dropdown with only permitted items
+  const accessibleEntries = useMemo(() => {
+    return NAVIGATION_ENTRIES.map((entry) => {
+      if (entry.type === 'link') {
+        if (entry.permission && !can(entry.permission)) {
+          return null;
+        }
+        return entry;
+      }
+
+      if (entry.type === 'group') {
+        const permittedItems = entry.items.filter((item) => {
+          return !item.permission || can(item.permission);
+        });
+
+        // 0 accessible children → hide group completely
+        if (permittedItems.length === 0) {
+          return null;
+        }
+
+        // 1 accessible child → collapse to direct link (no dropdown accordion)
+        if (permittedItems.length === 1) {
+          const single = permittedItems[0];
+          return {
+            type: 'link' as const,
+            label: single.label,
+            href: single.href,
+            icon: entry.icon,
+            exact: single.exact,
+            badge: single.badge,
+            permission: single.permission,
+          };
+        }
+
+        // 2+ accessible children → dropdown accordion with accessible children only
+        return {
+          ...entry,
+          items: permittedItems,
+        };
+      }
+
+      return null;
+    }).filter(Boolean) as NavEntry[];
+  }, [can]);
+
   // Active group auto-expansion
-  const activeGroupName = useMemo(() => getActiveGroupName(pathname), [pathname]);
+  const activeGroupName = useMemo(() => getActiveGroupName(pathname, accessibleEntries), [pathname, accessibleEntries]);
   const [openGroup, setOpenGroup] = useState<string | null>(activeGroupName);
 
   useEffect(() => {
@@ -291,6 +361,12 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
     }
   };
 
+  const displayRole = user?.is_super_admin || user?.role_slug === 'super_admin'
+    ? 'Super Admin'
+    : user?.role_slug
+    ? user.role_slug.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+    : 'Staff Administrator';
+
   return (
     <aside
       className={`bg-[#07152F] text-white border border-[#1c325c] rounded-3xl p-4 shadow-xl shrink-0 lg:sticky lg:top-4 self-start transition-all duration-300 ${
@@ -302,7 +378,7 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5 text-[#FF1654] text-[11px] font-bold uppercase tracking-wider">
             <Sparkles size={14} />
-            {!isCollapsed && <span>Control Center</span>}
+            {!isCollapsed && <span>{displayRole}</span>}
           </div>
           {onToggleCollapse && (
             <button
@@ -323,9 +399,9 @@ export function AdminSidebar({ isCollapsed = false, onToggleCollapse }: AdminSid
         )}
       </div>
 
-      {/* Navigation List (Intelligent Direct Links & Expandable Groups) */}
+      {/* Navigation List (Filtered by Permissions with Smart Direct Links & Groups) */}
       <nav className="space-y-1 max-h-[calc(100vh-160px)] overflow-y-auto no-scrollbar pr-1">
-        {NAVIGATION_ENTRIES.map((entry) => {
+        {accessibleEntries.map((entry) => {
           const Icon = entry.icon;
 
           // ── CASE 1 & 2: Direct Link (0 or 1 real destination) ──

@@ -12,6 +12,9 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isSeller: boolean;
   isAdmin: boolean;
+  isSuperAdmin: boolean;
+  can: (permission?: string | null) => boolean;
+  canAny: (permissions: string[]) => boolean;
   login: (payload: LoginPayload) => Promise<ApiUser>;
   register: (payload: RegisterPayload) => Promise<ApiUser>;
   setAuthSession: (user: ApiUser, token: string, rememberMe?: boolean) => Promise<void>;
@@ -179,6 +182,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isSeller = roleStr === 'seller' || roleStr === 'vendor';
   const isAdmin = roleStr === 'admin';
 
+  const isSuperAdmin = Boolean(
+    user?.is_super_admin ||
+    user?.roles?.includes('super_admin') ||
+    user?.role_slug === 'super_admin' ||
+    (user?.id === 1 && user?.role === 'admin')
+  );
+
+  const can = useCallback(
+    (permission?: string | null): boolean => {
+      if (!user) return false;
+      if (isSuperAdmin) return true;
+      if (!permission) return true;
+      const perms = user.permissions || [];
+      return perms.includes(permission) || perms.includes('*');
+    },
+    [user, isSuperAdmin]
+  );
+
+  const canAny = useCallback(
+    (permissions: string[]): boolean => {
+      if (!user) return false;
+      if (isSuperAdmin) return true;
+      if (!permissions || permissions.length === 0) return true;
+      const perms = user.permissions || [];
+      if (perms.includes('*')) return true;
+      return permissions.some((p) => perms.includes(p));
+    },
+    [user, isSuperAdmin]
+  );
+
   return (
     <AuthContext.Provider
       value={{
@@ -188,6 +221,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isAuthenticated: !!user && !!token,
         isSeller,
         isAdmin,
+        isSuperAdmin,
+        can,
+        canAny,
         login,
         register,
         setAuthSession,

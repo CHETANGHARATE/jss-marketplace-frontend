@@ -39,6 +39,10 @@ export interface ApiUser {
   email: string;
   phone?: string;
   role: 'admin' | 'seller' | 'customer';
+  role_slug?: string;
+  roles?: string[];
+  permissions?: string[];
+  is_super_admin?: boolean;
   is_active?: boolean;
   email_verified_at?: string;
   created_at: string;
