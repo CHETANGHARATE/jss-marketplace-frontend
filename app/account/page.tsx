@@ -65,11 +65,11 @@ function AccountContent() {
     if (tabParam === 'register') {
       setAuthView('register');
     } else if (tabParam === 'forgot-password' || tabParam === 'forgot_password') {
-      setAuthView('forgot_password');
+      router.replace('/forgot-password');
     } else if (tabParam === 'login' || !tabParam) {
       setAuthView('login');
     }
-  }, [tabParam]);
+  }, [tabParam, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

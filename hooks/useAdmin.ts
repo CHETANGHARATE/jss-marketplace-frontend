@@ -597,7 +597,7 @@ export function useUpdateAdminOrderStatusMutation() {
 // ─── Payments ─────────────────────────────────────────────────────────────────
 
 export function useAdminPaymentsQuery(
-  params?: { status?: string; page?: number },
+  params?: { search?: string; status?: string; gateway?: string; page?: number; per_page?: number },
   enabled = true
 ) {
   return useQuery({

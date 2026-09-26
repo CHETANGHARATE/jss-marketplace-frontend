@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../contexts/AuthContext';
-import { ShieldCheck, Lock, Mail, Eye, EyeOff, AlertCircle, Sparkles, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Lock, Mail, AlertCircle, Sparkles, ArrowRight } from 'lucide-react';
 import { BrandLogo } from '../../../components/BrandLogo';
+import { PasswordInput } from '../../../components/ui/PasswordInput';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -12,7 +14,6 @@ export default function AdminLoginPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -111,29 +112,25 @@ export default function AdminLoginPage() {
 
             {/* Password Field */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-foreground/80 uppercase tracking-wider block">
-                Security Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-foreground/40">
-                  <Lock className="w-4 h-4" />
-                </div>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className="w-full pl-10 pr-11 py-3 bg-muted/20 border border-border/40 rounded-2xl text-xs font-medium text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-foreground/40 hover:text-foreground transition-colors"
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-foreground/80 uppercase tracking-wider block">
+                  Security Password
+                </label>
+                <Link
+                  href="/forgot-password"
+                  className="text-xs font-bold text-rose-500 hover:underline"
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
+                  Forgot Password?
+                </Link>
               </div>
+              <PasswordInput
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••••••"
+                autoComplete="current-password"
+                className="py-3 bg-muted/20 border-border/40 focus:border-rose-500 focus:ring-rose-500 text-xs"
+              />
             </div>
 
             {/* Submit Button */}

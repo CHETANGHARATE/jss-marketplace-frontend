@@ -469,17 +469,24 @@ export const adminService = {
     return response.data.data;
   },
 
-  // ── Payments ─────────────────────────────────────────────────────────────
+  // ── Payments & Refunds ──────────────────────────────────────────────────
 
   /** GET /admin/payments */
-  async getPayments(params?: { status?: string; page?: number }): Promise<PaginatedApiResponse<AdminPaymentRecord>> {
-    const response = await apiClient.get<PaginatedApiResponse<AdminPaymentRecord>>('/admin/payments', { params });
+  async getPayments(params?: { search?: string; status?: string; gateway?: string; page?: number; per_page?: number }): Promise<PaginatedApiResponse<any>> {
+    const response = await apiClient.get<PaginatedApiResponse<any>>('/admin/payments', { params });
+    return response.data;
+  },
+
+  /** GET /admin/payments/logs */
+  async getPaymentLogs(params?: { page?: number }): Promise<PaginatedApiResponse<any>> {
+    const response = await apiClient.get<PaginatedApiResponse<any>>('/admin/payments/logs', { params });
     return response.data;
   },
 
   /** POST /admin/payments/refund */
-  async refundPayment(payload: { order_id: number; amount: number; reason?: string }): Promise<void> {
-    await apiClient.post('/admin/payments/refund', payload);
+  async refundPayment(payload: { order_id: number; amount: number; reason?: string }): Promise<any> {
+    const response = await apiClient.post<ApiResponse<any>>('/admin/payments/refund', payload);
+    return response.data.data;
   },
 
   // ── Shipments ─────────────────────────────────────────────────────────────

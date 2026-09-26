@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { User, Phone, Mail, Lock, CreditCard, Calendar, MapPin, Eye, EyeOff } from 'lucide-react';
+import { User, Phone, Mail, Lock, CreditCard, Calendar, MapPin } from 'lucide-react';
+import { PasswordInput } from '../../ui/PasswordInput';
 
 export interface Step1Data {
   fullName: string;
@@ -47,8 +48,6 @@ const INDIAN_STATES = [
 ];
 
 export const Step1BasicInfo: React.FC<Step1Props> = ({ data, onChange, onNext, isLoggedIn }) => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = (): boolean => {
@@ -167,45 +166,27 @@ export const Step1BasicInfo: React.FC<Step1Props> = ({ data, onChange, onNext, i
           <>
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-foreground/80">Create Password *</label>
-              <div className="relative">
-                <Lock size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-custom" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={data.password || ''}
-                  onChange={(e) => onChange({ password: e.target.value })}
-                  placeholder="Create Password"
-                  className="w-full pl-10 pr-10 py-2.5 bg-background-secondary border border-border-custom rounded-xl text-xs font-semibold text-foreground focus:outline-none focus:border-primary"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-custom hover:text-foreground"
-                >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
+              <PasswordInput
+                value={data.password || ''}
+                onChange={(e) => onChange({ password: e.target.value })}
+                placeholder="Create Password"
+                autoComplete="new-password"
+                className="py-2.5 px-4 text-xs font-semibold rounded-xl"
+                icon={<Lock size={18} />}
+              />
               {errors.password && <p className="text-[11px] font-bold text-rose-500">{errors.password}</p>}
             </div>
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-foreground/80">Confirm Password *</label>
-              <div className="relative">
-                <Lock size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-custom" />
-                <input
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  value={data.confirmPassword || ''}
-                  onChange={(e) => onChange({ confirmPassword: e.target.value })}
-                  placeholder="Confirm Password"
-                  className="w-full pl-10 pr-10 py-2.5 bg-background-secondary border border-border-custom rounded-xl text-xs font-semibold text-foreground focus:outline-none focus:border-primary"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-custom hover:text-foreground"
-                >
-                  {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
+              <PasswordInput
+                value={data.confirmPassword || ''}
+                onChange={(e) => onChange({ confirmPassword: e.target.value })}
+                placeholder="Confirm Password"
+                autoComplete="new-password"
+                className="py-2.5 px-4 text-xs font-semibold rounded-xl"
+                icon={<Lock size={18} />}
+              />
               {errors.confirmPassword && <p className="text-[11px] font-bold text-rose-500">{errors.confirmPassword}</p>}
             </div>
           </>

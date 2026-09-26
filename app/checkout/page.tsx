@@ -69,7 +69,7 @@ const DEFAULT_SHIPPING_METHODS: ApiShippingMethod[] = [
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const { warning, error: toastError, success: toastSuccess } = useToast();
   const { cart, cartTotal, cartItemCount, clearCart } = useCartWishlist();
   const { data: addresses = [], isLoading: isAddressesLoading } = useAddressesQuery();
@@ -96,6 +96,7 @@ export default function CheckoutPage() {
   const [addressToEdit, setAddressToEdit] = useState<ApiAddress | undefined>(undefined);
   const [isOrderPlaced, setIsOrderPlaced] = useState<boolean>(false);
   const [placedOrderNumber, setPlacedOrderNumber] = useState<string>('');
+  const [pendingOrder, setPendingOrder] = useState<any | null>(null);
 
   const [paymentModalState, setPaymentModalState] = useState<{
     isOpen: boolean;
@@ -174,10 +175,104 @@ export default function CheckoutPage() {
 
   const selectedAddress = addresses.find((a) => a.id === selectedAddressId) || addresses[0];
 
+  const initiateRazorpayPayment = (order: any) => {
+    setPaymentModalState({ isOpen: true, status: 'processing', errorMessage: undefined });
+
+    createPaymentOrderMutation.mutate(
+      { order_id: order.id, gateway: 'razorpay' },
+      {
+        onSuccess: async (razorpayData) => {
+          try {
+            const activeAddress = addresses.find((a) => a.id === selectedAddressId) || addresses[0];
+            await razorpayService.openCheckout({
+              key: razorpayData.key || razorpayData.key_id || 'rzp_test_placeholder',
+              amount: razorpayData.amount,
+              currency: razorpayData.currency || 'INR',
+              name: 'JSSSolutions Marketplace',
+              description: `Order #${order.order_number}`,
+              order_id: razorpayData.razorpay_order_id || razorpayData.gateway_order_id || '',
+              prefill: {
+                name: activeAddress?.full_name || user?.name || '',
+                email: user?.email || '',
+                contact: activeAddress?.phone || user?.phone || '',
+              },
+              notes: {
+                order_id: String(order.id),
+                order_number: order.order_number,
+              },
+              theme: {
+                color: '#0d9488',
+              },
+              handler: (response) => {
+                setPaymentModalState({ isOpen: true, status: 'processing' });
+                verifyPaymentMutation.mutate(
+                  {
+                    order_id: order.id,
+                    gateway: 'razorpay',
+                    payload: {
+                      razorpay_payment_id: response.razorpay_payment_id,
+                      razorpay_order_id: response.razorpay_order_id,
+                      razorpay_signature: response.razorpay_signature,
+                    },
+                  },
+                  {
+                    onSuccess: () => {
+                      clearCart();
+                      setPendingOrder(null);
+                      setPaymentModalState({ isOpen: false, status: 'success' });
+                      setPlacedOrderNumber(order.order_number);
+                      setIsOrderPlaced(true);
+                      toastSuccess('Payment successful! Your order has been placed.', 'Order Confirmed');
+                    },
+                    onError: (err: any) => {
+                      setPaymentModalState({
+                        isOpen: true,
+                        status: 'failed',
+                        errorMessage: err?.response?.data?.message || 'Payment verification failed. Please contact support.',
+                      });
+                    },
+                  }
+                );
+              },
+              modal: {
+                ondismiss: () => {
+                  setPaymentModalState({
+                    isOpen: true,
+                    status: 'failed',
+                    errorMessage: 'Payment was not completed. You can try again to complete your order.',
+                  });
+                },
+              },
+            });
+          } catch (err: any) {
+            setPaymentModalState({
+              isOpen: true,
+              status: 'failed',
+              errorMessage: err.message || 'Failed to open Razorpay payment window.',
+            });
+          }
+        },
+        onError: (err: any) => {
+          setPaymentModalState({
+            isOpen: true,
+            status: 'failed',
+            errorMessage: err?.response?.data?.message || 'Failed to initialize payment gateway order.',
+          });
+        },
+      }
+    );
+  };
+
   const handlePlaceOrder = () => {
     if (!selectedAddressId && addresses.length === 0) {
       warning('Please add a shipping address to proceed.', 'Address Required');
       setIsAddressModalOpen(true);
+      return;
+    }
+
+    // If an unpaid order already exists for this checkout attempt, retry payment directly
+    if (paymentProvider === 'razorpay' && pendingOrder) {
+      initiateRazorpayPayment(pendingOrder);
       return;
     }
 
@@ -190,80 +285,19 @@ export default function CheckoutPage() {
       },
       {
         onSuccess: (order) => {
+          setPendingOrder(order);
           if (paymentProvider === 'razorpay') {
-            setPaymentModalState({ isOpen: true, status: 'processing' });
-
-            createPaymentOrderMutation.mutate(
-              { order_id: order.id, gateway: 'razorpay' },
-              {
-                onSuccess: async (razorpayData) => {
-                  try {
-                    await razorpayService.openCheckout({
-                      key: razorpayData.key || 'rzp_test_placeholder',
-                      amount: razorpayData.amount,
-                      currency: razorpayData.currency || 'INR',
-                      name: 'JSS Marketplace',
-                      description: `Order #${order.order_number}`,
-                      order_id: razorpayData.gateway_order_id,
-                      handler: (response) => {
-                        verifyPaymentMutation.mutate(
-                          {
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_order_id: response.razorpay_order_id,
-                            razorpay_signature: response.razorpay_signature,
-                          },
-                          {
-                            onSuccess: () => {
-                              clearCart();
-                              setPaymentModalState({ isOpen: false, status: 'success' });
-                              setPlacedOrderNumber(order.order_number);
-                              setIsOrderPlaced(true);
-                            },
-                            onError: () => {
-                              setPaymentModalState({
-                                isOpen: true,
-                                status: 'failed',
-                                errorMessage: 'Payment verification failed. Please contact support.',
-                              });
-                            },
-                          }
-                        );
-                      },
-                      modal: {
-                        ondismiss: () => {
-                          setPaymentModalState({
-                            isOpen: true,
-                            status: 'failed',
-                            errorMessage: 'Payment window was closed before completion.',
-                          });
-                        },
-                      },
-                    });
-                  } catch (err: any) {
-                    setPaymentModalState({
-                      isOpen: true,
-                      status: 'failed',
-                      errorMessage: err.message,
-                    });
-                  }
-                },
-                onError: () => {
-                  setPaymentModalState({
-                    isOpen: true,
-                    status: 'failed',
-                    errorMessage: 'Failed to initialize payment gateway order.',
-                  });
-                },
-              }
-            );
+            initiateRazorpayPayment(order);
           } else {
             clearCart();
+            setPendingOrder(null);
             setPlacedOrderNumber(order.order_number);
             setIsOrderPlaced(true);
+            toastSuccess('Order placed successfully with Cash on Delivery.', 'Order Confirmed');
           }
         },
         onError: (err: any) => {
-          toastError(err.message || 'Failed to process checkout.', 'Checkout Failed');
+          toastError(err?.response?.data?.message || 'Failed to process checkout. Please try again.', 'Checkout Error');
         },
       }
     );

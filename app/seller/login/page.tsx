@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Store, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useToast } from '../../../components/Toast';
+import { PasswordInput } from '../../../components/ui/PasswordInput';
 
 export default function SellerLoginPage() {
   const router = useRouter();
@@ -55,14 +56,20 @@ export default function SellerLoginPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-foreground mb-1">Password</label>
-            <input
-              type="password"
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-xs font-bold text-foreground">Password</label>
+              <Link href="/forgot-password" className="text-xs font-bold text-primary hover:underline">
+                Forgot Password?
+              </Link>
+            </div>
+            <PasswordInput
               required
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-background text-foreground text-xs px-4 py-3 rounded-xl border border-border-custom focus:border-primary focus:outline-none"
+              autoComplete="current-password"
+              className="py-3 px-4 rounded-xl text-xs"
+              icon={false}
             />
           </div>
 

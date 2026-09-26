@@ -23,6 +23,7 @@ import { OtpLoginForm } from './OtpLoginForm';
 import { OtpSignupForm } from './OtpSignupForm';
 import { EmailOtpLoginForm } from './EmailOtpLoginForm';
 import { EmailOtpSignupForm } from './EmailOtpSignupForm';
+import { PasswordInput } from '../ui/PasswordInput';
 import { BrandLogo } from '../BrandLogo';
 
 interface AuthCardProps {
@@ -276,23 +277,19 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = 'login' }) => 
                   Password <span className="text-rose-500">*</span>
                 </label>
                 <Link
-                  href="/account?tab=forgot-password"
+                  href="/forgot-password"
                   className="text-xs font-bold text-primary hover:underline"
                 >
                   Forgot Password?
                 </Link>
               </div>
-              <div className="relative flex items-center">
-                <Lock size={16} className="absolute left-3.5 text-muted-custom font-bold" />
-                <input
-                  type="password"
-                  value={passwordInput}
-                  onChange={(e) => setPasswordInput(e.target.value)}
-                  placeholder="••••••••"
-                  disabled={isSubmitting}
-                  className="w-full bg-background-secondary text-foreground text-sm font-bold pl-10 pr-4 py-3.5 rounded-2xl border border-border-custom/80 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-custom/50"
-                />
-              </div>
+              <PasswordInput
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                placeholder="••••••••"
+                disabled={isSubmitting}
+                autoComplete="current-password"
+              />
             </div>
 
             <div className="flex items-center justify-between pt-1">
@@ -409,17 +406,14 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = 'login' }) => 
               <label className="block text-xs font-black uppercase tracking-wider text-muted-custom">
                 Password (Min 8 characters) <span className="text-rose-500">*</span>
               </label>
-              <div className="relative flex items-center">
-                <Lock size={16} className="absolute left-3.5 text-muted-custom font-bold" />
-                <input
-                  type="password"
-                  value={passwordInput}
-                  onChange={(e) => setPasswordInput(e.target.value)}
-                  placeholder="••••••••"
-                  disabled={isSubmitting}
-                  className="w-full bg-background-secondary text-foreground text-sm font-bold pl-10 pr-4 py-3.5 rounded-2xl border border-border-custom/80 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-custom/50"
-                />
-              </div>
+              <PasswordInput
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                placeholder="••••••••"
+                disabled={isSubmitting}
+                autoComplete="new-password"
+                minLength={8}
+              />
             </div>
 
             <button

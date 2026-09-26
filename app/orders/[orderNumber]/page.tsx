@@ -28,16 +28,29 @@ import {
   FileText
 } from 'lucide-react';
 import { useToast } from '../../../components/Toast';
+import { useCreatePaymentOrderMutation, useVerifyPaymentMutation } from '../../../hooks/usePayment';
+import { razorpayService } from '../../../services/razorpayService';
+import { PaymentStatusModal } from '../../../components/PaymentStatusModal';
+import { useAuth } from '../../../contexts/AuthContext';
 
 export default function OrderDetailPage() {
   const params = useParams();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   const { success: toastSuccess, error: toastError } = useToast();
   const orderNumber = typeof params?.orderNumber === 'string' ? params.orderNumber : '';
 
   const { data: order, isLoading, isError } = useOrderByNumberQuery(orderNumber);
   const { data: shipment } = useOrderShipmentQuery(orderNumber, !!order);
   const cancelMutation = useCancelOrderMutation();
+  const createPaymentOrderMutation = useCreatePaymentOrderMutation();
+  const verifyPaymentMutation = useVerifyPaymentMutation();
+
+  const [paymentModalState, setPaymentModalState] = useState<{
+    isOpen: boolean;
+    status: 'processing' | 'success' | 'failed';
+    errorMessage?: string;
+  }>({ isOpen: false, status: 'processing' });
 
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   const [showOrderCancelModal, setShowOrderCancelModal] = useState(false);
@@ -129,6 +142,88 @@ export default function OrderDetailPage() {
     } finally {
       setIsCancellingItem(false);
     }
+  };
+
+  const handleRetryPayment = () => {
+    if (!order) return;
+    setPaymentModalState({ isOpen: true, status: 'processing', errorMessage: undefined });
+    createPaymentOrderMutation.mutate(
+      { order_id: order.id, gateway: 'razorpay' },
+      {
+        onSuccess: async (razorpayData) => {
+          try {
+            await razorpayService.openCheckout({
+              key: razorpayData.key || razorpayData.key_id || 'rzp_test_placeholder',
+              amount: razorpayData.amount,
+              currency: razorpayData.currency || 'INR',
+              name: 'JSSSolutions Marketplace',
+              description: `Payment for Order #${order.order_number}`,
+              order_id: razorpayData.razorpay_order_id || razorpayData.gateway_order_id || '',
+              prefill: {
+                name: order.shipping_address_snapshot?.full_name || user?.name || '',
+                email: user?.email || '',
+                contact: order.shipping_address_snapshot?.phone || user?.phone || '',
+              },
+              notes: {
+                order_id: String(order.id),
+                order_number: order.order_number,
+              },
+              theme: { color: '#0d9488' },
+              handler: (response) => {
+                setPaymentModalState({ isOpen: true, status: 'processing' });
+                verifyPaymentMutation.mutate(
+                  {
+                    order_id: order.id,
+                    gateway: 'razorpay',
+                    payload: {
+                      razorpay_payment_id: response.razorpay_payment_id,
+                      razorpay_order_id: response.razorpay_order_id,
+                      razorpay_signature: response.razorpay_signature,
+                    },
+                  },
+                  {
+                    onSuccess: () => {
+                      setPaymentModalState({ isOpen: false, status: 'success' });
+                      toastSuccess('Payment successful! Your order is now confirmed.');
+                      queryClient.invalidateQueries({ queryKey: ['orders', orderNumber] });
+                    },
+                    onError: (err: any) => {
+                      setPaymentModalState({
+                        isOpen: true,
+                        status: 'failed',
+                        errorMessage: err?.response?.data?.message || 'Payment verification failed. Please contact support.',
+                      });
+                    },
+                  }
+                );
+              },
+              modal: {
+                ondismiss: () => {
+                  setPaymentModalState({
+                    isOpen: true,
+                    status: 'failed',
+                    errorMessage: 'Payment window was closed before completion. You can retry paying now.',
+                  });
+                },
+              },
+            });
+          } catch (err: any) {
+            setPaymentModalState({
+              isOpen: true,
+              status: 'failed',
+              errorMessage: err.message || 'Failed to open Razorpay payment window.',
+            });
+          }
+        },
+        onError: (err: any) => {
+          setPaymentModalState({
+            isOpen: true,
+            status: 'failed',
+            errorMessage: err?.response?.data?.message || 'Failed to initialize payment gateway order.',
+          });
+        },
+      }
+    );
   };
 
   const canCancelOrder = ['pending', 'confirmed'].includes(order.status?.toLowerCase());
@@ -351,6 +446,19 @@ export default function OrderDetailPage() {
                 {order.payment_status?.toUpperCase()}
               </span>
             </div>
+
+            {order.payment_status === 'pending' && order.payment_method !== 'cod' && order.status !== 'cancelled' && (
+              <div className="pt-3">
+                <button
+                  onClick={handleRetryPayment}
+                  disabled={createPaymentOrderMutation.isPending}
+                  className="w-full py-2.5 bg-primary text-primary-foreground font-bold text-xs rounded-xl shadow-xs hover:bg-primary/90 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <CreditCard className="w-4 h-4" />
+                  <span>{createPaymentOrderMutation.isPending ? 'Connecting Gateway...' : 'Complete Payment Now'}</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -443,6 +551,15 @@ export default function OrderDetailPage() {
           </div>
         </div>
       )}
+
+      {/* Payment Retry Status Modal */}
+      <PaymentStatusModal
+        isOpen={paymentModalState.isOpen}
+        status={paymentModalState.status}
+        errorMessage={paymentModalState.errorMessage}
+        onRetry={handleRetryPayment}
+        onClose={() => setPaymentModalState({ ...paymentModalState, isOpen: false })}
+      />
     </div>
   );
 }

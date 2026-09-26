@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { PasswordInput } from '@/components/ui/PasswordInput';
 import {
   useAdminStaffRolesQuery,
   useAdminStaffListQuery,
@@ -490,8 +491,7 @@ export default function AdminStaffPage() {
 
             <div className="space-y-1 text-xs">
               <label className="font-bold text-muted-custom">Temporary Password * (Min 8 chars)</label>
-              <input
-                type="password"
+              <PasswordInput
                 required
                 minLength={8}
                 value={form.password}
@@ -501,9 +501,10 @@ export default function AdminStaffPage() {
                 }}
                 placeholder="••••••••"
                 autoComplete="new-password"
-                className={`w-full px-3 py-2 bg-background-secondary border ${
+                className={`px-3 py-2 bg-background-secondary border ${
                   fieldErrors.password?.length ? 'border-rose-500 ring-1 ring-rose-500/30' : 'border-border-custom'
                 } text-foreground font-mono font-bold rounded-xl focus:outline-none`}
+                icon={false}
               />
               {fieldErrors.password?.length ? (
                 <p className="text-[11px] font-bold text-rose-500">{fieldErrors.password[0]}</p>

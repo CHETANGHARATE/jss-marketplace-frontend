@@ -5,6 +5,7 @@ import { useChangePasswordMutation } from '../../../hooks/useProfile';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { AccountSidebar } from '../../../components/AccountSidebar';
 import { KeyRound, ShieldCheck, Sparkles, CheckCircle2, AlertCircle } from 'lucide-react';
+import { PasswordInput } from '../../../components/ui/PasswordInput';
 
 export default function PasswordSecurityPage() {
   const changePasswordMutation = useChangePasswordMutation();
@@ -85,23 +86,26 @@ export default function PasswordSecurityPage() {
           <form onSubmit={handleSubmit} className="space-y-5 text-xs font-semibold max-w-xl">
             <div className="space-y-1.5">
               <label className="text-foreground/70">Current Password</label>
-              <input
-                type="password"
+              <PasswordInput
                 required
+                autoComplete="current-password"
                 value={formData.current_password}
                 onChange={(e) => setFormData({ ...formData, current_password: e.target.value })}
-                className="w-full bg-muted/30 border border-border/40 rounded-xl px-3.5 py-2.5 text-foreground focus:outline-none focus:border-primary"
+                className="bg-muted/30 border-border/40 rounded-xl px-3.5 py-2.5"
+                icon={false}
               />
             </div>
 
             <div className="space-y-1.5">
               <label className="text-foreground/70">New Password</label>
-              <input
-                type="password"
+              <PasswordInput
                 required
+                minLength={8}
+                autoComplete="new-password"
                 value={formData.new_password}
                 onChange={(e) => setFormData({ ...formData, new_password: e.target.value })}
-                className="w-full bg-muted/30 border border-border/40 rounded-xl px-3.5 py-2.5 text-foreground focus:outline-none focus:border-primary"
+                className="bg-muted/30 border-border/40 rounded-xl px-3.5 py-2.5"
+                icon={false}
               />
 
               {formData.new_password && (
@@ -122,12 +126,14 @@ export default function PasswordSecurityPage() {
 
             <div className="space-y-1.5">
               <label className="text-foreground/70">Confirm New Password</label>
-              <input
-                type="password"
+              <PasswordInput
                 required
+                minLength={8}
+                autoComplete="new-password"
                 value={formData.new_password_confirmation}
                 onChange={(e) => setFormData({ ...formData, new_password_confirmation: e.target.value })}
-                className="w-full bg-muted/30 border border-border/40 rounded-xl px-3.5 py-2.5 text-foreground focus:outline-none focus:border-primary"
+                className="bg-muted/30 border-border/40 rounded-xl px-3.5 py-2.5"
+                icon={false}
               />
             </div>
 

@@ -199,10 +199,10 @@ export const authService = {
   },
 
   async forgotPassword(email: string): Promise<{ message: string; demo_otp?: string }> {
-    const response = await apiClient.post<ApiResponse<{ email?: string; otp?: string }>>('/auth/forgot-password', { email });
+    const response = await apiClient.post<ApiResponse<{ email?: string; otp?: string; demo_otp?: string }>>('/auth/forgot-password', { email });
     return {
-      message: response.data.message || 'OTP verification code sent to your email.',
-      demo_otp: response.data.data?.otp,
+      message: response.data.message || 'Verification code sent to your email.',
+      demo_otp: response.data.data?.demo_otp || (response.data.data as any)?.otp,
     };
   },
 
@@ -211,11 +211,18 @@ export const authService = {
     return response.data.success;
   },
 
-  async resetPassword(payload: { email: string; otp: string; password: string; password_confirmation: string }): Promise<string> {
+  async resetPassword(payload: {
+    email: string;
+    otp?: string;
+    token?: string;
+    password: string;
+    password_confirmation: string;
+  }): Promise<string> {
+    const code = payload.token || payload.otp;
     const response = await apiClient.post<ApiResponse<any>>('/auth/reset-password', {
       email: payload.email,
-      otp: payload.otp,
-      token: payload.otp,
+      otp: code,
+      token: code,
       password: payload.password,
       password_confirmation: payload.password_confirmation,
     });
