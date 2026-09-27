@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useQueryClient } from '@tanstack/react-query';
 import { useCartWishlist } from '../../contexts/CartWishlistContext';
 import { useAddressesQuery } from '../../hooks/useAddress';
 import { useCheckoutMutation } from '../../hooks/useCheckout';
@@ -69,6 +70,7 @@ const DEFAULT_SHIPPING_METHODS: ApiShippingMethod[] = [
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const { warning, error: toastError, success: toastSuccess } = useToast();
   const { cart, cartTotal, cartItemCount, clearCart } = useCartWishlist();
@@ -220,8 +222,11 @@ export default function CheckoutPage() {
                       clearCart();
                       setPendingOrder(null);
                       setPaymentModalState({ isOpen: false, status: 'success' });
-                      setPlacedOrderNumber(order.order_number);
+                      const canonicalNum = (order.order_number || String(order.id)).replace(/^#/, '');
+                      setPlacedOrderNumber(canonicalNum);
                       setIsOrderPlaced(true);
+                      queryClient.invalidateQueries({ queryKey: ['orders'] });
+                      queryClient.invalidateQueries({ queryKey: ['order', canonicalNum] });
                       toastSuccess('Payment successful! Your order has been placed.', 'Order Confirmed');
                     },
                     onError: (err: any) => {
@@ -287,8 +292,11 @@ export default function CheckoutPage() {
           } else {
             clearCart();
             setPendingOrder(null);
-            setPlacedOrderNumber(order.order_number);
+            const canonicalNum = (order.order_number || String(order.id)).replace(/^#/, '');
+            setPlacedOrderNumber(canonicalNum);
             setIsOrderPlaced(true);
+            queryClient.invalidateQueries({ queryKey: ['orders'] });
+            queryClient.invalidateQueries({ queryKey: ['order', canonicalNum] });
             toastSuccess('Order placed successfully with Cash on Delivery.', 'Order Confirmed');
           }
         },
@@ -382,7 +390,7 @@ export default function CheckoutPage() {
             href={`/orders/${placedOrderNumber}`}
             className="w-full sm:w-auto px-6 py-3 bg-primary text-white font-bold rounded-2xl shadow-sm hover:bg-primary/90 transition-all text-center"
           >
-            View Order Status & Tracking
+            Show Order & Tracking
           </Link>
           <Link
             href="/orders"

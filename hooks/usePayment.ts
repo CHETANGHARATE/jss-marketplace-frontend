@@ -21,7 +21,7 @@ export function useVerifyPaymentMutation() {
     mutationFn: (payload: VerifyPaymentPayload) => paymentService.verifyPayment(payload),
     onSuccess: (payment) => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
-      queryClient.invalidateQueries({ queryKey: ['order', payment.order_id] });
+      queryClient.invalidateQueries({ queryKey: ['order'] });
     },
   });
 }

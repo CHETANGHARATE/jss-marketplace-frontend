@@ -38,7 +38,8 @@ export default function OrderDetailPage() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const { success: toastSuccess, error: toastError } = useToast();
-  const orderNumber = typeof params?.orderNumber === 'string' ? params.orderNumber : '';
+  const rawOrderNumber = typeof params?.orderNumber === 'string' ? params.orderNumber : '';
+  const orderNumber = decodeURIComponent(rawOrderNumber).replace(/^#/, '');
 
   const { data: order, isLoading, isError } = useOrderByNumberQuery(orderNumber);
   const { data: shipment } = useOrderShipmentQuery(orderNumber, !!order);
@@ -65,7 +66,7 @@ export default function OrderDetailPage() {
   if (isLoading) {
     return (
       <div className="space-y-8">
-        <Breadcrumbs items={[{ label: 'Orders', href: '/orders' }, { label: orderNumber }]} />
+        <Breadcrumbs items={[{ label: 'Orders', href: '/orders' }, { label: `#${orderNumber}` }]} />
         <OrderSkeleton count={1} />
       </div>
     );
@@ -77,7 +78,7 @@ export default function OrderDetailPage() {
         <AlertCircle className="w-12 h-12 text-rose-500 mx-auto" />
         <h2 className="text-2xl font-bold text-foreground">Order Not Found</h2>
         <p className="text-sm text-foreground/60">
-          The requested order #{orderNumber} could not be found in your account history.
+          The requested order #{orderNumber} could not be found in your account history or you may not have access to this order.
         </p>
         <Link
           href="/orders"
