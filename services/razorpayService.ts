@@ -21,10 +21,17 @@ export interface RazorpayOptions {
     razorpay_order_id: string;
     razorpay_signature: string;
   }) => void;
+  config?: Record<string, any>;
+  retry?: {
+    enabled?: boolean;
+    max_count?: number;
+  };
+  timeout?: number;
   modal?: {
     ondismiss?: () => void;
     escape?: boolean;
     animation?: boolean;
+    confirm_close?: boolean;
   };
 }
 
