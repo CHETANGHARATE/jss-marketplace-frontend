@@ -297,7 +297,11 @@ export default function CheckoutPage() {
           }
         },
         onError: (err: any) => {
-          toastError(err?.response?.data?.message || 'Failed to process checkout. Please try again.', 'Checkout Error');
+          const fieldErrors = err?.response?.data?.errors;
+          const errorDetail = fieldErrors
+            ? Object.values(fieldErrors).flat().join(' ')
+            : err?.response?.data?.message || 'Failed to process checkout. Please try again.';
+          toastError(errorDetail, 'Checkout Error');
         },
       }
     );
