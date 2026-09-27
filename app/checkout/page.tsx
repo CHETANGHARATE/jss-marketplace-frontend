@@ -270,16 +270,12 @@ export default function CheckoutPage() {
       return;
     }
 
-    // If an unpaid order already exists for this checkout attempt, retry payment directly
-    if (paymentProvider === 'razorpay' && pendingOrder) {
-      initiateRazorpayPayment(pendingOrder);
-      return;
-    }
-
     checkoutMutation.mutate(
       {
         shipping_address_id: selectedAddressId || addresses[0]?.id,
         payment_method: paymentProvider === 'bank_transfer' ? 'cod' : paymentProvider,
+        shipping_method: selectedShippingMethod.code,
+        cart_items: cart.map((i) => ({ product_id: Number(i.product.id), quantity: i.quantity })),
         points_to_redeem: coinsToRedeem > 0 ? coinsToRedeem : undefined,
         coupon_code: appliedCoupon || undefined,
       },

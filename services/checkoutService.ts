@@ -8,6 +8,8 @@ export interface ProcessCheckoutPayload {
   points_to_redeem?: number;
   coupon_code?: string;
   notes?: string;
+  shipping_method?: string;
+  cart_items?: Array<{ product_id: number; quantity: number }>;
 }
 
 export const checkoutService = {
