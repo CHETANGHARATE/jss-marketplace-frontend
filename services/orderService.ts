@@ -1,10 +1,13 @@
 import { apiClient } from './apiClient';
 import { ApiOrder, ApiResponse, PaginatedApiResponse } from '../types/api';
-
 export const orderService = {
-  async getOrders(): Promise<ApiOrder[]> {
-    const response = await apiClient.get<PaginatedApiResponse<ApiOrder>>('/orders');
-    return response.data.data;
+  async getOrders(params?: { status?: string; page?: number; per_page?: number }): Promise<ApiOrder[]> {
+    const response = await apiClient.get<any>('/orders', { params });
+    const raw = response.data;
+    if (Array.isArray(raw)) return raw;
+    if (Array.isArray(raw?.data)) return raw.data;
+    if (Array.isArray(raw?.data?.data)) return raw.data.data;
+    return [];
   },
 
   async getOrderByNumber(orderNumber: string): Promise<ApiOrder> {
