@@ -96,6 +96,11 @@ export default function OrderDetailPage() {
     setIsDownloadingPdf(true);
     try {
       const blob = await orderService.downloadInvoicePdf(order.order_number);
+      if (blob.type && blob.type.includes('json')) {
+        const text = await blob.text();
+        const errJson = JSON.parse(text);
+        throw new Error(errJson.message || 'Invoice generation failed');
+      }
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;

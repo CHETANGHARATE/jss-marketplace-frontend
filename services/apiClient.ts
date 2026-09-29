@@ -61,14 +61,26 @@ apiClient.interceptors.request.use(
  */
 apiClient.interceptors.response.use(
   (response) => response,
-  (error: AxiosError<{ message?: string; errors?: Record<string, string[]> }>) => {
+  async (error: AxiosError<any>) => {
     if (error.response?.status === 401 && typeof window !== 'undefined') {
       localStorage.removeItem('auth_token');
       sessionStorage.removeItem('auth_token');
     }
 
-    const fieldErrors = error.response?.data?.errors;
+    let fieldErrors = error.response?.data?.errors;
     let message = error.response?.data?.message;
+
+    // Handle Blob response (e.g. file downloads returning JSON errors)
+    if (error.response?.data instanceof Blob) {
+      try {
+        const text = await error.response.data.text();
+        const json = JSON.parse(text);
+        if (json.message) message = json.message;
+        if (json.errors) fieldErrors = json.errors;
+      } catch {
+        // Not a JSON blob
+      }
+    }
 
     // If backend returned 422 with field-level validation errors, unpack specific errors into message
     if (fieldErrors && typeof fieldErrors === 'object' && Object.keys(fieldErrors).length > 0) {
