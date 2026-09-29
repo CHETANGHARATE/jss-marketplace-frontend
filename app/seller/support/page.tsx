@@ -46,7 +46,7 @@ export default function SellerSupportPage() {
           <Headphones size={32} className="text-primary mx-auto" />
           <h3 className="text-lg font-black text-foreground">Contact Seller Desk</h3>
           <p className="text-xs text-muted-custom max-w-md mx-auto">
-            Email us at <strong className="text-foreground">seller@jssmarketplace.com</strong> or call our dedicated vendor helpline.
+            Email us at <strong className="text-foreground">seller@jssmarketplace.com</strong> or call our support helpline at <a href="tel:+919996669884" className="text-primary font-bold hover:underline">+91 99966 69884</a>.
           </p>
           <div className="pt-2">
             <Link

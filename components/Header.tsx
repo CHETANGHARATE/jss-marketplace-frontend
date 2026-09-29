@@ -166,10 +166,14 @@ export const Header: React.FC = () => {
 
             {/* Right — Contact & app */}
             <div className="hidden lg:flex items-center gap-4 text-slate-300 text-[11px] font-medium shrink-0">
-              <span className="flex items-center gap-1 hover:text-white transition-colors cursor-pointer">
+              <a
+                href="tel:+919996669884"
+                className="flex items-center gap-1 hover:text-white transition-colors cursor-pointer"
+                title="Customer Care: +91 99966 69884"
+              >
                 <PhoneCall size={11} className="text-emerald-400" />
-                <span>{t('nav.helpline') || '1800-XXX-XXXX'}</span>
-              </span>
+                <span>{t('nav.helpline') || 'Customer Care: +91 99966 69884'}</span>
+              </a>
               <span className="text-slate-700">|</span>
               <span className="flex items-center gap-1 hover:text-white transition-colors cursor-pointer">
                 <Smartphone size={11} className="text-blue-400" />

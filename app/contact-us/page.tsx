@@ -66,8 +66,15 @@ export default function ContactUsPage() {
               Assistance with orders, delivery, tracking, and product queries.
             </p>
             <div className="pt-2 text-xs font-semibold text-foreground space-y-1">
-              <p className="flex items-center gap-2"><Mail size={14} className="text-primary" /> support@jssmarketplace.com</p>
-              <p className="flex items-center gap-2"><Phone size={14} className="text-primary" /> 1800-123-4567 (Toll Free)</p>
+              <p className="flex items-center gap-2">
+                <Mail size={14} className="text-primary" /> support@jssmarketplace.com
+              </p>
+              <p className="flex items-center gap-2">
+                <Phone size={14} className="text-primary" />
+                <a href="tel:+919996669884" className="hover:text-primary transition-colors">
+                  +91 99966 69884 (Customer Care)
+                </a>
+              </p>
             </div>
           </div>
 

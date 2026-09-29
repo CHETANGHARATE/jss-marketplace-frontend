@@ -75,10 +75,14 @@ export const HomeFaqSection: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-4 py-2.5 rounded-xl text-xs font-black transition-colors shadow-2xs cursor-pointer justify-center uppercase tracking-wider">
+              <a
+                href="tel:+919996669884"
+                className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-4 py-2.5 rounded-xl text-xs font-black transition-colors shadow-2xs cursor-pointer justify-center uppercase tracking-wider"
+                title="Call Customer Care: +91 99966 69884"
+              >
                 <Phone size={14} />
-                <span>1800-JSS-MARKET</span>
-              </div>
+                <span>+91 99966 69884</span>
+              </a>
 
               <div className="flex items-center gap-2 text-[11px] text-slate-600 dark:text-slate-400 font-semibold justify-center">
                 <ShieldCheck size={14} className="text-emerald-500 shrink-0" />

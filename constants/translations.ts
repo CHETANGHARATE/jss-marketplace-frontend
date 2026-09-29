@@ -36,7 +36,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.india_platform': 'Direct-from-source Multi-Vendor Platform',
     'nav.festive_deals': 'Festive Deals',
     'nav.free_shipping_notice': 'Free Express Shipping on all orders above ₹499!',
-    'nav.helpline': 'Helpline: 1800-JSS-MARKET',
+    'nav.helpline': 'Customer Care: +91 99966 69884',
     'nav.loading_categories': 'Loading Categories...',
 
     // ── UI Theme ────────────────────────────────────────────────────────────
@@ -234,7 +234,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.guarantee_title': '100% Genuine Guarantee',
     'footer.guarantee_sub': 'Directly from certified sellers',
     'footer.support_title': '24/7 Dedicated Support',
-    'footer.support_sub': 'Instant chat & helpline: 1800-JSS',
+    'footer.support_sub': 'Customer Care: +91 99966 69884',
     'footer.shop_categories': 'Shop Categories',
     'footer.become_vendor': 'Become Vendor',
     'footer.help_support': 'Help & Support',
@@ -356,7 +356,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.india_platform': 'स्रोत से सीधे मल्टी-वेंडर प्लेटफॉर्म',
     'nav.festive_deals': 'त्योहार डील्स',
     'nav.free_shipping_notice': '₹499 से अधिक के सभी ऑर्डरों पर मुफ्त एक्सप्रेस शिपिंग!',
-    'nav.helpline': 'हेल्पलाइन: 1800-JSS-MARKET',
+    'nav.helpline': 'ग्राहक सेवा: +91 99966 69884',
     'nav.loading_categories': 'श्रेणियां लोड हो रही हैं...',
 
     // ── UI Theme ────────────────────────────────────────────────────────────
@@ -554,7 +554,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.guarantee_title': '100% प्रामाणिक गारंटी',
     'footer.guarantee_sub': 'सीधे प्रमाणित विक्रेताओं से',
     'footer.support_title': '24/7 समर्पित सहायता',
-    'footer.support_sub': 'त्वरित चैट और हेल्पलाइन: 1800-JSS',
+    'footer.support_sub': 'ग्राहक सेवा: +91 99966 69884',
     'footer.shop_categories': 'श्रेणियां खरीदें',
     'footer.become_vendor': 'विक्रेता बनें',
     'footer.help_support': 'सहायता और समर्थन',
@@ -676,7 +676,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.india_platform': 'थेट स्त्रोताकडून मल्टी-व्हेंडर प्लॅटफॉर्म',
     'nav.festive_deals': 'सण डील्स',
     'nav.free_shipping_notice': '₹४९९ पेक्षा जास्त सर्व ऑर्डर्सवर मोफत एक्सप्रेस शिपिंग!',
-    'nav.helpline': 'हेल्पलाइन: १८००-JSS-MARKET',
+    'nav.helpline': 'ग्राहक सेवा: +91 99966 69884',
     'nav.loading_categories': 'श्रेण्या लोड होत आहेत...',
 
     // ── UI Theme ────────────────────────────────────────────────────────────
@@ -874,7 +874,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.guarantee_title': '१००% अस्सल हमी',
     'footer.guarantee_sub': 'थेट प्रमाणित विक्रेत्यांकडून',
     'footer.support_title': '२४/७ समर्पित मदत',
-    'footer.support_sub': 'त्वरित चॅट आणि हेल्पलाइन: १८००-JSS',
+    'footer.support_sub': 'ग्राहक सेवा: +91 99966 69884',
     'footer.shop_categories': 'खरेदी श्रेण्या',
     'footer.become_vendor': 'विक्रेता व्हा',
     'footer.help_support': 'मदत आणि आधार',

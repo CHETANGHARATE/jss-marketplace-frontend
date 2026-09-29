@@ -12,7 +12,8 @@ import {
   UserCheck,
   Store,
   ArrowRight,
-  HelpCircle
+  HelpCircle,
+  Phone
 } from 'lucide-react';
 
 export default function HelpCenterPage() {
@@ -153,13 +154,23 @@ export default function HelpCenterPage() {
           <p className="text-xs sm:text-sm text-muted-custom max-w-md mx-auto">
             Our customer support desk is available to assist you with active orders, refunds, or general queries.
           </p>
-          <Link
-            href="/contact-us"
-            className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-extrabold text-xs uppercase px-8 py-3.5 rounded-2xl transition-all shadow-md"
-          >
-            <span>Contact Customer Support</span>
-            <ArrowRight size={14} />
-          </Link>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/contact-us"
+              className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white font-extrabold text-xs uppercase px-8 py-3.5 rounded-2xl transition-all shadow-md"
+            >
+              <span>Contact Customer Support</span>
+              <ArrowRight size={14} />
+            </Link>
+            <a
+              href="tel:+919996669884"
+              className="inline-flex items-center gap-2 bg-card hover:bg-background-secondary border border-border-custom text-foreground font-extrabold text-xs uppercase px-6 py-3.5 rounded-2xl transition-all shadow-xs"
+              title="Call Customer Care: +91 99966 69884"
+            >
+              <Phone size={14} className="text-primary" />
+              <span>Call: +91 99966 69884</span>
+            </a>
+          </div>
         </section>
 
       </div>
