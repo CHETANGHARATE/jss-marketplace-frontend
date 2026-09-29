@@ -5,8 +5,10 @@ import { useAdminOrdersQuery, useUpdateAdminOrderStatusMutation } from '../../..
 import { AdminPageHeader } from '../../../components/admin/AdminPageHeader';
 import { ShoppingBag, Search, Eye, Printer, FileText, CheckCircle2, Clock, Truck, XCircle, AlertCircle, Package } from 'lucide-react';
 import { ApiOrder } from '../../../types/api';
+import { useToast } from '../../../components/Toast';
 
 export default function AdminOrdersPage() {
+  const { success: toastSuccess, error: toastError } = useToast();
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [search, setSearch] = useState('');
   const [selectedOrder, setSelectedOrder] = useState<ApiOrder | null>(null);
@@ -28,14 +30,23 @@ export default function AdminOrdersPage() {
   });
 
   const handleStatusUpdate = (id: number, status: string) => {
-    updateStatusMutation.mutate({ id, status });
+    updateStatusMutation.mutate(
+      { id, status },
+      {
+        onSuccess: () => {
+          toastSuccess(`Order status updated to ${status.toUpperCase()}`);
+        },
+        onError: (err: any) => {
+          toastError(err?.response?.data?.message || err?.message || 'Failed to update order status');
+        },
+      }
+    );
   };
 
   const statusTabs = [
     { id: 'all', label: 'All Orders' },
     { id: 'pending', label: 'Pending' },
     { id: 'confirmed', label: 'Confirmed' },
-    { id: 'processing', label: 'Processing' },
     { id: 'packed', label: 'Packed' },
     { id: 'shipped', label: 'Shipped' },
     { id: 'delivered', label: 'Delivered' },
@@ -102,8 +113,13 @@ export default function AdminOrdersPage() {
               className="p-5 bg-card border border-border-custom/80 rounded-3xl shadow-2xs space-y-4 hover:border-primary/50 transition-all"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border-custom/60 text-xs">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                   <span className="font-mono font-black text-primary text-sm">#{ord.order_number}</span>
+                  {ord.tracking_number && (
+                    <span className="font-mono text-[10px] bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-md font-bold">
+                      AWB: {ord.tracking_number}
+                    </span>
+                  )}
                   <span className="text-muted-custom font-medium">
                     {new Date(ord.created_at).toLocaleDateString('en-IN', {
                       month: 'short',
@@ -119,13 +135,15 @@ export default function AdminOrdersPage() {
                   <div className="flex items-center gap-2">
                     <span className="text-[11px] text-muted-custom font-bold">Status:</span>
                     <select
-                      value={ord.status}
+                      value={ord.status === 'processing' ? 'packed' : ord.status}
+                      disabled={ord.status === 'cancelled'}
                       onChange={(e) => handleStatusUpdate(ord.id, e.target.value)}
-                      className="bg-background-secondary border border-border-custom/80 text-foreground text-xs font-black rounded-xl px-2.5 py-1 focus:outline-none capitalize"
+                      className={`bg-background-secondary border border-border-custom/80 text-foreground text-xs font-black rounded-xl px-2.5 py-1 focus:outline-none capitalize ${
+                        ord.status === 'cancelled' ? 'opacity-60 cursor-not-allowed' : ''
+                      }`}
                     >
                       <option value="pending">Pending</option>
                       <option value="confirmed">Confirmed</option>
-                      <option value="processing">Processing</option>
                       <option value="packed">Packed</option>
                       <option value="shipped">Shipped</option>
                       <option value="delivered">Delivered</option>

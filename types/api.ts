@@ -267,9 +267,12 @@ export interface ApiOrder {
   id: number;
   order_number: string;
   user_id: number;
-  status: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  status: 'pending' | 'confirmed' | 'processing' | 'packed' | 'shipped' | 'delivered' | 'cancelled';
   payment_status: 'unpaid' | 'paid' | 'refunded' | 'failed' | 'pending';
   payment_method?: string;
+  tracking_number?: string | null;
+  courier_name?: string | null;
+  tracking_url?: string | null;
   subtotal: number;
   tax?: number;
   shipping_fee?: number;

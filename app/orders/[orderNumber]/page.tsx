@@ -298,10 +298,20 @@ export default function OrderDetailPage() {
         <h3 className="text-xs font-extrabold uppercase tracking-wider text-foreground/50 mb-4">
           Shipment Progress Tracking
         </h3>
-        <OrderStatusTimeline status={order.status} />
+        <OrderStatusTimeline
+          status={order.status}
+          shipmentStatus={shipment?.status}
+          trackingNumber={order.tracking_number || shipment?.tracking_number}
+          courierName={order.courier_name || shipment?.courier_name}
+        />
       </div>
 
-      <ShipmentTrackingCard tracking={shipment} />
+      <ShipmentTrackingCard
+        tracking={shipment}
+        orderStatus={order.status}
+        orderTrackingNumber={order.tracking_number}
+        orderCourierName={order.courier_name}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Ordered Items with Single Item Cancellation (Feature 139) */}
