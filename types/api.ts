@@ -45,6 +45,13 @@ export interface ApiUser {
   is_super_admin?: boolean;
   is_active?: boolean;
   email_verified_at?: string;
+  vendor_store?: {
+    id: number;
+    store_name: string;
+    slug: string;
+    status: string;
+    kyc_status: string;
+  } | null;
   created_at: string;
   updated_at?: string;
 }

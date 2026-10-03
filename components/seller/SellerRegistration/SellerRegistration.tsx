@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import {
   Store,
   CheckCircle2,
@@ -264,13 +265,19 @@ export const SellerRegistration: React.FC = () => {
           Our Admin Moderation Team will review your application and document scan copies in the Admin Control Panel. You will receive an update at <strong>{step1.email}</strong> once your store is activated.
         </p>
 
-        <div className="pt-4 flex justify-center gap-4">
-          <a
-            href="/vendor/dashboard"
-            className="px-8 py-3 bg-primary hover:bg-primary-hover text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md"
+        <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
+          <Link
+            href="/seller/application-status"
+            className="px-6 py-3 bg-primary hover:bg-primary-hover text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md text-center"
           >
-            Go to Seller Dashboard
-          </a>
+            View Application Status
+          </Link>
+          <Link
+            href="/account"
+            className="px-6 py-3 bg-background-secondary hover:bg-border-custom/50 text-foreground font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-xs text-center border border-border-custom"
+          >
+            Back to Customer Dashboard
+          </Link>
         </div>
       </div>
     );
