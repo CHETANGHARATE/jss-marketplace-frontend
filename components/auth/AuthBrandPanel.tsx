@@ -46,7 +46,7 @@ export const AuthBrandPanel: React.FC = () => {
           <h1 className="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
             Welcome to <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-700 to-indigo-600">
-              JSS Marketplace
+              JDS Mart
             </span>
           </h1>
           <p className="text-sm font-medium text-slate-600 max-w-md leading-relaxed">
@@ -58,7 +58,7 @@ export const AuthBrandPanel: React.FC = () => {
       {/* Middle Interactive Visual Composition */}
       <div className="relative z-10 my-6 py-6 border-y border-slate-200/70 grid grid-cols-1 gap-3.5">
         <h3 className="text-xs font-black uppercase tracking-wider text-primary mb-1">
-          Why Shop on JSS Marketplace?
+          Why Shop on JDS Mart?
         </h3>
 
         <div className="space-y-2.5">

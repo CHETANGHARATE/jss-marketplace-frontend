@@ -17,8 +17,8 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Our Mission & Core Values | JSS Marketplace',
-  description: 'Discover the mission, vision, and core values driving JSS Marketplace to empower businesses and customers across India.',
+  title: 'Our Mission & Core Values | JDS Mart',
+  description: 'Discover the mission, vision, and core values driving JDS Mart to empower businesses and customers across India.',
 };
 
 export default function MissionPage() {
@@ -64,7 +64,7 @@ export default function MissionPage() {
   return (
     <FooterPageLayout
       title="Our Mission & Core Values"
-      subtitle="Guiding principles driving JSS Marketplace towards transparent, empowered, and accessible trade."
+      subtitle="Guiding principles driving JDS Mart towards transparent, empowered, and accessible trade."
       categoryName="Company"
     >
       <div className="space-y-12">
@@ -150,7 +150,7 @@ export default function MissionPage() {
         <section className="bg-slate-900 text-white p-8 sm:p-10 rounded-3xl text-center space-y-5">
           <h2 className="text-xl sm:text-3xl font-black">Join Us On Our Journey</h2>
           <p className="text-xs sm:text-sm text-slate-300 max-w-lg mx-auto">
-            Discover thousands of products or grow your business online with JSS Marketplace.
+            Discover thousands of products or grow your business online with JDS Mart.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
             <Link

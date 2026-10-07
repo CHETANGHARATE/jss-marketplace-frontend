@@ -49,13 +49,13 @@ export const seoService = {
     return {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'JSS Marketplace',
+      name: 'JDS Mart',
       url: siteUrl,
       logo: `${siteUrl}/logo.png`,
       sameAs: [
-        'https://facebook.com/jssmarketplace',
-        'https://twitter.com/jssmarketplace',
-        'https://instagram.com/jssmarketplace',
+        'https://facebook.com/jdsmart',
+        'https://twitter.com/jdsmart',
+        'https://instagram.com/jdsmart',
       ],
     };
   },

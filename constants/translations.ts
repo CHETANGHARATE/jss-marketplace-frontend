@@ -93,7 +93,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.recommended_for_you': 'Recommended For You',
     'home.featured_brands': 'Featured Brands',
     'home.testimonials': 'Customer Testimonials',
-    'home.download_app': 'Download JSS Mobile App',
+    'home.download_app': 'Download JDS Mart Mobile App',
     'home.download_app_desc': 'Shop on the go. Get exclusive app offers.',
     'home.newsletter_title': 'Join Our Newsletter',
     'home.newsletter_desc': 'Get updates on latest trends, sales, and weekly offers.',
@@ -109,9 +109,9 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.mins': 'Mins',
     'home.secs': 'Secs',
 
-    // ── Why Choose JSS Marketplace ──────────────────────────────────────────
+    // ── Why Choose JDS Mart ─────────────────────────────────────────────────
     'home.excellence': 'Marketplace Excellence',
-    'home.why_choose_title': 'Why Choose JSS Marketplace?',
+    'home.why_choose_title': 'Why Choose JDS Mart?',
     'home.why_choose_sub': "India's most trusted direct-from-source multi-vendor platform for retail & wholesale buyers.",
     'home.why_trust_quote': 'Aapka Vishwas, Hamari Pehchan. 💙',
     'home.why_secure_payments': 'Secure Payments',
@@ -413,7 +413,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.recommended_for_you': 'आपके लिए अनुशंसित',
     'home.featured_brands': 'विशेष रुप से प्रदर्शित ब्रांड',
     'home.testimonials': 'ग्राहकों के अनुभव',
-    'home.download_app': 'जेएसएस मोबाइल ऐप डाउनलोड करें',
+    'home.download_app': 'जेडीएस मार्ट मोबाइल ऐप डाउनलोड करें',
     'home.download_app_desc': 'चलते-फिरते खरीदारी करें। विशेष ऐप ऑफर प्राप्त करें।',
     'home.newsletter_title': 'हमारे न्यूज़लेटर से जुड़ें',
     'home.newsletter_desc': 'नवीनतम रुझानों, बिक्री और साप्ताहिक ऑफ़र पर अपडेट प्राप्त करें।',
@@ -431,7 +431,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // ── Why Choose ──────────────────────────────────────────────────────────
     'home.excellence': 'मार्केटप्लेस उत्कृष्टता',
-    'home.why_choose_title': 'जेएसएस मार्केटप्लेस क्यों चुनें?',
+    'home.why_choose_title': 'जेडीएस मार्ट क्यों चुनें?',
     'home.why_choose_sub': 'खुदरा और थोक खरीदारों के लिए भारत का सबसे विश्वसनीय डायरेक्ट-फ्रॉम-सोर्स मल्टी-वेंडर प्लेटफॉर्म।',
     'home.why_trust_quote': 'आपका विश्वास, हमारी पहचान। 💙',
     'home.why_secure_payments': 'सुरक्षित भुगतान',
@@ -733,7 +733,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.recommended_for_you': 'तुमच्यासाठी शिफारस केलेले',
     'home.featured_brands': 'वैशिष्ट्यीकृत ब्रँड',
     'home.testimonials': 'ग्राहकांचे अनुभव',
-    'home.download_app': 'जेएसएस मोबाईल ॲप डाउनलोड करा',
+    'home.download_app': 'जेडीएस मार्ट मोबाईल ॲप डाउनलोड करा',
     'home.download_app_desc': 'जाता जाता खरेदी करा. विशेष ॲप ऑफर मिळवा.',
     'home.newsletter_title': 'आमच्या वृत्तपत्रात सामील व्हा',
     'home.newsletter_desc': 'नवीनतम ट्रेंड, विक्री आणि साप्ताहिक ऑफरवर अद्यतने मिळवा.',
@@ -751,7 +751,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // ── Why Choose ──────────────────────────────────────────────────────────
     'home.excellence': 'मार्केटप्लेस उत्कृष्टता',
-    'home.why_choose_title': 'जेएसएस मार्केटप्लेस का निवडावे?',
+    'home.why_choose_title': 'जेडीएस मार्ट का निवडावे?',
     'home.why_choose_sub': 'किरकोळ आणि घाऊक ग्राहकांसाठी भारतातील सर्वात विश्वासू थेट स्त्रोताकडून मल्टी-व्हेंडर प्लॅटफॉर्म.',
     'home.why_trust_quote': 'आपला विश्वास, आमची ओळख. 💙',
     'home.why_secure_payments': 'सुरक्षित पेमेंट',

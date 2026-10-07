@@ -126,7 +126,7 @@ export const Footer: React.FC = () => {
     e.preventDefault();
     if (email.trim()) {
       setSubscribed(true);
-      success('Thank you for subscribing to JSS Marketplace deals!');
+      success('Thank you for subscribing to JDS Mart deals!');
       setEmail('');
       setTimeout(() => setSubscribed(false), 5000);
     }
@@ -274,7 +274,7 @@ export const Footer: React.FC = () => {
           {/* COLUMN 4 — ABOUT JSS (2 Cols) */}
           <div className="lg:col-span-2 space-y-3.5">
             <h4 className="font-extrabold text-xs text-white tracking-wider uppercase border-b border-slate-800 pb-2">
-              About JSS
+              About JDS Mart
             </h4>
             <ul className="space-y-2 text-xs font-medium text-slate-400">
               <li><Link href="/about" className="hover:text-primary transition-colors flex items-center gap-1 group"><ChevronRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity text-primary" />About Us</Link></li>
@@ -389,7 +389,7 @@ export const Footer: React.FC = () => {
       {/* ─── 4. BOTTOM LEGAL BAR ─── */}
       <div className="border-t border-slate-800/80 bg-[#070D1E] py-4 text-xs text-slate-400">
         <div className="max-w-[1536px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p>© {currentYear} JSS Solutions Ltd. All rights reserved.</p>
+          <p>© {currentYear} JDS Mart. All rights reserved.</p>
 
           <div className="flex items-center gap-4 text-[11px] font-medium">
             <Link href="/sitemap" className="hover:text-primary transition-colors">Sitemap</Link>

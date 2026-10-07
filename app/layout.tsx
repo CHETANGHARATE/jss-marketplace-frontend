@@ -40,25 +40,25 @@ export async function generateMetadata(): Promise<Metadata> {
   const siteUrl = getSiteUrl();
   return {
     title: {
-      default: 'JSS Marketplace - India Shops Here',
-      template: '%s | JSS Marketplace - India Shops Here',
+      default: 'JDS Mart - India Shops Here',
+      template: '%s | JDS Mart - India Shops Here',
     },
-    description: 'JSS Solutions Marketplace - India Shops Here. Direct-from-source authentic products from verified sellers across India.',
-    keywords: ['eCommerce', 'Multi-vendor', 'Marketplace', 'Online Shopping', 'India Shops Here', 'JSS Marketplace'],
-    authors: [{ name: 'JSS Solutions' }],
+    description: 'JDS Mart - India Shops Here. Direct-from-source authentic products from verified sellers across India.',
+    keywords: ['eCommerce', 'Multi-vendor', 'Marketplace', 'Online Shopping', 'India Shops Here', 'JDS Mart'],
+    authors: [{ name: 'JDS Mart' }],
     metadataBase: new URL(siteUrl),
     openGraph: {
-      title: 'JSS Marketplace - India Shops Here',
-      description: 'JSS Solutions Marketplace - India Shops Here. Direct-from-source authentic products from verified sellers across India.',
+      title: 'JDS Mart - India Shops Here',
+      description: 'JDS Mart - India Shops Here. Direct-from-source authentic products from verified sellers across India.',
       url: siteUrl,
-      siteName: 'JSS Marketplace',
+      siteName: 'JDS Mart',
       locale: 'en_US',
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'JSS Marketplace - India Shops Here',
-      description: 'JSS Solutions Marketplace - India Shops Here. Direct-from-source authentic products.',
+      title: 'JDS Mart - India Shops Here',
+      description: 'JDS Mart - India Shops Here. Direct-from-source authentic products.',
     },
     robots: {
       index: true,

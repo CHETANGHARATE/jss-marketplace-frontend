@@ -34,7 +34,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
     <div className={`relative ${currentSize.class} shrink-0 flex items-center justify-center transition-transform duration-200 group-hover:scale-105`}>
       <img
         src="/logo.png"
-        alt="JSS Solutions Marketplace - India Shops Here"
+        alt="JDS Mart - India Shops Here"
         className="w-full h-full object-contain"
         loading="eager"
       />
@@ -69,7 +69,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
               : 'text-foreground text-lg sm:text-xl'
           }`}
         >
-          JSS<span className={isFooter ? 'text-primary-light' : 'text-primary'}>Solutions</span>
+          JDS<span className={isFooter ? 'text-primary-light' : 'text-primary'}>Mart</span>
         </span>
       </div>
 

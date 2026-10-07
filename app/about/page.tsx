@@ -18,8 +18,8 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'About Us | JSS Marketplace',
-  description: 'Learn about JSS Marketplace — India\'s trusted multi-vendor platform connecting verified sellers, manufacturers, and farmers directly with customers.',
+  title: 'About Us | JDS Mart',
+  description: 'Learn about JDS Mart — India\'s trusted multi-vendor platform connecting verified sellers, manufacturers, and farmers directly with customers.',
 };
 
 export default function AboutPage() {
@@ -87,7 +87,7 @@ export default function AboutPage() {
 
   return (
     <FooterPageLayout
-      title="About JSS Marketplace"
+      title="About JDS Mart"
       subtitle="Connecting customers with trusted sellers, manufacturers, farmers and businesses across India."
       categoryName="Company"
     >
@@ -103,10 +103,10 @@ export default function AboutPage() {
             India's Next-Generation Multi-Vendor Marketplace
           </h2>
           <p className="text-sm text-muted-custom leading-relaxed">
-            JSS Marketplace (operated by JSS Solutions Ltd.) is a comprehensive e-commerce platform built to digitize and empower trade across India. We bring together micro-entrepreneurs, regional manufacturers, agricultural producers, and established brands into a single transparent online ecosystem.
+            JDS Mart is a comprehensive e-commerce platform built to digitize and empower trade across India. We bring together micro-entrepreneurs, regional manufacturers, agricultural producers, and established brands into a single transparent online ecosystem.
           </p>
           <p className="text-sm text-muted-custom leading-relaxed">
-            Whether you are looking for fresh regional syrups and spices, authentic pooja items, kitchen appliances, or modern fashion, JSS Marketplace offers an accessible and reliable shopping experience for every customer.
+            Whether you are looking for fresh regional syrups and spices, authentic pooja items, kitchen appliances, or modern fashion, JDS Mart offers an accessible and reliable shopping experience for every customer.
           </p>
         </section>
 
@@ -132,10 +132,10 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 3. Why Choose JSS Marketplace */}
+        {/* 3. Why Choose JDS Mart */}
         <section className="space-y-6">
           <div className="text-center space-y-2">
-            <h2 className="text-xl sm:text-2xl font-black text-foreground">Why JSS Marketplace?</h2>
+            <h2 className="text-xl sm:text-2xl font-black text-foreground">Why JDS Mart?</h2>
             <p className="text-xs text-muted-custom max-w-xl mx-auto">
               Our core pillars designed to deliver value for buyers and vendors alike.
             </p>
@@ -161,7 +161,7 @@ export default function AboutPage() {
         <section className="bg-card border border-border-custom p-6 sm:p-8 rounded-3xl space-y-6">
           <div className="space-y-1">
             <h3 className="text-lg font-black text-foreground">What Makes Us Different</h3>
-            <p className="text-xs text-muted-custom">How JSS Marketplace compares to traditional e-commerce models.</p>
+            <p className="text-xs text-muted-custom">How JDS Mart compares to traditional e-commerce models.</p>
           </div>
 
           <div className="overflow-x-auto">
@@ -169,7 +169,7 @@ export default function AboutPage() {
               <thead>
                 <tr className="border-b border-border-custom text-muted-custom uppercase font-black tracking-wider">
                   <th className="pb-3 pr-4">Feature</th>
-                  <th className="pb-3 px-4 text-primary">JSS Marketplace</th>
+                  <th className="pb-3 px-4 text-primary">JDS Mart</th>
                   <th className="pb-3 pl-4">Traditional E-Commerce</th>
                 </tr>
               </thead>

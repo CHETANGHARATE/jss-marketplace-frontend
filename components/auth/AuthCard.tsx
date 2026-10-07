@@ -183,7 +183,7 @@ export const AuthCard: React.FC<AuthCardProps> = ({ initialMode = 'login' }) => 
         </h2>
         <p className="text-xs text-muted-custom font-medium max-w-sm mx-auto">
           {mode === 'login'
-            ? 'Choose how you want to log in to JSS Marketplace.'
+            ? 'Choose how you want to log in to JDS Mart.'
             : 'Select your preferred signup method below.'}
         </p>
       </div>

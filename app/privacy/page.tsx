@@ -3,8 +3,8 @@ import { Metadata } from 'next';
 import { FooterPageLayout } from '../../components/FooterPageLayout';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | JSS Marketplace',
-  description: 'Learn how JSS Marketplace collects, protects, uses, and respects user and seller personal data.',
+  title: 'Privacy Policy | JDS Mart',
+  description: 'Learn how JDS Mart collects, protects, uses, and respects user and seller personal data.',
 };
 
 export default function PrivacyPage() {

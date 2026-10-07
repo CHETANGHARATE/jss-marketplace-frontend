@@ -98,7 +98,7 @@ export default function ContactUsPage() {
             </div>
             <h3 className="font-extrabold text-base text-foreground">Corporate Office</h3>
             <p className="text-xs text-muted-custom leading-relaxed">
-              JSS Solutions Ltd., Commercial Tower, Business District, Maharashtra, India.
+              JDS Mart, Commercial Tower, Business District, Maharashtra, India.
             </p>
             <div className="pt-2 text-xs font-semibold text-foreground space-y-1">
               <p className="flex items-center gap-2"><MapPin size={14} className="text-indigo-500" /> Mumbai / Pune Regional Offices</p>
@@ -121,7 +121,7 @@ export default function ContactUsPage() {
               <CheckCircle2 size={40} className="text-emerald-500 mx-auto" />
               <h3 className="text-lg font-extrabold text-foreground">Request Submitted Successfully</h3>
               <p className="text-xs text-muted-custom max-w-md mx-auto">
-                Thank you for contacting JSS Marketplace. Your query has been logged and assigned to our support representative.
+                Thank you for contacting JDS Mart. Your query has been logged and assigned to our support representative.
               </p>
               <button
                 onClick={() => setSubmitted(false)}

@@ -104,7 +104,7 @@ export const SellerHeroBanner: React.FC<SellerHeroBannerProps> = ({ onStartSelli
               </div>
               <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight leading-[1.15]">
                 GROW YOUR BUSINESS WITH{' '}
-                <span className="text-emerald-600 dark:text-emerald-400 block">JSS MARKETPLACE</span>
+                <span className="text-emerald-600 dark:text-emerald-400 block">JDS MART</span>
               </h1>
               <p className="text-sm sm:text-base text-muted-custom font-medium leading-relaxed">
                 Join thousands of sellers across Maharashtra and grow your business online with low commissions, fast settlements, and nationwide logistics.

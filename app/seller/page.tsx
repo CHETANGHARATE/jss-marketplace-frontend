@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Become a Seller | JSS Marketplace',
+  title: 'Become a Seller | JDS Mart',
   description: 'Sell your products to millions of buyers across India. Low commissions, fast settlements, and dedicated seller support.',
 };
 
@@ -29,7 +29,7 @@ export default function BecomeSellerPage() {
 
   return (
     <FooterPageLayout
-      title="Grow Your Business with JSS Marketplace"
+      title="Grow Your Business with JDS Mart"
       subtitle="Connect directly with millions of buyers across India and scale your brand effortlessly."
       categoryName="Seller Portal"
     >

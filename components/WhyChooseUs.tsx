@@ -292,9 +292,9 @@ export const WhyChooseUs: React.FC = () => {
             <span>{t('home.excellence') || 'MARKETPLACE EXCELLENCE'}</span>
           </div>
 
-          {/* Main Heading: "Why Choose JSS Marketplace?" */}
+          {/* Main Heading: "Why Choose JDS Mart?" */}
           <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-black text-slate-900 dark:text-white leading-tight tracking-tight">
-            Why Choose <span className="text-[#1565D8]">JSS</span> Marketplace?
+            Why Choose <span className="text-[#1565D8]">JDS</span> Mart?
           </h2>
 
           {/* Subtitle */}
