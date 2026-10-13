@@ -14,7 +14,7 @@ export async function GET() {
   const apiBaseUrl =
     process.env.API_BASE_URL ||
     process.env.NEXT_PUBLIC_API_BASE_URL ||
-    'https://api.jsssolutions.in/api/v1';
+    'https://api.jdsmart.in/api/v1';
 
   return NextResponse.json(
     { apiBaseUrl },

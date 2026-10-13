@@ -10,7 +10,7 @@ import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'ax
  */
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
-  'https://api.jsssolutions.in/api/v1';
+  'https://api.jdsmart.in/api/v1';
 
 export const apiClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,

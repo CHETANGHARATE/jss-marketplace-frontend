@@ -14,9 +14,9 @@ const nextConfig: NextConfig = {
    */
   env: {
     NEXT_PUBLIC_API_BASE_URL:
-      process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.jsssolutions.in/api/v1",
+      process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.jdsmart.in/api/v1",
     NEXT_PUBLIC_APP_URL:
-      process.env.NEXT_PUBLIC_APP_URL || "https://jss-marketplace.vercel.app",
+      process.env.NEXT_PUBLIC_APP_URL || "https://jdsmart.in",
   },
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -29,6 +29,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: 'http', hostname: 'localhost' },
       { protocol: 'http', hostname: '127.0.0.1' },
+      { protocol: 'https', hostname: 'api.jdsmart.in' },
       { protocol: 'https', hostname: 'api.jsssolutions.in' },
       { protocol: 'https', hostname: 'jsssolutions.in' },
       { protocol: 'https', hostname: '**.jsssolutions.in' },
