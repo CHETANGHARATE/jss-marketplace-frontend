@@ -780,7 +780,7 @@ export default function CheckoutPage() {
               <button
                 onClick={handlePlaceOrder}
                 disabled={checkoutMutation.isPending || (addresses.length === 0 && !selectedAddressId)}
-                className="w-full py-4 px-8 bg-primary hover:bg-primary-dark text-white font-black text-base sm:text-lg rounded-2xl shadow-lg shadow-blue-500/25 transition-all active:scale-[0.99] disabled:opacity-50 flex items-center justify-center gap-2.5 cursor-pointer"
+                className="w-full py-4 px-8 bg-[#003153] hover:bg-[#00253f] text-white font-black text-base sm:text-lg rounded-2xl shadow-lg shadow-[#003153]/25 transition-all active:scale-[0.99] disabled:opacity-50 flex items-center justify-center gap-2.5 cursor-pointer"
               >
                 <Lock className="w-5 h-5" />
                 {checkoutMutation.isPending ? (
