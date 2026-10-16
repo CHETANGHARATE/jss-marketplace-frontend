@@ -21,11 +21,11 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   className = '',
   onClick,
 }) => {
-  // Logo image dimension sizing
+  // Logo image dimension sizing (increased slightly for enhanced visual prominence)
   const imgSizeMap = {
-    sm: { width: 38, height: 38, class: 'w-9 h-9 sm:w-10 sm:h-10' },
-    md: { width: 48, height: 48, class: 'w-11 h-11 sm:w-12 sm:h-12' },
-    lg: { width: 64, height: 64, class: 'w-14 h-14 sm:w-16 sm:h-16' },
+    sm: { width: 44, height: 44, class: 'w-10 h-10 sm:w-11 sm:h-11' },
+    md: { width: 56, height: 56, class: 'w-12 h-12 sm:w-14 sm:h-14' },
+    lg: { width: 76, height: 76, class: 'w-16 h-16 sm:w-[76px] sm:h-[76px]' },
   };
 
   const currentSize = imgSizeMap[size];
@@ -57,16 +57,35 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   const isAuth = variant === 'auth';
   const isAdmin = variant === 'admin';
 
+  // Responsive font sizes keyed by size prop to keep proportional balance with the increased logo
+  const titleFontSize =
+    size === 'lg'
+      ? 'text-2xl sm:text-3xl'
+      : size === 'sm'
+      ? 'text-base sm:text-lg'
+      : isFooter || isAuth
+      ? 'text-xl sm:text-2xl'
+      : isAdmin
+      ? 'text-lg sm:text-xl'
+      : 'text-xl sm:text-2xl';
+
+  const sloganFontSize =
+    size === 'lg'
+      ? 'text-xs sm:text-sm'
+      : size === 'sm'
+      ? 'text-[10px] sm:text-[11px]'
+      : 'text-[11px] sm:text-[12.5px]';
+
   const brandText = (
     <div className="flex flex-col leading-tight">
       <div className="flex items-baseline gap-1">
         <span
-          className={`font-black tracking-tight ${
+          className={`font-black tracking-tight ${titleFontSize} ${
             isFooter || isAuth
-              ? 'text-white text-xl sm:text-2xl'
+              ? 'text-white'
               : isAdmin
-              ? 'text-foreground text-lg sm:text-xl'
-              : 'text-foreground text-lg sm:text-xl'
+              ? 'text-foreground'
+              : 'text-foreground'
           }`}
         >
           JDS<span className={isFooter ? 'text-primary-light' : 'text-primary'}>Mart</span>
@@ -75,7 +94,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
 
       {showSlogan && (
         <span
-          className={`text-[11px] sm:text-[12px] font-extrabold tracking-wide ${
+          className={`${sloganFontSize} font-extrabold tracking-wide ${
             isFooter
               ? 'text-slate-300'
               : isAuth
